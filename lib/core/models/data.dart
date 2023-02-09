@@ -23,69 +23,46 @@ class CalendarData {
 
 final List<CalendarData> calendarData = [
   CalendarData(
-    name: 'Deniz Çolak',
+    name: 'Tapmub Consultancy',
     date: DateTime.now().add(Duration(days: -16, hours: 5)),
-    position: "Software Architect",
+    position: "Registration",
     rating: '₽',
   ),
   CalendarData(
-    name: 'John Doe',
+    name: 'Laka PVT',
     date: DateTime.now().add(Duration(days: -5, hours: 8)),
-    position: "Software Engineer",
+    position: "Tax Clearing",
     rating: '₽',
   ),
   CalendarData(
     name: 'Joy Barker',
     date: DateTime.now().add(Duration(days: -10, hours: 3)),
-    position: "Solution Architect",
+    position: "CR5",
     rating: '\$',
   ),
   CalendarData(
     name: 'Kate Hartley',
     date: DateTime.now().add(Duration(days: 6, hours: 6)),
-    position: "Project Manager",
+    position: "CR6",
     rating: '\$',
   ),
   CalendarData(
     name: 'Fletcher Robson',
     date: DateTime.now().add(Duration(days: -18, hours: 9)),
-    position: "Line Manager",
+    position: "Tax",
     rating: '\$',
   ),
   CalendarData(
     name: 'Aldrich Mason',
     date: DateTime.now().add(Duration(days: -12, hours: 2)),
-    position: "UI/UX Designer",
+    position: "Tax",
     rating: '\$',
   ),
   CalendarData(
     name: 'Phyllis Leonard',
     date: DateTime.now().add(Duration(days: -8, hours: 4)),
-    position: "Business Analyst",
+    position: "CR5",
     rating: '\$',
   ),
-  CalendarData(
-    name: 'Ken Rehbein',
-    date: DateTime.now().add(Duration(days: -3, hours: 6)),
-    position: "Software Architect",
-    rating: '₽',
-  ),
-  CalendarData(
-    name: 'Sydney Blake',
-    date: DateTime.now().add(Duration(days: -2, hours: 6)),
-    position: "Project Manager",
-    rating: '₽',
-  ),
-  CalendarData(
-    name: 'Megan Salazar',
-    date: DateTime.now().add(Duration(days: -2, hours: 7)),
-    position: "Software Engineer",
-    rating: '₽',
-  ),
-  CalendarData(
-    name: 'Celeste Pena',
-    date: DateTime.now().add(Duration(days: -14, hours: 5)),
-    position: "Solution Architect",
-    rating: '₽',
-  ),
+
 ];

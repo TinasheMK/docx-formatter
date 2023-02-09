@@ -18,23 +18,6 @@ class Header extends StatelessWidget {
             onPressed: () {},
           ),
         if (!Responsive.isMobile(context))
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Hello, Tinashe 👋",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "Register Company",
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-            ],
-          ),
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
         Expanded(child: SearchField()),
@@ -71,7 +54,7 @@ class ProfileCard extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-              child: Text("Deniz Çolak"),
+              child: Text("Tapiwa"),
             ),
           Icon(Icons.keyboard_arrow_down),
         ],

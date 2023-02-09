@@ -37,28 +37,25 @@ var slideData = [
   {
     "image": "assets/slides/background-1.jpeg",
     "kBackgroundColor": 0xFF2c614f,
-    "text": "Welcome to the Smart Smart Admin Dashboard!",
+    "text": "Tapmub Consultancy!",
     "altText": "You can access & track your services in real-time.",
-    "bAltText": "Are you ready for the next generation AI supported Dashboard?",
+    "bAltText": "Login To Continue",
     "productImage": "assets/images/mockup.png"
   },
   {
     "image": "assets/slides/background-2.jpeg",
     "kBackgroundColor": 0xFF8a1a4c,
-    "text": "¡Bienvenido al tablero Smart Admin Dashboard!",
-    "altText": "Puede acceder y rastrear sus servicios en tiempo real.",
-    "bAltText":
-        "¿Estás listo para el panel de control impulsado por IA de próxima generación?",
+    "text": "Tapmub Consultancy!",
+    "altText": "You can access & track your services in real-time.",
+    "bAltText": "Login To Continue",
     "productImage": "assets/images/mockup-2.png"
   },
   {
     "image": "assets/slides/background-3.jpeg",
     "kBackgroundColor": 0xFF0ab3ec,
-    "text": "Willkommen im Smart Admin Dashboard!",
-    "altText":
-        "Sie können in Echtzeit auf Ihre Dienste zugreifen und diese verfolgen.",
-    "bAltText":
-        "Sind Sie bereit für das AI-unterstützte Dashboard der nächsten Generation?",
+    "text": "Tapmub Consultancy!",
+    "altText": "You can access & track your services in real-time.",
+    "bAltText": "Login To Continue",
     "productImage": "assets/images/mockup-3.png"
   }
 ];

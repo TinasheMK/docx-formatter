@@ -2,7 +2,10 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
+import 'package:smart_admin_dashboard/screens/tax/tax_home_screen.dart';
+import 'package:smart_admin_dashboard/screens/tax/tax_screen.dart';
 
+import '../../clients/clients_home_screen.dart';
 import '../../register/register_home_screen.dart';
 import '../../register/register_screen.dart';
 import '../home_screen.dart';
@@ -33,7 +36,7 @@ class SideMenu extends StatelessWidget {
                 SizedBox(
                   height: defaultPadding,
                 ),
-                Text("Smart HR - Application")
+                Text("Tapmub Consultancy")
               ],
             )),
             DrawerListTile(
@@ -56,16 +59,26 @@ class SideMenu extends StatelessWidget {
                 );
               },
             ),
-            // DrawerListTile(
-            //   title: "Pages",
-            //   svgSrc: "assets/icons/menu_task.svg",
-            //   press: () {},
-            // ),
-            // DrawerListTile(
-            //   title: "Categories",
-            //   svgSrc: "assets/icons/menu_doc.svg",
-            //   press: () {},
-            // ),
+            DrawerListTile(
+              title: "Tax Clearance",
+              svgSrc: "assets/icons/menu_task.svg",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TaxHomeScreen()),
+                );
+              },
+            ),
+            DrawerListTile(
+              title: "Clients",
+              svgSrc: "assets/icons/menu_doc.svg",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
+                );
+              },
+            ),
             // DrawerListTile(
             //   title: "Appearance",
             //   svgSrc: "assets/icons/menu_store.svg",

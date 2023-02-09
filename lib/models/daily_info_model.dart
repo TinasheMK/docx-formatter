@@ -102,7 +102,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "Onboarding",
+    "title": "Clients",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
     "totalStorage": "+ %8",
@@ -145,7 +145,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "Open Position",
+    "title": "Tax Clearance",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
     "totalStorage": "+ %8",
@@ -188,7 +188,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "Efficiency",
+    "title": "Scope",
     "volumeData": 5328,
     "icon": FlutterIcons.bell_faw5s,
     "totalStorage": "- %5",
@@ -231,7 +231,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "Employee",
+    "title": "User",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
     "totalStorage": "+ %20",
@@ -244,7 +244,7 @@ var dailyData = [
     "spots": [
       FlSpot(
         1,
-        2,
+        1.3,
       ),
       FlSpot(
         2,
@@ -275,7 +275,7 @@ var dailyData = [
         1.5,
       )
     ]
-  },
+  }
 ];
 
 //final List<double> yValues = [

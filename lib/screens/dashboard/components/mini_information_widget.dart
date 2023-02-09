@@ -36,7 +36,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               Container(
                 padding: EdgeInsets.all(defaultPadding * 0.75),
                 height: 40,
-                width: 40,
+                width: 50,
                 decoration: BoxDecoration(
                   color: widget.dailyData.color!.withOpacity(0.1),
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -56,15 +56,15 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   value: _value,
                   items: [
                     DropdownMenuItem(
-                      child: Text("Daily"),
+                      child: Text("Options"),
                       value: 1,
                     ),
                     DropdownMenuItem(
-                      child: Text("Weekly"),
+                      child: Text("New"),
                       value: 2,
                     ),
                     DropdownMenuItem(
-                      child: Text("Monthly"),
+                      child: Text("View"),
                       value: 3,
                     ),
                   ],
@@ -88,12 +88,12 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               SizedBox(
                 height: 8,
               ),
-              Container(
-                child: LineChartWidget(
-                  colors: widget.dailyData.colors,
-                  spotsData: widget.dailyData.spots,
-                ),
-              )
+              // Container(
+              //   child: LineChartWidget(
+              //     colors: widget.dailyData.colors,
+              //     spotsData: widget.dailyData.spots,
+              //   ),
+              // )
             ],
           ),
           SizedBox(
@@ -113,13 +113,13 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     .caption!
                     .copyWith(color: Colors.white70),
               ),
-              Text(
-                widget.dailyData.totalStorage!,
-                style: Theme.of(context)
-                    .textTheme
-                    .caption!
-                    .copyWith(color: Colors.white),
-              ),
+              // Text(
+              //   widget.dailyData.totalStorage!,
+              //   style: Theme.of(context)
+              //       .textTheme
+              //       .caption!
+              //       .copyWith(color: Colors.white),
+              // ),
             ],
           )
         ],

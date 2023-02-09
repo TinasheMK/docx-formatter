@@ -22,7 +22,7 @@ class UserDetailsWidget extends StatelessWidget {
         children: [
           CalendarWidget(),
           Text(
-            "Employment Details",
+            "Activity Chart",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -32,19 +32,19 @@ class UserDetailsWidget extends StatelessWidget {
           Chart(),
           UserDetailsMiniCard(
             color: Color(0xff0293ee),
-            title: "Technical Interview",
+            title: "Company Registration",
             amountOfFiles: "%28.3",
             numberOfIncrease: 1328,
           ),
           UserDetailsMiniCard(
             color: Color(0xfff8b250),
-            title: "HR Interview",
+            title: "Tax",
             amountOfFiles: "%16.7",
             numberOfIncrease: 1328,
           ),
           UserDetailsMiniCard(
             color: Color(0xff845bef),
-            title: "Final Interview",
+            title: "CR4",
             amountOfFiles: "%22.4",
             numberOfIncrease: 1328,
           ),

@@ -1,6 +1,6 @@
-import 'package:smart_admin_dashboard/core/models/data.dart';
-import 'package:smart_admin_dashboard/core/widgets/wrapper.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/components/list_calendar_data.dart';
+import '../../../core/models/data.dart';
+import '../../../core/widgets/wrapper.dart';
+import '../../../screens/dashboard/components/list_calendar_data.dart';
 
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class _Empty extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'There are no interviews.',
+        'There are no events.',
         style: TextStyle(fontSize: 14),
       ),
     );
@@ -40,7 +40,7 @@ class _List extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("🔥 Upcoming events"),
+        Text("🔥 Activity"),
         SizedBox(
           height: 8,
         ),

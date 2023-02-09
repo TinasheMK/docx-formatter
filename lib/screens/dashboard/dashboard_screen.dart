@@ -38,7 +38,6 @@ class DashboardScreen extends StatelessWidget {
                         RecentDiscussions(),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
-                        if (Responsive.isMobile(context)) UserDetailsWidget(),
                       ],
                     ),
                   ),

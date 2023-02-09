@@ -20,7 +20,7 @@ class RecentDiscussions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Recent Open Positions",
+            "Clients",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(
@@ -30,13 +30,15 @@ class RecentDiscussions extends StatelessWidget {
               columnSpacing: defaultPadding,
               columns: [
                 DataColumn(
-                  label: Text("Position Name"),
+                  label: Text("Name"),
+                ),DataColumn(
+                  label: Text("Job"),
                 ),
                 DataColumn(
                   label: Text("Create Date"),
                 ),
                 DataColumn(
-                  label: Text("Total Application"),
+                  label: Text("Stage"),
                 ),
               ],
               rows: List.generate(
@@ -54,6 +56,7 @@ class RecentDiscussions extends StatelessWidget {
 DataRow recentUserDataRow(RecentUser userInfo) {
   return DataRow(
     cells: [
+      DataCell(Text(userInfo.name!)),
       DataCell(Container(
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(

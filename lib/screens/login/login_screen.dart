@@ -6,6 +6,8 @@ import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dar
 
 import 'package:flutter/material.dart';
 
+import '../download/register_download_screen.dart';
+
 class Login extends StatefulWidget {
   Login({required this.title});
   final String title;
@@ -303,10 +305,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               type: ButtonType.PRIMARY,
               text: "Sign In",
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                // );
+
+                generateRegister();
               },
             ),
             SizedBox(height: 24.0),
@@ -329,7 +333,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 GestureDetector(
                   onTap: () {},
                   child: Text(
-                    "Forget Password?",
+                    "Forgot Password?",
                     textAlign: TextAlign.right,
                     style: Theme.of(context)
                         .textTheme

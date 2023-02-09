@@ -6,6 +6,9 @@ import 'package:smart_admin_dashboard/screens/dashboard/components/mini_informat
 import 'package:smart_admin_dashboard/screens/forms/input_form.dart';
 import 'package:flutter/material.dart';
 
+import '../new/new_register_home_screen.dart';
+import '../new/new_register_screen.dart';
+
 class MiniInformation extends StatelessWidget {
   const MiniInformation({
     Key? key,
@@ -17,7 +20,7 @@ class MiniInformation extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SizedBox(
               width: 10,
@@ -28,34 +31,35 @@ class MiniInformation extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                  defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                 ),
               ),
               onPressed: () {
-                Navigator.of(context).push(new MaterialPageRoute<Null>(
-                    builder: (BuildContext context) {
-                      return new FormMaterial();
-                    },
-                    fullscreenDialog: true));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Register',)),
+                );
+
+
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Add New",
+                "Add New Document",
               ),
             ),
           ],
         ),
         SizedBox(height: defaultPadding),
-        Responsive(
-          mobile: InformationCard(
-            crossAxisCount: _size.width < 650 ? 2 : 4,
-            childAspectRatio: _size.width < 650 ? 1.2 : 1,
-          ),
-          tablet: InformationCard(),
-          desktop: InformationCard(
-            childAspectRatio: _size.width < 1400 ? 1.2 : 1.4,
-          ),
-        ),
+        // Responsive(
+        //   mobile: InformationCard(
+        //     crossAxisCount: _size.width < 650 ? 2 : 4,
+        //     childAspectRatio: _size.width < 650 ? 1.2 : 1,
+        //   ),
+        //   tablet: InformationCard(),
+        //   desktop: InformationCard(
+        //     childAspectRatio: _size.width < 1400 ? 1.2 : 1.4,
+        //   ),
+        // ),
       ],
     );
   }

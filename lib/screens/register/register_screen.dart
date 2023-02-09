@@ -1,11 +1,11 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/responsive.dart';
+import '../../core/constants/color_constants.dart';
+import '../../responsive.dart';
 
-import 'package:smart_admin_dashboard/screens/register/components/mini_information_card.dart';
+import './components/mini_information_card.dart';
 
-import 'package:smart_admin_dashboard/screens/register/components/recent_forums.dart';
-import 'package:smart_admin_dashboard/screens/register/components/recent_users.dart';
-import 'package:smart_admin_dashboard/screens/register/components/user_details_widget.dart';
+import './components/recent_forums.dart';
+import './components/recent_users.dart';
+import './components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'components/header.dart';
@@ -35,21 +35,19 @@ class RegisterScreen extends StatelessWidget {
                         //SizedBox(height: defaultPadding),
                         RecentUsers(),
                         SizedBox(height: defaultPadding),
-                        RecentDiscussions(),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
-                        if (Responsive.isMobile(context)) UserDetailsWidget(),
                       ],
                     ),
                   ),
                   if (!Responsive.isMobile(context))
                     SizedBox(width: defaultPadding),
                   // On Mobile means if the screen is less than 850 we dont want to show it
-                  if (!Responsive.isMobile(context))
-                    Expanded(
-                      flex: 2,
-                      child: UserDetailsWidget(),
-                    ),
+                  // if (!Responsive.isMobile(context))
+                    //z Expanded(
+                    //   flex: 2,
+                    //   child: UserDetailsWidget(),
+                    // ),
                 ],
               )
             ],

@@ -44,6 +44,8 @@ dependencies:
   flutter_screenutil: ^5.0.0+2
   smooth_page_indicator: ^0.3.0-nullsafety.0
   colorize_text_avatar: ^1.0.2
+  data_table_2: ^2.0.3
+  docx_template: ^0.3.2
 
 dev_dependencies:
   flutter_test:

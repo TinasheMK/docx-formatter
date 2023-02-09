@@ -101,7 +101,6 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
                 ),
           ),
           child: Text(userInfo.role!))),
-      DataCell(Text(userInfo.email!)),
       DataCell(Text(userInfo.date!)),
       DataCell(Text(userInfo.posts!)),
       DataCell(

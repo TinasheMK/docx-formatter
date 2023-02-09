@@ -21,7 +21,7 @@ class RecentUsers extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Recent Candidates",
+            "Recent Documents",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SingleChildScrollView(
@@ -33,19 +33,16 @@ class RecentUsers extends StatelessWidget {
                 columnSpacing: defaultPadding,
                 columns: [
                   DataColumn(
-                    label: Text("Name Surname"),
+                    label: Text("Company Name"),
                   ),
                   DataColumn(
-                    label: Text("Applied Position"),
+                    label: Text("Doc Type"),
                   ),
                   DataColumn(
-                    label: Text("E-mail"),
+                    label: Text("Creation Date"),
                   ),
                   DataColumn(
-                    label: Text("Registration Date"),
-                  ),
-                  DataColumn(
-                    label: Text("Status"),
+                    label: Text("Stage"),
                   ),
                   DataColumn(
                     label: Text("Operation"),
@@ -53,7 +50,7 @@ class RecentUsers extends StatelessWidget {
                 ],
                 rows: List.generate(
                   recentUsers.length,
-                  (index) => recentUserDataRow(recentUsers[index], context),
+                      (index) => recentUserDataRow(recentUsers[index], context),
                 ),
               ),
             ),
@@ -97,10 +94,9 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
             color: getRoleColor(userInfo.role).withOpacity(.2),
             border: Border.all(color: getRoleColor(userInfo.role)),
             borderRadius: BorderRadius.all(Radius.circular(5.0) //
-                ),
+            ),
           ),
           child: Text(userInfo.role!))),
-      DataCell(Text(userInfo.email!)),
       DataCell(Text(userInfo.date!)),
       DataCell(Text(userInfo.posts!)),
       DataCell(
