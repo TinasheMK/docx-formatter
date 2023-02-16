@@ -26,7 +26,7 @@ class MiniInformation extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text("New Company Registration Doc" ),
+            Text("New CR6 Doc" ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,

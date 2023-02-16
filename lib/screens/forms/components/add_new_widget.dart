@@ -4,7 +4,18 @@ import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
+import '../../register/new/new_register_home_screen.dart';
+import '../../register/new/new_register_screen.dart';
+
 class SelectionSection extends StatelessWidget {
+  const SelectionSection({
+    Key? key,
+    required this.tasks,
+
+  }) : super(key: key);
+
+  final List<DailyInfoModel> tasks;
+
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
@@ -19,10 +30,14 @@ class SelectionSection extends StatelessWidget {
           mobile: InformationCard(
             crossAxisCount: _size.width < 650 ? 2 : 4,
             childAspectRatio: _size.width < 650 ? 1.2 : 1,
+            tasks: tasks,
           ),
-          tablet: InformationCard(),
+          tablet: InformationCard(
+            tasks: tasks,
+          ),
           desktop: InformationCard(
             childAspectRatio: _size.width < 1400 ? 1.1 : 1.3,
+            tasks: tasks,
           ),
         ),
       ],
@@ -35,8 +50,11 @@ class InformationCard extends StatelessWidget {
     Key? key,
     this.crossAxisCount = 5,
     this.childAspectRatio = 1,
+    required this.tasks,
+
   }) : super(key: key);
 
+  final List<DailyInfoModel> tasks;
   final int crossAxisCount;
   final double childAspectRatio;
 
@@ -45,7 +63,7 @@ class InformationCard extends StatelessWidget {
     return GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: dailyDatas.length,
+      itemCount: tasks.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: defaultPadding,
@@ -53,7 +71,7 @@ class InformationCard extends StatelessWidget {
         childAspectRatio: childAspectRatio,
       ),
       itemBuilder: (context, index) =>
-          MiniInformationWidget(dailyData: dailyDatas[index]),
+          MiniInformationWidget(dailyData: tasks[index]),
     );
   }
 }
@@ -158,7 +176,11 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 ),
               ),
               onTap: () {
-                _toggle();
+                // _toggle();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Register',)),
+                );
               }),
           SizedBox(
             height: 8,

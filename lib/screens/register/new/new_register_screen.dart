@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/register/register_screen.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
+import '../../../models/registration/Registration.dart';
 import '../../../responsive.dart';
 
+import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import './components/mini_information_card.dart';
 
@@ -42,13 +45,20 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   int _value = 1;
 
-
-
-
-
   List persons = [];
   List original = [];
+
+
+
   TextEditingController txtQuery = new TextEditingController();
+
+
+  late String director1_country;
+  late String director1_city;
+  late String directorLastName;
+  late String director1_street;
+  late String directorName;
+  late String companyName;
 
   void loadData() async {
     String jsonStr = await rootBundle.loadString('assets/persons.json');
@@ -205,6 +215,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                companyName = value!;
               },
               validator: (String? value) {
                 return (value != null && value.contains('@'))
@@ -212,7 +223,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     : null;
               },
 
-              topLabel: "First Name",
+              topLabel: "Company Name",
 
               hintText: "Enter First Name",
               // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -227,6 +238,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                directorName = value!;
               },
               validator: (String? value) {
                 return (value != null && value.contains('@'))
@@ -234,7 +246,31 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     : null;
               },
 
-              topLabel: "Last Name",
+              topLabel: "First Director First Name",
+
+              hintText: "Enter First Name",
+              // prefixIcon: FlutterIcons.chevron_left_fea,
+            ),
+            SizedBox(height: 8.0),
+            InputWidget(
+              keyboardType: TextInputType.text,
+              onSaved: (String? value) {
+                // This optional block of code can be used to run
+                // code when the user saves the form.
+              },
+              onChanged: (String? value) {
+                // This optional block of code can be used to run
+                // code when the user saves the form.
+                directorLastName = value!;
+
+              },
+              validator: (String? value) {
+                return (value != null && value.contains('@'))
+                    ? 'Do not use the @ char.'
+                    : null;
+              },
+
+              topLabel: "First Director Last Name",
 
               hintText: "Enter Last Name",
               // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -249,6 +285,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                director1_street = value!;
+
               },
               validator: (String? value) {
                 return (value != null && value.contains('@'))
@@ -256,9 +294,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     : null;
               },
 
-              topLabel: "Company Name",
+              topLabel: "Street",
 
-              hintText: "Enter Name",
+              hintText: "Enter Street Address",
               // prefixIcon: FlutterIcons.chevron_left_fea,
             ),
             SizedBox(height: 8.0),
@@ -271,6 +309,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                director1_city = value!;
+
               },
               validator: (String? value) {
                 return (value != null && value.contains('@'))
@@ -278,9 +318,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     : null;
               },
 
-              topLabel: "Address",
+              topLabel: "City",
 
-              hintText: "Enter Address Name",
+              hintText: "Enter City Name",
               // prefixIcon: FlutterIcons.chevron_left_fea,
             ),
             SizedBox(height: 8.0),
@@ -293,6 +333,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                director1_country = value!;
+
               },
               validator: (String? value) {
                 return (value != null && value.contains('@'))
@@ -300,42 +342,43 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     : null;
               },
 
-              topLabel: "Email",
+              topLabel: "Country",
 
-              hintText: "Enter E-mail",
+              hintText: "Enter Country",
               // prefixIcon: FlutterIcons.chevron_left_fea,
             ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              topLabel: "Field",
-              obscureText: true,
-              hintText: "Field",
-              onSaved: (String? uPassword) {},
-              onChanged: (String? value) {},
-              validator: (String? value) {},
-            ),
+
             SizedBox(height: 24.0),
             AppButton(
               type: ButtonType.PRIMARY,
               text: "Proceed",
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
+
+                var register = {
+                  "companyName": companyName,
+                  "directorName": directorName,
+                  "director1": "wii",
+                  "director1_street": director1_street,
+                  "director1_city": director1_city,
+                  "director1_country": director1_country,
+                  "directorLastName": directorLastName,
+                };
+                Registration registration =  Registration.fromJson(register);
+                print(registration.directorLastName);
+                generateRegister(registration);
               },
             ),
             SizedBox(height: 24.0),
-            AppButton(
-              type: ButtonType.PRIMARY,
-              text: "Back",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
-                );
-              },
-            ),
+            // AppButton(
+            //   type: ButtonType.PRIMARY,
+            //   text: "Back",
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => DashboardScreen()),
+            //     );
+            //   },
+            // ),
             SizedBox(height: 24.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

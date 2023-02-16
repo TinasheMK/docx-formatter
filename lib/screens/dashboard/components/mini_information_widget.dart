@@ -4,11 +4,16 @@ import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../responsive.dart';
+import '../../forms/input_form.dart';
+import '../../forms/new_task.dart';
+
 class MiniInformationWidget extends StatefulWidget {
   const MiniInformationWidget({
     Key? key,
     required this.dailyData,
   }) : super(key: key);
+
   final DailyInfoModel dailyData;
 
   @override
@@ -47,34 +52,58 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   size: 18,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 12.0),
-                child: DropdownButton(
-                  icon: Icon(Icons.more_vert, size: 18),
-                  underline: SizedBox(),
-                  style: Theme.of(context).textTheme.button,
-                  value: _value,
-                  items: [
-                    DropdownMenuItem(
-                      child: Text("Options"),
-                      value: 1,
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                        child: Container(
+                          padding: EdgeInsets.all(defaultPadding * 0.75),
+                          height: 40,
+                          width: 55,
+                          decoration: BoxDecoration(
+                            color: widget.dailyData.color!.withOpacity(0.1),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Text(
+                            "New",
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(new MaterialPageRoute<Null>(
+                              builder: (BuildContext context) {
+                                return new NewTask(dailyData: widget.dailyData,);
+                              },
+                              fullscreenDialog: true));
+                        }
                     ),
-                    DropdownMenuItem(
-                      child: Text("New"),
-                      value: 2,
+                    SizedBox(
+                      width: 4,
                     ),
-                    DropdownMenuItem(
-                      child: Text("View"),
-                      value: 3,
+                    GestureDetector(
+                        child: Container(
+                          padding: EdgeInsets.all(defaultPadding * 0.75),
+                          height: 40,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: widget.dailyData.color!.withOpacity(0.1),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Text(
+                            "View",
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(new MaterialPageRoute<Null>(
+                              builder: (BuildContext context) {
+                                return new NewTask(dailyData: widget.dailyData,);
+                              },
+                              fullscreenDialog: true));
+                        }
                     ),
-                  ],
-                  onChanged: (int? value) {
-                    setState(() {
-                      _value = value!;
-                    });
-                  },
-                ),
+                    ]
               ),
+
             ],
           ),
           Row(

@@ -4,14 +4,21 @@ import 'package:flutter/material.dart';
 
 import '../../models/daily_info_model.dart';
 
-class FormMaterial extends StatefulWidget {
+class NewTask extends StatefulWidget {
+  const NewTask({
+    Key? key,
+    required this.dailyData,
+  }) : super(key: key);
+
+  final DailyInfoModel dailyData;
+
   @override
-  _FormMaterialState createState() => _FormMaterialState();
+  _NewTaskState createState() => _NewTaskState();
 
 
 }
 
-class _FormMaterialState extends State<FormMaterial> {
+class _NewTaskState extends State<NewTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +38,11 @@ class _FormMaterialState extends State<FormMaterial> {
                     Center(
                       child: Text("What do you want to add? Select from below."),
                     ),
-                    SelectionSection(tasks: deeds,),
+                    widget.dailyData.title=="DEEDS"?SelectionSection(tasks: deeds,):
+                    widget.dailyData.title=="ZIMRA"?SelectionSection(tasks: zimras,):
+                    widget.dailyData.title=="PRAZ"?SelectionSection(tasks: prazs,):
+                    widget.dailyData.title=="CLIENT"?SelectionSection(tasks: clients,):
+                    SelectionSection(tasks: deeds),
                   ],
                 )),
           ),

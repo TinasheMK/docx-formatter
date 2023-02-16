@@ -1,23 +1,17 @@
 import 'dart:io';
 
 import 'package:docx_template/docx_template.dart';
-import 'package:flutter/services.dart';
 
 ///
 /// Read file template.docx, produce it and save
 ///
-void generateRegister() async {
-  // final f = File("assets/tempates/template.docx");
-  // final docx = await DocxTemplate.fromBytes(await f.readAsBytes());
+void generateFromTemplate() async {
+  final f = File("assets/templates/template.docx");
+  final docx = await DocxTemplate.fromBytes(await f.readAsBytes());
 
-  final data = await rootBundle.load('assets/tempates/template.docx');
-  final bytes = data.buffer.asUint8List();
-
-  final docx = await DocxTemplate.fromBytes(bytes);
-
-  /* 
+  /*
     Or in the case of Flutter, you can use rootBundle.load, then get bytes
-    
+
     final data = await rootBundle.load('lib/assets/users.docx');
     final bytes = data.buffer.asUint8List();
 
@@ -25,10 +19,7 @@ void generateRegister() async {
   */
 
   // Load test image for inserting in docx
-  // final testFileContent = await File('assets/images/logo.png').readAsBytes();
-
-  final img = await rootBundle.load('assets/images/logo.png');
-  final testFileContent = img.buffer.asUint8List();
+  final testFileContent = await File('assets/images/mockup.png').readAsBytes();
 
   final listNormal = ['Foo', 'Bar', 'Baz'];
   final listBold = ['ooFPlop', 'raB', 'zaB'];
@@ -119,5 +110,4 @@ void generateRegister() async {
   final docGenerated = await docx.generate(content);
   final fileGenerated = File('generated.docx');
   if (docGenerated != null) await fileGenerated.writeAsBytes(docGenerated);
-  print("Document Generated Sucessfult");
 }
