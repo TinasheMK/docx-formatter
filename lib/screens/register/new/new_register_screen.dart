@@ -428,7 +428,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       if(!directors.asMap().containsKey(0)){
                         directors.add(Director.fromJson({}));
                       }
-                      directors[0].id = value;
+                      directors[0].nationalId = value;
 
                     },
                     validator: (String? value) {
@@ -623,7 +623,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorLastName = value!;
-                      secretaries[0].id = value;
+                      secretaries[0].nationalId = value;
 
 
                     },
@@ -941,7 +941,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     if(!directors.asMap().containsKey(number-1)){
                       directors.add(Director.fromJson({}));
                     }
-                    directors[number-1].id = value;
+                    directors[number-1].nationalId = value;
 
 
                   },

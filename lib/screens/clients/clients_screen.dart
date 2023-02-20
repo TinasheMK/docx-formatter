@@ -1,6 +1,10 @@
+import 'package:smart_admin_dashboard/models/registration/Company.dart';
+
 import '../../core/constants/color_constants.dart';
 import '../../../responsive.dart';
 
+import '../../main.dart';
+import '../../providers/client_provider.dart';
 import './components/mini_information_card.dart';
 
 import 'package:smart_admin_dashboard/screens/register/components/recent_forums.dart';
@@ -11,6 +15,11 @@ import 'package:flutter/material.dart';
 import 'components/header.dart';
 
 class ClientsScreen extends StatelessWidget {
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

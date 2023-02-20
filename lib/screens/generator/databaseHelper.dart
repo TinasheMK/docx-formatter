@@ -39,12 +39,14 @@ class DatabaseHelper {
             name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             national_id TEXT NOT NULL,
+            nationality TEXT,
             street TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             particulars TEXT,
             incDate TEXT,
-            email TEXT
+            email TEXT,
+            company_id INTEGER NOT NULL
           )
           ''');
 
@@ -54,12 +56,14 @@ class DatabaseHelper {
             name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             national_id TEXT NOT NULL,
+            nationality TEXT,
             street TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             particulars TEXT,
             incDate TEXT,
-            email TEXT           
+            email TEXT,
+            company_id INTEGER NOT NULL           
           )
           ''');
   }

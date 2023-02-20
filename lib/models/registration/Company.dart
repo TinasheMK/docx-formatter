@@ -6,6 +6,7 @@ import '../../main.dart';
 import '../../screens/generator/databaseHelper.dart';
 
 class Company {
+  int? id;
   String? companyName;
   String? street;
   String? city;
@@ -21,6 +22,7 @@ class Company {
         this.country,
         this.directors,
         this.secretaries,
+        this.id
       );
 
  Company.fromJson(Map<String, dynamic> json) {
@@ -35,7 +37,7 @@ class Company {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-
+    data['id'] = this.id;
     data['companyName'] = this.companyName;
     data['street'] = this.street;
     data['city'] = this.city;
@@ -48,43 +50,56 @@ class Company {
 
   Future<void> save() async {
     Map<String, dynamic> row = {
-      "name": "this.companyName",
-      "street": "this.street",
-      "city": "this.city",
-      "country": "this.country",
+      "name": this.companyName,
+      "street": this.street,
+      "city": this.city,
+      "country": this.country,
     };
     final id = await dbHelper.insert("company", row);
+    this.id = id;
+    var dirs = this.directors;
+    var secs = this.secretaries;
+
+    for(int i=0; i<30; i++){{
+      try {
+        dirs?[i]?.saveAndAttach(id);
+        secs?[i]?.saveAndAttach(id);
+      }catch(err) {}
+
+      }
+    }
+
+
     debugPrint('inserted company row id: $id');
   }
-}
 
-//
-// void _query() async {
-//   final allRows = await dbHelper.queryAllRows();
-//   debugPrint('query all rows:');
-//   for (final row in allRows) {
-//     debugPrint(row.toString());
-//   }
-// }
-//
-// void _update() async {
-//   // row to update
-//   Map<String, dynamic> row = {
-//     DatabaseHelper.columnId: 1,
-//     DatabaseHelper.columnName: 'Mary',
-//     DatabaseHelper.columnAge: 32
-//   };
-//   final rowsAffected = await dbHelper.update(row);
-//   debugPrint('updated $rowsAffected row(s)');
-// }
-//
-// void _delete() async {
-//   // Assuming that the number of rows is the id for the last row.
-//   final id = await dbHelper.queryRowCount();
-//   final rowsDeleted = await dbHelper.delete(id);
-//   debugPrint('deleted $rowsDeleted row(s): row $id');
-// }
-//
-//
+
+  Future<void> query() async {
+    final allRows = await dbHelper.queryAllRows('company');
+    debugPrint('query all rows:');
+    for (final row in allRows) {
+      debugPrint(row.toString());
+    }
+  }
+
+  void update() async {
+    // row to update
+    Map<String, dynamic> row = {
+      "name": this.companyName,
+      "street": this.street,
+      "city": this.city,
+      "country": this.country,
+    };
+    final rowsAffected = await dbHelper.update('company',row);
+    debugPrint('updated $rowsAffected row(s)');
+  }
+
+  void delete() async {
+    // Assuming that the number of rows is the id for the last row.
+    // final id = await dbHelper.queryRowCount('company');
+    final rowsDeleted = await dbHelper.delete('company',this.id!);
+    debugPrint('deleted $rowsDeleted row(s): row $id');
+  }
+}
 
 
