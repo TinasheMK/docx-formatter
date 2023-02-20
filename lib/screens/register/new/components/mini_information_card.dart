@@ -11,9 +11,12 @@ import 'package:smart_admin_dashboard/screens/register/register_home_screen.dart
 // import '../new/new_register_screen.dart';
 
 class MiniInformation extends StatelessWidget {
+
+
   const MiniInformation({
-    Key? key,
+    Key? key,required this.title
   }) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class MiniInformation extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text("New CR6 Doc", style: TextStyle(fontSize: 35, color: Colors.white) ),
+            Text("New "+title, style: TextStyle(fontSize: 35, color: Colors.white) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,

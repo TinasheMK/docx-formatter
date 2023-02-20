@@ -6,6 +6,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 class DailyInfoModel {
   IconData? icon;
   String? title;
+  String? code;
   String? totalStorage;
   int? volumeData;
   int? percentage;
@@ -16,6 +17,7 @@ class DailyInfoModel {
   DailyInfoModel({
     this.icon,
     this.title,
+    this.code,
     this.totalStorage,
     this.volumeData,
     this.percentage,
@@ -28,6 +30,7 @@ class DailyInfoModel {
     title = json['title'];
     volumeData = json['volumeData'];
     icon = json['icon'];
+    code = json['code'];
     totalStorage = json['totalStorage'];
     color = json['color'];
     percentage = json['percentage'];
@@ -40,6 +43,7 @@ class DailyInfoModel {
     data['title'] = this.title;
     data['volumeData'] = this.volumeData;
     data['icon'] = this.icon;
+    data['code'] = this.code;
     data['totalStorage'] = this.totalStorage;
     data['color'] = this.color;
     data['percentage'] = this.percentage;
@@ -72,6 +76,7 @@ var dailyData = [
 
   {
     "title": "DEEDS",
+    "code": "deed",
     "volumeData": 1328,
     "icon": FlutterIcons.message1_ant,
     "totalStorage": "+ %5",
@@ -115,6 +120,7 @@ var dailyData = [
   },
   {
     "title": "ZIMRA",
+    "code": "zimra",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
     "totalStorage": "+ %8",
@@ -158,6 +164,7 @@ var dailyData = [
   },
   {
     "title": "PRAZ",
+    "code": "praz",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
     "totalStorage": "+ %8",
@@ -201,6 +208,7 @@ var dailyData = [
   },
   {
     "title": "CLIENT",
+    "code": "client",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
     "totalStorage": "+ %20",
@@ -247,6 +255,7 @@ var dailyData = [
   },
   {
     "title": "OTHER",
+    "code": "other",
     "volumeData": 5328,
     "icon": FlutterIcons.bell_faw5s,
     "totalStorage": "- %5",
@@ -310,6 +319,7 @@ var deed = [
 
   {
     "title": "Company Registration",
+    "code": "reg",
     "volumeData": 1328,
     "icon": FlutterIcons.message1_ant,
     "totalStorage": "+ %5",
@@ -353,6 +363,7 @@ var deed = [
   },
   {
     "title": "CD (CR6)",
+    "code": "cr6",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
     "totalStorage": "+ %8",
@@ -396,6 +407,7 @@ var deed = [
   },
   {
     "title": "CA (CR5)",
+    "code": "cr5",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
     "totalStorage": "+ %8",
@@ -439,6 +451,7 @@ var deed = [
   },
   {
     "title": "Allo (CR11)",
+    "code": "cr11",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
     "totalStorage": "+ %20",
@@ -485,6 +498,7 @@ var deed = [
   },
   {
     "title": "Trading Name (CR3)",
+    "code": "cr3",
     "volumeData": 5328,
     "icon": FlutterIcons.bell_faw5s,
     "totalStorage": "- %5",
@@ -528,6 +542,7 @@ var deed = [
   },
   {
     "title": "Annual Returns",
+    "code": "returns",
     "volumeData": 5328,
     "icon": FlutterIcons.bell_faw5s,
     "totalStorage": "- %5",

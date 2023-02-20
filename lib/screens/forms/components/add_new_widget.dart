@@ -179,7 +179,8 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 // _toggle();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Register',)),
+                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: widget.dailyData.title! , code: widget.dailyData.code != null?
+                  widget.dailyData.code!:"reg")),
                 );
               }),
           SizedBox(

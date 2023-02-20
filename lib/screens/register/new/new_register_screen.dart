@@ -27,8 +27,10 @@ import 'components/dropdown_search.dart';
 
 
 class NewRegisterScreen extends StatefulWidget {
-  NewRegisterScreen({required this.title});
+  NewRegisterScreen({required this.title, required this.code});
   final String title;
+  final String code;
+
   @override
   _NewRegisterScreenState createState() => _NewRegisterScreenState();
 }
@@ -118,6 +120,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   @override
   void initState() {
     super.initState();
+
     loadData();
     _animationController = AnimationController(
       vsync: this,
@@ -134,6 +137,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    print(widget.code);
     return SafeArea(
       child: SingleChildScrollView(
         //padding: EdgeInsets.all(defaultPadding),
@@ -143,7 +147,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(),
+              MiniInformation(title: widget.title,),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -782,7 +786,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 await company.save();
                 print(company.toJson());
 
-                cr6FormGenerator(company);
+                cr6FormGenerator(company, widget.code);
               },
             ),
             SizedBox(height: 24.0),
