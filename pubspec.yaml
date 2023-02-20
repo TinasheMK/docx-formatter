@@ -48,6 +48,7 @@ dependencies:
   docx_template: ^0.3.2
   sqflite: ^2.2.4+1
   path_provider: ^2.0.12
+  sqflite_common_ffi: ^2.2.1+1
 
 dependency_overrides:
   archive: 3.3.0

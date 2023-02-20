@@ -6,12 +6,6 @@ class DatabaseHelper {
   static const _databaseName = "database.db";
   static const _databaseVersion = 1;
 
-  // static const table = 'company';
-
-  static const columnId = 'id';
-  static const columnName = 'name';
-  static const columnAge = 'age';
-
 
 
   late Database _db;
@@ -36,14 +30,6 @@ class DatabaseHelper {
             street TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL
-          )
-          ''');
-
-    await db.execute('''
-          CREATE TABLE dog (
-            $columnId INTEGER PRIMARY KEY,
-            $columnName TEXT NOT NULL,
-            $columnAge INTEGER NOT NULL
           )
           ''');
 
@@ -84,8 +70,6 @@ class DatabaseHelper {
   // and the value is the column value. The return value is the id of the
   // inserted row.
   Future<int> insert(String table, Map<String, dynamic> row) async {
-    print(table);
-    print(row);
     return await _db.insert(table, row);
   }
 
@@ -105,7 +89,7 @@ class DatabaseHelper {
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
   Future<int> update(String table, Map<String, dynamic> row) async {
-    int id = row[columnId];
+    int id = row['id'];
     return await _db.update(
       table,
       row,
@@ -116,7 +100,7 @@ class DatabaseHelper {
 
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
-  Future<int> delete(String table, int id) async {
+  Future<int> delete(String table,int id) async {
     return await _db.delete(
       table,
       where: 'id = ?',

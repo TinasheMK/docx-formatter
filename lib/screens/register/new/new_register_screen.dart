@@ -1,15 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:smart_admin_dashboard/models/registration/Secretary.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/register/register_screen.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../models/registration/Registration.dart';
+import '../../../models/registration/Director.dart';
+import '../../../models/registration/Company.dart';
 import '../../../responsive.dart';
 
+import '../../generator/CR6_form_generator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import './components/mini_information_card.dart';
@@ -45,26 +48,28 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   int _value = 1;
 
+  int _directors = 2;
+
   List persons = [];
   List original = [];
 
+  List<Director> directors = [];
+  List<Secretary> secretaries = [Secretary.fromJson({})];
 
 
   TextEditingController txtQuery = new TextEditingController();
 
 
-  late String director1_country;
-  late String director1_city;
-  late String directorLastName;
-  late String director1_street;
-  late String directorName;
+  late String country;
+  late String city;
+  late String street;
   late String companyName;
 
   void loadData() async {
-    String jsonStr = await rootBundle.loadString('assets/persons.json');
-    var json = jsonDecode(jsonStr);
-    persons = json;
-    original = json;
+    // String jsonStr = await rootBundle.loadString('assets/persons.json');
+    // var json = jsonDecode(jsonStr);
+    // persons = json;
+    // original = json;
     setState(() {});
   }
 
@@ -89,6 +94,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     setState(() {});
   }
 
+  void _addDirector() {
+    setState(() {
+      _directors += 1;
+    });
+  }
+
+  void _removeDirector() {
+    setState(() {
+      if(_directors>1){
+        _directors -= 1;
+      }else{
+        _directors = 1;
+      }
+    });
+  }
+
 
 
 
@@ -102,6 +123,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       vsync: this,
       duration: const Duration(milliseconds: 750),
     );
+
   }
 
   @override
@@ -172,7 +194,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text( "Search Existing Clients", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                Text( "Search Existing Clients", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20, color: Colors.white),
                 ),
                 SizedBox(height: 10),
                 TextFormField(
@@ -186,7 +208,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     fillColor: secondaryColor,
                     suffixIcon: IconButton(
                       icon: Icon(Icons.clear, color: greenColor),
-                      onPressed: () {
+
+                        onPressed: () {
                         txtQuery.text = '';
                         search(txtQuery.text);
                       },
@@ -203,169 +226,563 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
             SizedBox(height: 8.0),
 
-            Text( "New Client", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            Text( "New Client", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+            ),
+            Row(
+              children: [
+
+              ],
             ),
             SizedBox(height: 16.0),
-            InputWidget(
-              keyboardType: TextInputType.text,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                companyName = value!;
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
 
-              topLabel: "Company Name",
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      companyName = value!;
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
 
-              hintText: "Enter First Name",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
+                    topLabel: "Company Name",
+
+                    hintText: "Enter First Name",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      street = value!;
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Street",
+
+                    hintText: "Enter Street Address",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                )
+              ],
             ),
             SizedBox(height: 8.0),
-            InputWidget(
-              keyboardType: TextInputType.text,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                directorName = value!;
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      city = value!;
 
-              topLabel: "First Director First Name",
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
 
-              hintText: "Enter First Name",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              keyboardType: TextInputType.text,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                directorLastName = value!;
+                    topLabel: "City",
 
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
+                    hintText: "Enter City Name",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      country = value!;
 
-              topLabel: "First Director Last Name",
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
 
-              hintText: "Enter Last Name",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              keyboardType: TextInputType.text,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                director1_street = value!;
+                    topLabel: "Country",
 
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
-
-              topLabel: "Street",
-
-              hintText: "Enter Street Address",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              keyboardType: TextInputType.text,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                director1_city = value!;
-
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
-
-              topLabel: "City",
-
-              hintText: "Enter City Name",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              keyboardType: TextInputType.emailAddress,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                director1_country = value!;
-
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
-
-              topLabel: "Country",
-
-              hintText: "Enter Country",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
+                    hintText: "Enter Country",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                )
+              ],
             ),
 
-            SizedBox(height: 24.0),
+            SizedBox(height: 50.0),
+
+            //First Director
+            Text( "First Director Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].name = value;
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "First Director First Name",
+
+                    hintText: "Enter First Name",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].lastName = value;
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "First Director Last Name",
+
+                    hintText: "Enter Last Name",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].id = value;
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "First Director id",
+
+                    hintText: "Enter id",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorStreet = value!;
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].street = value;
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "First Director Street Address",
+
+                    hintText: "Enter Street Address",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorCity = value!;
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].city = value;
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "First Director City",
+
+                    hintText: "Enter City",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorCountry = value!;
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].country = value;
+
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "First Director Country",
+
+                    hintText: "Enter Country",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                )
+              ],
+            ),
+            //First Director Ends
+
+            SizedBox(height: 50.0),
+
+            //Secretary
+            Text( "Secretary Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorName = value!;
+                      secretaries[0].name = value;
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Secretary First Name",
+
+                    hintText: "Enter First Name",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorLastName = value!;
+                      secretaries[0].lastName = value;
+
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Secretary Last Name",
+
+                    hintText: "Enter Last Name",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorLastName = value!;
+                      secretaries[0].id = value;
+
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Secretary id",
+
+                    hintText: "Enter id",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorStreet = value!;
+                      secretaries[0].street = value;
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Secretary Street Address",
+
+                    hintText: "Enter Street Address",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorCity = value!;
+                      secretaries[0].city = value;
+
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Secretary City",
+
+                    hintText: "Enter City",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorCountry = value!;
+                      secretaries[0].country = value;
+
+
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+                    topLabel: "Secretary Country",
+
+                    hintText: "Enter Country",
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                )
+              ],
+            ),
+            //Secretary Ends
+
+
+            _directors>=2? _SecondDirector(context, 2):SizedBox(height:0),
+            _directors>=3? _SecondDirector(context, 3):SizedBox(height:0),
+            _directors>=4? _SecondDirector(context, 4):SizedBox(height:0),
+            _directors>=5? _SecondDirector(context, 5):SizedBox(height:0),
+            _directors>=6? _SecondDirector(context, 6):SizedBox(height:0),
+            _directors>=7? _SecondDirector(context, 7):SizedBox(height:0),
+            _directors>=8? _SecondDirector(context, 8):SizedBox(height:0),
+            _directors>=9? _SecondDirector(context, 9):SizedBox(height:0),
+            _directors>=10? _SecondDirector(context, 10):SizedBox(height:0),
+            _directors>=11? _SecondDirector(context, 11):SizedBox(height:0),
+            _directors>=12? _SecondDirector(context, 12):SizedBox(height:0),
+            _directors>=13? _SecondDirector(context, 13):SizedBox(height:0),
+
+
+            SizedBox(height: 40.0),
+            AppButton(
+              type: ButtonType.PLAIN,
+              text: "Add Director",
+              onPressed: () {
+                _addDirector();
+              },
+            ),
+            SizedBox(height: 40.0),
             AppButton(
               type: ButtonType.PRIMARY,
               text: "Proceed",
-              onPressed: () {
+              onPressed: () async {
+
+                // List<DailyInfoModel> dailyDatas =
+                // dailyData.map((item) => DailyInfoModel.fromJson(item)).toList();
+
 
                 var register = {
-                  "companyName": companyName,
-                  "directorName": directorName,
-                  "director1": "wii",
-                  "director1_street": director1_street,
-                  "director1_city": director1_city,
-                  "director1_country": director1_country,
-                  "directorLastName": directorLastName,
+                  "companyName":companyName,
+                  "street":street,
+                  "city":city,
+                  "country":country,
                 };
-                Registration registration =  Registration.fromJson(register);
-                print(registration.directorLastName);
-                generateRegister(registration);
+                Company company =  Company.fromJson(register);
+
+
+
+                company.directors = directors;
+                company.secretaries = secretaries;
+                await company.save();
+                print(company.toJson());
+
+                cr6FormGenerator(company);
               },
             ),
             SizedBox(height: 24.0),
@@ -380,24 +797,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             //   },
             // ),
             SizedBox(height: 24.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  // children: <Widget>[
-                  //   Checkbox(
-                  //     value: isChecked,
-                  //     onChanged: (bool? value) {
-                  //       setState(() {
-                  //         isChecked = value!;
-                  //       });
-                  //     },
-                  //   ),
-                  //   Text("Remember Me")
-                  // ],
-                ),
-              ],
-            ),
             SizedBox(height: 24.0),
             Center(
               child: Wrap(
@@ -437,6 +836,236 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     );
   }
 
+
+  Widget _SecondDirector(BuildContext context, int number) {
+    return
+      Column(
+        children:[
+          SizedBox(height: 50.0),
+          Row(
+            children: [
+              Text( "Director "+number.toString()+" Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+              ),
+              SizedBox(width: 100),
+              TextButton(
+                onPressed: () {
+                  _removeDirector();
+                  directors.removeAt(number-1);
+
+                },
+                child: Text("Remove Director",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        fontWeight: FontWeight.w400, color: Colors.redAccent)),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorName = value!;value
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Director.fromJson({}));
+                    }
+                    directors[number-1].name = value;
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director First Name",
+
+                  hintText: "Enter First Name",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorLastName = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Director.fromJson({}));
+                    }
+                    directors[number-1].lastName = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director Last Name",
+
+                  hintText: "Enter Last Name",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorLastName = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                      directors.add(Director.fromJson({}));
+                    }
+                    directors[number-1].id = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director id",
+
+                  hintText: "Enter id",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorStreet = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Director.fromJson({}));
+                    }
+                    directors[number-1].street = value;
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director Street Address",
+
+                  hintText: "Enter Street Address",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorCity = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Director.fromJson({}));
+                    }
+                    directors[number-1].city = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director City",
+
+                  hintText: "Enter City",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorCountry = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Director.fromJson({}));
+                    }
+                    directors[number-1].country = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director Country",
+
+                  hintText: "Enter Country",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 40.0),
+        ],
+
+      );
+  }
+
+
 }
 
 Widget _listView(persons) {
@@ -455,5 +1084,9 @@ Widget _listView(persons) {
         }),
   );
 }
+
+
+
+
 
 

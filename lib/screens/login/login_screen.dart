@@ -3,10 +3,15 @@ import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/core/widgets/input_widget.dart';
 import 'package:smart_admin_dashboard/screens/home/home_screen.dart';
 import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dart';
+import 'package:smart_admin_dashboard/screens/generator/data_store.dart';
 
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
+import '../generator/databaseHelper.dart';
+import '../generator/register_download_screen.dart';
 
+// final dbHelper = DatabaseHelper();
 class Login extends StatefulWidget {
   Login({required this.title});
   final String title;
@@ -308,7 +313,9 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   context,
                   MaterialPageRoute(builder: (context) => HomeScreen()),
                 );
-              },
+                // dataStore();
+                // _query();
+                },
             ),
             SizedBox(height: 24.0),
             Row(
@@ -328,7 +335,9 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    // _insert();
+                  },
                   child: Text(
                     "Forgot Password?",
                     textAlign: TextAlign.right,
@@ -378,3 +387,5 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     );
   }
 }
+
+

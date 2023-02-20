@@ -1,11 +1,28 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/init/provider_list.dart';
+import 'package:smart_admin_dashboard/screens/generator/databaseHelper.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'dart:io' show Platform;
+final dbHelper = DatabaseHelper();
 
-void main() {
+Future<void> main() async {
+  if (Platform.isWindows || Platform.isLinux) {
+    // Initialize FFI
+    sqfliteFfiInit();
+    // Change the default factory
+    databaseFactory = databaseFactoryFfi;
+  }
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // initialize the database
+  await dbHelper.init();
+
+
   runApp(MyApp());
 }
 
