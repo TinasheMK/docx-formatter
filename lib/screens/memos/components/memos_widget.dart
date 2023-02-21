@@ -4,17 +4,20 @@ import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/Memo.dart';
 import '../../register/new/new_register_home_screen.dart';
 import '../../register/new/new_register_screen.dart';
 
-class SelectionSection extends StatelessWidget {
-  const SelectionSection({
+class MemoSelectionSection extends StatelessWidget {
+  const MemoSelectionSection({
     Key? key,
-    required this.tasks,
+    required this.memos,
+    required this.callback
 
   }) : super(key: key);
 
-  final List<DailyInfoModel> tasks;
+  final Function(String, String) callback;
+  final List<Memo> memos;
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +33,17 @@ class SelectionSection extends StatelessWidget {
           mobile: InformationCard(
             crossAxisCount: _size.width < 650 ? 2 : 4,
             childAspectRatio: _size.width < 650 ? 1.2 : 1,
-            tasks: tasks,
+            memos: memos,
+            callback: callback
           ),
           tablet: InformationCard(
-            tasks: tasks,
+            memos: memos,
+            callback: callback
           ),
           desktop: InformationCard(
             childAspectRatio: _size.width < 1400 ? 1.1 : 1.3,
-            tasks: tasks,
+            memos: memos,
+            callback: callback
           ),
         ),
       ],
@@ -50,20 +56,22 @@ class InformationCard extends StatelessWidget {
     Key? key,
     this.crossAxisCount = 5,
     this.childAspectRatio = 1,
-    required this.tasks,
+    required this.memos,
+    required this.callback,
 
   }) : super(key: key);
 
-  final List<DailyInfoModel> tasks;
+  final List<Memo> memos;
   final int crossAxisCount;
   final double childAspectRatio;
+  final Function(String, String) callback;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: tasks.length,
+      itemCount: memos.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: defaultPadding,
@@ -71,7 +79,7 @@ class InformationCard extends StatelessWidget {
         childAspectRatio: childAspectRatio,
       ),
       itemBuilder: (context, index) =>
-          MiniInformationWidget(dailyData: tasks[index]),
+          MiniInformationWidget(memo: memos[index], callback:callback),
     );
   }
 }
@@ -79,9 +87,11 @@ class InformationCard extends StatelessWidget {
 class MiniInformationWidget extends StatefulWidget {
   const MiniInformationWidget({
     Key? key,
-    required this.dailyData,
+    required this.memo,
+    required this.callback
   }) : super(key: key);
-  final DailyInfoModel dailyData;
+  final Memo memo;
+  final Function(String, String) callback;
 
   @override
   _MiniInformationWidgetState createState() => _MiniInformationWidgetState();
@@ -126,7 +136,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(
@@ -141,12 +151,12 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 height: 40,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: widget.dailyData.color!.withOpacity(0.1),
+                  color: Colors.lightBlue!.withOpacity(0.1),
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Icon(
-                  widget.dailyData.icon,
-                  color: widget.dailyData.color,
+                  widget.memo.icon,
+                  color: Colors.lightBlue,
                   size: 18,
                 ),
               ),
@@ -161,7 +171,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${widget.dailyData.title!}",
+                      "${widget.memo.title!}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -170,96 +180,31 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     Visibility(
                       visible: !_visible,
-                      child: Icon(Icons.create, size: 18),
+                      child: widget.memo.set=="set"?Icon(Icons.backspace_outlined, size: 18):Icon(Icons.add, size: 18),
                     )
                   ],
                 ),
               ),
               onTap: () {
                 // _toggle();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: widget.dailyData.title! , code: widget.dailyData.code != null?
-                  widget.dailyData.code!:"reg")),
-                );
-              }),
-          SizedBox(
-            height: 8,
-          ),
-          Visibility(
-            visible: _visible,
-            child: new Container(
-              child: new Container(
-                padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 10.0),
-                child: new Material(
-                  elevation: 10.0,
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: new ListTile(
-                    title: new TextField(
-                      controller: _controller,
-                      decoration: new InputDecoration(
-                        hintText: 'Enter Name',
-                        border: InputBorder.none,
-                      ),
-                      onChanged: _onChanged,
-                    ),
-                    trailing: new IconButton(
-                      icon: new Icon(Icons.cancel),
-                      onPressed: () {
-                        _controller.clear();
-                        _toggle();
-                        status = false;
-                      },
-                    ),
-                  ),
-                ),
+                if(widget.memo.set=="set"){
+                  widget.callback(widget.memo.code!, "not");
+                  setState(() {
+                    widget.memo.set="not";
+                  });
+                }else{
+                  widget.callback(widget.memo.code!, "set");
+                  setState(() {
+                    widget.memo.set="set";
+                  });
+
+                }
+              }
               ),
-            ),
-          ),
-          Visibility(
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            visible: status,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0),
-              margin: EdgeInsets.only(top: 15),
-              child: Center(
-                child: AppButton(
-                  type: ButtonType.PRIMARY,
-                  text: "Start",
-                  onPressed: () {
-                    print('Button clicked..');
-                    _showDialog(context);
-                    _toggle();
-                    status = false;
-                  },
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
     );
   }
 
-  _showDialog(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Container(
-            child: Row(
-              children: [
-                      Icon(
-                        Icons.verified,
-                        color: bgColor,
-                      ),
-                      SizedBox(
-                        width: 25,
-                      ),
-                      Text('Please wait. Generating form to continue..'),
-              ],
-            )
-        )
-    )
-    );
-  }
 }

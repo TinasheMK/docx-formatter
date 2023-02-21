@@ -56,7 +56,8 @@ void generateFromTemplate() async {
         ]))
         ..add(ImageContent('img', testFileContent))
     ]))
-    ..add(ListContent("list", [
+    ..add(
+        ListContent("list", [
       TextContent("value", "Engine")
         ..add(ListContent("listnested", contentList)),
       TextContent("value", "Gearbox"),

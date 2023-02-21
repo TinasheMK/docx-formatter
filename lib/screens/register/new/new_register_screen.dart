@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:smart_admin_dashboard/models/registration/Secretary.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/register/register_screen.dart';
+import '../../../models/Memo.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
@@ -15,6 +16,7 @@ import '../../../responsive.dart';
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
+import '../../memos/memo_list_material.dart';
 import './components/mini_information_card.dart';
 
 import '../components/recent_forums.dart';
@@ -63,9 +65,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
   late String country;
+  String generatorResp = "";
   late String city;
   late String street;
   late String companyName;
+  List<String> memoItems = [];
 
   void loadData() async {
     // String jsonStr = await rootBundle.loadString('assets/persons.json');
@@ -114,6 +118,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
 
+  late int crossAxisCount;
+  late double childAspectRatio;
+  late List<Memo> memosSet = [];
 
 
 
@@ -135,9 +142,25 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    print(widget.code);
+    // print(widget.code);
+    final Size _size = MediaQuery.of(context).size;
+    crossAxisCount= _size.width < 650 ? 2 : 4;
+    childAspectRatio= _size.width < 650 ? 3 : 3;
+
+    memosSet = memoInits;
+
+    for( int i = 0 ; i < memos.length; i++ ) {
+      if(memos[i].set!="set"){
+        memosSet.removeWhere((element) => element.code == memos[i].code);
+        print(i);
+      }else if(memos.length==0){
+        memosSet.add(memos[1]);
+      }
+    }
+
     return SafeArea(
       child: SingleChildScrollView(
         //padding: EdgeInsets.all(defaultPadding),
@@ -183,6 +206,29 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   }
 
   Container _registerScreen(BuildContext context) {
+
+    callback(mem, action) {
+      if(action=="set"){
+        setState(() {
+          memoItems.add(mem);
+          print(memoItems);
+          memosSet.add(memos.where((element) => element.code ==mem).first);
+
+
+        });
+      }else{
+        setState(() {
+          memoItems.removeWhere((element) => element == mem);
+          memosSet.removeWhere((element) => element.code == mem);
+
+          print(memoItems);
+        });
+      }
+
+
+
+    }
+
     return Container(
       width: double.infinity,
       constraints: BoxConstraints(
@@ -753,15 +799,68 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             _directors>=13? _SecondDirector(context, 13):SizedBox(height:0),
 
 
+            SizedBox(height: 20.0),
+            Row(
+              children: [
+
+                ElevatedButton.icon(
+                icon: Icon(
+                  Icons.close,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
+                    primary: Colors.green),
+                onPressed: () {
+                  _addDirector();
+                },
+                label: Text("Add Director")),
+              ],),
             SizedBox(height: 40.0),
-            AppButton(
-              type: ButtonType.PLAIN,
-              text: "Add Director",
-              onPressed: () {
-                _addDirector();
-              },
+
+
+            memosSet.length >= 1 ?
+            GridView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: memosSet.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: defaultPadding,
+                    mainAxisSpacing: defaultPadding,
+                    childAspectRatio: childAspectRatio,
+                  ),
+                  itemBuilder: (context, index) => MiniMemo(memo: memosSet[index]),
+              )
+            :SizedBox(
+                height: 20.0,
+                child:
+                Text("Add Memorandum Items")
             ),
+            SizedBox(height: 15.0),
+
+            Row(
+              children: [
+
+                ElevatedButton.icon(
+                    icon: Icon(
+                      Icons.close,
+                      size: 14,
+                    ),
+                    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
+                        primary: Colors.blueAccent),
+                    onPressed: () {
+                      Navigator.of(context).push(new MaterialPageRoute<Null>(
+                          builder: (BuildContext context) {
+                            return new MemoListMaterial(callback: callback);
+                          },
+                          fullscreenDialog: true));
+                    },
+                    label: Text("Edit Memo")),
+              ],),
+
+
             SizedBox(height: 40.0),
+            generatorResp!=""?Text(generatorResp):SizedBox(),
             AppButton(
               type: ButtonType.PRIMARY,
               text: "Proceed",
@@ -783,10 +882,14 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 company.directors = directors;
                 company.secretaries = secretaries;
-                await company.save();
+                // await company.save();
                 print(company.toJson());
 
-                cr6FormGenerator(company, widget.code);
+                var response = await cr6FormGenerator(company, widget.code, memosSet);
+
+                setState(() {
+                  generatorResp = response;
+                });
               },
             ),
             SizedBox(height: 24.0),
@@ -1090,6 +1193,75 @@ Widget _listView(persons) {
 }
 
 
+
+
+
+class MiniMemo extends StatefulWidget {
+  const MiniMemo({
+    Key? key,
+    required this.memo
+  }) : super(key: key);
+  final Memo memo;
+
+  @override
+  _MiniMemoState createState() => _MiniMemoState();
+}
+
+class _MiniMemoState extends State<MiniMemo> {
+  bool _visible = false;
+
+
+  int charLength = 0;
+
+  bool status = false;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+              child: Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${widget.memo.title!}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Visibility(
+                      visible: !_visible,
+                      child: widget.memo.set=="set"?Icon(Icons.backspace_outlined, size: 18):Icon(Icons.add, size: 18),
+                    )
+                  ],
+                ),
+              ),
+              onTap: () {
+                // _toggle();
+
+              }
+          ),
+
+        ],
+      ),
+    );
+  }
+
+}
 
 
 
