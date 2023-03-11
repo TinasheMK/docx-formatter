@@ -21,7 +21,7 @@ class RecentUsers extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Recent Documents",
+            "Recent Invoices",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SingleChildScrollView(

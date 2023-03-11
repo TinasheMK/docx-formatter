@@ -243,380 +243,384 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
 
             SizedBox(height: 16.0),
            //Client and invoice details
+
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  child:
-                  Row(
-                    children:[
-                      Text( "Client Name: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                      Text( "Kanjan Solutions", style: TextStyle(color: Colors.white),
-                      ),
-                    ]
-                  ),
+                  child: Column( children: [
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                          children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "First Name: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:75),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "Last Name: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:75),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "Company Name: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:25),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "Email: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:118),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                  ],),
 
                 ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
                 Expanded(
-                  child:
-                  Row(
-                    children:[
-                      Text( "Invoice Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                      ),
-                      Text( "10/12/2023", style: TextStyle( color: Colors.white),
-                      ),
-                    ]
-                  ),
+                  child: Column( children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "Address: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:70),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "City: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:110),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "Country: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:70),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:
+                          Row(
+                              children:[
+                                Padding(
+                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
+                                    child: Text( "Phone Number: ", style: TextStyle(fontSize: 18, color: Colors.white),)
+                                ),
+
+                                SizedBox(width:5),
+                                SizedBox(
+                                  width:200,
+                                  child: InputWidget(
+                                    keyboardType: TextInputType.text,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                      // directorStreet = value!;
+                                      if(!directors.asMap().containsKey(0)){
+                                        directors.add(Director.fromJson({}));
+                                      }
+                                      directors[0].street = value;
+                                    },
+                                    validator: (String? value) {
+                                      return (value != null && value.contains('@'))
+                                          ? 'Do not use the @ char.'
+                                          : null;
+                                    },
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],),
+                  ],),
 
                 ),
               ],
+
             ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Due Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                        ),
-                        Text( "10/12/2023", style: TextStyle( color: Colors.white),
-                        ),
-                      ]
-                  ),
-
-                ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Total Due: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                        ),
-                        Text( "\$10", style: TextStyle( color: Colors.white),
-                        ),
-                      ]
-                  ),
-
-                ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Balance: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                        ),
-                        Text( "\$10", style: TextStyle( color: Colors.white),
-                        ),
-                      ]
-                  ),
-
-                ),
-              ],
-            ),
-            SizedBox(height: 50.0),
-
-            //First Director
-            Text( "Draft", style: TextStyle(fontSize: 30, color: Colors.white),
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Payment Method: ", style: TextStyle(color: Colors.white),
-                        ),
-                        Text( "Mail in Payment", style: TextStyle( fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ]
-                  ),
-
-                ),
-              ],
-            ),
-            SizedBox(width: 10.0),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].name = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-                  },
-                  icon: Icon(Icons.mail),
-                  label: Text(
-                    "Send Email",
-                  ),
-                ),
-
-              ],
-            ),
-            SizedBox(height: 16.0),
-
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-                  },
-                  icon: Icon(Icons.cancel),
-                  label: Text(
-                    "Mark Cancelled",
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-                  },
-                  icon: Icon(Icons.cancel_outlined),
-                  label: Text(
-                    "Mark Unpaid",
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height:20),
-            Container(
-              padding: EdgeInsets.all(defaultPadding),
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Invoice Items",
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  SingleChildScrollView(
-                    //scrollDirection: Axis.horizontal,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: DataTable(
-                      horizontalMargin: 0,
-                      columnSpacing: defaultPadding,
-                      columns: [
-                        DataColumn(
-                          label: Text("Unit"),
-                        ),
-                        DataColumn(
-                          label: Text("Description"),
-                        ),
-                        DataColumn(
-                          label: Text("Unit Price"),
-                        ),
-                        DataColumn(
-                          label: Text("Amount"),
-                        ),
-                        DataColumn(
-                          label: Text("Action"),
-                        ),
-                      ],
-                      rows: List.generate(
-                        recentUsers.length,
-                            (index) => recentUserDataRow(recentUsers[index], context),
-                      ),
-                    ),
-                ),
-              ),
-            ],
-          ),),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(child:SizedBox(width: 600.0)),
-                Text("Subtotal"),
-                SizedBox(width: 60.0),
-                Expanded(
-
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].street = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(child:SizedBox(width: 600.0)),
-                Text("Credit"),
-                SizedBox(width: 60.0),
-                Expanded(
-
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].street = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(child:SizedBox(width: 600.0)),
-                Text("Total Due"),
-                SizedBox(width: 60.0),
-                Expanded(
-
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].street = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-              ],
-            ),
-            SizedBox(height: 16.0),
-
+            SizedBox(height:50),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -638,211 +642,12 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                   },
                   icon: Icon(Icons.save),
                   label: Text(
-                    "Save Changes",
-                  ),
-                ),
-                SizedBox(width: 15,),
-
-
-
-
-
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-                  },
-                  icon: Icon(Icons.cancel_outlined),
-                  label: Text(
-                    "Mark Unpaid",
+                    "Add Client",
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 15.0),
 
-
-            Container(
-              padding: EdgeInsets.all(defaultPadding),
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Related Payments",
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  SingleChildScrollView(
-                    //scrollDirection: Axis.horizontal,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DataTable(
-                        horizontalMargin: 0,
-                        columnSpacing: defaultPadding,
-                        columns: [
-                          DataColumn(
-                            label: Text("Unit"),
-                          ),
-                          DataColumn(
-                            label: Text("Description"),
-                          ),
-                          DataColumn(
-                            label: Text("Unit Price"),
-                          ),
-                          DataColumn(
-                            label: Text("Amount"),
-                          ),
-                          DataColumn(
-                            label: Text("Action"),
-                          ),
-                        ],
-                        rows: List.generate(
-                          recentUsers.length,
-                              (index) => recentUserDataRow(recentUsers[index], context),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),),
-            //Secretary Ends
-
-
-
-            SizedBox(height: 20.0),
-            SizedBox(height: 40.0),
-
-
-            memosSet.length >= 1 ?
-            GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: memosSet.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: defaultPadding,
-                    mainAxisSpacing: defaultPadding,
-                    childAspectRatio: childAspectRatio,
-                  ),
-                  itemBuilder: (context, index) => MiniMemo(memo: memosSet[index]),
-              )
-            :SizedBox(
-                height: 20.0,
-                child:
-                Text("Add Memorandum Items")
-            ),
-            SizedBox(height: 15.0),
-
-            Row(
-              children: [
-
-                ElevatedButton.icon(
-                    icon: Icon(
-                      Icons.close,
-                      size: 14,
-                    ),
-                    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
-                        primary: Colors.blueAccent),
-                    onPressed: () {
-                      Navigator.of(context).push(new MaterialPageRoute<Null>(
-                          builder: (BuildContext context) {
-                            return new MemoListMaterial(callback: callback);
-                          },
-                          fullscreenDialog: true));
-                    },
-                    label: Text("Edit Memo")),
-              ],),
-
-
-            SizedBox(height: 40.0),
-            generatorResp!=""?Text(generatorResp):SizedBox(),
-            AppButton(
-              type: ButtonType.PRIMARY,
-              text: "Proceed",
-              onPressed: () async {
-
-                // List<DailyInfoModel> dailyDatas =
-                // dailyData.map((item) => DailyInfoModel.fromJson(item)).toList();
-
-
-                var register = {
-                  "companyName":companyName,
-                  "street":street,
-                  "city":city,
-                  "country":country,
-                };
-                Company company =  Company.fromJson(register);
-
-
-
-                company.directors = directors;
-                company.secretaries = secretaries;
-                // await company.save();
-                print(company.toJson());
-
-                var response = await cr6FormGenerator(company, widget.code, memosSet);
-
-                setState(() {
-                  generatorResp = response;
-                });
-              },
-            ),
-            SizedBox(height: 24.0),
-            // AppButton(
-            //   type: ButtonType.PRIMARY,
-            //   text: "Back",
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => DashboardScreen()),
-            //     );
-            //   },
-            // ),
-            SizedBox(height: 24.0),
-            SizedBox(height: 24.0),
-            Center(
-              child: Wrap(
-                runAlignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(
-                    "Proceed to register company.",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(fontWeight: FontWeight.w300),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     if (_isMoved) {
-                  //       _animationController!.reverse();
-                  //     } else {
-                  //       _animationController!.forward();
-                  //     }
-                  //     _isMoved = !_isMoved;
-                  //   },
-                  //   child: Text("Sign In",
-                  //       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                  //           fontWeight: FontWeight.w400, color: greenColor)),
-                  // )
-                ],
-              ),
-            ),
             // _listView(persons),
           ],
         ),

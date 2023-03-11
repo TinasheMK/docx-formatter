@@ -11,12 +11,14 @@ import 'dart:io' show Platform;
 final dbHelper = DatabaseHelper();
 
 Future<void> main() async {
-  if (Platform.isWindows || Platform.isLinux) {
-    // Initialize FFI
-    sqfliteFfiInit();
-    // Change the default factory
-    databaseFactory = databaseFactoryFfi;
-  }
+  try {
+    if (Platform.isWindows || Platform.isLinux) {
+      // Initialize FFI
+      sqfliteFfiInit();
+      // Change the default factory
+      databaseFactory = databaseFactoryFfi;
+    }
+  }catch(e){}
 
   WidgetsFlutterBinding.ensureInitialized();
   // initialize the database

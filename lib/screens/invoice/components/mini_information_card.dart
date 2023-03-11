@@ -20,8 +20,9 @@ class MiniInformation extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text( "Invoices", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
             SizedBox(
               width: 10,
             ),
@@ -44,7 +45,7 @@ class MiniInformation extends StatelessWidget {
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Add New Document",
+                "Add New Invoice",
               ),
             ),
           ],

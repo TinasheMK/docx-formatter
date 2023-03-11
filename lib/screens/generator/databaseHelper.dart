@@ -12,13 +12,15 @@ class DatabaseHelper {
 
   // this opens the database (and creates it if it doesn't exist)
   Future<void> init() async {
-    final documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, _databaseName);
-    _db = await openDatabase(
-      path,
-      version: _databaseVersion,
-      onCreate: _onCreate,
-    );
+    try {
+      final documentsDirectory = await getApplicationDocumentsDirectory();
+      final path = join(documentsDirectory.path, _databaseName);
+      _db = await openDatabase(
+        path,
+        version: _databaseVersion,
+        onCreate: _onCreate,
+      );
+    }catch(e){}
   }
 
   // SQL code to create the database table

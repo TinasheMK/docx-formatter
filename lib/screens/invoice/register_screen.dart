@@ -33,7 +33,9 @@ class RegisterScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        RecentUsers(),
+                        RecentDiscussions(),
+
+                        // RecentUsers(),
                         SizedBox(height: defaultPadding),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),

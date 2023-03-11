@@ -20,7 +20,7 @@ class RecentDiscussions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Clients",
+            "Recent Invoices",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(

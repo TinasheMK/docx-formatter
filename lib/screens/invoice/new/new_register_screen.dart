@@ -13,9 +13,12 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../models/recent_user_model.dart';
 import '../../../models/registration/Director.dart';
 import '../../../models/registration/Company.dart';
+import '../../../models/registration/Invoice.dart';
+import '../../../models/registration/InvoiceItem.dart';
 import '../../../responsive.dart';
 
 import '../../generator/CR6_form_generator.dart';
+import '../../generator/invoicegenerator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import '../../memos/memo_list_material.dart';
@@ -55,11 +58,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   int _value = 1;
 
   int _directors = 2;
+  int _invoiceitems = 1;
 
   List persons = [];
   List original = [];
 
   List<Director> directors = [];
+  List<InvoiceItem> invoiceitems = [];
   List<Secretary> secretaries = [Secretary.fromJson({})];
 
 
@@ -105,15 +110,16 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   void _addDirector() {
     setState(() {
       _directors += 1;
+      _invoiceitems += 1;
     });
   }
 
   void _removeDirector() {
     setState(() {
-      if(_directors>1){
-        _directors -= 1;
+      if(_invoiceitems>1){
+        _invoiceitems-= 1;
       }else{
-        _directors = 1;
+        _invoiceitems = 1;
       }
     });
   }
@@ -273,7 +279,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             SizedBox(height:10),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
@@ -327,166 +333,273 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
             SizedBox(height: 16.0),
+
            //Client and invoice details
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
+            Container(
+              padding: EdgeInsets.all(defaultPadding),
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Row(
-                    children:[
-                      Text( "Client Name: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:
+                        Row(
+                            children:[
+                              Text( "Client Name: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              ),
+                              Text( "Kanjan Solutions", style: TextStyle(color: Colors.white),
+                              ),
+                            ]
+                        ),
+
                       ),
-                      Text( "Kanjan Solutions", style: TextStyle(color: Colors.white),
+                    ],
+                  ),
+                  SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:
+                        Row(
+                            children:[
+                              Text( "Invoice Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              ),
+                              Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                              ),
+                            ]
+                        ),
+
                       ),
-                    ]
+                    ],
                   ),
-
-                ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
+                  SizedBox(height: 3),
                   Row(
-                    children:[
-                      Text( "Invoice Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:
+                        Row(
+                            children:[
+                              Text( "Due Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              ),
+                              Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                              ),
+                            ]
+                        ),
+
                       ),
-                      Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                    ],
+                  ),
+                  SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:
+                        Row(
+                            children:[
+                              Text( "Total Due: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              ),
+                              Text( "\$10", style: TextStyle( color: Colors.white),
+                              ),
+                            ]
+                        ),
+
                       ),
-                    ]
+                    ],
                   ),
-
-                ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
+                  SizedBox(height: 3),
                   Row(
-                      children:[
-                        Text( "Due Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:
+                        Row(
+                            children:[
+                              Text( "Balance: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              ),
+                              Text( "\$10", style: TextStyle( color: Colors.white),
+                              ),
+                            ]
                         ),
-                        Text( "10/12/2023", style: TextStyle( color: Colors.white),
-                        ),
-                      ]
-                  ),
 
-                ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Total Due: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                        ),
-                        Text( "\$10", style: TextStyle( color: Colors.white),
-                        ),
-                      ]
+                      ),
+                    ],
                   ),
+                  SizedBox(height: 25.0),
+                ],
+              ),),
 
-                ),
-              ],
-            ),
-            SizedBox(height: 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Balance: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                        ),
-                        Text( "\$10", style: TextStyle( color: Colors.white),
-                        ),
-                      ]
-                  ),
 
-                ),
-              ],
-            ),
-            SizedBox(height: 50.0),
 
             //First Director
-            Text( "Draft", style: TextStyle(fontSize: 30, color: Colors.white),
+            Center(
+              child: Text( "Draft", style: TextStyle(fontSize: 30, color: Colors.white),
+              ),
             ),
             SizedBox(height: 16.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  Row(
-                      children:[
-                        Text( "Payment Method: ", style: TextStyle(color: Colors.white),
-                        ),
-                        Text( "Mail in Payment", style: TextStyle( fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ]
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  Text( "Payment Method: ", style: TextStyle(color: Colors.white),
                   ),
-
-                ),
-              ],
+                  Text( "Mail in Payment", style: TextStyle( fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ]
             ),
-            SizedBox(width: 10.0),
+            SizedBox(height: 10.0),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].name = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                Container(
+                  margin: EdgeInsets.only(left: defaultPadding),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                    vertical: defaultPadding / 2,
                   ),
+                  decoration: BoxDecoration(
+                    color: secondaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: TextButton(
+                    child: Text("Invoice Created", style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                                title: Center(
+                                  child: Column(
+                                    children: [
+                                      Text("Select Notification Type"),
+                                    ],
+                                  ),
+                                ),
+                                content: Container(
+                                  color: secondaryColor,
+                                  height: 200,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(left: defaultPadding),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: defaultPadding,
+                                          vertical: defaultPadding / 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: secondaryColor,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          border: Border.all(color: Colors.white10),
+                                        ),
+                                        child: TextButton(
+                                          child: Text("Invoice Created", style: TextStyle(color: Colors.white)),
+                                          onPressed: () {
+                                          },
+                                          // Delete
+                                        ),
+
+                                      ),
+                                      SizedBox(height: 7,),
+                                      Container(
+                                        margin: EdgeInsets.only(left: defaultPadding),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: defaultPadding,
+                                          vertical: defaultPadding / 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: secondaryColor,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          border: Border.all(color: Colors.white10),
+                                        ),
+                                        child: TextButton(
+                                          child: Text("Invoice Modified", style: TextStyle(color: Colors.white)),
+                                          onPressed: () {
+                                          },
+                                          // Delete
+                                        ),
+
+                                      ),
+                                      SizedBox(height: 7,),
+
+                                      Container(
+                                        margin: EdgeInsets.only(left: defaultPadding),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: defaultPadding,
+                                          vertical: defaultPadding / 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: secondaryColor,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          border: Border.all(color: Colors.white10),
+                                        ),
+                                        child: TextButton(
+                                          child: Text("Invoice Overdue", style: TextStyle(color: Colors.white)),
+                                          onPressed: () {
+                                          },
+                                          // Delete
+                                        ),
+
+                                      ),
+
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton.icon(
+                                              icon: Icon(
+                                                Icons.close,
+                                                size: 14,
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Colors.grey),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              label: Text("Cancel")),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ));
+                          });
+                    },
+                    // Delete
+                  ),
+
                 ),
                 SizedBox(width: 16.0),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                SizedBox(
+                  // padding: EdgeInsets.only(left:0, top:25, right:0, bottom:0),
+                  child:ElevatedButton.icon(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: defaultPadding * 1.5,
+                        vertical:
+                        defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                      ),
                     ),
-                  ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-                  },
-                  icon: Icon(Icons.mail),
-                  label: Text(
-                    "Send Email",
-                  ),
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                      // );
+                    },
+                    icon: Icon(Icons.mail),
+                    label: Text(
+                      "Send Email",
+                    ),
+                  )
                 ),
 
               ],
@@ -595,8 +708,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Expanded(child:SizedBox(width: 600.0)),
                 Text("Subtotal"),
                 SizedBox(width: 60.0),
-                Expanded(
-
+                SizedBox(
+                  width: 150,
                   child:
                   InputWidget(
                     keyboardType: TextInputType.text,
@@ -632,8 +745,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Expanded(child:SizedBox(width: 600.0)),
                 Text("Credit"),
                 SizedBox(width: 60.0),
-                Expanded(
-
+                SizedBox(
+                  width: 150,
                   child:
                   InputWidget(
                     keyboardType: TextInputType.text,
@@ -669,8 +782,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Expanded(child:SizedBox(width: 600.0)),
                 Text("Total Due"),
                 SizedBox(width: 60.0),
-                Expanded(
-
+                SizedBox(
+                  width: 150,
                   child:
                   InputWidget(
                     keyboardType: TextInputType.text,
@@ -700,7 +813,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 SizedBox(width: 16.0),
               ],
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 10.0),
 
 
             Row(
@@ -715,11 +828,43 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                     ),
                   ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
+                  onPressed: () async {
+
+
+                    // var invoicevar = {
+                    //   "companyName":companyName,
+                    //   "street":street,
+                    //   "city":city,
+                    //   "country":country,
+                    // };
+                    var invoicevar = {
+                      "companyName":"Kanjan",
+                      "street":"street",
+                      "city":"city",
+                      "country":"country",
+                    };
+                    Invoice invoice =  Invoice.fromJson(invoicevar);
+
+                    var invoiceitem = {
+                      "companyName":"Kanjan",
+                      "street":"street",
+                      "city":"city",
+                      "country":"country",
+                    };
+                    InvoiceItem invoiceItem = InvoiceItem.fromJson(invoiceitem);
+
+
+                    // invoice.invoiceitems = invoiceitems;
+                    invoice.invoiceitems = [invoiceItem];
+                    invoice.secretaries = secretaries;
+                    // await company.save();
+                    print(invoice.toJson());
+
+                    var response = await invoiceGenerator(invoice, widget.code, memosSet);
+
+                    setState(() {
+                      generatorResp = response;
+                    });
                   },
                   icon: Icon(Icons.save),
                   label: Text(
@@ -868,6 +1013,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   "city":city,
                   "country":country,
                 };
+
                 Company company =  Company.fromJson(register);
 
 
@@ -1274,71 +1420,12 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
         Row(
           children: [
             TextButton(
-              child: Text('Add Row', style: TextStyle(color: greenColor)),
+              child: Icon(Icons.add),
               onPressed: () {},
             ),
-            SizedBox(
-              width: 6,
-            ),
             TextButton(
-              child: Text("Delete", style: TextStyle(color: Colors.redAccent)),
+              child: Icon(Icons.delete),
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (_) {
-                      return AlertDialog(
-                          title: Center(
-                            child: Column(
-                              children: [
-                                Icon(Icons.warning_outlined,
-                                    size: 36, color: Colors.red),
-                                SizedBox(height: 20),
-                                Text("Confirm Deletion"),
-                              ],
-                            ),
-                          ),
-                          content: Container(
-                            color: secondaryColor,
-                            height: 70,
-                            child: Column(
-                              children: [
-                                Text(
-                                    "Are you sure want to delete '${userInfo.name}'?"),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton.icon(
-                                        icon: Icon(
-                                          Icons.close,
-                                          size: 14,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.grey),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        label: Text("Cancel")),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    ElevatedButton.icon(
-                                        icon: Icon(
-                                          Icons.delete,
-                                          size: 14,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.red),
-                                        onPressed: () {},
-                                        label: Text("Delete"))
-                                  ],
-                                )
-                              ],
-                            ),
-                          ));
-                    });
               },
               // Delete
             ),

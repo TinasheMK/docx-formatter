@@ -2,6 +2,7 @@
 import '../../core/constants/color_constants.dart';
 import '../../../responsive.dart';
 import '../dashboard/components/recent_forums.dart';
+import '../dashboard/components/recent_users.dart';
 import './components/mini_information_card.dart';
 import './components/user_details_widget.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +37,9 @@ class ClientsScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        // RecentUsers(),
+                        RecentUsers(),
                         SizedBox(height: defaultPadding),
-                        RecentDiscussions(),
+                        // RecentDiscussions(),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
                         if (Responsive.isMobile(context)) UserDetailsWidget(),
