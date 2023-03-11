@@ -37,7 +37,7 @@ class MiniInformation extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Register', code: 'wiw',)),
+                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Invoice', code: 'invoice',)),
                 );
 
 

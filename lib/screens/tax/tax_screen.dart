@@ -1,13 +1,13 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 
-import 'package:smart_admin_dashboard/screens/register/components/mini_information_card.dart';
 
-import 'package:smart_admin_dashboard/screens/register/components/recent_forums.dart';
-import 'package:smart_admin_dashboard/screens/register/components/recent_users.dart';
-import 'package:smart_admin_dashboard/screens/register/components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../invoice/components/mini_information_card.dart';
+import '../invoice/components/recent_forums.dart';
+import '../invoice/components/recent_users copy.dart';
+import '../invoice/components/user_details_widget.dart';
 import 'components/header.dart';
 
 class TaxScreen extends StatelessWidget {

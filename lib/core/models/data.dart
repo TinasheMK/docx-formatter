@@ -23,7 +23,7 @@ class CalendarData {
 
 final List<CalendarData> calendarData = [
   CalendarData(
-    name: 'Tapmub Consultancy',
+    name: 'Invoicer',
     date: DateTime.now().add(Duration(days: -16, hours: 5)),
     position: "Registration",
     rating: '₽',

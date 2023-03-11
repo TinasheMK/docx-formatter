@@ -38,11 +38,11 @@ class _NewTaskState extends State<NewTask> {
                     Center(
                       child: Text("What do you want to add? Select from below."),
                     ),
-                    widget.dailyData.title=="DEEDS"?SelectionSection(tasks: deeds,):
+                    widget.dailyData.title=="DEEDS"?SelectionSection(tasks: billings,):
                     widget.dailyData.title=="ZIMRA"?SelectionSection(tasks: zimras,):
                     widget.dailyData.title=="PRAZ"?SelectionSection(tasks: prazs,):
                     widget.dailyData.title=="CLIENT"?SelectionSection(tasks: clients,):
-                    SelectionSection(tasks: deeds),
+                    SelectionSection(tasks: billings),
                   ],
                 )),
           ),

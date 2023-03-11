@@ -37,7 +37,7 @@ var slideData = [
   {
     "image": "assets/slides/background-1.jpeg",
     "kBackgroundColor": 0xFF2c614f,
-    "text": "Tapmub Consultancy!",
+    "text": "Invoicer",
     "altText": "You can access & track your services in real-time.",
     "bAltText": "Login To Continue",
     "productImage": "assets/images/mockup.png"
@@ -45,7 +45,7 @@ var slideData = [
   {
     "image": "assets/slides/background-2.jpeg",
     "kBackgroundColor": 0xFF8a1a4c,
-    "text": "Tapmub Consultancy!",
+    "text": "Invoicer",
     "altText": "You can access & track your services in real-time.",
     "bAltText": "Login To Continue",
     "productImage": "assets/images/mockup-2.png"
@@ -53,7 +53,7 @@ var slideData = [
   {
     "image": "assets/slides/background-3.jpeg",
     "kBackgroundColor": 0xFF0ab3ec,
-    "text": "Tapmub Consultancy!",
+    "text": "Invoicer",
     "altText": "You can access & track your services in real-time.",
     "bAltText": "Login To Continue",
     "productImage": "assets/images/mockup-3.png"

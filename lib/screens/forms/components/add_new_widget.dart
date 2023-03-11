@@ -4,8 +4,8 @@ import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
-import '../../register/new/new_register_home_screen.dart';
-import '../../register/new/new_register_screen.dart';
+import '../../invoice/new/new_register_home_screen.dart';
+import '../../invoice/new/new_register_screen.dart';
 
 class SelectionSection extends StatelessWidget {
   const SelectionSection({

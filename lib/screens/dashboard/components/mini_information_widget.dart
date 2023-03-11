@@ -60,13 +60,13 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                         child: Container(
                           padding: EdgeInsets.all(defaultPadding * 0.75),
                           height: 40,
-                          width: 55,
+                          width: 75,
                           decoration: BoxDecoration(
                             color: widget.dailyData.color!.withOpacity(0.1),
                             borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
                           child: Text(
-                            "New",
+                            "Actions",
                           ),
                         ),
                         onTap: () {
@@ -77,30 +77,30 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               fullscreenDialog: true));
                         }
                     ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.all(defaultPadding * 0.75),
-                          height: 40,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: widget.dailyData.color!.withOpacity(0.1),
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Text(
-                            "View",
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(new MaterialPageRoute<Null>(
-                              builder: (BuildContext context) {
-                                return new NewTask(dailyData: widget.dailyData,);
-                              },
-                              fullscreenDialog: true));
-                        }
-                    ),
+                    // SizedBox(
+                    //   width: 4,
+                    // ),
+                    // GestureDetector(
+                    //     child: Container(
+                    //       padding: EdgeInsets.all(defaultPadding * 0.75),
+                    //       height: 40,
+                    //       width: 60,
+                    //       decoration: BoxDecoration(
+                    //         color: widget.dailyData.color!.withOpacity(0.1),
+                    //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    //       ),
+                    //       child: Text(
+                    //         "View",
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       Navigator.of(context).push(new MaterialPageRoute<Null>(
+                    //           builder: (BuildContext context) {
+                    //             return new NewTask(dailyData: widget.dailyData,);
+                    //           },
+                    //           fullscreenDialog: true));
+                    //     }
+                    // ),
                     ]
               ),
 
@@ -114,9 +114,6 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(
-                height: 8,
-              ),
               // Container(
               //   child: LineChartWidget(
               //     colors: widget.dailyData.colors,
@@ -124,9 +121,6 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               //   ),
               // )
             ],
-          ),
-          SizedBox(
-            height: 8,
           ),
           ProgressLine(
             color: widget.dailyData.color!,

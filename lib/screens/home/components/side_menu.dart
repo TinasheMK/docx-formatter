@@ -6,8 +6,8 @@ import 'package:smart_admin_dashboard/screens/tax/tax_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/tax/tax_screen.dart';
 
 import '../../clients/clients_home_screen.dart';
-import '../../register/register_home_screen.dart';
-import '../../register/register_screen.dart';
+import '../../invoice/register_home_screen.dart';
+import '../../invoice/register_screen.dart';
 import '../home_screen.dart';
 
 class SideMenu extends StatelessWidget {
@@ -36,7 +36,7 @@ class SideMenu extends StatelessWidget {
                 SizedBox(
                   height: defaultPadding,
                 ),
-                Text("Tapmub Consultancy")
+                Text("Invoicer")
               ],
             )),
             DrawerListTile(
@@ -50,7 +50,7 @@ class SideMenu extends StatelessWidget {
               },
             ),
             DrawerListTile(
-              title: "Registration",
+              title: "Invoices",
               svgSrc: "assets/icons/menu_tran.svg",
               press: () {
                 Navigator.push(
@@ -60,7 +60,7 @@ class SideMenu extends StatelessWidget {
               },
             ),
             DrawerListTile(
-              title: "Tax Clearance",
+              title: "Quotes",
               svgSrc: "assets/icons/menu_task.svg",
               press: () {
                 Navigator.push(

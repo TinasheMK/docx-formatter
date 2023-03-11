@@ -31,7 +31,7 @@ class _FormMaterialState extends State<FormMaterial> {
                     Center(
                       child: Text("What do you want to add? Select from below."),
                     ),
-                    SelectionSection(tasks: deeds,),
+                    SelectionSection(tasks: billings,),
                   ],
                 )),
           ),

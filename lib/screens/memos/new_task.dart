@@ -38,7 +38,7 @@ class _NewTaskState extends State<NewTask> {
                     Center(
                       child: Text("What do you want to add? Select from below."),
                     ),
-                    SelectionSection(tasks: deeds),
+                    SelectionSection(tasks: billings),
                   ],
                 )),
           ),

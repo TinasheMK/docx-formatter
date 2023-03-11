@@ -56,8 +56,8 @@ class DailyInfoModel {
 List<DailyInfoModel> dailyDatas =
     dailyData.map((item) => DailyInfoModel.fromJson(item)).toList();
 
-List<DailyInfoModel> deeds =
-deed.map((item) => DailyInfoModel.fromJson(item)).toList();
+List<DailyInfoModel> billings =
+billing.map((item) => DailyInfoModel.fromJson(item)).toList();
 
 List<DailyInfoModel> prazs =
 praz.map((item) => DailyInfoModel.fromJson(item)).toList();
@@ -75,7 +75,7 @@ client.map((item) => DailyInfoModel.fromJson(item)).toList();
 var dailyData = [
 
   {
-    "title": "DEEDS",
+    "title": "BILLING",
     "code": "deed",
     "volumeData": 1328,
     "icon": FlutterIcons.message1_ant,
@@ -119,7 +119,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "ZIMRA",
+    "title": "CLIENTS",
     "code": "zimra",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
@@ -163,7 +163,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "PRAZ",
+    "title": "ORDERS",
     "code": "praz",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
@@ -207,7 +207,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "CLIENT",
+    "title": "REPORTS",
     "code": "client",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
@@ -253,72 +253,16 @@ var dailyData = [
       )
     ]
   },
-  {
-    "title": "OTHER",
-    "code": "other",
-    "volumeData": 5328,
-    "icon": FlutterIcons.bell_faw5s,
-    "totalStorage": "- %5",
-    "color": Color(0xFF00F260),
-    "percentage": 78,
-    "colors": [Color(0xff0575E6), Color(0xff00F260)],
-    "spots": [
-      FlSpot(
-        1,
-        1.3,
-      ),
-      FlSpot(
-        2,
-        1.0,
-      ),
-      FlSpot(
-        3,
-        1.8,
-      ),
-      FlSpot(
-        4,
-        1.5,
-      ),
-      FlSpot(
-        5,
-        1.0,
-      ),
-      FlSpot(
-        6,
-        2.2,
-      ),
-      FlSpot(
-        7,
-        1.8,
-      ),
-      FlSpot(
-        8,
-        1.5,
-      )
-    ]
-  },
 
 ];
 
 
 
-//final List<double> yValues = [
-//  2.3,
-//  1.8,
-//  1.9,
-//  1.5,
-//  1.0,
-//  2.2,
-//  1.8,
-//  1.5,
-//];
 
-
-
-var deed = [
+var billing = [
 
   {
-    "title": "Company Registration",
+    "title": "New Invoice",
     "code": "reg",
     "volumeData": 1328,
     "icon": FlutterIcons.message1_ant,
@@ -362,7 +306,7 @@ var deed = [
     ]
   },
   {
-    "title": "CD (CR6)",
+    "title": "Paid Invoices",
     "code": "cr6",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
@@ -406,7 +350,7 @@ var deed = [
     ]
   },
   {
-    "title": "CA (CR5)",
+    "title": "Draft Invoices",
     "code": "cr5",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
@@ -450,7 +394,7 @@ var deed = [
     ]
   },
   {
-    "title": "Allo (CR11)",
+    "title": "Unpaid Invoices",
     "code": "cr11",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
@@ -497,7 +441,7 @@ var deed = [
     ]
   },
   {
-    "title": "Trading Name (CR3)",
+    "title": "Overdue Invoices",
     "code": "cr3",
     "volumeData": 5328,
     "icon": FlutterIcons.bell_faw5s,
@@ -541,7 +485,51 @@ var deed = [
     ]
   },
   {
-    "title": "Annual Returns",
+    "title": "Cancelled Invoices",
+    "code": "returns",
+    "volumeData": 5328,
+    "icon": FlutterIcons.bell_faw5s,
+    "totalStorage": "- %5",
+    "color": Color(0xFF00F260),
+    "percentage": 78,
+    "colors": [Color(0xff0575E6), Color(0xff00F260)],
+    "spots": [
+      FlSpot(
+        1,
+        1.3,
+      ),
+      FlSpot(
+        2,
+        1.0,
+      ),
+      FlSpot(
+        3,
+        1.8,
+      ),
+      FlSpot(
+        4,
+        1.5,
+      ),
+      FlSpot(
+        5,
+        1.0,
+      ),
+      FlSpot(
+        6,
+        2.2,
+      ),
+      FlSpot(
+        7,
+        1.8,
+      ),
+      FlSpot(
+        8,
+        1.5,
+      )
+    ]
+  },
+  {
+    "title": "Refunded Invoices",
     "code": "returns",
     "volumeData": 5328,
     "icon": FlutterIcons.bell_faw5s,

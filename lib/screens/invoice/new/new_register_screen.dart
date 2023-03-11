@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_admin_dashboard/models/registration/Secretary.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
-import 'package:smart_admin_dashboard/screens/register/register_screen.dart';
+import '../../../core/utils/colorful_tag.dart';
 import '../../../models/Memo.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
+import '../../../models/recent_user_model.dart';
 import '../../../models/registration/Director.dart';
 import '../../../models/registration/Company.dart';
 import '../../../responsive.dart';
@@ -239,7 +241,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
 
-
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +260,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     suffixIcon: IconButton(
                       icon: Icon(Icons.clear, color: greenColor),
 
-                        onPressed: () {
+                      onPressed: () {
                         txtQuery.text = '';
                         search(txtQuery.text);
                       },
@@ -269,145 +270,178 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               ],
             ),
 
+            SizedBox(height:10),
 
-
-
-
-
-            SizedBox(height: 8.0),
-
-            Text( "New Client", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.send),
+                  label: Text(
+                    "Publish",
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.mail),
+                  label: Text(
+                    "Publish & Send Email",
+                  ),
+                ),
               ],
             ),
+
+
+
+
+
+
             SizedBox(height: 16.0),
-
+           //Client and invoice details
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      companyName = value!;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Company Name",
-
-                    hintText: "Enter First Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  Row(
+                    children:[
+                      Text( "Client Name: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      Text( "Kanjan Solutions", style: TextStyle(color: Colors.white),
+                      ),
+                    ]
                   ),
+
                 ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      street = value!;
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Street",
-
-                    hintText: "Enter Street Address",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
               ],
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: 3),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      city = value!;
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "City",
-
-                    hintText: "Enter City Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  Row(
+                    children:[
+                      Text( "Invoice Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                      ),
+                      Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                      ),
+                    ]
                   ),
+
                 ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.emailAddress,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      country = value!;
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Country",
-
-                    hintText: "Enter Country",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
               ],
             ),
+            SizedBox(height: 3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  Row(
+                      children:[
+                        Text( "Due Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                        ),
+                        Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                        ),
+                      ]
+                  ),
 
+                ),
+              ],
+            ),
+            SizedBox(height: 3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  Row(
+                      children:[
+                        Text( "Total Due: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                        ),
+                        Text( "\$10", style: TextStyle( color: Colors.white),
+                        ),
+                      ]
+                  ),
+
+                ),
+              ],
+            ),
+            SizedBox(height: 3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  Row(
+                      children:[
+                        Text( "Balance: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                        ),
+                        Text( "\$10", style: TextStyle( color: Colors.white),
+                        ),
+                      ]
+                  ),
+
+                ),
+              ],
+            ),
             SizedBox(height: 50.0),
 
             //First Director
-            Text( "First Director Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+            Text( "Draft", style: TextStyle(fontSize: 30, color: Colors.white),
             ),
             SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child:
+                  Row(
+                      children:[
+                        Text( "Payment Method: ", style: TextStyle(color: Colors.white),
+                        ),
+                        Text( "Mail in Payment", style: TextStyle( fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ]
+                  ),
+
+                ),
+              ],
+            ),
+            SizedBox(width: 10.0),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -430,76 +464,139 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           ? 'Do not use the @ char.'
                           : null;
                     },
-
-                    topLabel: "First Director First Name",
-
-                    hintText: "Enter First Name",
                     // prefixIcon: FlutterIcons.chevron_left_fea,
                   ),
                 ),
                 SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].lastName = value;
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director Last Name",
-
-                    hintText: "Enter Last Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.mail),
+                  label: Text(
+                    "Send Email",
                   ),
                 ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].nationalId = value;
 
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director id",
-
-                    hintText: "Enter id",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
               ],
             ),
             SizedBox(height: 16.0),
+
+
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.cancel),
+                  label: Text(
+                    "Mark Cancelled",
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.cancel_outlined),
+                  label: Text(
+                    "Mark Unpaid",
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height:20),
+            Container(
+              padding: EdgeInsets.all(defaultPadding),
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Invoice Items",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  SingleChildScrollView(
+                    //scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      horizontalMargin: 0,
+                      columnSpacing: defaultPadding,
+                      columns: [
+                        DataColumn(
+                          label: Text("Unit"),
+                        ),
+                        DataColumn(
+                          label: Text("Description"),
+                        ),
+                        DataColumn(
+                          label: Text("Unit Price"),
+                        ),
+                        DataColumn(
+                          label: Text("Amount"),
+                        ),
+                        DataColumn(
+                          label: Text("Action"),
+                        ),
+                      ],
+                      rows: List.generate(
+                        recentUsers.length,
+                            (index) => recentUserDataRow(recentUsers[index], context),
+                      ),
+                    ),
+                ),
+              ),
+            ],
+          ),),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(child:SizedBox(width: 600.0)),
+                Text("Subtotal"),
+                SizedBox(width: 60.0),
                 Expanded(
+
                   child:
                   InputWidget(
                     keyboardType: TextInputType.text,
@@ -522,180 +619,21 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           : null;
                     },
 
-                    topLabel: "First Director Street Address",
 
-                    hintText: "Enter Street Address",
                     // prefixIcon: FlutterIcons.chevron_left_fea,
                   ),
                 ),
                 SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorCity = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].city = value;
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director City",
-
-                    hintText: "Enter City",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorCountry = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
-                      }
-                      directors[0].country = value;
-
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director Country",
-
-                    hintText: "Enter Country",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
               ],
             ),
-            //First Director Ends
-
-            SizedBox(height: 50.0),
-
-            //Secretary
-            Text( "Secretary Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-            ),
-            SizedBox(height: 16.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Expanded(child:SizedBox(width: 600.0)),
+                Text("Credit"),
+                SizedBox(width: 60.0),
                 Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorName = value!;
-                      secretaries[0].name = value;
 
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Secretary First Name",
-
-                    hintText: "Enter First Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorLastName = value!;
-                      secretaries[0].lastName = value;
-
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Secretary Last Name",
-
-                    hintText: "Enter Last Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorLastName = value!;
-                      secretaries[0].nationalId = value;
-
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Secretary id",
-
-                    hintText: "Enter id",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
                   child:
                   InputWidget(
                     keyboardType: TextInputType.text,
@@ -707,8 +645,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorStreet = value!;
-                      secretaries[0].street = value;
-
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].street = value;
                     },
                     validator: (String? value) {
                       return (value != null && value.contains('@'))
@@ -716,105 +656,157 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           : null;
                     },
 
-                    topLabel: "Secretary Street Address",
 
-                    hintText: "Enter Street Address",
                     // prefixIcon: FlutterIcons.chevron_left_fea,
                   ),
                 ),
                 SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorCity = value!;
-                      secretaries[0].city = value;
-
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Secretary City",
-
-                    hintText: "Enter City",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorCountry = value!;
-                      secretaries[0].country = value;
-
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Secretary Country",
-
-                    hintText: "Enter Country",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(child:SizedBox(width: 600.0)),
+                Text("Total Due"),
+                SizedBox(width: 60.0),
+                Expanded(
+
+                  child:
+                  InputWidget(
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                      // directorStreet = value!;
+                      if(!directors.asMap().containsKey(0)){
+                        directors.add(Director.fromJson({}));
+                      }
+                      directors[0].street = value;
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+
+
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+                SizedBox(width: 16.0),
+              ],
+            ),
+            SizedBox(height: 16.0),
+
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.save),
+                  label: Text(
+                    "Save Changes",
+                  ),
+                ),
+                SizedBox(width: 15,),
+
+
+
+
+
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    // );
+                  },
+                  icon: Icon(Icons.cancel_outlined),
+                  label: Text(
+                    "Mark Unpaid",
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 15.0),
+
+
+            Container(
+              padding: EdgeInsets.all(defaultPadding),
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Related Payments",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  SingleChildScrollView(
+                    //scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        horizontalMargin: 0,
+                        columnSpacing: defaultPadding,
+                        columns: [
+                          DataColumn(
+                            label: Text("Unit"),
+                          ),
+                          DataColumn(
+                            label: Text("Description"),
+                          ),
+                          DataColumn(
+                            label: Text("Unit Price"),
+                          ),
+                          DataColumn(
+                            label: Text("Amount"),
+                          ),
+                          DataColumn(
+                            label: Text("Action"),
+                          ),
+                        ],
+                        rows: List.generate(
+                          recentUsers.length,
+                              (index) => recentUserDataRow(recentUsers[index], context),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),),
             //Secretary Ends
 
 
-            _directors>=2? _SecondDirector(context, 2):SizedBox(height:0),
-            _directors>=3? _SecondDirector(context, 3):SizedBox(height:0),
-            _directors>=4? _SecondDirector(context, 4):SizedBox(height:0),
-            _directors>=5? _SecondDirector(context, 5):SizedBox(height:0),
-            _directors>=6? _SecondDirector(context, 6):SizedBox(height:0),
-            _directors>=7? _SecondDirector(context, 7):SizedBox(height:0),
-            _directors>=8? _SecondDirector(context, 8):SizedBox(height:0),
-            _directors>=9? _SecondDirector(context, 9):SizedBox(height:0),
-            _directors>=10? _SecondDirector(context, 10):SizedBox(height:0),
-            _directors>=11? _SecondDirector(context, 11):SizedBox(height:0),
-            _directors>=12? _SecondDirector(context, 12):SizedBox(height:0),
-            _directors>=13? _SecondDirector(context, 13):SizedBox(height:0),
-
 
             SizedBox(height: 20.0),
-            Row(
-              children: [
-
-                ElevatedButton.icon(
-                icon: Icon(
-                  Icons.close,
-                  size: 14,
-                ),
-                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
-                    primary: Colors.green),
-                onPressed: () {
-                  _addDirector();
-                },
-                label: Text("Add Director")),
-              ],),
             SizedBox(height: 40.0),
 
 
@@ -1261,6 +1253,100 @@ class _MiniMemoState extends State<MiniMemo> {
     );
   }
 
+}
+
+
+DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
+  return DataRow(
+    cells: [
+      DataCell(
+        Row(
+          children: [
+            Text("1",
+            ),
+          ],
+        ),
+      ),
+      DataCell(Text(userInfo.name!)),
+      DataCell(Text("10")),
+      DataCell(Text("100")),
+      DataCell(
+        Row(
+          children: [
+            TextButton(
+              child: Text('Add Row', style: TextStyle(color: greenColor)),
+              onPressed: () {},
+            ),
+            SizedBox(
+              width: 6,
+            ),
+            TextButton(
+              child: Text("Delete", style: TextStyle(color: Colors.redAccent)),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (_) {
+                      return AlertDialog(
+                          title: Center(
+                            child: Column(
+                              children: [
+                                Icon(Icons.warning_outlined,
+                                    size: 36, color: Colors.red),
+                                SizedBox(height: 20),
+                                Text("Confirm Deletion"),
+                              ],
+                            ),
+                          ),
+                          content: Container(
+                            color: secondaryColor,
+                            height: 70,
+                            child: Column(
+                              children: [
+                                Text(
+                                    "Are you sure want to delete '${userInfo.name}'?"),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton.icon(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: 14,
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Colors.grey),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        label: Text("Cancel")),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    ElevatedButton.icon(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          size: 14,
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Colors.red),
+                                        onPressed: () {},
+                                        label: Text("Delete"))
+                                  ],
+                                )
+                              ],
+                            ),
+                          ));
+                    });
+              },
+              // Delete
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
 
 

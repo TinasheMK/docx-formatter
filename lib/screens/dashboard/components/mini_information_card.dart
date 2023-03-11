@@ -64,7 +64,7 @@ class MiniInformation extends StatelessWidget {
 class InformationCard extends StatelessWidget {
   const InformationCard({
     Key? key,
-    this.crossAxisCount = 5,
+    this.crossAxisCount = 4,
     this.childAspectRatio = 1,
   }) : super(key: key);
 
