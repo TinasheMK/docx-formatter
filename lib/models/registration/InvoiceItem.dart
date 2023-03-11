@@ -1,114 +1,79 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 
 import '../../main.dart';
 
 class InvoiceItem {
-  String? name;
-  String? lastName;
-  int? id;
-  String? nationalId;
-  String? nationality;
-  String? street;
-  String? city;
-  String? country;
-  String? particulars;
-  String? incDate;
-  String? email;
-  int? companyId;
+  int?    id;
+  String? product;
+  Double? unitPrice;
+  Double? total;
+  int? invoiceId;
+  String? description;
+
 
 
   InvoiceItem(
-      this.id,
-      this.name,
-      this.lastName,
-      this.nationalId,
-      this.city,
-      this.country,
-      this.nationality,
-      this.street,
-      this.particulars,
-      this.incDate,
-      this.companyId,
-      this.email
+    this.id,
+    this.product,
+    this.unitPrice,
+    this.total,
+    this.invoiceId,
+    this.description,
+
       );
 
   InvoiceItem.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    lastName = json['lastName'];
-    id = json['id'];
-    nationality = json['nationality'];
-    nationalId = json['nationalId'];
-    street = json['street'];
-    city = json['city'];
-    country = json['country'];
-    particulars = json['particulars'];
-    incDate = json['incDate'];
-    companyId = json['companyId'];
-    email = json['email'];
+    product = json['product'];
+    unitPrice = json['unitPrice'];
+    total = json['total'];
+    invoiceId = json['invoiceId'];
+    description = json['description'];
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['lastName'] = this.lastName;
-    data['id'] = this.id;
-    data['city'] = this.city;
-    data['country'] = this.country;
-    data['nationality'] = this.nationality;
-    data['nationalId'] = this.nationalId;
-    data['street'] = this.street;
-    data['particulars'] = this.particulars;
-    data['incDate'] = this.incDate;
-    data['companyId'] = this.companyId;
-    data['email'] = this.email;
 
-
+    data['product'] = this.product;
+    data['unitPrice'] = this.unitPrice;
+    data['total'] = this.total;
+    data['invoiceId'] = this.invoiceId;
+    data['description'] = this.description;
     return data;
   }
 
   Future<void> save() async {
     Map<String, dynamic> row = {
-      'name': this.name,
-      'lastName': this.lastName,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'national_id  ': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
-      'company_id': this.companyId,
-      'email': this.email,
-
+      'product': this.product,
+      'unitPrice': this.unitPrice,
+      'total': this.total,
+      'invoiceId': this.invoiceId,
+      'description': this.description,
     };
-    final id = await dbHelper.insert("director", row);
+    final id = await dbHelper.insert("invoice_item", row);
     this.id = id;
-    debugPrint('inserted director row id: $id');
+    debugPrint('inserted invoice_item row id: $id');
   }
 
   Future<void> saveAndAttach(int companyId) async {
-    debugPrint('adding   director');
+    debugPrint('adding   invoice_item');
 
     Map<String, dynamic> row = {
-      'name': this.name,
-      'last_name': this.lastName,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'national_id': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
-      'email': this.email,
-      'company_id': companyId
+      'product': this.product,
+      'unitPrice': this.unitPrice,
+      'total': this.total,
+      'invoiceId': this.invoiceId,
+      'description': this.description,
     };
-    final id = await dbHelper.insert("director", row);
+    final id = await dbHelper.insert("invoice_item", row);
     this.id = id;
-    debugPrint('inserted director row id: $id');
+    debugPrint('inserted invoice_item row id: $id');
   }
 
   Future<void> query() async {
-    final allRows = await dbHelper.queryAllRows('director');
+    final allRows = await dbHelper.queryAllRows('invoice_item');
     debugPrint('query all rows:');
     for (final row in allRows) {
       debugPrint(row.toString());
@@ -118,25 +83,20 @@ class InvoiceItem {
   void update() async {
     // row to update
     Map<String, dynamic> row = {
-      'name': this.name,
-      'lastName': this.lastName,
-      'id': this.id,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'nationalId': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
+      'product': this.product,
+      'unitPrice': this.unitPrice,
+      'total': this.total,
+      'invoiceId': this.invoiceId,
+      'description': this.description,
     };
-    final rowsAffected = await dbHelper.update('director',row);
+    final rowsAffected = await dbHelper.update('invoice_item',row);
     debugPrint('updated $rowsAffected row(s)');
   }
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
     // final id = await dbHelper.queryRowCount('company');
-    final rowsDeleted = await dbHelper.delete('director',this.id!);
+    final rowsDeleted = await dbHelper.delete('invoice_item',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
 }

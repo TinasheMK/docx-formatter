@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
-import 'package:smart_admin_dashboard/models/registration/Secretary.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import '../../../core/utils/colorful_tag.dart';
 import '../../../models/Memo.dart';
@@ -11,7 +10,7 @@ import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
 import '../../../models/recent_user_model.dart';
-import '../../../models/registration/Director.dart';
+import '../../../models/registration/Client.dart';
 import '../../../models/registration/Company.dart';
 import '../../../responsive.dart';
 
@@ -59,8 +58,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   List persons = [];
   List original = [];
 
-  List<Director> directors = [];
-  List<Secretary> secretaries = [Secretary.fromJson({})];
+  List<Client> clients = [];
 
 
   TextEditingController txtQuery = new TextEditingController();
@@ -274,10 +272,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -319,10 +317,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -364,10 +362,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -409,10 +407,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -459,10 +457,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -504,10 +502,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -549,10 +547,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -594,10 +592,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                       // This optional block of code can be used to run
                                       // code when the user saves the form.
                                       // directorStreet = value!;
-                                      if(!directors.asMap().containsKey(0)){
-                                        directors.add(Director.fromJson({}));
+                                      if(!clients.asMap().containsKey(0)){
+                                        clients.add(Client.fromJson({}));
                                       }
-                                      directors[0].street = value;
+                                      clients[0].street = value;
                                     },
                                     validator: (String? value) {
                                       return (value != null && value.contains('@'))
@@ -669,7 +667,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
               TextButton(
                 onPressed: () {
                   _removeDirector();
-                  directors.removeAt(number-1);
+                  clients.removeAt(number-1);
 
                 },
                 child: Text("Remove Director",
@@ -694,10 +692,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorName = value!;value
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!clients.asMap().containsKey(number-1)){
+                        clients.add(Client.fromJson({}));
                     }
-                    directors[number-1].name = value;
+                    clients[number-1].companyName = value;
 
                   },
                   validator: (String? value) {
@@ -725,10 +723,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorLastName = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!clients.asMap().containsKey(number-1)){
+                        clients.add(Client.fromJson({}));
                     }
-                    directors[number-1].lastName = value;
+                    clients[number-1].companyName = value;
 
 
                   },
@@ -757,10 +755,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorLastName = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                      directors.add(Director.fromJson({}));
+                    if(!clients.asMap().containsKey(number-1)){
+                      clients.add(Client.fromJson({}));
                     }
-                    directors[number-1].nationalId = value;
+                    clients[number-1].companyName = value;
 
 
                   },
@@ -794,10 +792,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorStreet = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!clients.asMap().containsKey(number-1)){
+                        clients.add(Client.fromJson({}));
                     }
-                    directors[number-1].street = value;
+                    clients[number-1].street = value;
 
                   },
                   validator: (String? value) {
@@ -825,10 +823,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorCity = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!clients.asMap().containsKey(number-1)){
+                        clients.add(Client.fromJson({}));
                     }
-                    directors[number-1].city = value;
+                    clients[number-1].city = value;
 
 
                   },
@@ -857,10 +855,10 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorCountry = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!clients.asMap().containsKey(number-1)){
+                        clients.add(Client.fromJson({}));
                     }
-                    directors[number-1].country = value;
+                    clients[number-1].country = value;
 
 
                   },

@@ -26,25 +26,43 @@ class DatabaseHelper {
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE company (
+          CREATE TABLE client (
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
+            company_name TEXT NOT NULL,
             street TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL
+            telephone TEXT NOT NULL
+            email TEXT NOT NULL
+            status TEXT NOT NULL
+          )
+          ''');
+    await db.execute('''
+          CREATE TABLE company (
+            id INTEGER PRIMARY KEY,
+            company_name TEXT NOT NULL,
+            street TEXT NOT NULL,
+            city TEXT NOT NULL,
+            country TEXT NOT NULL
+            telephone TEXT NOT NULL
+            email TEXT NOT NULL
+            status TEXT NOT NULL
           )
           ''');
 
+
     await db.execute('''
-          CREATE TABLE director (
+          CREATE TABLE employee (
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
+            first_name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             national_id TEXT NOT NULL,
             nationality TEXT,
+            postcode TEXT NOT NULL,
             street TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL,
+            telephone TEXT NOT NULL,
             particulars TEXT,
             incDate TEXT,
             email TEXT,
@@ -53,19 +71,40 @@ class DatabaseHelper {
           ''');
 
     await db.execute('''
-          CREATE TABLE secretary (
+          CREATE TABLE invoice (
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            last_name TEXT NOT NULL,
-            national_id TEXT NOT NULL,
-            nationality TEXT,
-            street TEXT NOT NULL,
-            city TEXT NOT NULL,
-            country TEXT NOT NULL,
-            particulars TEXT,
-            incDate TEXT,
-            email TEXT,
-            company_id INTEGER NOT NULL           
+            total_amount FLOAT NOT NULL,
+            vat_percent FLOAT NOT NULL,
+            vat_amount FLOAT NOT NULL,
+            sub_total_amount FLOAT NOT NULL,
+            discount FLOAT NOT NULL,
+            published BIT NOT NULL,
+            notes TEXT NOT NULL,
+            invoice_date TEXT NOT NULL,
+            due_date TEXT,
+            invoice_status TEXT NOT NULL        
+          )
+          ''');
+
+    await db.execute('''
+          CREATE TABLE invoice_item (
+            id INTEGER PRIMARY KEY,
+            unit_price FLOAT NOT NULL,
+            total FLOAT NOT NULL,
+            product TEXT NOT NULL,
+            description TEXT NOT NULL,
+            invoice_id INTEGER NOT NULL        
+          )
+          ''');
+
+    await db.execute('''
+          CREATE TABLE payment (
+            id INTEGER PRIMARY KEY,
+            total FLOAT NOT NULL,
+            ref TEXT NOT NULL,
+            status TEXT NOT NULL,
+            payment_date TEXT NOT NULL,
+            invoice_id INTEGER NOT NULL        
           )
           ''');
   }

@@ -31,13 +31,12 @@ Future <String> invoiceGenerator(Invoice company, String code, List<Memo> memos)
     for (var n in directors) {
       final c = RowContent()
         ..add(TextContent("dname","wiii" + " " + "ioioio"))..add(
-            TextContent("did", n.nationalId))..add(
-            TextContent("dstreet", n.street))..add(
-            TextContent("dcity", n.city))..add(
-            TextContent("dcountry", n.country))..add(
-            TextContent("dnationality", n.country))..add(TextContent('daddress',
-            directors[0].street! + ", " + "ytvytiouio" + ", " +
-                directors[0].country!));
+            TextContent("did", ""))..add(
+            TextContent("dstreet", ""))..add(
+            TextContent("dcity", ""))..add(
+            TextContent("dcountry", ""))..add(
+            TextContent("dnationality", ""))..add(TextContent('daddress',
+            ", " + "ytvytiouio" + ", " ));
 
       directorList.add(c);
     }
@@ -57,15 +56,15 @@ Future <String> invoiceGenerator(Invoice company, String code, List<Memo> memos)
 
 
 
-    content..add(TextContent("company_name", company.companyName))..add(
+    content..add(TextContent("company_name", company.notes))..add(
         TextContent(
             "d1_name", "directors[0].name!" + " " + "irectors[0].lastName!"))
       ..add(
-        TextContent("d1_street", directors[0].street))
+        TextContent("d1_street", "directors"))
       ..add(
-        TextContent("d1_city", directors[0].city))
+        TextContent("d1_city", "directors[0].city"))
       ..add(
-        TextContent("d1_country", directors[0].country))
+        TextContent("d1_country", "directors[0].country"))
 
       ..add(TextContent(
         "sname", "wii"))
@@ -84,8 +83,8 @@ Future <String> invoiceGenerator(Invoice company, String code, List<Memo> memos)
     final directory = await getApplicationDocumentsDirectory();
     print(directory.path);
 
-    new File("${directory.path}\\ClientDocs\\${company.companyName}\\${company
-        .companyName}_invoice.docx").create(recursive: true)
+    new File("${directory.path}\\ClientDocs\\${company
+        .id}_invoice.docx").create(recursive: true)
         .then((File file) async {
       if (docGen != null) await file.writeAsBytes(docGen);
     });
