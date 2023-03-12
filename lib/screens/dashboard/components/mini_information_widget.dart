@@ -36,22 +36,40 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MediaQuery.of(context).size.width > 715 ?  MainAxisAlignment.spaceBetween :
+                               MediaQuery.of(context).size.width < 650 ?  MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(defaultPadding * 0.75),
-                height: 40,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: widget.dailyData.color!.withOpacity(0.1),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Icon(
-                  widget.dailyData.icon,
-                  color: widget.dailyData.color,
-                  size: 18,
-                ),
-              ),
+              MediaQuery.of(context).size.width > 715 ? Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.5),
+                      height: 40,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: widget.dailyData.color!.withOpacity(0.1),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Icon(
+                        widget.dailyData.icon,
+                        color: widget.dailyData.color,
+                        size: 15,
+                      ),
+                    ) :
+              MediaQuery.of(context).size.width < 650 ? Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.5),
+                      height: 40,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: widget.dailyData.color!.withOpacity(0.1),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Icon(
+                        widget.dailyData.icon,
+                        color: widget.dailyData.color,
+                        size: 15,
+                      ),
+                    ) :
+                  SizedBox(width: 0,),
+
+
 
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -65,8 +83,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                             color: widget.dailyData.color!.withOpacity(0.1),
                             borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
-                          child: Text(
-                            "Actions",
+                          child: Text("Action",
                           ),
                         ),
                         onTap: () {

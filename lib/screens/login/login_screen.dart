@@ -8,6 +8,7 @@ import 'package:smart_admin_dashboard/screens/generator/data_store.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../responsive.dart';
 import '../generator/databaseHelper.dart';
 import '../generator/register_download_screen.dart';
 
@@ -55,23 +56,24 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
+              Responsive.isDesktop(context)?Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width / 2,
                 color: Colors.white,
                 child: SliderWidget(),
-              ),
+              ):SizedBox(),
               Container(
                 height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width / 2,
+                width:  Responsive.isDesktop(context) ? MediaQuery.of(context).size.width / 2 : MediaQuery.of(context).size.width,
                 color: bgColor,
                 child: Center(
                   child: Card(
                     //elevation: 5,
                     color: bgColor,
                     child: Container(
-                      padding: EdgeInsets.all(42),
-                      width: MediaQuery.of(context).size.width / 3.6,
+                      padding: Responsive.isTablet(context) ? EdgeInsets.only(left: 200, top: 15, right:200, bottom:15):
+                      Responsive.isMobile(context) ?EdgeInsets.all(62) :EdgeInsets.all(15),
+                      width: Responsive.isDesktop(context) ? MediaQuery.of(context).size.width / 3.6 :  MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height / 1.2,
                       child: Column(
                         children: <Widget>[
@@ -207,7 +209,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 );
               },
             ),
-            SizedBox(height: 24.0),
+            SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

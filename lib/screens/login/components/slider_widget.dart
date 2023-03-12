@@ -75,7 +75,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                         width: MediaQuery.of(context).size.width / 2,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.cover,
                               image: AssetImage(slides[index].image!),
                             ),
                             borderRadius: BorderRadius.all(
@@ -102,12 +102,14 @@ class _SliderWidgetState extends State<SliderWidget> {
                               style: Theme.of(context).textTheme.headline5),
                         ),
                         Container(
+                          padding: EdgeInsets.all(42),
                           alignment: Alignment.center,
                           child: Text(slides[index].altText!,
                               style: Theme.of(context).textTheme.headline5),
                         ),
                         SizedBox(height: 12),
                         Container(
+                          // padding: EdgeInsets.all(42),
                           alignment: Alignment.center,
                           child: Text(slides[index].bAltText!,
                               style: Theme.of(context).textTheme.bodyText1),

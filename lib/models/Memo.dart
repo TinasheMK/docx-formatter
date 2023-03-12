@@ -68,7 +68,7 @@ memoInit.map((item) => Memo.fromJson(item)).toList();
 var memo = [
 
   {
-    "title": "Agriculture",
+    "title": "Kanjan Solutions",
     "code": "1",
     "volumeData": 1328,
     "icon": FlutterIcons.message1_ant,
@@ -112,7 +112,7 @@ var memo = [
     ]
   },
   {
-    "title": "Timber",
+    "title": "Savvy ",
     "code": "2",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
@@ -156,7 +156,7 @@ var memo = [
     ]
   },
   {
-    "title": "Construction",
+    "title": "ZimboSoft",
     "code": "3",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
@@ -200,7 +200,7 @@ var memo = [
     ]
   },
   {
-    "title": "Hotels & Lodges",
+    "title": "Econet Wireless",
     "code": "4",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,

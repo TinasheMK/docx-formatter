@@ -6,6 +6,8 @@ import 'package:smart_admin_dashboard/screens/dashboard/components/mini_informat
 import 'package:smart_admin_dashboard/screens/forms/input_form.dart';
 import 'package:flutter/material.dart';
 
+import '../../invoice/new/new_register_home_screen.dart';
+
 class MiniInformation extends StatelessWidget {
   const MiniInformation({
     Key? key,
@@ -32,15 +34,14 @@ class MiniInformation extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.of(context).push(new MaterialPageRoute<Null>(
-                    builder: (BuildContext context) {
-                      return new FormMaterial();
-                    },
-                    fullscreenDialog: true));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Invoice', code: 'invoice',)),
+                );
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Add New",
+                "New Invoice",
               ),
             ),
           ],

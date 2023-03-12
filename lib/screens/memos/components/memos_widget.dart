@@ -29,8 +29,8 @@ class MemoSelectionSection extends StatelessWidget {
         SizedBox(height: defaultPadding),
         Responsive(
           mobile: InformationCard(
-            crossAxisCount: _size.width < 650 ? 2 : 4,
-            childAspectRatio: _size.width < 650 ? 1.2 : 1,
+            crossAxisCount: _size.width < 650 ? 1 : 1,
+            childAspectRatio: _size.width < 650 ? 5 : 8,
             memos: memos,
             callback: callback
           ),
@@ -39,7 +39,7 @@ class MemoSelectionSection extends StatelessWidget {
             callback: callback
           ),
           desktop: InformationCard(
-            childAspectRatio: _size.width < 1400 ? 1.1 : 1.3,
+            childAspectRatio: _size.width < 1400 ? 6 : 6,
             memos: memos,
             callback: callback
           ),
@@ -52,8 +52,8 @@ class MemoSelectionSection extends StatelessWidget {
 class InformationCard extends StatelessWidget {
   const InformationCard({
     Key? key,
-    this.crossAxisCount = 5,
-    this.childAspectRatio = 1,
+    this.crossAxisCount = 2,
+    this.childAspectRatio = 6,
     required this.memos,
     required this.callback,
 
@@ -137,37 +137,33 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
         color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(defaultPadding * 0.75),
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue!.withOpacity(0.1),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Icon(
-                  widget.memo.icon,
-                  color: Colors.lightBlue,
-                  size: 18,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
+
+
           GestureDetector(
               child: Container(
                 alignment: Alignment.center,
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.75),
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlue!.withOpacity(0.1),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Icon(
+                        widget.memo.icon,
+                        color: Colors.lightBlue,
+                        size: 18,
+                      ),
+                    ),
                     Text(
                       "${widget.memo.title!}",
                       maxLines: 1,

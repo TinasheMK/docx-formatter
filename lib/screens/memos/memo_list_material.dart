@@ -28,16 +28,48 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
         child: Card(
           color: bgColor,
           elevation: 5,
-          margin: EdgeInsets.fromLTRB(32, 32, 64, 32),
+          margin: EdgeInsets.all(10),
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
+            padding: const EdgeInsets.all(10.0),
             child: Container(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16.0, horizontal: 16.0),
                 child: Column(
                   children: [
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text( "Search Existing Clients", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20, color: Colors.white),
+                        ),
+                        SizedBox(height: 10),
+                        TextFormField(
+                          // controller: "txtQuery",
+                          // onChanged: search,
+                          decoration: InputDecoration(
+                            hintText: "Search",
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
+                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                            prefixIcon: Icon(Icons.search, color: greenColor),
+                            fillColor: secondaryColor,
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.clear, color: greenColor),
+
+                              onPressed: () {
+                                // txtQuery.text = '';
+                                // search(txtQuery.text);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 10,),
+
                     Center(
-                      child: Text("What do you want to add? Select from below."),
+                      child: Text("Select a client."),
                     ),
                     MemoSelectionSection(memos: memos,callback: widget.callback),
                   ],

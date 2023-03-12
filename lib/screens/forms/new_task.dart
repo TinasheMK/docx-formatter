@@ -27,9 +27,9 @@ class _NewTaskState extends State<NewTask> {
         child: Card(
           color: bgColor,
           elevation: 5,
-          margin: EdgeInsets.fromLTRB(32, 32, 64, 32),
+          margin: EdgeInsets.all(10),
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
+            padding: const EdgeInsets.all(0),
             child: Container(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16.0, horizontal: 16.0),

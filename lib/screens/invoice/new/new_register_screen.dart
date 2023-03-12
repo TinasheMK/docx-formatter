@@ -242,34 +242,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text( "Search Existing Clients", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20, color: Colors.white),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: txtQuery,
-                  onChanged: search,
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-                    prefixIcon: Icon(Icons.search, color: greenColor),
-                    fillColor: secondaryColor,
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.clear, color: greenColor),
+            SizedBox(height: 15.0),
 
-                      onPressed: () {
-                        txtQuery.text = '';
-                        search(txtQuery.text);
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
 
             SizedBox(height:10),
 
@@ -327,6 +301,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
 
+
+
+
+
             SizedBox(height: 16.0),
 
            //Client and invoice details
@@ -345,10 +323,47 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Client Name: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              Text( "Client: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
-                              Text( "Kanjan Solutions", style: TextStyle(color: Colors.white),
-                              ),
+                              memosSet.length >= 1 ? Container(
+                                  margin: EdgeInsets.only(left: defaultPadding),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: defaultPadding /2,
+                                    vertical: defaultPadding / 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: secondaryColor,
+                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(color: Colors.white10),
+                                  ),
+                                  child: TextButton(
+                                    child: Text(memosSet[0].title!, style: TextStyle(color: Colors.white)),
+                                    onPressed: () {
+                                      Navigator.of(context).push(new MaterialPageRoute<Null>(
+                                          builder: (BuildContext context) {
+                                            return new MemoListMaterial(callback: callback);
+                                          },
+                                          fullscreenDialog: true));
+                            },
+                            // Delete
+                          ),
+
+                        )
+                              :ElevatedButton.icon(
+                                  icon: Icon(
+                                    Icons.person,
+                                    size: 14,
+                                  ),
+                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
+                                      primary: Colors.blueAccent),
+                                  onPressed: () {
+                                    Navigator.of(context).push(new MaterialPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return new MemoListMaterial(callback: callback);
+                                        },
+                                        fullscreenDialog: true));
+                                  },
+                                  label: Text("Select Client")),
                             ]
                         ),
 
@@ -889,7 +904,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   },
                   icon: Icon(Icons.cancel_outlined),
                   label: Text(
-                    "Mark Unpaid",
+                    "Cancel Changes",
                   ),
                 ),
               ],
@@ -947,55 +962,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
             SizedBox(height: 20.0),
-            SizedBox(height: 40.0),
-
-
-            memosSet.length >= 1 ?
-            GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: memosSet.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: defaultPadding,
-                    mainAxisSpacing: defaultPadding,
-                    childAspectRatio: childAspectRatio,
-                  ),
-                  itemBuilder: (context, index) => MiniMemo(memo: memosSet[index]),
-              )
-            :SizedBox(
-                height: 20.0,
-                child:
-                Text("Add Memorandum Items")
-            ),
-            SizedBox(height: 15.0),
-
-            Row(
-              children: [
-
-                ElevatedButton.icon(
-                    icon: Icon(
-                      Icons.close,
-                      size: 14,
-                    ),
-                    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
-                        primary: Colors.blueAccent),
-                    onPressed: () {
-                      Navigator.of(context).push(new MaterialPageRoute<Null>(
-                          builder: (BuildContext context) {
-                            return new MemoListMaterial(callback: callback);
-                          },
-                          fullscreenDialog: true));
-                    },
-                    label: Text("Edit Memo")),
-              ],),
-
-
-            SizedBox(height: 40.0),
             generatorResp!=""?Text(generatorResp):SizedBox(),
             AppButton(
               type: ButtonType.PRIMARY,
-              text: "Proceed",
+              text: "Print Invoice",
               onPressed: () async {
 
                 // List<DailyInfoModel> dailyDatas =
@@ -1038,37 +1008,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             // ),
             SizedBox(height: 24.0),
             SizedBox(height: 24.0),
-            Center(
-              child: Wrap(
-                runAlignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(
-                    "Proceed to register company.",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(fontWeight: FontWeight.w300),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     if (_isMoved) {
-                  //       _animationController!.reverse();
-                  //     } else {
-                  //       _animationController!.forward();
-                  //     }
-                  //     _isMoved = !_isMoved;
-                  //   },
-                  //   child: Text("Sign In",
-                  //       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                  //           fontWeight: FontWeight.w400, color: greenColor)),
-                  // )
-                ],
-              ),
-            ),
             // _listView(persons),
           ],
         ),
