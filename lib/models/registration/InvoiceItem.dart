@@ -8,6 +8,7 @@ class InvoiceItem {
   int?    id;
   String? product;
   Double? unitPrice;
+  Double? units;
   Double? total;
   int? invoiceId;
   String? description;
@@ -18,6 +19,7 @@ class InvoiceItem {
     this.id,
     this.product,
     this.unitPrice,
+    this.units,
     this.total,
     this.invoiceId,
     this.description,
@@ -27,6 +29,7 @@ class InvoiceItem {
   InvoiceItem.fromJson(Map<String, dynamic> json) {
     product = json['product'];
     unitPrice = json['unitPrice'];
+    units = json['units'];
     total = json['total'];
     invoiceId = json['invoiceId'];
     description = json['description'];
@@ -38,6 +41,7 @@ class InvoiceItem {
 
     data['product'] = this.product;
     data['unitPrice'] = this.unitPrice;
+    data['units'] = this.units;
     data['total'] = this.total;
     data['invoiceId'] = this.invoiceId;
     data['description'] = this.description;
@@ -48,6 +52,7 @@ class InvoiceItem {
     Map<String, dynamic> row = {
       'product': this.product,
       'unitPrice': this.unitPrice,
+      'units': this.units,
       'total': this.total,
       'invoiceId': this.invoiceId,
       'description': this.description,
@@ -63,6 +68,7 @@ class InvoiceItem {
     Map<String, dynamic> row = {
       'product': this.product,
       'unitPrice': this.unitPrice,
+      'units': this.units,
       'total': this.total,
       'invoiceId': this.invoiceId,
       'description': this.description,
@@ -85,6 +91,7 @@ class InvoiceItem {
     Map<String, dynamic> row = {
       'product': this.product,
       'unitPrice': this.unitPrice,
+      'units': this.units,
       'total': this.total,
       'invoiceId': this.invoiceId,
       'description': this.description,

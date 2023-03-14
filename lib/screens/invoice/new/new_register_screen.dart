@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import '../../../core/utils/colorful_tag.dart';
 import '../../../models/Memo.dart';
+
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
@@ -27,6 +31,7 @@ import '../components/recent_forums.dart';
 import '../components/recent_users.dart';
 import '../components/user_details_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as _Size;
 
 import '../components/header.dart';
 import 'components/dropdown_search.dart';
@@ -52,6 +57,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   var _isMoved = false;
 
+
   bool isChecked = false;
 
   int _value = 1;
@@ -63,7 +69,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   List original = [];
 
   List<Client> directors = [];
-  List<InvoiceItem> invoiceitems = [];
+  List<InvoiceItem> invoiceitems = [InvoiceItem.fromJson({})];
 
 
   TextEditingController txtQuery = new TextEditingController();
@@ -83,6 +89,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     // original = json;
     setState(() {});
   }
+
 
   void search(String query) {
     if (query.isEmpty) {
@@ -112,6 +119,16 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     });
   }
 
+  void deleteRow(int index) {
+      invoiceitems.removeAt(index);
+      myController.removeAt(index);
+      print("Deleting at index:");
+      print(index);
+      setState(() {
+
+      });
+  }
+
   void _removeDirector() {
     setState(() {
       if(_invoiceitems>1){
@@ -122,16 +139,30 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     });
   }
 
-
+  List<TextEditingController> myController = [TextEditingController()] ;
 
   late int crossAxisCount;
   late double childAspectRatio;
   late List<Memo> memosSet = [];
-
+  late String _dateCount;
+  late String _range;
 
 
   @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    _animationController?.dispose();
+
+    myController.forEach((e) { e.dispose();});
+    super.dispose();
+  }
+
+  @override
   void initState() {
+    _dateCount = '';
+    _range = '';
+
     super.initState();
 
     loadData();
@@ -140,19 +171,44 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       duration: const Duration(milliseconds: 750),
     );
 
+    myController.forEach((e) { e.addListener(_printLatestValue); });
+
+
+
   }
 
-  @override
-  void dispose() {
-    _animationController?.dispose();
-    super.dispose();
+  void _printLatestValue() {
+
+    myController.forEach((e) { print('Second text field: ${e.text}');});
+
   }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      print(args.value);
+      if (args.value is PickerDateRange) {
+        _range =
+            DateFormat('dd/MM/yyyy').format(args.value.startDate).toString() +
+                ' - ' +
+                DateFormat('dd/MM/yyyy')
+                    .format(args.value.endDate ?? args.value.startDate)
+                    .toString();
+      } else if (args.value is DateTime) {
+      } else if (args.value is List<DateTime>) {
+        _dateCount = args.value.length.toString();
+      }
+    });
+  }
+
+
+
+
 
 
   @override
   Widget build(BuildContext context) {
     // print(widget.code);
-    final Size _size = MediaQuery.of(context).size;
+    final _Size.Size _size = MediaQuery.of(context).size;
     crossAxisCount= _size.width < 650 ? 2 : 4;
     childAspectRatio= _size.width < 650 ? 3 : 3;
 
@@ -166,6 +222,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         memosSet.add(memos[1]);
       }
     }
+
+
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -311,7 +369,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             Container(
               padding: EdgeInsets.all(defaultPadding),
               decoration: BoxDecoration(
-                color: secondaryColor,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +380,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Client: ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                               memosSet.length >= 1 ? Container(
                                   margin: EdgeInsets.only(left: defaultPadding),
@@ -354,7 +411,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                     Icons.person,
                                     size: 14,
                                   ),
-                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
+                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
                                       primary: Colors.blueAccent),
                                   onPressed: () {
                                     Navigator.of(context).push(new MaterialPageRoute<Null>(
@@ -378,9 +435,47 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Invoice Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Invoice Date:   ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                              // Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                              // ),
+                              SizedBox(
+                                // width: 150,
+                                child:
+                                TextButton(
+                                  child: Text("2023-03-22", style: TextStyle(color:Colors.blueAccent)),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return AlertDialog(
+                                              title: Center(
+                                                child: Column(
+                                                  children: [
+                                                    Text("Select Date"),
+                                                  ],
+                                                ),
+                                              ),
+                                              content: Container(
+                                                color: secondaryColor,
+                                                height: 350,
+                                                width: 350,
+                                                child: SizedBox(
+                                                  width: 300,
+                                                  height: 300,
+                                                  child: SfDateRangePicker(
+                                                    onSelectionChanged: _onSelectionChanged,
+                                                    selectionMode: DateRangePickerSelectionMode.single,
+                                                    initialSelectedRange: PickerDateRange(
+                                                        DateTime.now().subtract(const Duration(days: 4)),
+                                                        DateTime.now().add(const Duration(days: 3))),
+                                                  ),
+                                                ),
+                                              ));
+                                        });
+                                  },
+                                  // Delete
+                                ),
                               ),
                             ]
                         ),
@@ -396,9 +491,43 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Due Date: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Due Date:        ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                              // Text( "10/12/2023", style: TextStyle( color: Colors.white),
+                              // ),
+                              TextButton(
+                                child: Text("2023-03-22", style: TextStyle(color: Colors.blueAccent)),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) {
+                                        return AlertDialog(
+                                            title: Center(
+                                              child: Column(
+                                                children: [
+                                                  Text("Select Date"),
+                                                ],
+                                              ),
+                                            ),
+                                            content: Container(
+                                              color: secondaryColor,
+                                              height: 350,
+                                              width: 350,
+                                              child: SizedBox(
+                                                width: 300,
+                                                height: 300,
+                                                child: SfDateRangePicker(
+                                                  onSelectionChanged: _onSelectionChanged,
+                                                  selectionMode: DateRangePickerSelectionMode.single,
+                                                  initialSelectedRange: PickerDateRange(
+                                                      DateTime.now().subtract(const Duration(days: 4)),
+                                                      DateTime.now().add(const Duration(days: 3))),
+                                                ),
+                                              ),
+                                            ));
+                                      });
+                                },
+                                // Delete
                               ),
                             ]
                         ),
@@ -414,10 +543,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Total Due: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "\$10", style: TextStyle( color: Colors.white),
+                              Text( "\$10", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
+
                             ]
                         ),
 
@@ -432,9 +562,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Balance: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Balance:             ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "\$10", style: TextStyle( color: Colors.white),
+                              Text( "\$12", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
                             ]
                         ),
@@ -703,8 +833,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ),
                       ],
                       rows: List.generate(
-                        recentUsers.length,
-                            (index) => recentUserDataRow(recentUsers[index], context),
+                        invoiceitems.length,
+                            (index) => _recentUserDataRow(invoiceitems[index], index, context),
                       ),
                     ),
                 ),
@@ -944,13 +1074,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           DataColumn(
                             label: Text("Amount"),
                           ),
-                          DataColumn(
-                            label: Text("Action"),
-                          ),
                         ],
                         rows: List.generate(
                           recentUsers.length,
-                              (index) => recentUserDataRow(recentUsers[index], context),
+                              (index) => paymentsDataRow(recentUsers[index], context),
                         ),
                       ),
                     ),
@@ -1245,7 +1372,128 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   }
 
 
+  DataRow _recentUserDataRow( InvoiceItem item, int index, BuildContext context) {
+    return DataRow(
+      cells: [
+        DataCell(
+            Padding(padding: EdgeInsets.all(3),
+              child: TextFormField(
+                controller: myController[index],
+                decoration: InputDecoration(
+
+                  focusedBorder: OutlineInputBorder(
+                    //gapPadding: 16,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+
+                ),
+                onChanged: (String value){
+                  print(invoiceitems[index].toJson());
+                  invoiceitems[index].units =  value as Double?;
+                },
+
+
+              ),)
+
+        ),
+        DataCell(
+            Padding(padding: EdgeInsets.all(3),
+              child: TextFormField(
+                decoration: InputDecoration(
+
+                  focusedBorder: OutlineInputBorder(
+                    //gapPadding: 16,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+
+                ),
+                onChanged: (String value){
+                  print(invoiceitems[index].toJson());
+                  invoiceitems[index].description =  value;
+                },
+
+              ),)
+
+        ),
+        DataCell(
+            Padding(padding: EdgeInsets.all(3),
+              child: TextField(
+                decoration: InputDecoration(
+
+                  focusedBorder: OutlineInputBorder(
+                    //gapPadding: 16,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+
+                ),
+                onChanged: (String value){
+                  print(invoiceitems[index].toJson());
+                  invoiceitems[index].unitPrice =  value as Double?;
+                },
+
+
+              ),)
+
+        ),
+        DataCell(
+            Padding(padding: EdgeInsets.all(3),
+              child: TextField(
+                decoration: InputDecoration(
+
+                  focusedBorder: OutlineInputBorder(
+                    //gapPadding: 16,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+
+                ),
+                onChanged: (String value){
+                  print(invoiceitems[index].toJson());
+                  invoiceitems[index].total =  value as Double? ;
+                },
+
+
+              ),)
+
+        ),
+        DataCell(
+          Row(
+            children: [
+              invoiceitems.length != 1
+                  ? TextButton(
+                    child: Icon(Icons.delete, color: Colors.redAccent,),
+                    onPressed: () {
+                      deleteRow(index);
+                    },
+              )
+                  : SizedBox(width: 0,),
+              invoiceitems.length == (index+1) ? TextButton(
+                child: Icon(Icons.add, color: Colors.blueAccent,),
+                onPressed: () {
+                  setState ((){
+                      invoiceitems.add(InvoiceItem.fromJson({}));
+                      myController.add(TextEditingController());
+                  });
+
+                },
+              ) : SizedBox(width: 0,),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
+
+
+
 
 Widget _listView(persons) {
   return Expanded(
@@ -1333,43 +1581,40 @@ class _MiniMemoState extends State<MiniMemo> {
     );
   }
 
+
+
 }
 
-
-DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
+DataRow paymentsDataRow(RecentUser userInfo, BuildContext context) {
   return DataRow(
     cells: [
       DataCell(
         Row(
           children: [
-            Text("1",
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: Text(
+                userInfo.name!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
       ),
-      DataCell(Text(userInfo.name!)),
-      DataCell(Text("10")),
-      DataCell(Text("100")),
-      DataCell(
-        Row(
-          children: [
-            TextButton(
-              child: Icon(Icons.add),
-              onPressed: () {},
+      DataCell(Container(
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: getRoleColor(userInfo.role).withOpacity(.2),
+            border: Border.all(color: getRoleColor(userInfo.role)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0) //
             ),
-            TextButton(
-              child: Icon(Icons.delete),
-              onPressed: () {
-              },
-              // Delete
-            ),
-          ],
-        ),
-      ),
+          ),
+          child: Text(userInfo.role!))),
+      DataCell(Text(userInfo.date!)),
+      DataCell(Text(userInfo.posts!))
     ],
   );
 }
-
-
 
 

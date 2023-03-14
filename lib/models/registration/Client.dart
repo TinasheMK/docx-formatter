@@ -16,7 +16,7 @@ class Client {
   List<Employee>? employees;
 
 
-  Client(
+  Client({
     this.id,
     this.companyName,
     this.street,
@@ -26,7 +26,7 @@ class Client {
     this.email,
     this.status,
     this.employees,
-  );
+  });
 
  Client.fromJson(Map<String, dynamic> json) {
    id = json['id'];
@@ -57,7 +57,7 @@ class Client {
 
   Future<void> save() async {
     Map<String, dynamic> row = {
-      "companyName": this.companyName,
+      "company_name": this.companyName,
       "street": this.street,
       "city": this.city,
       "country": this.country,

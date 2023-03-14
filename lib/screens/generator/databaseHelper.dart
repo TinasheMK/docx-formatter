@@ -29,24 +29,24 @@ class DatabaseHelper {
           CREATE TABLE client (
             id INTEGER PRIMARY KEY,
             company_name TEXT NOT NULL,
-            street TEXT NOT NULL,
-            city TEXT NOT NULL,
-            country TEXT NOT NULL
-            telephone TEXT NOT NULL
-            email TEXT NOT NULL
-            status TEXT NOT NULL
+            street TEXT ,
+            city TEXT ,
+            country TEXT ,
+            telephone TEXT, 
+            email TEXT ,
+            status TEXT 
           )
           ''');
     await db.execute('''
           CREATE TABLE company (
             id INTEGER PRIMARY KEY,
             company_name TEXT NOT NULL,
-            street TEXT NOT NULL,
-            city TEXT NOT NULL,
-            country TEXT NOT NULL
-            telephone TEXT NOT NULL
-            email TEXT NOT NULL
-            status TEXT NOT NULL
+            street TEXT ,
+            city TEXT ,
+            country TEXT, 
+            telephone TEXT, 
+            email TEXT ,
+            status TEXT 
           )
           ''');
 
@@ -56,44 +56,45 @@ class DatabaseHelper {
             id INTEGER PRIMARY KEY,
             first_name TEXT NOT NULL,
             last_name TEXT NOT NULL,
-            national_id TEXT NOT NULL,
+            national_id TEXT ,
             nationality TEXT,
-            postcode TEXT NOT NULL,
-            street TEXT NOT NULL,
-            city TEXT NOT NULL,
-            country TEXT NOT NULL,
-            telephone TEXT NOT NULL,
+            postcode TEXT ,
+            street TEXT ,
+            city TEXT ,
+            country TEXT ,
+            telephone TEXT ,
             particulars TEXT,
             incDate TEXT,
             email TEXT,
-            company_id INTEGER NOT NULL
+            company_id INTEGER NOT NULL 
           )
           ''');
 
     await db.execute('''
           CREATE TABLE invoice (
             id INTEGER PRIMARY KEY,
-            total_amount FLOAT NOT NULL,
-            vat_percent FLOAT NOT NULL,
-            vat_amount FLOAT NOT NULL,
-            sub_total_amount FLOAT NOT NULL,
-            discount FLOAT NOT NULL,
-            published BIT NOT NULL,
-            notes TEXT NOT NULL,
-            invoice_date TEXT NOT NULL,
+            client INTEGER NOT NULL,
+            total_amount FLOAT ,
+            vat_percent FLOAT ,
+            vat_amount FLOAT ,
+            sub_total_amount FLOAT ,
+            discount FLOAT ,
+            published BIT ,
+            notes TEXT ,
+            invoice_date TEXT ,
             due_date TEXT,
-            invoice_status TEXT NOT NULL        
+            invoice_status TEXT         
           )
           ''');
 
     await db.execute('''
           CREATE TABLE invoice_item (
             id INTEGER PRIMARY KEY,
-            unit_price FLOAT NOT NULL,
+            unit_price FLOAT ,
             total FLOAT NOT NULL,
-            product TEXT NOT NULL,
+            product TEXT ,
             description TEXT NOT NULL,
-            invoice_id INTEGER NOT NULL        
+            invoice_id INTEGER NOT NULL       
           )
           ''');
 
@@ -101,10 +102,10 @@ class DatabaseHelper {
           CREATE TABLE payment (
             id INTEGER PRIMARY KEY,
             total FLOAT NOT NULL,
-            ref TEXT NOT NULL,
-            status TEXT NOT NULL,
-            payment_date TEXT NOT NULL,
-            invoice_id INTEGER NOT NULL        
+            ref TEXT ,
+            status TEXT ,
+            payment_date TEXT ,
+            invoice_id INTEGER NOT NULL         
           )
           ''');
   }

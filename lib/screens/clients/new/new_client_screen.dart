@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
+import 'package:smart_admin_dashboard/models/registration/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import '../../../core/utils/colorful_tag.dart';
 import '../../../models/Memo.dart';
@@ -58,7 +59,8 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   List persons = [];
   List original = [];
 
-  List<Client> clients = [];
+  Client client = Client.fromJson({});
+  Employee employee = Employee.fromJson({});
 
 
   TextEditingController txtQuery = new TextEditingController();
@@ -241,384 +243,16 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
 
             SizedBox(height: 16.0),
            //Client and invoice details
+           //
+           //  Row(
+           //    // crossAxisAlignment: CrossAxisAlignment.stretch,
+           //    children: fields,
+           //
+           //  ),
 
-            Row(
-              // crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Column( children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                          children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "First Name: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:75),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "Last Name: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:75),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "Company Name: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:25),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "Email: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:118),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                  ],),
-
-                ),
-                Expanded(
-                  child: Column( children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "Address: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:70),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "City: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:110),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "Country: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:70),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:
-                          Row(
-                              children:[
-                                Padding(
-                                    padding: EdgeInsets.only(left:0, bottom: 0, right: 0, top:20), //apply padding to all four sides
-                                    child: Text( "Phone Number: ", style: TextStyle(fontSize: 18, color: Colors.white),)
-                                ),
-
-                                SizedBox(width:5),
-                                SizedBox(
-                                  width:200,
-                                  child: InputWidget(
-                                    keyboardType: TextInputType.text,
-                                    onSaved: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                    },
-                                    onChanged: (String? value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      // directorStreet = value!;
-                                      if(!clients.asMap().containsKey(0)){
-                                        clients.add(Client.fromJson({}));
-                                      }
-                                      clients[0].street = value;
-                                    },
-                                    validator: (String? value) {
-                                      return (value != null && value.contains('@'))
-                                          ? 'Do not use the @ char.'
-                                          : null;
-                                    },
-
-
-                                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                                  ),
-                                ),
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                      ],),
-                  ],),
-
-                ),
-              ],
-
-            ),
-            SizedBox(height:50),
+            Responsive.isMobile(context)
+                ? SizedBox( height: 600,child: Column( children: fields(context),))
+                :  Row(children: fields(context),),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -637,6 +271,8 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     //   context,
                     //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
                     // );
+                    print(client.toJson());
+                    client.save();
                   },
                   icon: Icon(Icons.save),
                   label: Text(
@@ -653,233 +289,361 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
     );
   }
 
-
-  Widget _SecondDirector(BuildContext context, int number) {
-    return
-      Column(
-        children:[
-          SizedBox(height: 50.0),
+  List<Widget> fields(BuildContext context) {
+    return[
+      Expanded(
+        child: Column(children: [
           Row(
-            children: [
-              Text( "Director "+number.toString()+" Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-              ),
-              SizedBox(width: 100),
-              TextButton(
-                onPressed: () {
-                  _removeDirector();
-                  clients.removeAt(number-1);
-
-                },
-                child: Text("Remove Director",
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontWeight: FontWeight.w400, color: Colors.redAccent)),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(
                 child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorName = value!;value
-                    if(!clients.asMap().containsKey(number-1)){
-                        clients.add(Client.fromJson({}));
-                    }
-                    clients[number-1].companyName = value;
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("First Name: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
 
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
+                      SizedBox(width: 75),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                            employee.firstName = value;
+                          },
+                          validator: (String? value) {
+                            return (value != null && value.contains('@'))
+                                ? 'Do not use the @ char.'
+                                : null;
+                          },
 
-                  topLabel: "Director First Name",
 
-                  hintText: "Enter First Name",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
                 ),
               ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorLastName = value!;
-                    if(!clients.asMap().containsKey(number-1)){
-                        clients.add(Client.fromJson({}));
-                    }
-                    clients[number-1].companyName = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director Last Name",
-
-                  hintText: "Enter Last Name",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorLastName = value!;
-                    if(!clients.asMap().containsKey(number-1)){
-                      clients.add(Client.fromJson({}));
-                    }
-                    clients[number-1].companyName = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director id",
-
-                  hintText: "Enter id",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 16.0),
+              SizedBox(height: 3),
+            ],),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(
                 child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorStreet = value!;
-                    if(!clients.asMap().containsKey(number-1)){
-                        clients.add(Client.fromJson({}));
-                    }
-                    clients[number-1].street = value;
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("Last Name: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
 
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
+                      SizedBox(width: 75),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                              employee.lastName = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
 
-                  topLabel: "Director Street Address",
 
-                  hintText: "Enter Street Address",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
                 ),
               ),
-              SizedBox(width: 16.0),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
               Expanded(
                 child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorCity = value!;
-                    if(!clients.asMap().containsKey(number-1)){
-                        clients.add(Client.fromJson({}));
-                    }
-                    clients[number-1].city = value;
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("Company Name: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
+
+                      SizedBox(width: 25),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                              client.companyName = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
 
 
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director City",
-
-                  hintText: "Enter City",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
                 ),
               ),
-              SizedBox(width: 16.0),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
               Expanded(
                 child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorCountry = value!;
-                    if(!clients.asMap().containsKey(number-1)){
-                        clients.add(Client.fromJson({}));
-                    }
-                    clients[number-1].country = value;
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("Email: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
+
+                      SizedBox(width: 118),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                              client.email = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
 
 
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director Country",
-
-                  hintText: "Enter Country",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
                 ),
-              )
-            ],
-          ),
-          SizedBox(height: 40.0),
-        ],
+              ),
+              SizedBox(height: 3),
+            ],),
+        ],),
 
-      );
+      ),
+      Expanded(
+        child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child:
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("Address: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
+
+                      SizedBox(width: 70),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                            // directorStreet = value!;
+                            //
+                            //
+                              client.street = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
+
+
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child:
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("City: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
+
+                      SizedBox(width: 110),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+
+                              client.city = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
+
+
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child:
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("Country: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
+
+                      SizedBox(width: 70),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                              client.country = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
+
+
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child:
+                Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 0, bottom: 0, right: 0, top: 20),
+                          //apply padding to all four sides
+                          child: Text("Phone Number: ",
+                            style: TextStyle(fontSize: 18, color: Colors.white),)
+                      ),
+
+                      SizedBox(width: 5),
+                      SizedBox(
+                        width: 200,
+                        child: InputWidget(
+                          keyboardType: TextInputType.text,
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          onChanged: (String? value) {
+                              client.telephone = value;
+                            },
+                            validator: (String? value) {
+                              return (value != null && value.contains('@'))
+                                  ? 'Do not use the @ char.'
+                                  : null;
+                          },
+
+
+                          // prefixIcon: FlutterIcons.chevron_left_fea,
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+              SizedBox(height: 3),
+            ],),
+        ],),
+
+      ),
+    ];
   }
 
 
@@ -1066,6 +830,9 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
     ],
   );
 }
+
+
+
 
 
 

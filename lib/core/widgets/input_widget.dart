@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +16,12 @@ class InputWidget extends StatelessWidget {
   final Key? kKey;
   final TextEditingController? kController;
   final String? kInitialValue;
+  final TextInputFormatter? filteringTextInputFormatter;
 
   InputWidget({
     this.hintText,
     this.prefixIcon,
-    this.height = 48.0,
+    this.height,
     this.topLabel = "",
     this.obscureText = false,
     required this.onSaved,
@@ -30,6 +32,7 @@ class InputWidget extends StatelessWidget {
     this.kKey,
     this.kController,
     this.kInitialValue,
+    this.filteringTextInputFormatter
   });
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class InputWidget extends StatelessWidget {
         Text(this.topLabel!),
         SizedBox(height: 4.0),
         Container(
-          height: 50,
+          height: this.height!= null? this.height: 50,
           decoration: BoxDecoration(
             color: secondaryColor,
             //color: Theme.of(context).buttonColor,
@@ -85,6 +88,9 @@ class InputWidget extends StatelessWidget {
                     .bodyText1!
                     .copyWith(color: Colors.white54),
                 errorText: this.errorText),
+            inputFormatters: <TextInputFormatter>[
+              this.filteringTextInputFormatter != null ? this.filteringTextInputFormatter!: FilteringTextInputFormatter.singleLineFormatter,
+            ],
           ),
         )
       ],
