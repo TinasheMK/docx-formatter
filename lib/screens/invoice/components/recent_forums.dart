@@ -3,10 +3,36 @@ import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
 import 'package:smart_admin_dashboard/models/recent_user_model.dart';
 import 'package:flutter/material.dart';
 
-class RecentDiscussions extends StatelessWidget {
+import '../../../models/registration/Invoice.dart';
+
+
+class RecentDiscussions extends StatefulWidget {
   const RecentDiscussions({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _RecentDiscussionsState createState() => _RecentDiscussionsState();
+}
+
+
+class _RecentDiscussionsState extends State<RecentDiscussions> {
+
+
+  List<Invoice> invoices = [Invoice.fromJson({})];
+
+  Future<void> _initclients() async {
+    invoices = await getInvoices();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initclients();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +56,20 @@ class RecentDiscussions extends StatelessWidget {
               columnSpacing: defaultPadding,
               columns: [
                 DataColumn(
-                  label: Text("Name"),
+                  label: Text("Id"),
                 ),DataColumn(
-                  label: Text("Job"),
+                  label: Text("Client"),
                 ),
                 DataColumn(
-                  label: Text("Create Date"),
+                  label: Text("Invoice Date"),
                 ),
                 DataColumn(
-                  label: Text("Stage"),
+                  label: Text("Amount"),
                 ),
               ],
               rows: List.generate(
-                recentUsers.length,
-                (index) => recentUserDataRow(recentUsers[index]),
+                invoices.length,
+                (index) => recentUserDataRow(invoices[index]),
               ),
             ),
           ),
@@ -53,21 +79,21 @@ class RecentDiscussions extends StatelessWidget {
   }
 }
 
-DataRow recentUserDataRow(RecentUser userInfo) {
+DataRow recentUserDataRow(Invoice userInfo) {
   return DataRow(
     cells: [
-      DataCell(Text(userInfo.name!)),
+      DataCell(Text(userInfo.id.toString()!)),
       DataCell(Container(
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: getRoleColor(userInfo.role).withOpacity(.2),
-            border: Border.all(color: getRoleColor(userInfo.role)),
+            color: getRoleColor(userInfo.client.toString()).withOpacity(.2),
+            border: Border.all(color: Colors.green),
             borderRadius: BorderRadius.all(Radius.circular(5.0) //
                 ),
           ),
-          child: Text(userInfo.role!))),
-      DataCell(Text(userInfo.date!)),
-      DataCell(Text(userInfo.posts!)),
+          child: Text(userInfo.client.toString()!))),
+      DataCell(Text(userInfo.invoiceDate.toString().split(" ")[0])),
+      DataCell(Text(userInfo.totalAmount.toString())),
     ],
   );
 }

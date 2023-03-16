@@ -94,7 +94,8 @@ class DatabaseHelper {
             total FLOAT NOT NULL,
             product TEXT ,
             description TEXT NOT NULL,
-            invoice_id INTEGER NOT NULL       
+            invoice_id INTEGER NOT NULL,      
+            units INTEGER NOT NULL       
           )
           ''');
 
@@ -130,6 +131,12 @@ class DatabaseHelper {
   Future<int> queryRowCount(String table) async {
     final results = await _db.rawQuery('SELECT COUNT(*) FROM $table');
     return Sqflite.firstIntValue(results) ?? 0;
+  }
+
+
+  Future<Map<String, dynamic>> findById(String table, int id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = $id');
+    return results[0];
   }
 
   // We are assuming here that the id column in the map is set. The other

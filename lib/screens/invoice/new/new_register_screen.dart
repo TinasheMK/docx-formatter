@@ -70,6 +70,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   List<Client> directors = [];
   List<InvoiceItem> invoiceitems = [InvoiceItem.fromJson({})];
+  Invoice invoice = Invoice.fromJson({});
 
 
   TextEditingController txtQuery = new TextEditingController();
@@ -139,7 +140,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     });
   }
 
-  List<TextEditingController> myController = [TextEditingController()] ;
+   List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
 
   late int crossAxisCount;
   late double childAspectRatio;
@@ -154,7 +155,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     // widget tree.
     _animationController?.dispose();
 
-    myController.forEach((e) { e.dispose();});
+    myController.forEach((e) {
+      e.forEach((a) {
+        a.dispose();
+      });
+
+    });
     super.dispose();
   }
 
@@ -163,6 +169,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     _dateCount = '';
     _range = '';
 
+    invoice.subTotalAmount = 0;
+    invoice.invoiceDate = DateTime.now().toString();
+    invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
     super.initState();
 
     loadData();
@@ -171,7 +180,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       duration: const Duration(milliseconds: 750),
     );
 
-    myController.forEach((e) { e.addListener(_printLatestValue); });
+    myController.forEach((e) {
+      e.forEach((a) {
+        a.addListener(_printLatestValue);
+      });
+    });
 
 
 
@@ -179,7 +192,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   void _printLatestValue() {
 
-    myController.forEach((e) { print('Second text field: ${e.text}');});
+    myController.forEach((e) {
+      e.forEach((a) {
+        print('Second text field: ${a.text}');
+      });
+
+    });
 
   }
 
@@ -318,10 +336,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     ),
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Publishing"),
+                    ));
                   },
                   icon: Icon(Icons.send),
                   label: Text(
@@ -443,7 +460,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                 // width: 150,
                                 child:
                                 TextButton(
-                                  child: Text("2023-03-22", style: TextStyle(color:Colors.blueAccent)),
+                                  child: Text(invoice.invoiceDate.toString().split(" ")[0], style: TextStyle(color:Colors.blueAccent)),
                                   onPressed: () {
                                     showDialog(
                                         context: context,
@@ -464,7 +481,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                   width: 300,
                                                   height: 300,
                                                   child: SfDateRangePicker(
-                                                    onSelectionChanged: _onSelectionChanged,
+                                                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                                                      setState(() {
+                                                        print(args.value);
+                                                        invoice.invoiceDate = args.value.toString();
+                                                      });
+                                                    },
                                                     selectionMode: DateRangePickerSelectionMode.single,
                                                     initialSelectedRange: PickerDateRange(
                                                         DateTime.now().subtract(const Duration(days: 4)),
@@ -496,7 +518,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                               // Text( "10/12/2023", style: TextStyle( color: Colors.white),
                               // ),
                               TextButton(
-                                child: Text("2023-03-22", style: TextStyle(color: Colors.blueAccent)),
+                                child: Text(invoice.dueDate.toString().split(" ")[0], style: TextStyle(color: Colors.blueAccent)),
                                 onPressed: () {
                                   showDialog(
                                       context: context,
@@ -517,7 +539,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                 width: 300,
                                                 height: 300,
                                                 child: SfDateRangePicker(
-                                                  onSelectionChanged: _onSelectionChanged,
+                                                  onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                                                    setState(() {
+                                                      print(args.value);
+                                                      invoice.dueDate = args.value.toString();
+                                                    });
+                                                  },
                                                   selectionMode: DateRangePickerSelectionMode.single,
                                                   initialSelectedRange: PickerDateRange(
                                                       DateTime.now().subtract(const Duration(days: 4)),
@@ -545,7 +572,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "\$10", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "\$"+ invoice.subTotalAmount.toString()!, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
 
                             ]
@@ -842,113 +869,91 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             ],
           ),),
 
+                SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(child:SizedBox(width: 600.0)),
                 Text("Subtotal"),
                 SizedBox(width: 60.0),
-                SizedBox(
-                  width: 150,
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Client.fromJson({}));
-                      }
-                      directors[0].street = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                Container(
+                  margin: EdgeInsets.only(left: defaultPadding),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                    vertical: defaultPadding / 2,
                   ),
+                  decoration: BoxDecoration(
+                    color: secondaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: TextButton(
+                    child: Text("\$" + invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                    },
+                    // Delete
+                  ),
+
                 ),
+
                 SizedBox(width: 16.0),
               ],
             ),
+            SizedBox(height: 5,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(child:SizedBox(width: 600.0)),
                 Text("Credit"),
-                SizedBox(width: 60.0),
-                SizedBox(
-                  width: 150,
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Client.fromJson({}));
-                      }
-                      directors[0].street = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                SizedBox(width: 60.0,),
+                Container(
+                  margin: EdgeInsets.only(left: defaultPadding),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                    vertical: defaultPadding / 2,
                   ),
+                  decoration: BoxDecoration(
+                    color: secondaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: TextButton(
+                    child: Text("\$0", style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                    },
+                    // Delete
+                  ),
+
                 ),
                 SizedBox(width: 16.0),
               ],
             ),
+            SizedBox(height: 5,),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(child:SizedBox(width: 600.0)),
                 Text("Total Due"),
-                SizedBox(width: 60.0),
-                SizedBox(
-                  width: 150,
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Client.fromJson({}));
-                      }
-                      directors[0].street = value;
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                SizedBox(width: 60.0, height: 15,),
+                Container(
+                  margin: EdgeInsets.only(left: defaultPadding),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                    vertical: defaultPadding / 2,
                   ),
+                  decoration: BoxDecoration(
+                    color: secondaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: TextButton(
+                    child: Text("\$"+invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                    },
+                    // Delete
+                  ),
+
                 ),
                 SizedBox(width: 16.0),
               ],
@@ -970,41 +975,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
                   onPressed: () async {
 
+                    invoice.invoiceitems = invoiceitems;
+                    invoice.totalAmount = invoice.subTotalAmount;
+                    invoice.client = int.parse(memoItems[0]);
+                    invoice.save();
 
-                    // var invoicevar = {
-                    //   "companyName":companyName,
-                    //   "street":street,
-                    //   "city":city,
-                    //   "country":country,
-                    // };
-                    var invoicevar = {
-                      "companyName":"Kanjan",
-                      "street":"street",
-                      "city":"city",
-                      "country":"country",
-                    };
-                    Invoice invoice =  Invoice.fromJson(invoicevar);
-
-                    var invoiceitem = {
-                      "companyName":"Kanjan",
-                      "street":"street",
-                      "city":"city",
-                      "country":"country",
-                    };
-                    InvoiceItem invoiceItem = InvoiceItem.fromJson(invoiceitem);
-
-
-                    // invoice.invoiceitems = invoiceitems;
-                    invoice.invoiceitems = [invoiceItem];
-                    // invoice.secretaries = secretaries;
-                    // await company.save();
                     print(invoice.toJson());
 
                     var response = await invoiceGenerator(invoice, widget.code, memosSet);
 
-                    setState(() {
-                      generatorResp = response;
-                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(response),
+                    ));
+
+                    // setState(() {
+                    //   generatorResp = response;
+                    // });
                   },
                   icon: Icon(Icons.save),
                   label: Text(
@@ -1019,7 +1005,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.blueAccent,
                     padding: EdgeInsets.symmetric(
                       horizontal: defaultPadding * 1.5,
                       vertical:
@@ -1032,9 +1018,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
                     // );
                   },
-                  icon: Icon(Icons.cancel_outlined),
+                  icon: Icon(Icons.add),
                   label: Text(
-                    "Cancel Changes",
+                    "Add Payment",
                   ),
                 ),
               ],
@@ -1116,6 +1102,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 print(company.toJson());
 
                 // var response = await cr6FormGenerator(company, widget.code, memosSet);
+
 
                 // setState(() {
                 //   generatorResp = response;
@@ -1378,7 +1365,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         DataCell(
             Padding(padding: EdgeInsets.all(3),
               child: TextFormField(
-                controller: myController[index],
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                controller: myController[index][0],
                 decoration: InputDecoration(
 
                   focusedBorder: OutlineInputBorder(
@@ -1390,8 +1381,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ),
                 onChanged: (String value){
+                  value!=null || value !=""
+                      ? invoiceitems[index].units =  int.parse(value)
+                      :invoiceitems[index].units =1 ;
+
+
+                  // invoiceitems[index].unitPrice = invoiceitems[index].total != null ? invoiceitems[index].total : 1 / invoiceitems[index].units! ;
+                  invoiceitems[index].total!=null?invoiceitems[index].total : invoiceitems[index].total =1;
+                  invoiceitems[index].unitPrice = invoiceitems[index].total! / invoiceitems[index].units!;
                   print(invoiceitems[index].toJson());
-                  invoiceitems[index].units =  value as Double?;
+
+                  setState(() {
+                    myController[index][2].text = invoiceitems[index].unitPrice.toString();
+
+                  });
+
+
                 },
 
 
@@ -1401,6 +1406,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         DataCell(
             Padding(padding: EdgeInsets.all(3),
               child: TextFormField(
+                controller: myController[index][1],
+
                 decoration: InputDecoration(
 
                   focusedBorder: OutlineInputBorder(
@@ -1412,8 +1419,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ),
                 onChanged: (String value){
-                  print(invoiceitems[index].toJson());
                   invoiceitems[index].description =  value;
+                  print(invoiceitems[index].toJson());
                 },
 
               ),)
@@ -1421,7 +1428,41 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         ),
         DataCell(
             Padding(padding: EdgeInsets.all(3),
+
               child: TextField(
+                enabled: false,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
+                ],
+                controller: myController[index][2],
+                decoration: InputDecoration(
+
+                  focusedBorder: OutlineInputBorder(
+                    //gapPadding: 16,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+
+                ),
+
+                onChanged: (String value){
+                  invoiceitems[index].unitPrice =  double.parse(value);
+                  print(invoiceitems[index].toJson());
+                },
+
+
+              ),)
+
+        ),
+        DataCell(
+            Padding(padding: EdgeInsets.all(3),
+              child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
+                ],
+                controller: myController[index][3],
+
                 decoration: InputDecoration(
 
                   focusedBorder: OutlineInputBorder(
@@ -1433,30 +1474,24 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ),
                 onChanged: (String value){
+                  invoiceitems[index].total =  double.parse(value) ;
+                  invoiceitems[index].unitPrice =  double.parse(value) / (invoiceitems[index].units!=null ? invoiceitems[index].units!:1);
                   print(invoiceitems[index].toJson());
-                  invoiceitems[index].unitPrice =  value as Double?;
-                },
+
+                  var total = 0.0;
+                  invoiceitems.forEach((e) {
+                    if(e.total==null){e.total = 0;}
+                    total+=e.total!;
+                  });
+
+                  invoice.subTotalAmount = total;
+
+                  setState(() {
+                    myController[index][2].text = invoiceitems[index].unitPrice.toString();
+
+                  });
 
 
-              ),)
-
-        ),
-        DataCell(
-            Padding(padding: EdgeInsets.all(3),
-              child: TextField(
-                decoration: InputDecoration(
-
-                  focusedBorder: OutlineInputBorder(
-                    //gapPadding: 16,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                ),
-                onChanged: (String value){
-                  print(invoiceitems[index].toJson());
-                  invoiceitems[index].total =  value as Double? ;
                 },
 
 
@@ -1479,7 +1514,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 onPressed: () {
                   setState ((){
                       invoiceitems.add(InvoiceItem.fromJson({}));
-                      myController.add(TextEditingController());
+                      myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
                   });
 
                 },

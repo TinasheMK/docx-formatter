@@ -10,25 +10,10 @@ import 'package:flutter/material.dart';
 import '../../../main.dart';
 import '../../../models/registration/Client.dart';
 import '../../../responsive.dart';
+import '../../clients/clients_home_screen.dart';
+import '../../clients/new/new_client_home_screen.dart';
 
-Future<List<Client>> getClients() async {
-  final maps = await dbHelper.queryAllRows("client");
 
-  return List.generate(maps.length, (i) {
-    return Client(
-      id : maps[i]['id'],
-      companyName : maps[i]['company_name'],
-      street : maps[i]['street'],
-      city : maps[i]['city'],
-      country : maps[i]['country'],
-      telephone : maps[i]['telephone'],
-      email : maps[i]['email'],
-      status : maps[i]['status'],
-      employees : maps[i]['employees'],
-
-    );
-  });
-}
 
 class RecentUsers extends StatefulWidget {
   @override
@@ -54,8 +39,6 @@ class _RecentUsersState extends State<RecentUsers> {
   @override
   Widget build(BuildContext context) {
       clients.removeWhere((element) => element.companyName == null);
-
-
 
     return Container(
       padding: EdgeInsets.all(defaultPadding),
@@ -155,29 +138,47 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
                 Icons.edit,
                 size: 14,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(new MaterialPageRoute<Null>(
+                    builder: (BuildContext context) {
+                      return new NewClientHome(title: "Edit Client", code: "edit", clientId: userInfo.id );
+                    },
+                    fullscreenDialog: true));
+              },
               // Edit
               label: Text("Edit"),
-            ) : Icon(Icons.edit),
+            ) :
+
+            GestureDetector(
+              onTap:(){
+                Navigator.of(context).push(new MaterialPageRoute<Null>(
+                    builder: (BuildContext context) {
+                      return new NewClientHome(title: "Edit Client", code: "edit", clientId: userInfo.id );
+                    },
+                    fullscreenDialog: true));
+              },
+              child:Icon(Icons.edit, color:Colors.blue.withOpacity(0.5)),
+            ),
             SizedBox(
               width: 6,
             ),
-            Responsive.isDesktop(context) ? ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green.withOpacity(0.5),
-              ),
-              icon: Icon(
-                Icons.visibility,
-                size: 14,
-              ),
-              onPressed: () {},
-              //View
-              label: Text("View"),
-            ) : Icon(Icons.remove_red_eye),
+            // Responsive.isDesktop(context) ? ElevatedButton.icon(
+            //   style: ElevatedButton.styleFrom(
+            //     primary: Colors.green.withOpacity(0.5),
+            //   ),
+            //   icon: Icon(
+            //     Icons.visibility,
+            //     size: 14,
+            //   ),
+            //   onPressed: () {},
+            //   //View
+            //   label: Text("View"),
+            // ) : Icon(Icons.remove_red_eye, color: Colors.green.withOpacity(0.5)),
             SizedBox(
               width: 6,
             ),
-            Responsive.isDesktop(context) ? ElevatedButton.icon(
+            Responsive.isDesktop(context)
+                ? ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 primary: Colors.red.withOpacity(0.5),
               ),
@@ -224,7 +225,23 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
                                         ),
                                         style: ElevatedButton.styleFrom(
                                             primary: Colors.red),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          try{
+                                            userInfo.delete();
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                              content: Text("Client deleted successfully"),
+                                            ));
+                                          }catch(e){
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                              content: Text("An error occured while deleting"),
+                                            ));
+                                          }
+                                            Navigator.of(context).pop();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
+                                          );
+                                        },
                                         label: Text("Delete"))
                                   ],
                                 )
@@ -235,7 +252,77 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
               },
               // Delete
               label: Text("Delete"),
-            ) : Icon( Icons.delete),
+            )
+                : GestureDetector(
+                 onTap: (){
+                   showDialog(
+                       context: context,
+                       builder: (_) {
+                         return AlertDialog(
+                             title: Center(
+                               child: Text("Confirm Deletion"),
+                             ),
+                             content: Container(
+                               color: secondaryColor,
+                               height: 70,
+                               child: Column(
+                                 children: [
+                                   Text(
+                                       "Are you sure want to delete '${userInfo.companyName}'?"),
+                                   SizedBox(
+                                     height: 16,
+                                   ),
+                                   Row(
+                                     mainAxisAlignment: MainAxisAlignment.center,
+                                     children: [
+                                       ElevatedButton.icon(
+                                           icon: Icon(
+                                             Icons.close,
+                                             size: 14,
+                                           ),
+                                           style: ElevatedButton.styleFrom(
+                                               primary: Colors.grey),
+                                           onPressed: () {
+                                             Navigator.of(context).pop();
+                                           },
+                                           label: Text("Cancel")),
+                                       SizedBox(
+                                         width: 20,
+                                       ),
+                                       ElevatedButton.icon(
+                                           icon: Icon(
+                                             Icons.delete,
+                                             size: 14,
+                                           ),
+                                           style: ElevatedButton.styleFrom(
+                                               primary: Colors.red),
+                                           onPressed: () {
+                                             try{
+                                               userInfo.delete();
+                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                 content: Text("Client deleted successfully"),
+                                               ));
+                                             }catch(e){
+                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                 content: Text("An error occured while deleting"),
+                                               ));
+                                             }
+                                             Navigator.of(context).pop();
+                                             Navigator.push(
+                                               context,
+                                               MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
+                                             );
+                                           },
+                                           label: Text("Delete"))
+                                     ],
+                                   )
+                                 ],
+                               ),
+                             ));
+                       });
+                 } ,
+                child: Icon( Icons.delete, color: Colors.red.withOpacity(0.5),)
+            ),
           ],
         ),
       ),

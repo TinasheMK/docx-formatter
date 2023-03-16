@@ -9,22 +9,23 @@ import 'Payment.dart';
 
 class Invoice {
   int?    id;
-  Double? totalAmount;
-  Double? vatPercent;
-  Double? vatAmount;
-  Double? subTotalAmount;
+  double? totalAmount;
+  double? vatPercent;
+  double? vatAmount;
+  double? subTotalAmount;
   Bool? published;
   String? notes;
   Double? discount;
-  DateTime? invoiceDate;
-  DateTime? dueDate;
+  String? invoiceDate;
+  String? dueDate;
   InvoiceStatus? invoiceStatus;
-  List<Client>?      clients;
+  int?      client;
+  Client?   clientFull;
   List<Payment>?     payments;
   List<InvoiceItem>? invoiceitems;
 
 
-  Invoice(
+  Invoice({
     this.id,
     this.totalAmount,
     this.vatPercent,
@@ -36,10 +37,11 @@ class Invoice {
     this.invoiceDate,
     this.dueDate,
     this.invoiceStatus,
-    this.clients,
+    this.client,
+    this.clientFull,
     this.payments,
     this.invoiceitems,
-      );
+  });
 
  Invoice.fromJson(Map<String, dynamic> json) {
    id = json['id'];
@@ -53,7 +55,7 @@ class Invoice {
    invoiceDate = json['invoiceDate'];
    dueDate = json['dueDate'];
    invoiceStatus = json['invoiceStatus'];
-   clients = json['clients'];
+   client = json['client'];
    payments = json['payments'];
    invoiceitems = json['invoiceitems'];
 
@@ -73,9 +75,10 @@ class Invoice {
     data['invoiceDate'] = this.invoiceDate;
     data['dueDate'] = this.dueDate;
     data['invoiceStatus'] = this.invoiceStatus;
+    data['client'] = this.client;
     data['invoiceitems'] = this.invoiceitems?.map((item) => item.toJson());
     data['payments'] = this.payments?.map((item) => item.toJson());
-    data['clients'] = this.clients?.map((item) => item.toJson());
+    // data['clientFull'] = this.clientFull.toJson();
 
     return data;
   }
@@ -84,19 +87,17 @@ class Invoice {
   Future<void> save() async {
     Map<String, dynamic> row = {
 
-      "totalAmount": this.totalAmount,
-      "vatPercent": this.vatPercent,
-      "vatAmount": this.vatAmount,
-      "subTotalAmount": this.subTotalAmount,
+      "total_amount": this.totalAmount,
+      "vat_percent": this.vatPercent,
+      "vat_amount": this.vatAmount,
+      "sub_total_amount": this.subTotalAmount,
       "published": this.published,
       "notes": this.notes,
       "discount": this.discount,
-      "invoiceDate": this.invoiceDate,
-      "dueDate": this.dueDate,
-      "invoiceStatus": this.invoiceStatus,
-      "clients": this.clients,
-      "payments": this.payments,
-      "invoiceitems": this.invoiceitems,
+      "invoice_date": this.invoiceDate,
+      "due_date": this.dueDate,
+      "invoice_status": this.invoiceStatus,
+      "client": this.client
 
 
     };
@@ -104,13 +105,11 @@ class Invoice {
     this.id = id;
     var invs = this.invoiceitems;
     var pays = this.payments;
-    var clies = this.clients;
 
     for(int i=0; i<30; i++){{
       try {
         invs?[i]?.saveAndAttach(id);
         pays?[i]?.saveAndAttach(id);
-        clies?[i]?.saveAndAttach(id);
       }catch(err) {}
 
       }
@@ -143,9 +142,8 @@ class Invoice {
       "invoiceDate": this.invoiceDate,
       "dueDate": this.dueDate,
       "invoiceStatus": this.invoiceStatus,
-      "clients": this.clients,
+      "clients": this.client,
       "payments": this.payments,
-      "invoiceitems": this.invoiceitems,
 
 
     };
@@ -168,3 +166,30 @@ enum InvoiceStatus {
 }
 
 
+
+Future<List<Invoice>> getInvoices() async {
+  final maps = await dbHelper.queryAllRows("invoice");
+
+  return List.generate(maps.length, (i) {
+
+    return Invoice(
+
+      id : maps[i]['id'],
+      totalAmount : maps[i]['total_amount'],
+      vatPercent : maps[i]['vat_percent'],
+      vatAmount : maps[i]['vat_amount'],
+      subTotalAmount : maps[i]['sub_total_amount'],
+      published : maps[i]['published'],
+      notes : maps[i]['notes'],
+      discount : maps[i]['discount'],
+      invoiceDate : maps[i]['invoice_date'],
+      dueDate : maps[i]['due_date'],
+      invoiceStatus : maps[i]['invoice_status'],
+      client : maps[i]['client'],
+      payments : maps[i]['payments'],
+      invoiceitems : maps[i]['invoice_items'],
+
+
+    );
+  });
+}

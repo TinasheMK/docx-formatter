@@ -12,6 +12,7 @@ class Client {
   String? country;
   String? telephone;
   String? email;
+  String? set;
   Status? status;
   List<Employee>? employees;
 
@@ -21,6 +22,7 @@ class Client {
     this.companyName,
     this.street,
     this.city,
+    this.set,
     this.country,
     this.telephone,
     this.email,
@@ -107,10 +109,13 @@ class Client {
   void update() async {
     // row to update
     Map<String, dynamic> row = {
-      "name": this.companyName,
+      "company_name": this.companyName,
       "street": this.street,
       "city": this.city,
       "country": this.country,
+      "telephone": this.telephone,
+      "email": this.email,
+      "id" : this.id
     };
     final rowsAffected = await dbHelper.update('client',row);
     debugPrint('updated $rowsAffected row(s)');
@@ -122,6 +127,44 @@ class Client {
     final rowsDeleted = await dbHelper.delete('client',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
+
+
+
 }
 
+Future<List<Client>> getClients() async {
+  final maps = await dbHelper.queryAllRows("client");
 
+  return List.generate(maps.length, (i) {
+    return Client(
+      id : maps[i]['id'],
+      companyName : maps[i]['company_name'],
+      street : maps[i]['street'],
+      city : maps[i]['city'],
+      country : maps[i]['country'],
+      telephone : maps[i]['telephone'],
+      email : maps[i]['email'],
+      status : maps[i]['status'],
+      employees : maps[i]['employees'],
+
+    );
+  });
+}
+
+Future<Client> getClient(id) async {
+  final maps = await dbHelper.findById("client", id);
+
+    return Client(
+      id : maps['id'],
+      companyName : maps['company_name'],
+      street : maps['street'],
+      city : maps['city'],
+      country : maps['country'],
+      telephone : maps['telephone'],
+      email : maps['email'],
+      status : maps['status'],
+      employees : maps['employees'],
+
+    );
+
+}

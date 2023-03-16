@@ -7,15 +7,15 @@ import '../../main.dart';
 class InvoiceItem {
   int?    id;
   String? product;
-  Double? unitPrice;
-  Double? units;
-  Double? total;
+  double? unitPrice;
+  num? units;
+  double? total;
   int? invoiceId;
   String? description;
 
 
 
-  InvoiceItem(
+  InvoiceItem({
     this.id,
     this.product,
     this.unitPrice,
@@ -24,7 +24,7 @@ class InvoiceItem {
     this.invoiceId,
     this.description,
 
-      );
+  });
 
   InvoiceItem.fromJson(Map<String, dynamic> json) {
     product = json['product'];
@@ -62,15 +62,15 @@ class InvoiceItem {
     debugPrint('inserted invoice_item row id: $id');
   }
 
-  Future<void> saveAndAttach(int companyId) async {
+  Future<void> saveAndAttach(int invoiceId) async {
     debugPrint('adding   invoice_item');
 
     Map<String, dynamic> row = {
       'product': this.product,
-      'unitPrice': this.unitPrice,
+      'unit_price': this.unitPrice,
       'units': this.units,
       'total': this.total,
-      'invoiceId': this.invoiceId,
+      'invoice_id': invoiceId,
       'description': this.description,
     };
     final id = await dbHelper.insert("invoice_item", row);
@@ -107,3 +107,32 @@ class InvoiceItem {
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
 }
+
+
+//
+// Future<List<InvoiceItem>> getInvoiceItems() async {
+//   final maps = await dbHelper.queryAllRows("invoice_items");
+//
+//   return List.generate(maps.length, (i) {
+//
+//     return InvoiceItem(
+//
+//       id : maps[i]['id'],
+//       totalAmount : maps[i]['totalAmount'],
+//       vatPercent : maps[i]['vatPercent'],
+//       vatAmount : maps[i]['vatAmount'],
+//       subTotalAmount : maps[i]['subTotalAmount'],
+//       published : maps[i]['published'],
+//       notes : maps[i]['notes'],
+//       discount : maps[i]['discount'],
+//       invoiceDate : maps[i]['invoiceDate'],
+//       dueDate : maps[i]['dueDate'],
+//       invoiceStatus : maps[i]['invoiceStatus'],
+//       client : maps[i]['client'],
+//       payments : maps[i]['payments'],
+//       invoiceitems : maps[i]['invoiceitems'],
+//
+//
+//     );
+//   });
+// }

@@ -70,7 +70,6 @@ class InputWidget extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-                errorStyle: TextStyle(height: 0, color: Colors.transparent),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).errorColor,
