@@ -2,6 +2,7 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
 
 class Header extends StatelessWidget {
   const Header({
@@ -64,19 +65,27 @@ class ProfileCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: Colors.white10),
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage("assets/images/profile_pic.png"),
-          ),
-          if (!Responsive.isMobile(context))
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-              child: Text("Tapiwa"),
+      child: GestureDetector(
+        onTap:(){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
+          );
+        } ,
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage("assets/images/profile_pic.png"),
             ),
-          // Icon(Icons.keyboard_arrow_down),
-        ],
+            if (!Responsive.isMobile(context))
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+                child: Text("Tapiwa"),
+              ),
+            // Icon(Icons.keyboard_arrow_down),
+          ],
+        ),
       ),
     );
   }

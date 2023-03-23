@@ -108,6 +108,24 @@ class InvoiceItem {
   }
 }
 
+Future<List<InvoiceItem>> getInvoiceItems(id) async {
+  final maps = await dbHelper.findInvoiceItems("invoice_item", id);
+
+  return List.generate(maps.length, (i) {
+    return InvoiceItem(
+      id : maps[i]['id'],
+      product : maps[i]['product'],
+      unitPrice : maps[i]['unitPrice'],
+      units : maps[i]['units'],
+      total : maps[i]['total'],
+      invoiceId : maps[i]['invoiceId'],
+      description : maps[i]['description'],
+
+    );
+  });
+
+}
+
 
 //
 // Future<List<InvoiceItem>> getInvoiceItems() async {
@@ -136,3 +154,4 @@ class InvoiceItem {
 //     );
 //   });
 // }
+

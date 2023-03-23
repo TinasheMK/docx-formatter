@@ -24,6 +24,7 @@ import '../../generator/CR6_form_generator.dart';
 import '../../generator/invoicegenerator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
+import '../../invoice/components/header.dart';
 import '../../memos/memo_list_material.dart';
 import './components/mini_information_card.dart';
 
@@ -33,27 +34,20 @@ import '../components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as _Size;
 
-import '../components/header.dart';
 import 'components/dropdown_search.dart';
 
 
-class NewRegisterScreen extends StatefulWidget {
-  NewRegisterScreen({required this.title, required this.code, this.invoiceId});
+class NewProfileScreen extends StatefulWidget {
+  NewProfileScreen({required this.title, required this.code});
   final String title;
-  final int? invoiceId;
   final String code;
 
   @override
-  _NewRegisterScreenState createState() => _NewRegisterScreenState(invoiceId);
+  _NewProfileScreenState createState() => _NewProfileScreenState();
 }
 
-// class NewRegisterScreen extends StatefulWidget {
-class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTickerProviderStateMixin {
-
-  _NewRegisterScreenState(int? this.invoiceId);
-  int? invoiceId;
-
-
+// class NewProfileScreen extends StatefulWidget {
+class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerProviderStateMixin {
   var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
       .chain(CurveTween(curve: Curves.ease));
   var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
@@ -69,11 +63,14 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   int _value = 1;
 
   int _directors = 2;
+  int _invoiceitems = 1;
 
   List persons = [];
   List original = [];
 
   List<Client> directors = [];
+  List<InvoiceItem> invoiceitems = [InvoiceItem.fromJson({})];
+  Invoice invoice = Invoice.fromJson({});
 
 
   TextEditingController txtQuery = new TextEditingController();
@@ -116,9 +113,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     setState(() {});
   }
 
+  void _addDirector() {
+    setState(() {
+      _directors += 1;
+      _invoiceitems += 1;
+    });
+  }
 
   void deleteRow(int index) {
-      invoice!.invoiceitems!.removeAt(index);
+      invoiceitems.removeAt(index);
       myController.removeAt(index);
       print("Deleting at index:");
       print(index);
@@ -127,6 +130,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       });
   }
 
+  void _removeDirector() {
+    setState(() {
+      if(_invoiceitems>1){
+        _invoiceitems-= 1;
+      }else{
+        _invoiceitems = 1;
+      }
+    });
+  }
 
    List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
 
@@ -152,21 +164,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     super.dispose();
   }
 
-
-  late Invoice invoice ;
-
-  Future<void> _initInvoice() async {
-    invoice = await getInvoice(invoiceId);
-    setState(() {});
-  }
-
   @override
   void initState() {
-
-    super.initState();
-    _initInvoice();
     _dateCount = '';
     _range = '';
+
+    invoice.subTotalAmount = 0;
+    invoice.invoiceDate = DateTime.now().toString();
+    invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
+    super.initState();
 
     loadData();
     _animationController = AnimationController(
@@ -195,17 +201,30 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   }
 
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      print(args.value);
+      if (args.value is PickerDateRange) {
+        _range =
+            DateFormat('dd/MM/yyyy').format(args.value.startDate).toString() +
+                ' - ' +
+                DateFormat('dd/MM/yyyy')
+                    .format(args.value.endDate ?? args.value.startDate)
+                    .toString();
+      } else if (args.value is DateTime) {
+      } else if (args.value is List<DateTime>) {
+        _dateCount = args.value.length.toString();
+      }
+    });
+  }
+
+
 
 
 
 
   @override
   Widget build(BuildContext context) {
-    invoice.subTotalAmount = 0;
-    invoice.invoiceDate = DateTime.now().toString();
-    invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
-    print(invoice!.toJson().toString());
-
     // print(widget.code);
     final _Size.Size _size = MediaQuery.of(context).size;
     crossAxisCount= _size.width < 650 ? 2 : 4;
@@ -553,7 +572,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "\$"+ invoice.totalAmount.toString()!, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "\$"+ invoice.subTotalAmount.toString()!, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
 
                             ]
@@ -841,8 +860,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ),
                       ],
                       rows: List.generate(
-                        invoice!.invoiceitems!.length,
-                            (index) => _recentUserDataRow(invoice!.invoiceitems![index], index, context),
+                        invoiceitems.length,
+                            (index) => _recentUserDataRow(invoiceitems[index], index, context),
                       ),
                     ),
                 ),
@@ -956,7 +975,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
                   onPressed: () async {
 
-                    // invoice.invoiceitems! = invoice!.invoiceitems!;
+                    invoice.invoiceitems = invoiceitems;
                     invoice.totalAmount = invoice.subTotalAmount;
                     invoice.client = int.parse(memoItems[0]);
                     invoice.save();
@@ -1111,6 +1130,235 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   }
 
 
+  Widget _SecondDirector(BuildContext context, int number) {
+    return
+      Column(
+        children:[
+          SizedBox(height: 50.0),
+          Row(
+            children: [
+              Text( "Director "+number.toString()+" Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+              ),
+              SizedBox(width: 100),
+              TextButton(
+                onPressed: () {
+                  _removeDirector();
+                  directors.removeAt(number-1);
+
+                },
+                child: Text("Remove Director",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        fontWeight: FontWeight.w400, color: Colors.redAccent)),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorName = value!;value
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Client.fromJson({}));
+                    }
+                    directors[number-1].companyName = value;
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director First Name",
+
+                  hintText: "Enter First Name",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorLastName = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Client.fromJson({}));
+                    }
+                    directors[number-1].companyName = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director Last Name",
+
+                  hintText: "Enter Last Name",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorLastName = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                      directors.add(Client.fromJson({}));
+                    }
+                    directors[number-1].companyName = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director id",
+
+                  hintText: "Enter id",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorStreet = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Client.fromJson({}));
+                    }
+                    directors[number-1].street = value;
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director Street Address",
+
+                  hintText: "Enter Street Address",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorCity = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Client.fromJson({}));
+                    }
+                    directors[number-1].city = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director City",
+
+                  hintText: "Enter City",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                  },
+                  onChanged: (String? value) {
+                    // This optional block of code can be used to run
+                    // code when the user saves the form.
+                    // directorCountry = value!;
+                    if(!directors.asMap().containsKey(number-1)){
+                        directors.add(Client.fromJson({}));
+                    }
+                    directors[number-1].country = value;
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Director Country",
+
+                  hintText: "Enter Country",
+                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 40.0),
+        ],
+
+      );
+  }
+
+
   DataRow _recentUserDataRow( InvoiceItem item, int index, BuildContext context) {
     return DataRow(
       cells: [
@@ -1134,17 +1382,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 ),
                 onChanged: (String value){
                   value!=null || value !=""
-                      ? invoice!.invoiceitems![index].units =  int.parse(value)
-                      :invoice!.invoiceitems![index].units =1 ;
+                      ? invoiceitems[index].units =  int.parse(value)
+                      :invoiceitems[index].units =1 ;
 
 
-                  // invoice!.invoiceitems![index].unitPrice = invoice!.invoiceitems![index].total != null ? invoice!.invoiceitems![index].total : 1 / invoice!.invoiceitems![index].units! ;
-                  invoice!.invoiceitems![index].total!=null?invoice!.invoiceitems![index].total : invoice!.invoiceitems![index].total =1;
-                  invoice!.invoiceitems![index].unitPrice = invoice!.invoiceitems![index].total! / invoice!.invoiceitems![index].units!;
-                  print(invoice!.invoiceitems![index].toJson());
+                  // invoiceitems[index].unitPrice = invoiceitems[index].total != null ? invoiceitems[index].total : 1 / invoiceitems[index].units! ;
+                  invoiceitems[index].total!=null?invoiceitems[index].total : invoiceitems[index].total =1;
+                  invoiceitems[index].unitPrice = invoiceitems[index].total! / invoiceitems[index].units!;
+                  print(invoiceitems[index].toJson());
 
                   setState(() {
-                    myController[index][2].text = invoice!.invoiceitems![index].unitPrice.toString();
+                    myController[index][2].text = invoiceitems[index].unitPrice.toString();
 
                   });
 
@@ -1171,8 +1419,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ),
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].description =  value;
-                  print(invoice!.invoiceitems![index].toJson());
+                  invoiceitems[index].description =  value;
+                  print(invoiceitems[index].toJson());
                 },
 
               ),)
@@ -1199,8 +1447,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 ),
 
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].unitPrice =  double.parse(value);
-                  print(invoice!.invoiceitems![index].toJson());
+                  invoiceitems[index].unitPrice =  double.parse(value);
+                  print(invoiceitems[index].toJson());
                 },
 
 
@@ -1226,12 +1474,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ),
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].total =  double.parse(value) ;
-                  invoice!.invoiceitems![index].unitPrice =  double.parse(value) / (invoice!.invoiceitems![index].units!=null ? invoice!.invoiceitems![index].units!:1);
-                  print(invoice!.invoiceitems![index].toJson());
+                  invoiceitems[index].total =  double.parse(value) ;
+                  invoiceitems[index].unitPrice =  double.parse(value) / (invoiceitems[index].units!=null ? invoiceitems[index].units!:1);
+                  print(invoiceitems[index].toJson());
 
                   var total = 0.0;
-                  invoice!.invoiceitems!.forEach((e) {
+                  invoiceitems.forEach((e) {
                     if(e.total==null){e.total = 0;}
                     total+=e.total!;
                   });
@@ -1239,7 +1487,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   invoice.subTotalAmount = total;
 
                   setState(() {
-                    myController[index][2].text = invoice!.invoiceitems![index].unitPrice.toString();
+                    myController[index][2].text = invoiceitems[index].unitPrice.toString();
 
                   });
 
@@ -1253,7 +1501,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         DataCell(
           Row(
             children: [
-              invoice!.invoiceitems!.length != 1
+              invoiceitems.length != 1
                   ? TextButton(
                     child: Icon(Icons.delete, color: Colors.redAccent,),
                     onPressed: () {
@@ -1261,11 +1509,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     },
               )
                   : SizedBox(width: 0,),
-              invoice!.invoiceitems!.length == (index+1) ? TextButton(
+              invoiceitems.length == (index+1) ? TextButton(
                 child: Icon(Icons.add, color: Colors.blueAccent,),
                 onPressed: () {
                   setState ((){
-                      invoice!.invoiceitems!.add(InvoiceItem.fromJson({}));
+                      invoiceitems.add(InvoiceItem.fromJson({}));
                       myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
                   });
 

@@ -170,9 +170,13 @@ enum InvoiceStatus {
 Future<List<Invoice>> getInvoices() async {
   final maps = await dbHelper.queryAllRows("invoice");
 
-  return List.generate(maps.length, (i) {
+  List<Invoice> invoices = [];
+  for( int i =0; i  <maps.length; i++)   {
 
-    return Invoice(
+    Client client = await getClient(maps[i]['client']);
+
+    invoices.add(
+        Invoice(
 
       id : maps[i]['id'],
       totalAmount : maps[i]['total_amount'],
@@ -186,10 +190,42 @@ Future<List<Invoice>> getInvoices() async {
       dueDate : maps[i]['due_date'],
       invoiceStatus : maps[i]['invoice_status'],
       client : maps[i]['client'],
+      clientFull: client,
       payments : maps[i]['payments'],
       invoiceitems : maps[i]['invoice_items'],
 
 
-    );
-  });
+    ));
+  };
+
+  return invoices;
 }
+
+
+Future<Invoice> getInvoice(id) async {
+  final maps = await dbHelper.findById("invoice", id);
+  Client client = await getClient(maps['client']);
+  List<InvoiceItem> invoiceItems = await getInvoiceItems(maps['id']);
+
+  return Invoice(
+    id : maps['id'],
+    totalAmount : maps['total_amount'],
+    vatPercent : maps['vat_percent'],
+    vatAmount : maps['vat_amount'],
+    subTotalAmount : maps['sub_total_amount'],
+    published : maps['published'],
+    notes : maps['notes'],
+    discount : maps['discount'],
+    invoiceDate : maps['invoice_date'],
+    dueDate : maps['due_date'],
+    invoiceStatus : maps['invoice_status'],
+    client : maps['client'],
+    clientFull: client,
+    payments : maps['payments'],
+    invoiceitems : invoiceItems,
+
+  );
+
+}
+
+

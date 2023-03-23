@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'new_register_screen.dart';
 
 class NewRegisterHome extends StatefulWidget {
-  NewRegisterHome({required this.title, required this.code});
+  NewRegisterHome({required this.title, required this.code, this.invoiceId});
   final String title;
+  final int? invoiceId;
   final String code;
   @override
   _NewRegisterHomeState createState() => _NewRegisterHomeState();
@@ -64,7 +65,7 @@ class _NewRegisterHomeState extends State<NewRegisterHome> with SingleTickerProv
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewRegisterScreen(title: widget.title, code: widget.code),
+              child: NewRegisterScreen(title: widget.title, code: widget.code, invoiceId: widget.invoiceId),
             ),
           ],
         ),
