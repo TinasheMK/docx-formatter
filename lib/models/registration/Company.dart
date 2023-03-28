@@ -15,15 +15,15 @@ class Company {
   List<Secretary>? secretaries;
 
 
-  Company(
-        this.companyName,
-        this.street,
-        this.city,
-        this.country,
-        this.directors,
-        this.secretaries,
-        this.id
-      );
+  Company({
+    this.companyName,
+    this.street,
+    this.city,
+    this.country,
+    this.directors,
+    this.secretaries,
+    this.id
+  });
 
  Company.fromJson(Map<String, dynamic> json) {
     companyName = json['companyName'];
@@ -50,7 +50,7 @@ class Company {
 
   Future<void> save() async {
     Map<String, dynamic> row = {
-      "name": this.companyName,
+      "company_name": this.companyName,
       "street": this.street,
       "city": this.city,
       "country": this.country,
@@ -101,5 +101,24 @@ class Company {
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
 }
+
+
+Future<List<Company>> getCompanies() async {
+  final maps = await dbHelper.queryAllRows("company");
+
+  return List.generate(maps.length, (i) {
+    print(maps[i].toString());
+    print('Extracting data');
+    return Company(
+        id : maps[i]['id'],
+        companyName : maps[i]['company_name'],
+        street : maps[i]['street'],
+        city : maps[i]['city'],
+        country : maps[i]['country'],
+
+    );
+  });
+}
+
 
 

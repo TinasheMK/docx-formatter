@@ -4,26 +4,27 @@ import 'package:docx_template/docx_template.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../models/Memo.dart';
+import '../../models/registration/Client.dart';
 import '../../models/registration/Company.dart';
 
 ///
 /// Read file template.docx, produce it and save
 ///
-Future <String> cr6FormGenerator(Company company, String code, List<Memo> memos) async {
-  try {
-    final f = File("./data/flutter_assets/assets/templates/CR6_template.docx");
+Future <String> cr6FormGenerator(Company company, String code, List<Client> memos) async {
+  // try {
+    final f = File("./assets/templates/CR6_template.docx");
     final docx = await DocxTemplate.fromBytes(await f.readAsBytes());
 
-    final f2 = File("./data/flutter_assets/assets/templates/memocover_template.docx");
+    final f2 = File("./assets/templates/memocover_template.docx");
     final memoCover = await DocxTemplate.fromBytes(await f2.readAsBytes());
 
-    final f3 = File("./data/flutter_assets/assets/templates/tocollect_template.docx");
+    final f3 = File("./assets/templates/tocollect_template.docx");
     final toCollect = await DocxTemplate.fromBytes(await f3.readAsBytes());
 
-    final f4 = File("./data/flutter_assets/assets/templates/articles_template.docx");
+    final f4 = File("./assets/templates/articles_template.docx");
     final articles = await DocxTemplate.fromBytes(await f4.readAsBytes());
 
-    final f5 = File("./data/flutter_assets/assets/templates/memo_template.docx");
+    final f5 = File("./assets/templates/memo_template.docx");
     final memoDoc = await DocxTemplate.fromBytes(await f5.readAsBytes());
 
 
@@ -65,7 +66,7 @@ Future <String> cr6FormGenerator(Company company, String code, List<Memo> memos)
 
     for (var n in memo) {
       final c = PlainContent("memolist")
-        ..add(TextContent("memodesc", n.description));
+        ..add(TextContent("memodesc", n.email));
       memoList.add(c);
     }
 
@@ -147,9 +148,9 @@ Future <String> cr6FormGenerator(Company company, String code, List<Memo> memos)
       if (memoDocGen != null) await file.writeAsBytes(memoDocGen);
     });
     return "Documents created successfully. Check your documents folder in ClientDocs folder.";
-  }catch(e){
-    return e.toString();
-  }
+  // }catch(e){
+  //   return e.toString();
+  // }
 
 
 

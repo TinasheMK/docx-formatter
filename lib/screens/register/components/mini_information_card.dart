@@ -37,14 +37,14 @@ class MiniInformation extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Register', code: 'wiw',)),
+                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'Company Registration', code: 'wiw',)),
                 );
 
 
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Add New Document",
+                "New Company Registration",
               ),
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class InputWidget extends StatelessWidget {
   final Key? kKey;
   final TextEditingController? kController;
   final String? kInitialValue;
+  final List<TextInputFormatter>? kinputFormatters;
 
   InputWidget({
     this.hintText,
@@ -30,6 +32,7 @@ class InputWidget extends StatelessWidget {
     this.kKey,
     this.kController,
     this.kInitialValue,
+    this.kinputFormatters,
   });
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class InputWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(4.0),
           ),
           child: TextFormField(
+            inputFormatters: this.kinputFormatters,
             initialValue: this.kInitialValue,
             controller: this.kController,
             key: this.kKey,

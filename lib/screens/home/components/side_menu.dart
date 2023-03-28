@@ -50,7 +50,7 @@ class SideMenu extends StatelessWidget {
               },
             ),
             DrawerListTile(
-              title: "Registration",
+              title: "Clients",
               svgSrc: "assets/icons/menu_tran.svg",
               press: () {
                 Navigator.push(
@@ -60,7 +60,7 @@ class SideMenu extends StatelessWidget {
               },
             ),
             DrawerListTile(
-              title: "Tax Clearance",
+              title: "ZIMRA",
               svgSrc: "assets/icons/menu_task.svg",
               press: () {
                 Navigator.push(
@@ -70,7 +70,17 @@ class SideMenu extends StatelessWidget {
               },
             ),
             DrawerListTile(
-              title: "Clients",
+              title: "PRAZ",
+              svgSrc: "assets/icons/menu_store.svg",
+              press: () {},
+            ),
+            DrawerListTile(
+              title: "OTHER",
+              svgSrc: "assets/icons/menu_notification.svg",
+              press: () {},
+            ),
+            DrawerListTile(
+              title: "Objectives",
               svgSrc: "assets/icons/menu_doc.svg",
               press: () {
                 Navigator.push(
@@ -79,16 +89,7 @@ class SideMenu extends StatelessWidget {
                 );
               },
             ),
-            // DrawerListTile(
-            //   title: "Appearance",
-            //   svgSrc: "assets/icons/menu_store.svg",
-            //   press: () {},
-            // ),
-            // DrawerListTile(
-            //   title: "Users",
-            //   svgSrc: "assets/icons/menu_notification.svg",
-            //   press: () {},
-            // ),
+
             // DrawerListTile(
             //   title: "Tools",
             //   svgSrc: "assets/icons/menu_profile.svg",

@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
-  static const _databaseName = "database.db";
+  static const _databaseName = "docdatabase.db";
   static const _databaseVersion = 1;
 
 
@@ -24,12 +24,87 @@ class DatabaseHelper {
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute('''
+          CREATE TABLE client (
+            id INTEGER PRIMARY KEY,
+            company_name TEXT NOT NULL,
+            street TEXT ,
+            city TEXT ,
+            country TEXT ,
+            telephone TEXT, 
+            email TEXT ,
+            status TEXT 
+          )
+          ''');
+    await db.execute('''
           CREATE TABLE company (
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            street TEXT NOT NULL,
-            city TEXT NOT NULL,
-            country TEXT NOT NULL
+            company_name TEXT NOT NULL,
+            street TEXT ,
+            city TEXT ,
+            country TEXT, 
+            telephone TEXT, 
+            email TEXT ,
+            status TEXT 
+          )
+          ''');
+
+
+    await db.execute('''
+          CREATE TABLE employee (
+            id INTEGER PRIMARY KEY,
+            first_name TEXT NOT NULL,
+            last_name TEXT NOT NULL,
+            national_id TEXT ,
+            nationality TEXT,
+            postcode TEXT ,
+            street TEXT ,
+            city TEXT ,
+            country TEXT ,
+            telephone TEXT ,
+            particulars TEXT,
+            incDate TEXT,
+            email TEXT,
+            company_id INTEGER NOT NULL 
+          )
+          ''');
+
+    await db.execute('''
+          CREATE TABLE invoice (
+            id INTEGER PRIMARY KEY,
+            client INTEGER NOT NULL,
+            total_amount FLOAT ,
+            vat_percent FLOAT ,
+            vat_amount FLOAT ,
+            sub_total_amount FLOAT ,
+            discount FLOAT ,
+            published BIT ,
+            notes TEXT ,
+            invoice_date TEXT ,
+            due_date TEXT,
+            invoice_status TEXT         
+          )
+          ''');
+
+    await db.execute('''
+          CREATE TABLE invoice_item (
+            id INTEGER PRIMARY KEY,
+            unit_price FLOAT ,
+            total FLOAT NOT NULL,
+            product TEXT ,
+            description TEXT NOT NULL,
+            invoice_id INTEGER NOT NULL,      
+            units INTEGER NOT NULL       
+          )
+          ''');
+
+    await db.execute('''
+          CREATE TABLE payment (
+            id INTEGER PRIMARY KEY,
+            total FLOAT NOT NULL,
+            ref TEXT ,
+            status TEXT ,
+            payment_date TEXT ,
+            invoice_id INTEGER NOT NULL         
           )
           ''');
 
@@ -88,6 +163,17 @@ class DatabaseHelper {
   Future<int> queryRowCount(String table) async {
     final results = await _db.rawQuery('SELECT COUNT(*) FROM $table');
     return Sqflite.firstIntValue(results) ?? 0;
+  }
+
+
+  Future<Map<String, dynamic>> findById(String table, int id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = $id');
+    return results[0];
+  }
+
+  Future<List<Map<String, dynamic>>> findInvoiceItems(String table, int id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE invoice_id = $id');
+    return results;
   }
 
   // We are assuming here that the id column in the map is set. The other

@@ -15,22 +15,26 @@ class Director {
   String? incDate;
   String? email;
   int? companyId;
+  late bool shareholder;
+  int? shares;
 
 
-  Director(
-      this.id,
-      this.name,
-      this.lastName,
-      this.nationalId,
-      this.city,
-      this.country,
-      this.nationality,
-      this.street,
-      this.particulars,
-      this.incDate,
-      this.companyId,
-      this.email
-      );
+  Director({
+    this.id,
+    this.name,
+    this.lastName,
+    this.nationalId,
+    this.city,
+    this.country,
+    this.nationality,
+    this.street,
+    this.particulars,
+    this.incDate,
+    this.companyId,
+    this.email,
+    required this.shareholder,
+    this.shares
+  });
 
   Director.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -39,12 +43,13 @@ class Director {
     nationality = json['nationality'];
     nationalId = json['nationalId'];
     street = json['street'];
-    city = json['city'];
-    country = json['country'];
+    city = 'Harare';
+    country = "Zimbabwe";
     particulars = json['particulars'];
     incDate = json['incDate'];
     companyId = json['companyId'];
     email = json['email'];
+    shareholder = false;
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +105,8 @@ class Director {
       'particulars': this.particulars,
       'incDate': this.incDate,
       'email': this.email,
+      'shares': this.shares,
+      'shareholder': this.shareholder,
       'company_id': companyId
     };
     final id = await dbHelper.insert("director", row);

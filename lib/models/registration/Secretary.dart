@@ -38,8 +38,8 @@ class Secretary {
     nationality = json['nationality'];
     nationalId = json['nationalId'];
     street = json['street'];
-    city = json['city'];
-    country = json['country'];
+    city = "Harare";
+    country = "Zimbabwe";
     particulars = json['particulars'];
     incDate = json['incDate'];
     companyId = json['companyId'];

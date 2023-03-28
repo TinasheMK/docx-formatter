@@ -33,6 +33,8 @@ class RegisterScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
+                        // RecentDiscussions(),
+
                         RecentUsers(),
                         SizedBox(height: defaultPadding),
                         if (Responsive.isMobile(context))
@@ -44,10 +46,10 @@ class RegisterScreen extends StatelessWidget {
                     SizedBox(width: defaultPadding),
                   // On Mobile means if the screen is less than 850 we dont want to show it
                   // if (!Responsive.isMobile(context))
-                    //z Expanded(
-                    //   flex: 2,
-                    //   child: UserDetailsWidget(),
-                    // ),
+                  //z Expanded(
+                  //   flex: 2,
+                  //   child: UserDetailsWidget(),
+                  // ),
                 ],
               )
             ],

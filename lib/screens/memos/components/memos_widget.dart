@@ -5,8 +5,7 @@ import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/Memo.dart';
-import '../../register/new/new_register_home_screen.dart';
-import '../../register/new/new_register_screen.dart';
+import '../../../models/registration/Client.dart';
 
 class MemoSelectionSection extends StatelessWidget {
   const MemoSelectionSection({
@@ -31,19 +30,19 @@ class MemoSelectionSection extends StatelessWidget {
         SizedBox(height: defaultPadding),
         Responsive(
           mobile: InformationCard(
-            crossAxisCount: _size.width < 650 ? 2 : 4,
-            childAspectRatio: _size.width < 650 ? 1.2 : 1,
-            memos: memos,
-            callback: callback
+              crossAxisCount: _size.width < 650 ? 1 : 1,
+              childAspectRatio: _size.width < 650 ? 5 : 8,
+              memos: memos,
+              callback: callback
           ),
           tablet: InformationCard(
-            memos: memos,
-            callback: callback
+              memos: memos,
+              callback: callback
           ),
           desktop: InformationCard(
-            childAspectRatio: _size.width < 1400 ? 1.1 : 1.3,
-            memos: memos,
-            callback: callback
+              childAspectRatio: _size.width < 1400 ? 6 : 6,
+              memos: memos,
+              callback: callback
           ),
         ),
       ],
@@ -51,11 +50,12 @@ class MemoSelectionSection extends StatelessWidget {
   }
 }
 
-class InformationCard extends StatelessWidget {
+
+class InformationCard extends StatefulWidget {
   const InformationCard({
     Key? key,
-    this.crossAxisCount = 5,
-    this.childAspectRatio = 1,
+    this.crossAxisCount = 2,
+    this.childAspectRatio = 6,
     required this.memos,
     required this.callback,
 
@@ -66,20 +66,43 @@ class InformationCard extends StatelessWidget {
   final double childAspectRatio;
   final Function(String, String) callback;
 
+
+  @override
+  _InformationCardState createState() => _InformationCardState();
+}
+
+class _InformationCardState extends State<InformationCard> {
+
+
+  List<Client> clients = [Client.fromJson({})];
+
+  Future<void> _initClients() async {
+    clients = await getClients();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initClients();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: memos.length,
+      itemCount: clients.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
+        crossAxisCount: widget.crossAxisCount,
         crossAxisSpacing: defaultPadding,
         mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
+        childAspectRatio: widget.childAspectRatio,
       ),
       itemBuilder: (context, index) =>
-          MiniInformationWidget(memo: memos[index], callback:callback),
+          MiniInformationWidget(memo: clients[index], callback:widget.callback),
     );
   }
 }
@@ -90,7 +113,7 @@ class MiniInformationWidget extends StatefulWidget {
     required this.memo,
     required this.callback
   }) : super(key: key);
-  final Memo memo;
+  final Client memo;
   final Function(String, String) callback;
 
   @override
@@ -139,48 +162,45 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
         color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(defaultPadding * 0.75),
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue!.withOpacity(0.1),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Icon(
-                  widget.memo.icon,
-                  color: Colors.lightBlue,
-                  size: 18,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
+
+
           GestureDetector(
               child: Container(
                 alignment: Alignment.center,
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.4),
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlue!.withOpacity(0.1),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.lightBlue,
+                        size: 18,
+                      ),
+                    ),
+                    SizedBox(width: 6,),
                     Text(
-                      "${widget.memo.title!}",
+                      "${widget.memo.companyName??'Objective Null'}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
-                      height: 8,
+                      width: 6,
                     ),
                     Visibility(
                       visible: !_visible,
-                      child: widget.memo.set=="set"?Icon(Icons.backspace_outlined, size: 18):Icon(Icons.add, size: 18),
+                      child: widget.memo.set=="set"?Icon(Icons.cancel_outlined, size: 18):Icon(Icons.add, size: 18),
                     )
                   ],
                 ),
@@ -188,19 +208,19 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               onTap: () {
                 // _toggle();
                 if(widget.memo.set=="set"){
-                  widget.callback(widget.memo.code!, "not");
+                  widget.callback(widget.memo.id.toString()!, "not");
                   setState(() {
                     widget.memo.set="not";
                   });
                 }else{
-                  widget.callback(widget.memo.code!, "set");
+                  widget.callback(widget.memo.id.toString()!, "set");
                   setState(() {
                     widget.memo.set="set";
                   });
 
                 }
               }
-              ),
+          ),
 
         ],
       ),

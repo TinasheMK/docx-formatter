@@ -2,15 +2,21 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 
 import 'package:smart_admin_dashboard/responsive.dart';
-import 'package:smart_admin_dashboard/screens/clients/new/new_client_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
-import 'package:smart_admin_dashboard/screens/forms/input_form.dart';
 import 'package:flutter/material.dart';
 
+import '../../clients_home_screen.dart';
+
+// import '../new/new_register_home_screen.dart';
+// import '../new/new_register_screen.dart';
+
 class MiniInformation extends StatelessWidget {
+
+
   const MiniInformation({
-    Key? key,
+    Key? key,required this.title
   }) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +26,13 @@ class MiniInformation extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text( "Clients", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
             SizedBox(
               width: 10,
             ),
+            Text(title, style: TextStyle(fontSize: 35, color: Colors.white) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.red,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:
@@ -34,15 +40,16 @@ class MiniInformation extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.of(context).push(new MaterialPageRoute<Null>(
-                    builder: (BuildContext context) {
-                      return new NewClientHome(title: "New Client", code: "client");
-                    },
-                    fullscreenDialog: true));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
+                );
+
+
               },
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.cancel),
               label: Text(
-                "Add New Client",
+                "Cancel",
               ),
             ),
           ],
