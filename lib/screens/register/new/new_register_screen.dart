@@ -195,16 +195,16 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     crossAxisCount= _size.width < 650 ? 2 : 4;
     childAspectRatio= _size.width < 650 ? 3 : 3;
 
-    memosSet = clients;
+    // memosSet = clients;
 
-    for( int i = 0 ; i < clients.length; i++ ) {
-      if(clients[i].set!="set"){
-        memosSet.removeWhere((element) => element.id == clients[i].id);
-        print(i);
-      }else if(clients.length==0){
-        memosSet.add(clients[1]);
-      }
-    }
+    // for( int i = 0 ; i < clients.length; i++ ) {
+    //   if(clients[i].set!="set"){
+    //     memosSet.removeWhere((element) => element.id == clients[i].id);
+    //     print(i);
+    //   }else if(clients.length==0){
+    //     memosSet.add(clients[1]);
+    //   }
+    // }
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -252,21 +252,27 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   Container _registerScreen(BuildContext context) {
 
-    callback(mem, action) {
+    callback(mem, action) async {
       if(action=="set"){
-        setState(() {
-          memoItems.add(mem);
-          print(clients);
-          memosSet.add(clients.where((element) => true).first);
+          var client1 = await getClient(int.parse(mem));
+        setState(()  {
+          // memoItems.add(mem);
+          // print(clients);
+          memosSet.removeWhere((e) => e.id ==int.parse(mem));
+          client1.set = "set";
+          client1.update();
+          memosSet.add(client1);
+          // memosSet.add(clients.where((e) => e.id == mem).first);
+
 
 
         });
       }else{
         setState(() {
-          memoItems.removeWhere((element) => element == mem);
-          memosSet.removeWhere((element) => element.id == mem);
+          // memoItems.removeWhere((element) => element == mem);
+          memosSet.removeWhere((element) => element.id == int.parse(mem));
 
-          print(memoItems);
+          // print(memoItems);
         });
       }
 
@@ -1022,7 +1028,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     mainAxisSpacing: defaultPadding,
                     childAspectRatio: childAspectRatio,
                   ),
-                  itemBuilder: (context, index) => MiniMemo(memo: memosSet[index]),
+                  itemBuilder: (context, index) => MiniMemo(memo: memosSet[index], callback: callback),
               )
             :SizedBox(
                 height: 20.0,
@@ -1480,9 +1486,11 @@ Widget _listView(persons) {
 class MiniMemo extends StatefulWidget {
   const MiniMemo({
     Key? key,
-    required this.memo
+    required this.memo, required this.callback
   }) : super(key: key);
   final Client memo;
+  final Function(String, String) callback;
+
 
   @override
   _MiniMemoState createState() => _MiniMemoState();
@@ -1517,7 +1525,7 @@ class _MiniMemoState extends State<MiniMemo> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${widget.memo.companyName!}",
+                      "${widget.memo.companyName??''}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1533,6 +1541,8 @@ class _MiniMemoState extends State<MiniMemo> {
               ),
               onTap: () {
                 // _toggle();
+                widget.callback(widget.memo.id.toString()!, "not");
+
 
               }
           ),

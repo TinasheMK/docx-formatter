@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:docx_template/docx_template.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../models/Memo.dart';
@@ -11,7 +12,7 @@ import '../../models/registration/Company.dart';
 /// Read file template.docx, produce it and save
 ///
 Future <String> cr6FormGenerator(Company company, String code, List<Client> memos) async {
-  // try {
+  try {
     final f = File("./assets/templates/CR6_template.docx");
     final docx = await DocxTemplate.fromBytes(await f.readAsBytes());
 
@@ -59,8 +60,7 @@ Future <String> cr6FormGenerator(Company company, String code, List<Client> memo
       final c = PlainContent("dlist")
         ..add(TextContent("dname", n.name! + " " + n.lastName!))..add(
             TextContent("did",
-                directors[0].street! + ", " + directors[0].city! + ", " +
-                    directors[0].country!));
+                n.nationalId!));
       directorContList.add(c);
     }
 
@@ -84,28 +84,37 @@ Future <String> cr6FormGenerator(Company company, String code, List<Client> memo
       secretaryList.add(c);
     }
 
+    var day = DateFormat('d').format(DateTime.now());
+    var tag;
+    if(day==1 || day==21 || day==31){
+      tag = "st";
+    }else if(day==2 || day==22){
+      tag ="nd";
+    }else if(day==3 || day==23){
+      tag="rd";
+    }else{
+      tag = "th";
+    }
 
     content..add(TextContent("company_name", company.companyName))..add(
         TextContent(
             "d1_name", directors[0].name! + " " + directors[0].lastName!))..add(
-        TextContent("d1_street", directors[0].street))..add(
-        TextContent("d1_city", directors[0].city))..add(
-        TextContent("d1_country", directors[0].country))..add(
-        TextContent("d1_city", directors[0].city))..add(TextContent(
-        "d1_address", directors[0].street! + ", " + directors[0].city! + ", " +
-        directors[0].country!))..add(TextContent(
-        "sname", secretaries[0].name! + " " + secretaries[0].lastName!))..add(
-        TextContent("sid", secretaries[0].nationalId))..add(
-        TextContent("snationality", secretaries[0].country))..add(
-        TextContent('saddress', secretaries[0].street))..add(
-        TableContent("table",
-          directorList,
-
-        ))..add(TableContent("table2",
-      secretaryList,
-    ))..add(ListContent("dlist", directorContList))..add(
-        ListContent("memolist", memoList))
-
+        TextContent("d1_street", directors[0].street))
+      ..add( TextContent("d1_city", directors[0].city))
+      ..add( TextContent("currentdate", day))
+      ..add( TextContent("currentdaytag", tag))
+      ..add( TextContent("currentyear", DateFormat('y').format(DateTime.now())))
+      ..add( TextContent("d1_country", directors[0].country))
+      ..add( TextContent("d1_city", directors[0].city))
+      ..add( TextContent( "d1_address", directors[0].street! + ", " + directors[0].city! + ", " +   directors[0].country!))
+      ..add( TextContent(  "sname", secretaries[0].name! + " " + secretaries[0].lastName!))
+      ..add( TextContent("sid", secretaries[0].nationalId))
+      ..add( TextContent("snationality", secretaries[0].country))
+      ..add(   TextContent('saddress', secretaries[0].street))
+      ..add(  TableContent("table",       directorList,  ))
+      ..add(TableContent("table2",   secretaryList,  ))
+      ..add(ListContent("dlist", directorContList))
+      ..add(   ListContent("memolist", memoList))
     ;
 
 
@@ -148,9 +157,9 @@ Future <String> cr6FormGenerator(Company company, String code, List<Client> memo
       if (memoDocGen != null) await file.writeAsBytes(memoDocGen);
     });
     return "Documents created successfully. Check your documents folder in ClientDocs folder.";
-  // }catch(e){
-  //   return e.toString();
-  // }
+  }catch(e){
+    return e.toString();
+  }
 
 
 

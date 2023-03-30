@@ -37,7 +37,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text("What do you want to add? Select from below."),
+                      child: Text("Select company objectives from below."),
                     ),
                     MemoSelectionSection(memos: memos,callback: widget.callback),
                   ],
