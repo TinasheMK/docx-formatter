@@ -11,7 +11,7 @@ import '../../models/registration/Invoice.dart';
 ///
 /// Read file template.docx, produce it and save
 ///
-Future <String> invoiceGenerator(Invoice invoice, String code, List<Memo> memos) async {
+Future <String> invoiceGenerator(Invoice invoice, String code, Client) async {
   try {
     // final f = File("assets/templates/invoicetemplate1.docx");
 
@@ -87,7 +87,7 @@ Future <String> invoiceGenerator(Invoice invoice, String code, List<Memo> memos)
       if (docGen != null) await file.writeAsBytes(docGen);
     });
 
-    return "Documents created successfully. Check your downloads folder in invoices folder.";
+    return "Invoice created successfully. Check your downloads folder in invoices folder.";
   }catch(e){
     return e.toString();
   }
@@ -98,7 +98,9 @@ Future <String> invoiceGenerator(Invoice invoice, String code, List<Memo> memos)
 Future<String?> getDownloadPath() async {
   Directory? directory;
   try {
-    if (Platform.isIOS || Platform.isWindows) {
+    if (Platform.isIOS ) {
+      directory = await getApplicationDocumentsDirectory();
+    } else if (Platform.isWindows) {
       directory = await getApplicationDocumentsDirectory();
     } else {
       directory = Directory('/storage/emulated/0/Download/');

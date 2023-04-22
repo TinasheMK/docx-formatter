@@ -69,7 +69,6 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   TextEditingController txtQuery = new TextEditingController();
 
 
-  List<String> memoItems = [];
 
   void loadData() async {
     setState(() {});
@@ -82,7 +81,11 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   late Client client ;
 
   Future<void> _initclient() async {
-    client = await getClient(clientId);
+    if(clientId!=null) {
+      client = await getClient(clientId);
+    }else{
+      client= Client.fromJson({});
+    }
     setState(() {});
   }
 
@@ -108,7 +111,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    print(client!.toJson().toString());
+    print(client?.toJson().toString());
     print(widget.code);
 
     // print(widget.code);
@@ -136,7 +139,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(title: client.companyName!,),
+              MiniInformation(title: client.companyName?? 'Company Name',),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,8 +148,6 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                     flex: 5,
                     child: Column(
                       children: [
-                        //MyFiels(),
-                        //SizedBox(height: defaultPadding),
                         Container(
                           width: double.infinity,
                           constraints: BoxConstraints(
@@ -165,64 +166,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                   children: [
                                     Expanded(
                                       child: Column(children: [
-                                        // Row(
-                                        //   // mainAxisAlignment: MainAxisAlignment.end,
-                                        //   children: [
-                                        //     Expanded(
-                                        //       child:
-                                        //       Padding(
-                                        //         padding: EdgeInsets.only(left: 5, right:5),
-                                        //         child: InputWidget(
-                                        //           topLabel: "First Name",
-                                        //           keyboardType: TextInputType.text,
-                                        //           onSaved: (String? value) {
-                                        //             // This optional block of code can be used to run
-                                        //             // code when the user saves the form.
-                                        //           },
-                                        //           onChanged: (String? value) {
-                                        //             employee.firstName = value;
-                                        //           },
-                                        //           kInitialValue: client!.employees?[0].firstName ,
-                                        //
-                                        //
-                                        //
-                                        //           // prefixIcon: FlutterIcons.chevron_left_fea,
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //     SizedBox(height: 3),
-                                        //   ],),
-                                        // Row(
-                                        //   mainAxisAlignment: MainAxisAlignment.end,
-                                        //   children: [
-                                        //     Expanded(
-                                        //       child:
-                                        //       Padding(
-                                        //         padding: EdgeInsets.only(left: 5, right:5),
-                                        //         child: InputWidget(
-                                        //           topLabel: "Last Name",
-                                        //           keyboardType: TextInputType.text,
-                                        //           onSaved: (String? value) {
-                                        //             // This optional block of code can be used to run
-                                        //             // code when the user saves the form.
-                                        //           },
-                                        //           onChanged: (String? value) {
-                                        //             employee.lastName = value;
-                                        //           },
-                                        //           validator: (String? value) {
-                                        //             return (value != null && value.contains('@'))
-                                        //                 ? 'Do not use the @ char.'
-                                        //                 : null;
-                                        //           },
-                                        //           kInitialValue: client!.employees?[0].lastName ,
-                                        //
-                                        //
-                                        //           // prefixIcon: FlutterIcons.chevron_left_fea,
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //     SizedBox(height: 3),
-                                        //   ],),
+
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
@@ -248,7 +192,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                     }
                                                     return null;
                                                   },
-                                                  kInitialValue: client.companyName!,
+                                                  kInitialValue: client.companyName ?? "Wii",
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -283,11 +227,6 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                             ),
                                             SizedBox(height: 3),
                                           ],),
-                                      ],),
-
-                                    ),
-                                    Expanded(
-                                      child: Column(children: [
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
@@ -319,6 +258,12 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                             ),
                                             SizedBox(height: 3),
                                           ],),
+                                      ],),
+
+                                    ),
+                                    Expanded(
+                                      child: Column(children: [
+
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
@@ -421,64 +366,6 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                   children: [
                                     Expanded(
                                       child: Column(children: [
-                                        // Row(
-                                        //   // mainAxisAlignment: MainAxisAlignment.end,
-                                        //   children: [
-                                        //     Expanded(
-                                        //       child:
-                                        //       Padding(
-                                        //         padding: EdgeInsets.only(left: 5, right:5),
-                                        //         child: InputWidget(
-                                        //           topLabel: "First Name",
-                                        //           keyboardType: TextInputType.text,
-                                        //           onSaved: (String? value) {
-                                        //             // This optional block of code can be used to run
-                                        //             // code when the user saves the form.
-                                        //           },
-                                        //           onChanged: (String? value) {
-                                        //             employee.firstName = value;
-                                        //           },
-                                        //           kInitialValue: client!.employees?[0].firstName ,
-                                        //
-                                        //
-                                        //
-                                        //           // prefixIcon: FlutterIcons.chevron_left_fea,
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //     SizedBox(height: 3),
-                                        //   ],),
-                                        // Row(
-                                        //   mainAxisAlignment: MainAxisAlignment.end,
-                                        //   children: [
-                                        //     Expanded(
-                                        //       child:
-                                        //       Padding(
-                                        //         padding: EdgeInsets.only(left: 5, right:5),
-                                        //         child: InputWidget(
-                                        //           topLabel: "Last Name",
-                                        //           keyboardType: TextInputType.text,
-                                        //           onSaved: (String? value) {
-                                        //             // This optional block of code can be used to run
-                                        //             // code when the user saves the form.
-                                        //           },
-                                        //           onChanged: (String? value) {
-                                        //             employee.lastName = value;
-                                        //           },
-                                        //           validator: (String? value) {
-                                        //             return (value != null && value.contains('@'))
-                                        //                 ? 'Do not use the @ char.'
-                                        //                 : null;
-                                        //           },
-                                        //           kInitialValue: client!.employees?[0].lastName ,
-                                        //
-                                        //
-                                        //           // prefixIcon: FlutterIcons.chevron_left_fea,
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //     SizedBox(height: 3),
-                                        //   ],),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
@@ -504,7 +391,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                     }
                                                     return null;
                                                   },
-                                                  kInitialValue: client.companyName.toString(),
+                                                  kInitialValue: client.companyName ?? '',
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,

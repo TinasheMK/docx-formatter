@@ -25,6 +25,7 @@ import '../../generator/invoicegenerator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import '../../memos/memo_list_material.dart';
+import '../register_home_screen.dart';
 import './components/mini_information_card.dart';
 
 import '../components/recent_forums.dart';
@@ -54,13 +55,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   int? invoiceId;
 
 
-  var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-      .chain(CurveTween(curve: Curves.ease));
-  var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
-      .chain(CurveTween(curve: Curves.ease));
-
-  AnimationController? _animationController;
-
   var _isMoved = false;
 
 
@@ -84,15 +78,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   late String city;
   late String street;
   late String companyName;
-  List<String> memoItems = [];
-
-  void loadData() async {
-    // String jsonStr = await rootBundle.loadString('assets/persons.json');
-    // var json = jsonDecode(jsonStr);
-    // persons = json;
-    // original = json;
-    setState(() {});
-  }
+  String memoItems = '';
 
 
   void search(String query) {
@@ -103,7 +89,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     }
 
     query = query.toLowerCase();
-    print(query);
+    // print(query);
     List result = [];
     persons.forEach((p) {
       var name = p["name"].toString().toLowerCase();
@@ -128,21 +114,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   }
 
 
-   List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
+  List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
 
   late int crossAxisCount;
   late double childAspectRatio;
-  late List<Memo> memosSet = [];
+  late Client selectedClient = Client.fromJson({});
   late String _dateCount;
   late String _range;
 
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
-    _animationController?.dispose();
-
     myController.forEach((e) {
       e.forEach((a) {
         a.dispose();
@@ -153,32 +135,39 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   }
 
 
-  late Invoice invoice ;
+  Invoice invoice = Invoice.fromJson({});
 
   Future<void> _initInvoice() async {
-    invoice = await getInvoice(invoiceId);
-    setState(() {});
+    if(invoiceId!=null) {
+      invoice = await getInvoice(invoiceId);
+      selectedClient = await getClient(invoice.client);
+      invoice.invoiceitems = await getInvoiceItems(invoiceId);
+    }else{
+      invoice = Invoice.fromJson({});
+      invoice.invoiceStatus = 'DRAFT';
+      invoice.invoiceDate = DateTime.now().toString();
+      invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
+    }
+    if(invoice.invoiceitems == null) {
+      invoice.invoiceitems = [InvoiceItem.fromJson({})];
+    }
+
+
+    setState(() {
+      invoice;
+    });
   }
 
   @override
   void initState() {
-
     super.initState();
     _initInvoice();
-    _dateCount = '';
-    _range = '';
-
-    loadData();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 750),
-    );
-
     myController.forEach((e) {
       e.forEach((a) {
         a.addListener(_printLatestValue);
       });
     });
+
 
 
 
@@ -188,7 +177,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
     myController.forEach((e) {
       e.forEach((a) {
-        print('Second text field: ${a.text}');
+        // print('Second text field: ${a.text}');
       });
 
     });
@@ -201,26 +190,25 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    invoice.subTotalAmount = 0;
-    invoice.invoiceDate = DateTime.now().toString();
-    invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
-    print(invoice!.toJson().toString());
+
+
+    // print(invoice!.toJson().toString());
 
     // print(widget.code);
-    final _Size.Size _size = MediaQuery.of(context).size;
-    crossAxisCount= _size.width < 650 ? 2 : 4;
-    childAspectRatio= _size.width < 650 ? 3 : 3;
+    // final _Size.Size _size = MediaQuery.of(context).size;
+    // crossAxisCount= _size.width < 650 ? 2 : 4;
+    // childAspectRatio= _size.width < 650 ? 3 : 3;
 
-    memosSet = memoInits;
+    // allClients = memoInits;
 
-    for( int i = 0 ; i < memos.length; i++ ) {
-      if(memos[i].set!="set"){
-        memosSet.removeWhere((element) => element.code == memos[i].code);
-        print(i);
-      }else if(memos.length==0){
-        memosSet.add(memos[1]);
-      }
-    }
+    // for( int i = 0 ; i < memos.length; i++ ) {
+    //   if(memos[i].set!="set"){
+    //     allClients.removeWhere((element) => element.code == memos[i].code);
+    //     print(i);
+    //   }else if(memos.length==0){
+    //     allClients.add(memos[1]);
+    //   }
+    // }
 
 
 
@@ -270,24 +258,43 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   Container _registerScreen(BuildContext context) {
 
-    callback(mem, action) {
-      if(action=="set"){
-        setState(() {
-          memoItems.add(mem);
-          print(memoItems);
-          memosSet.add(memos.where((element) => element.code ==mem).first);
+    // invoice.subTotalAmount = 0;
+    invoice.invoiceitems?.forEach((e) {
+      myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
 
+      print(e.toJson());
+    });
+
+
+
+    callback(mem, action) async {
+      if(action=="set"){
+        memoItems = mem;
+        print("Selected client with id" + memoItems);
+        // print(memoItems);
+        selectedClient = await getClient(int.parse(mem));
+        // allClients.add(memos.where((element) => element.code ==mem).first);
+        // print(selectedClient);
+
+        setState(()  {
 
         });
       }else{
         setState(() {
-          memoItems.removeWhere((element) => element == mem);
-          memosSet.removeWhere((element) => element.code == mem);
+          // allClients.removeWhere((element) => element.code == mem);
 
-          print(memoItems);
+          // print(memoItems);
         });
       }
     }
+
+    double total = 0;
+
+      invoice.invoiceitems?.forEach((i) {
+        total += i.total ?? 0;
+      });
+
+      invoice?.subTotalAmount = total;
 
     return Container(
       width: double.infinity,
@@ -317,38 +324,51 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     ),
                   ),
                   onPressed: () {
+
+
+                    invoice.invoiceStatus = 'UNPAID';
+                    invoice.save();
+                    // print(invoice.toJson());
+
+
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Publishing"),
+                      content: Text('Invoice Published'),
                     ));
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    );
+
                   },
                   icon: Icon(Icons.send),
                   label: Text(
                     "Publish",
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-                  },
-                  icon: Icon(Icons.mail),
-                  label: Text(
-                    "Publish & Send Email",
-                  ),
-                ),
+                // SizedBox(
+                //   width: 10,
+                // ),
+                // ElevatedButton.icon(
+                //   style: TextButton.styleFrom(
+                //     backgroundColor: Colors.orange,
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: defaultPadding * 1.5,
+                //       vertical:
+                //       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                //     ),
+                //   ),
+                //   onPressed: () {
+                //     // Navigator.push(
+                //     //   context,
+                //     //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                //     // );
+                //   },
+                //   icon: Icon(Icons.mail),
+                //   label: Text(
+                //     "Publish & Send Email",
+                //   ),
+                // ),
               ],
             ),
 
@@ -380,7 +400,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
-                              memosSet.length >= 1 ? Container(
+                              selectedClient.companyName != null ? Container(
                                   margin: EdgeInsets.only(left: defaultPadding),
                                   padding: EdgeInsets.symmetric(
                                     horizontal: defaultPadding /2,
@@ -392,7 +412,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                     border: Border.all(color: Colors.white10),
                                   ),
                                   child: TextButton(
-                                    child: Text(memosSet[0].title!, style: TextStyle(color: Colors.white)),
+                                    child: Text(selectedClient.companyName!, style: TextStyle(color: Colors.white)),
                                     onPressed: () {
                                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                                           builder: (BuildContext context) {
@@ -464,7 +484,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                   child: SfDateRangePicker(
                                                     onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                                                       setState(() {
-                                                        print(args.value);
+                                                        // print(args.value);
                                                         invoice.invoiceDate = args.value.toString();
                                                       });
                                                     },
@@ -521,9 +541,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                 height: 300,
                                                 child: SfDateRangePicker(
                                                   onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                                                    // print(args.value);
+                                                    invoice.dueDate = args.value.toString();
                                                     setState(() {
-                                                      print(args.value);
-                                                      invoice.dueDate = args.value.toString();
+
                                                     });
                                                   },
                                                   selectionMode: DateRangePickerSelectionMode.single,
@@ -553,12 +574,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "\$"+ invoice.totalAmount.toString()!, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "\$"+ invoice.subTotalAmount.toString() != null
+                                  ?   invoice.subTotalAmount.toString()
+                                  : '0', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
 
                             ]
                         ),
-
                       ),
                     ],
                   ),
@@ -570,10 +592,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         child:
                         Row(
                             children:[
-                              Text( "Balance:             ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                              ),
-                              Text( "\$12", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                              ),
+                              // Text( "Balance:             ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              // ),
+                              // Text( "\$12", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              // ),
                             ]
                         ),
 
@@ -588,7 +610,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
             //First Director
             Center(
-              child: Text( "Draft", style: TextStyle(fontSize: 30, color: Colors.white),
+              child: Text( invoice.invoiceStatus != null ? invoice.invoiceStatus! : 'DRAFT', style: TextStyle(fontSize: 30, color: Colors.white),
               ),
             ),
             SizedBox(height: 16.0),
@@ -603,156 +625,156 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             ),
             SizedBox(height: 10.0),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: defaultPadding),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: defaultPadding,
-                    vertical: defaultPadding / 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: secondaryColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(color: Colors.white10),
-                  ),
-                  child: TextButton(
-                    child: Text("Invoice Created", style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                                title: Center(
-                                  child: Column(
-                                    children: [
-                                      Text("Select Notification Type"),
-                                    ],
-                                  ),
-                                ),
-                                content: Container(
-                                  color: secondaryColor,
-                                  height: 200,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.only(left: defaultPadding),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: defaultPadding,
-                                          vertical: defaultPadding / 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Invoice Created", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-                                      Container(
-                                        margin: EdgeInsets.only(left: defaultPadding),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: defaultPadding,
-                                          vertical: defaultPadding / 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Invoice Modified", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        margin: EdgeInsets.only(left: defaultPadding),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: defaultPadding,
-                                          vertical: defaultPadding / 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Invoice Overdue", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(
-                                        height: 16,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ElevatedButton.icon(
-                                              icon: Icon(
-                                                Icons.close,
-                                                size: 14,
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              label: Text("Cancel")),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ));
-                          });
-                    },
-                    // Delete
-                  ),
-
-                ),
-                SizedBox(width: 16.0),
-                SizedBox(
-                  // padding: EdgeInsets.only(left:0, top:25, right:0, bottom:0),
-                  child:ElevatedButton.icon(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: defaultPadding * 1.5,
-                        vertical:
-                        defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                      // );
-                    },
-                    icon: Icon(Icons.mail),
-                    label: Text(
-                      "Send Email",
-                    ),
-                  )
-                ),
-
-              ],
-            ),
-            SizedBox(height: 16.0),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Container(
+            //       margin: EdgeInsets.only(left: defaultPadding),
+            //       padding: EdgeInsets.symmetric(
+            //         horizontal: defaultPadding,
+            //         vertical: defaultPadding / 2,
+            //       ),
+            //       decoration: BoxDecoration(
+            //         color: secondaryColor,
+            //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //         border: Border.all(color: Colors.white10),
+            //       ),
+            //       child: TextButton(
+            //         child: Text("Invoice Created", style: TextStyle(color: Colors.white)),
+            //         onPressed: () {
+            //           showDialog(
+            //               context: context,
+            //               builder: (_) {
+            //                 return AlertDialog(
+            //                     title: Center(
+            //                       child: Column(
+            //                         children: [
+            //                           Text("Select Notification Type"),
+            //                         ],
+            //                       ),
+            //                     ),
+            //                     content: Container(
+            //                       color: secondaryColor,
+            //                       height: 200,
+            //                       child: Column(
+            //                         children: [
+            //                           Container(
+            //                             margin: EdgeInsets.only(left: defaultPadding),
+            //                             padding: EdgeInsets.symmetric(
+            //                               horizontal: defaultPadding,
+            //                               vertical: defaultPadding / 2,
+            //                             ),
+            //                             decoration: BoxDecoration(
+            //                               color: secondaryColor,
+            //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //                               border: Border.all(color: Colors.white10),
+            //                             ),
+            //                             child: TextButton(
+            //                               child: Text("Invoice Created", style: TextStyle(color: Colors.white)),
+            //                               onPressed: () {
+            //                               },
+            //                               // Delete
+            //                             ),
+            //
+            //                           ),
+            //                           SizedBox(height: 7,),
+            //                           Container(
+            //                             margin: EdgeInsets.only(left: defaultPadding),
+            //                             padding: EdgeInsets.symmetric(
+            //                               horizontal: defaultPadding,
+            //                               vertical: defaultPadding / 2,
+            //                             ),
+            //                             decoration: BoxDecoration(
+            //                               color: secondaryColor,
+            //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //                               border: Border.all(color: Colors.white10),
+            //                             ),
+            //                             child: TextButton(
+            //                               child: Text("Invoice Modified", style: TextStyle(color: Colors.white)),
+            //                               onPressed: () {
+            //                               },
+            //                               // Delete
+            //                             ),
+            //
+            //                           ),
+            //                           SizedBox(height: 7,),
+            //
+            //                           Container(
+            //                             margin: EdgeInsets.only(left: defaultPadding),
+            //                             padding: EdgeInsets.symmetric(
+            //                               horizontal: defaultPadding,
+            //                               vertical: defaultPadding / 2,
+            //                             ),
+            //                             decoration: BoxDecoration(
+            //                               color: secondaryColor,
+            //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //                               border: Border.all(color: Colors.white10),
+            //                             ),
+            //                             child: TextButton(
+            //                               child: Text("Invoice Overdue", style: TextStyle(color: Colors.white)),
+            //                               onPressed: () {
+            //                               },
+            //                               // Delete
+            //                             ),
+            //
+            //                           ),
+            //
+            //                           SizedBox(
+            //                             height: 16,
+            //                           ),
+            //                           Row(
+            //                             mainAxisAlignment: MainAxisAlignment.center,
+            //                             children: [
+            //                               ElevatedButton.icon(
+            //                                   icon: Icon(
+            //                                     Icons.close,
+            //                                     size: 14,
+            //                                   ),
+            //                                   style: ElevatedButton.styleFrom(
+            //                                       primary: Colors.grey),
+            //                                   onPressed: () {
+            //                                     Navigator.of(context).pop();
+            //                                   },
+            //                                   label: Text("Cancel")),
+            //                             ],
+            //                           )
+            //                         ],
+            //                       ),
+            //                     ));
+            //               });
+            //         },
+            //         // Delete
+            //       ),
+            //
+            //     ),
+            //     SizedBox(width: 16.0),
+            //     SizedBox(
+            //       // padding: EdgeInsets.only(left:0, top:25, right:0, bottom:0),
+            //       child:ElevatedButton.icon(
+            //         style: TextButton.styleFrom(
+            //           backgroundColor: Colors.grey,
+            //           padding: EdgeInsets.symmetric(
+            //             horizontal: defaultPadding * 1.5,
+            //             vertical:
+            //             defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+            //           ),
+            //         ),
+            //         onPressed: () {
+            //           // Navigator.push(
+            //           //   context,
+            //           //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+            //           // );
+            //         },
+            //         icon: Icon(Icons.mail),
+            //         label: Text(
+            //           "Send Email",
+            //         ),
+            //       )
+            //     ),
+            //
+            //   ],
+            // ),
+            // SizedBox(height: 16.0),
 
 
             Row(
@@ -772,6 +794,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     //   context,
                     //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
                     // );
+
+                    invoice.invoiceStatus = 'CANCELLED';
+                    invoice.save();
+
+                    invoice.invoiceitems?.forEach((e) {
+                      print(e.toJson());
+                    });
+
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Marked as cancelled'),
+                    ));
+
+                    setState(() {
+
+                    });
                   },
                   icon: Icon(Icons.cancel),
                   label: Text(
@@ -795,6 +833,21 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     //   context,
                     //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
                     // );
+
+
+                    invoice.invoiceStatus = 'UNPAID';
+                    invoice.save();
+                    // print(invoice.toJson());
+
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Marked as unpaid'),
+                    ));
+
+                    setState(() {
+
+                    });
+
                   },
                   icon: Icon(Icons.cancel_outlined),
                   label: Text(
@@ -841,8 +894,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ),
                       ],
                       rows: List.generate(
-                        invoice!.invoiceitems!.length,
-                            (index) => _recentUserDataRow(invoice!.invoiceitems![index], index, context),
+                        invoice.invoiceitems != null ? invoice.invoiceitems!.length : 0 ,
+                            (index) => _recentUserDataRow(invoice.invoiceitems?[index] ?? InvoiceItem.fromJson({}), index, context),
                       ),
                     ),
                 ),
@@ -958,20 +1011,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                     // invoice.invoiceitems! = invoice!.invoiceitems!;
                     invoice.totalAmount = invoice.subTotalAmount;
-                    invoice.client = int.parse(memoItems[0]);
+                    invoice.client = selectedClient.id;
                     invoice.save();
 
-                    print(invoice.toJson());
+                    // print(invoice.toJson());
 
-                    var response = await invoiceGenerator(invoice, widget.code, memosSet);
+                    var response = await invoiceGenerator(invoice, widget.code, selectedClient);
 
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(response),
                     ));
 
-                    // setState(() {
-                    //   generatorResp = response;
-                    // });
                   },
                   icon: Icon(Icons.save),
                   label: Text(
@@ -1021,7 +1071,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     "Related Payments",
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
-                  SingleChildScrollView(
+                  invoice.payments !=null
+
+                  ?SingleChildScrollView(
                     //scrollDirection: Axis.horizontal,
                     child: SizedBox(
                       width: double.infinity,
@@ -1043,11 +1095,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           ),
                         ],
                         rows: List.generate(
-                          recentUsers.length,
+                          invoice.payments!.length,
                               (index) => paymentsDataRow(recentUsers[index], context),
                         ),
                       ),
                     ),
+                  )
+                  :Text(
+                    "No payments",
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ],
               ),),
@@ -1075,19 +1131,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 Company company =  Company.fromJson(register);
 
-
-
-                // company.cl = directors;
-                // company.secretaries = secretaries;
-                // await company.save();
-                print(company.toJson());
-
-                // var response = await cr6FormGenerator(company, widget.code, memosSet);
-
-
-                // setState(() {
-                //   generatorResp = response;
-                // });
               },
             ),
             SizedBox(height: 24.0),
@@ -1112,6 +1155,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
   DataRow _recentUserDataRow( InvoiceItem item, int index, BuildContext context) {
+    myController[index][0].text = item.units?.toString() ?? "";
+    myController[index][1].text = item.description?.toString() ?? "";
+    myController[index][2].text = item.unitPrice?.toString() ?? "";
+    myController[index][3].text = item.total?.toString() ?? "";
     return DataRow(
       cells: [
         DataCell(
@@ -1138,15 +1185,19 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       :invoice!.invoiceitems![index].units =1 ;
 
 
-                  // invoice!.invoiceitems![index].unitPrice = invoice!.invoiceitems![index].total != null ? invoice!.invoiceitems![index].total : 1 / invoice!.invoiceitems![index].units! ;
-                  invoice!.invoiceitems![index].total!=null?invoice!.invoiceitems![index].total : invoice!.invoiceitems![index].total =1;
+                  invoice!.invoiceitems![index].total!=null
+                      ?''
+                      : invoice!.invoiceitems![index].total = 0;
+
                   invoice!.invoiceitems![index].unitPrice = invoice!.invoiceitems![index].total! / invoice!.invoiceitems![index].units!;
-                  print(invoice!.invoiceitems![index].toJson());
 
-                  setState(() {
-                    myController[index][2].text = invoice!.invoiceitems![index].unitPrice.toString();
+                  // print(invoice!.invoiceitems![index].toJson());
 
-                  });
+                  // if(invoice!.invoiceitems![index].unitPrice == null) {
+                    setState(() {
+                      myController[index][2].text =  invoice!.invoiceitems![index].unitPrice.toString();
+                    });
+                  // }
 
 
                 },
@@ -1172,8 +1223,51 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 ),
                 onChanged: (String value){
                   invoice!.invoiceitems![index].description =  value;
-                  print(invoice!.invoiceitems![index].toJson());
+                  // print(invoice!.invoiceitems![index].toJson());
                 },
+
+              ),)
+
+        ),
+        DataCell(
+            Padding(padding: EdgeInsets.all(3),
+              child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
+                ],
+                controller: myController[index][2],
+
+                decoration: InputDecoration(
+
+                  focusedBorder: OutlineInputBorder(
+                    //gapPadding: 16,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+
+                ),
+                onChanged: (String value){
+                  invoice!.invoiceitems![index].unitPrice =  double.parse(value) ;
+                  invoice!.invoiceitems![index].total =  double.parse(value) * (invoice!.invoiceitems![index].units!=null ? invoice!.invoiceitems![index].units!:1);
+                  // print(invoice!.invoiceitems![index].toJson());
+
+                  var total = 0.0;
+                  invoice!.invoiceitems!.forEach((e) {
+                    if(e.total==null){e.total = 0;}
+                    total+=e.total!;
+                  });
+
+                  invoice.subTotalAmount = total;
+
+                  setState(() {
+                    myController[index][3].text = invoice!.invoiceitems![index].total.toString();
+
+                  });
+
+
+                },
+
 
               ),)
 
@@ -1186,35 +1280,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
                 ],
-                controller: myController[index][2],
-                decoration: InputDecoration(
-
-                  focusedBorder: OutlineInputBorder(
-                    //gapPadding: 16,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                ),
-
-                onChanged: (String value){
-                  invoice!.invoiceitems![index].unitPrice =  double.parse(value);
-                  print(invoice!.invoiceitems![index].toJson());
-                },
-
-
-              ),)
-
-        ),
-        DataCell(
-            Padding(padding: EdgeInsets.all(3),
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
-                ],
                 controller: myController[index][3],
-
                 decoration: InputDecoration(
 
                   focusedBorder: OutlineInputBorder(
@@ -1225,25 +1291,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
 
                 ),
+
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].total =  double.parse(value) ;
-                  invoice!.invoiceitems![index].unitPrice =  double.parse(value) / (invoice!.invoiceitems![index].units!=null ? invoice!.invoiceitems![index].units!:1);
-                  print(invoice!.invoiceitems![index].toJson());
-
-                  var total = 0.0;
-                  invoice!.invoiceitems!.forEach((e) {
-                    if(e.total==null){e.total = 0;}
-                    total+=e.total!;
-                  });
-
-                  invoice.subTotalAmount = total;
-
-                  setState(() {
-                    myController[index][2].text = invoice!.invoiceitems![index].unitPrice.toString();
-
-                  });
-
-
+                  invoice!.invoiceitems![index].total =  double.parse(value);
+                  // print(invoice!.invoiceitems![index].toJson());
                 },
 
 
@@ -1253,15 +1304,16 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         DataCell(
           Row(
             children: [
-              invoice!.invoiceitems!.length != 1
+              invoice.invoiceitems?.length != 1
                   ? TextButton(
                     child: Icon(Icons.delete, color: Colors.redAccent,),
                     onPressed: () {
                       deleteRow(index);
+                      item.delete();
                     },
               )
                   : SizedBox(width: 0,),
-              invoice!.invoiceitems!.length == (index+1) ? TextButton(
+              invoice.invoiceitems?.length == (index+1) ? TextButton(
                 child: Icon(Icons.add, color: Colors.blueAccent,),
                 onPressed: () {
                   setState ((){

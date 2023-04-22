@@ -126,6 +126,13 @@ class DatabaseHelper {
     return await _db.query(table);
   }
 
+
+  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, {String? filter}) async {
+    return filter != null
+        ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
+        : await _db.query(table,orderBy: 'invoice_date desc');
+  }
+
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
   Future<int> queryRowCount(String table) async {

@@ -27,6 +27,7 @@ class InvoiceItem {
   });
 
   InvoiceItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     product = json['product'];
     unitPrice = json['unitPrice'];
     units = json['units'];
@@ -39,6 +40,7 @@ class InvoiceItem {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
+    data['id'] = this.id;
     data['product'] = this.product;
     data['unitPrice'] = this.unitPrice;
     data['units'] = this.units;
@@ -66,6 +68,7 @@ class InvoiceItem {
     debugPrint('adding   invoice_item');
 
     Map<String, dynamic> row = {
+      'id': this.id,
       'product': this.product,
       'unit_price': this.unitPrice,
       'units': this.units,
@@ -73,7 +76,17 @@ class InvoiceItem {
       'invoice_id': invoiceId,
       'description': this.description,
     };
-    final id = await dbHelper.insert("invoice_item", row);
+
+    var id;
+
+    if(this.id==null) {
+      final id = await dbHelper.insert("invoice_item", row);
+    }else{
+      dbHelper.update('invoice_item',row);
+      id = this.id;
+    }
+
+
     this.id = id;
     debugPrint('inserted invoice_item row id: $id');
   }
@@ -115,7 +128,7 @@ Future<List<InvoiceItem>> getInvoiceItems(id) async {
     return InvoiceItem(
       id : maps[i]['id'],
       product : maps[i]['product'],
-      unitPrice : maps[i]['unitPrice'],
+      unitPrice : maps[i]['unit_price'],
       units : maps[i]['units'],
       total : maps[i]['total'],
       invoiceId : maps[i]['invoiceId'],

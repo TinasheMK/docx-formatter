@@ -5,8 +5,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../responsive.dart';
+import '../../clients/clients_home_screen.dart';
+import '../../clients/new/new_client_home_screen.dart';
 import '../../forms/input_form.dart';
 import '../../forms/new_task.dart';
+import '../../invoice/new/new_register_home_screen.dart';
+import '../../invoice/register_home_screen.dart';
 
 class MiniInformationWidget extends StatefulWidget {
   const MiniInformationWidget({
@@ -31,138 +35,55 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
         color: secondaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MediaQuery.of(context).size.width > 715 ?  MainAxisAlignment.spaceBetween :
-                               MediaQuery.of(context).size.width < 650 ?  MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
-            children: [
-              MediaQuery.of(context).size.width > 715 ? Container(
-                      padding: EdgeInsets.all(defaultPadding * 0.5),
-                      height: 40,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: widget.dailyData.color!.withOpacity(0.1),
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Icon(
-                        widget.dailyData.icon,
-                        color: widget.dailyData.color,
-                        size: 15,
-                      ),
-                    ) :
-              MediaQuery.of(context).size.width < 650 ? Container(
-                      padding: EdgeInsets.all(defaultPadding * 0.5),
-                      height: 40,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: widget.dailyData.color!.withOpacity(0.1),
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Icon(
-                        widget.dailyData.icon,
-                        color: widget.dailyData.color,
-                        size: 15,
-                      ),
-                    ) :
-                  SizedBox(width: 0,),
-
-
-
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.all(defaultPadding * 0.75),
-                          height: 40,
-                          width: 75,
-                          decoration: BoxDecoration(
-                            color: widget.dailyData.color!.withOpacity(0.1),
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Text("Action",
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(new MaterialPageRoute<Null>(
-                              builder: (BuildContext context) {
-                                return new NewTask(dailyData: widget.dailyData,);
-                              },
-                              fullscreenDialog: true));
-                        }
-                    ),
-                    // SizedBox(
-                    //   width: 4,
-                    // ),
-                    // GestureDetector(
-                    //     child: Container(
-                    //       padding: EdgeInsets.all(defaultPadding * 0.75),
-                    //       height: 40,
-                    //       width: 60,
-                    //       decoration: BoxDecoration(
-                    //         color: widget.dailyData.color!.withOpacity(0.1),
-                    //         borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    //       ),
-                    //       child: Text(
-                    //         "View",
-                    //       ),
-                    //     ),
-                    //     onTap: () {
-                    //       Navigator.of(context).push(new MaterialPageRoute<Null>(
-                    //           builder: (BuildContext context) {
-                    //             return new NewTask(dailyData: widget.dailyData,);
-                    //           },
-                    //           fullscreenDialog: true));
-                    //     }
-                    // ),
-                    ]
+      child: SizedBox(
+        child:
+        GestureDetector(
+            child: Container(
+              padding: EdgeInsets.all(defaultPadding * 0.75),
+              alignment: Alignment.center,
+              // height: 40,
+              // width: 175,
+              decoration: BoxDecoration(
+                color: widget.dailyData.color!.withOpacity(0.1),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
+              child: Text(widget.dailyData.title!, style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold
+              ),
+              ),
+            ),
+            onTap: () {
+              // Navigator.of(context).push(new MaterialPageRoute<Null>(
+              //     builder: (BuildContext context) {
+                    if(widget.dailyData.code == 'newin') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Invoice', code: 'invoice',)),
+                      );
+                    }else if(widget.dailyData.code == 'newclie'){
+                      Navigator.of(context).push(new MaterialPageRoute<Null>(
+                          builder: (BuildContext context) {
+                            return new NewClientHome(title: "New Client", code: "client");
+                          },
+                          fullscreenDialog: true));
+                    }else if(widget.dailyData.code == 'clients'){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
+                      );
+                    }else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                      );
+                    }
+                    // return new NewTask(dailyData: widget.dailyData,);
 
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.dailyData.title!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              // Container(
-              //   child: LineChartWidget(
-              //     colors: widget.dailyData.colors,
-              //     spotsData: widget.dailyData.spots,
-              //   ),
-              // )
-            ],
-          ),
-          ProgressLine(
-            color: widget.dailyData.color!,
-            percentage: widget.dailyData.percentage!,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${widget.dailyData.volumeData}",
-                style: Theme.of(context)
-                    .textTheme
-                    .caption!
-                    .copyWith(color: Colors.white70),
-              ),
-              // Text(
-              //   widget.dailyData.totalStorage!,
-              //   style: Theme.of(context)
-              //       .textTheme
-              //       .caption!
-              //       .copyWith(color: Colors.white),
-              // ),
-            ],
-          )
-        ],
+                  // },
+                  // fullscreenDialog: true));
+            }
+        ),
       ),
     );
   }

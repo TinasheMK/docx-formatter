@@ -123,6 +123,8 @@ class MiniInformationWidget extends StatefulWidget {
 class _MiniInformationWidgetState extends State<MiniInformationWidget> {
   bool _visible = false;
 
+  int selectedClient = 0;
+
   TextEditingController _controller = TextEditingController();
 
   void _toggle() {
@@ -159,7 +161,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
+        color: selectedClient==widget.memo.id?darkgreenColor:Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Row(
@@ -191,7 +193,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     SizedBox(width: 6,),
                     Text(
-                      "${widget.memo.companyName!}",
+                      "${widget.memo.companyName?? 'Name'}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -200,22 +202,25 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     Visibility(
                       visible: !_visible,
-                      child: widget.memo.set=="set"?Icon(Icons.cancel_outlined, size: 18):Icon(Icons.add, size: 18),
+                      child: selectedClient==widget.memo.id?Icon(Icons.cancel_outlined, size: 18):Icon(Icons.add, size: 18),
                     )
                   ],
                 ),
               ),
               onTap: () {
                 // _toggle();
-                if(widget.memo.set=="set"){
+                if(selectedClient==widget.memo.id){
                   widget.callback(widget.memo.id.toString()!, "not");
+                  selectedClient=='';
+                  print(selectedClient);
+
                   setState(() {
-                    widget.memo.set="not";
                   });
                 }else{
                   widget.callback(widget.memo.id.toString()!, "set");
+                  selectedClient = widget.memo.id!;
+                  print(selectedClient);
                   setState(() {
-                    widget.memo.set="set";
                   });
 
                 }

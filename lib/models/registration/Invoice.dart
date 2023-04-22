@@ -18,7 +18,7 @@ class Invoice {
   Double? discount;
   String? invoiceDate;
   String? dueDate;
-  InvoiceStatus? invoiceStatus;
+  String? invoiceStatus;
   int?      client;
   Client?   clientFull;
   List<Payment>?     payments;
@@ -81,12 +81,15 @@ class Invoice {
     // data['clientFull'] = this.clientFull.toJson();
 
     return data;
+
+
   }
 
 
   Future<void> save() async {
     Map<String, dynamic> row = {
 
+      "id": this.id,
       "total_amount": this.totalAmount,
       "vat_percent": this.vatPercent,
       "vat_amount": this.vatAmount,
@@ -101,8 +104,16 @@ class Invoice {
 
 
     };
-    final id = await dbHelper.insert("invoice", row);
-    this.id = id;
+
+    var id;
+
+    if(this.id==null) {
+      id = await dbHelper.insert("invoice", row);
+    }else{
+      final rowsAffected = await dbHelper.update("invoice",row);
+      id = this.id;
+    }
+
     var invs = this.invoiceitems;
     var pays = this.payments;
 
@@ -163,12 +174,21 @@ enum InvoiceStatus {
   UNPAID,
   PAID,
   PROCESSED,
+  CANCELLED,
+  DRAFT,
+  REFUNDED,
+  PUBLISHED,
+  OVERDUE,
 }
 
 
 
-Future<List<Invoice>> getInvoices() async {
-  final maps = await dbHelper.queryAllRows("invoice");
+Future<List<Invoice>> getInvoices({String? filter}) async {
+  var maps;
+
+  filter!=null && filter != 'ALL'
+      ?maps = await dbHelper.queryFilteredInvoices("invoice",filter: filter)
+      :maps = await dbHelper.queryFilteredInvoices("invoice");
 
   List<Invoice> invoices = [];
   for( int i =0; i  <maps.length; i++)   {

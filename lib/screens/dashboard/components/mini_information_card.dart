@@ -50,11 +50,11 @@ class MiniInformation extends StatelessWidget {
         Responsive(
           mobile: InformationCard(
             crossAxisCount: _size.width < 650 ? 2 : 4,
-            childAspectRatio: _size.width < 650 ? 1.2 : 1,
+            childAspectRatio: _size.width < 650 ? 2 : 2,
           ),
           tablet: InformationCard(),
           desktop: InformationCard(
-            childAspectRatio: _size.width < 1400 ? 1.2 : 1.4,
+            childAspectRatio: _size.width < 1400 ? 2 : 2,
           ),
         ),
       ],

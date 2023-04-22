@@ -59,16 +59,16 @@ class SideMenu extends StatelessWidget {
                 );
               },
             ),
-            DrawerListTile(
-              title: "Quotes",
-              svgSrc: "assets/icons/menu_task.svg",
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TaxHomeScreen()),
-                );
-              },
-            ),
+            // DrawerListTile(
+            //   title: "Quotes",
+            //   svgSrc: "assets/icons/menu_task.svg",
+            //   press: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => TaxHomeScreen()),
+            //     );
+            //   },
+            // ),
             DrawerListTile(
               title: "Clients",
               svgSrc: "assets/icons/menu_doc.svg",

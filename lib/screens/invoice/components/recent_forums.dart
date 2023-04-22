@@ -24,8 +24,10 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
 
   List<Invoice> invoices = [Invoice.fromJson({})];
 
-  Future<void> _initclients() async {
-    invoices = await getInvoices();
+  String filter = 'ALL';
+
+  Future<void> _initInvoices() async {
+    invoices = await getInvoices(filter: filter);
     setState(() {});
   }
 
@@ -33,12 +35,13 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
   void initState() {
     super.initState();
 
-    _initclients();
+    _initInvoices();
   }
 
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
@@ -48,9 +51,244 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Invoice List",
-            style: Theme.of(context).textTheme.subtitle1,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            children: [
+              Text(
+                "Invoice List",
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+
+              Container(
+                margin: EdgeInsets.only(left: defaultPadding),
+                padding: EdgeInsets.symmetric(
+                  horizontal: defaultPadding,
+                  vertical: defaultPadding / 2,
+                ),
+                decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(color: Colors.white10),
+                ),
+                child: TextButton(
+                  child: Text(filter + ' INVOICES', style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                              // title: Center(
+                              //   child: Column(
+                              //     children: [
+                              //       Text("Select Filter"),
+                              //     ],
+                              //   ),
+                              // ),
+                              content: Container(
+                                color: secondaryColor,
+                                height: 410,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("All Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'ALL';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+                                    SizedBox(height: 7,),
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("UNPAID Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'UNPAID';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+                                    SizedBox(height: 7,),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("Draft Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'DRAFT';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+
+                                    SizedBox(height: 7,),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("Paid Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'PAID';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+
+                                    SizedBox(height: 7,),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("Overdue Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'OVERDUE';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+
+                                    SizedBox(height: 7,),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("Cancelled Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'CANCELLED';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+                                    SizedBox(height: 7,),
+
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("Refunded Invoices", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'REFUNDED';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton.icon(
+                                            icon: Icon(
+                                              Icons.close,
+                                              size: 14,
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                                primary: Colors.grey),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            label: Text("Cancel")),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ));
+                        });
+                  },
+                  // Delete
+                ),
+
+              ),
+
+            ],
           ),
           SizedBox(
             width: double.infinity,
@@ -112,7 +350,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewRegisterHome(title: "Edit Client", code: "edit", invoiceId: userInfo.id );
+                      return new NewRegisterHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -124,7 +362,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
               onTap:(){
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewRegisterHome(title: "Edit Client", code: "edit", invoiceId: userInfo.id );
+                      return new NewRegisterHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },

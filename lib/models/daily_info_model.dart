@@ -75,8 +75,8 @@ client.map((item) => DailyInfoModel.fromJson(item)).toList();
 var dailyData = [
 
   {
-    "title": "BILLING",
-    "code": "deed",
+    "title": "INVOICES",
+    "code": "invoices",
     "volumeData": 1328,
     "icon": FlutterIcons.message1_ant,
     "totalStorage": "+ %5",
@@ -120,7 +120,7 @@ var dailyData = [
   },
   {
     "title": "CLIENTS",
-    "code": "zimra",
+    "code": "clients",
     "volumeData": 1328,
     "icon": FlutterIcons.comment_alt_faw5s,
     "totalStorage": "+ %8",
@@ -163,8 +163,8 @@ var dailyData = [
     ]
   },
   {
-    "title": "ORDERS",
-    "code": "praz",
+    "title": "NEW INVOICE",
+    "code": "newin",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
     "totalStorage": "+ %8",
@@ -207,8 +207,8 @@ var dailyData = [
     ]
   },
   {
-    "title": "REPORTS",
-    "code": "client",
+    "title": "NEW CLIENT",
+    "code": "newclie",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
     "totalStorage": "+ %20",

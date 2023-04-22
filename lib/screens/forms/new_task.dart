@@ -36,7 +36,7 @@ class _NewTaskState extends State<NewTask> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text("What do you want to add? Select from below."),
+                      child: Text("What do you want to add today? Select from below."),
                     ),
                     widget.dailyData.title=="DEEDS"?SelectionSection(tasks: billings,):
                     widget.dailyData.title=="ZIMRA"?SelectionSection(tasks: zimras,):
