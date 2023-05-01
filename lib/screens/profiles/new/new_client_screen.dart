@@ -15,12 +15,13 @@ import '../../../models/registration/Client.dart';
 import '../../../models/registration/Company.dart';
 import '../../../responsive.dart';
 
+import '../../clients/clients_home_screen.dart';
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import '../../invoice/components/header.dart';
 import '../../memos/memo_list_material.dart';
-import '../clients_home_screen.dart';
+import '../../profile/profiles_home_screen.dart';
 import 'components/mini_information_card.dart';
 
 import '../components/recent_users.dart';

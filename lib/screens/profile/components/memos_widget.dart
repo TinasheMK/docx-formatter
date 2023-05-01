@@ -5,7 +5,7 @@ import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/Memo.dart';
-import '../../../models/registration/Client.dart';
+import '../../../models/registration/Company.dart';
 
 class MemoSelectionSection extends StatelessWidget {
   const MemoSelectionSection({
@@ -74,10 +74,10 @@ class InformationCard extends StatefulWidget {
 class _InformationCardState extends State<InformationCard> {
 
 
-  List<Client> clients = [Client.fromJson({})];
+  List<Company> clients = [Company.fromJson({})];
 
-  Future<void> _initClients() async {
-    clients = await getClients();
+  Future<void> _initCompanys() async {
+    clients = await getCompanys();
     setState(() {});
   }
 
@@ -85,7 +85,7 @@ class _InformationCardState extends State<InformationCard> {
   void initState() {
     super.initState();
 
-    _initClients();
+    _initCompanys();
   }
 
 
@@ -113,7 +113,7 @@ class MiniInformationWidget extends StatefulWidget {
     required this.memo,
     required this.callback
   }) : super(key: key);
-  final Client memo;
+  final Company memo;
   final Function(String, String) callback;
 
   @override
@@ -172,7 +172,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               child: Container(
                 alignment: Alignment.center,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(

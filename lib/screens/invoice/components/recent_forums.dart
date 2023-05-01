@@ -302,7 +302,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
                   label: Text("Client"),
                 ),
                 DataColumn(
-                  label: Text("Invoice Date"),
+                  label: Text("Date"),
                 ),
                 DataColumn(
                   label: Text("Amount"),
@@ -371,167 +371,155 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
             SizedBox(
               width: 6,
             ),
-            // Responsive.isDesktop(context) ? ElevatedButton.icon(
+            // SizedBox(
+            //   width: 6,
+            // ),
+            // Responsive.isDesktop(context)
+            //     ? ElevatedButton.icon(
             //   style: ElevatedButton.styleFrom(
-            //     primary: Colors.green.withOpacity(0.5),
+            //     primary: Colors.red.withOpacity(0.5),
             //   ),
-            //   icon: Icon(
-            //     Icons.visibility,
-            //     size: 14,
-            //   ),
-            //   onPressed: () {},
-            //   //View
-            //   label: Text("View"),
-            // ) : Icon(Icons.remove_red_eye, color: Colors.green.withOpacity(0.5)),
-            SizedBox(
-              width: 6,
-            ),
-            Responsive.isDesktop(context)
-                ? ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red.withOpacity(0.5),
-              ),
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (_) {
-                      return AlertDialog(
-                          title: Center(
-                            child: Text("Confirm Deletion"),
-                          ),
-                          content: Container(
-                            color: secondaryColor,
-                            height: 70,
-                            child: Column(
-                              children: [
-                                Text(
-                                    "Are you sure want to delete invoice: ${userInfo.id}'?"),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton.icon(
-                                        icon: Icon(
-                                          Icons.close,
-                                          size: 14,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.grey),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        label: Text("Cancel")),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    ElevatedButton.icon(
-                                        icon: Icon(
-                                          Icons.delete,
-                                          size: 14,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.red),
-                                        onPressed: () {
-                                          try{
-                                            userInfo.delete();
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("Invoice deleted successfully"),
-                                            ));
-                                          }catch(e){
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("An error occured while deleting"),
-                                            ));
-                                          }
-                                          Navigator.of(context).pop();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                                          );
-                                        },
-                                        label: Text("Delete"))
-                                  ],
-                                )
-                              ],
-                            ),
-                          ));
-                    });
-              },
-              // Delete
-              label: Text("Delete"),
-            )
-                : GestureDetector(
-                onTap: (){
-                  showDialog(
-                      context: context,
-                      builder: (_) {
-                        return AlertDialog(
-                            title: Center(
-                              child: Text("Confirm Deletion"),
-                            ),
-                            content: Container(
-                              color: secondaryColor,
-                              height: 70,
-                              child: Column(
-                                children: [
-                                  Text(
-                                      "Are you sure want to delete invoice: '${userInfo.id}'?"),
-                                  SizedBox(
-                                    height: 16,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton.icon(
-                                          icon: Icon(
-                                            Icons.close,
-                                            size: 14,
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.grey),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          label: Text("Cancel")),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      ElevatedButton.icon(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            size: 14,
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.red),
-                                          onPressed: () {
-                                            try{
-                                              userInfo.delete();
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                content: Text("Invoice deleted successfully"),
-                                              ));
-                                            }catch(e){
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                content: Text("An error occured while deleting"),
-                                              ));
-                                            }
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                                            );
-                                          },
-                                          label: Text("Delete"))
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ));
-                      });
-                } ,
-                child: Icon( Icons.delete, color: Colors.red.withOpacity(0.5),)
-            ),
+            //   icon: Icon(Icons.delete),
+            //   onPressed: () {
+            //     showDialog(
+            //         context: context,
+            //         builder: (_) {
+            //           return AlertDialog(
+            //               title: Center(
+            //                 child: Text("Confirm Deletion"),
+            //               ),
+            //               content: Container(
+            //                 color: secondaryColor,
+            //                 height: 70,
+            //                 child: Column(
+            //                   children: [
+            //                     Text(
+            //                         "Are you sure want to delete invoice: ${userInfo.id}'?"),
+            //                     SizedBox(
+            //                       height: 16,
+            //                     ),
+            //                     Row(
+            //                       mainAxisAlignment: MainAxisAlignment.center,
+            //                       children: [
+            //                         ElevatedButton.icon(
+            //                             icon: Icon(
+            //                               Icons.close,
+            //                               size: 14,
+            //                             ),
+            //                             style: ElevatedButton.styleFrom(
+            //                                 primary: Colors.grey),
+            //                             onPressed: () {
+            //                               Navigator.of(context).pop();
+            //                             },
+            //                             label: Text("Cancel")),
+            //                         SizedBox(
+            //                           width: 20,
+            //                         ),
+            //                         ElevatedButton.icon(
+            //                             icon: Icon(
+            //                               Icons.delete,
+            //                               size: 14,
+            //                             ),
+            //                             style: ElevatedButton.styleFrom(
+            //                                 primary: Colors.red),
+            //                             onPressed: () {
+            //                               try{
+            //                                 userInfo.delete();
+            //                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //                                   content: Text("Invoice deleted successfully"),
+            //                                 ));
+            //                               }catch(e){
+            //                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //                                   content: Text("An error occured while deleting"),
+            //                                 ));
+            //                               }
+            //                               Navigator.of(context).pop();
+            //                               Navigator.push(
+            //                                 context,
+            //                                 MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+            //                               );
+            //                             },
+            //                             label: Text("Delete"))
+            //                       ],
+            //                     )
+            //                   ],
+            //                 ),
+            //               ));
+            //         });
+            //   },
+            //   // Delete
+            //   label: Text("Delete"),
+            // )
+            //     : GestureDetector(
+            //     onTap: (){
+            //       showDialog(
+            //           context: context,
+            //           builder: (_) {
+            //             return AlertDialog(
+            //                 title: Center(
+            //                   child: Text("Confirm Deletion"),
+            //                 ),
+            //                 content: Container(
+            //                   color: secondaryColor,
+            //                   height: 70,
+            //                   child: Column(
+            //                     children: [
+            //                       Text(
+            //                           "Are you sure want to delete invoice: '${userInfo.id}'?"),
+            //                       SizedBox(
+            //                         height: 16,
+            //                       ),
+            //                       Row(
+            //                         mainAxisAlignment: MainAxisAlignment.center,
+            //                         children: [
+            //                           ElevatedButton.icon(
+            //                               icon: Icon(
+            //                                 Icons.close,
+            //                                 size: 14,
+            //                               ),
+            //                               style: ElevatedButton.styleFrom(
+            //                                   primary: Colors.grey),
+            //                               onPressed: () {
+            //                                 Navigator.of(context).pop();
+            //                               },
+            //                               label: Text("Cancel")),
+            //                           SizedBox(
+            //                             width: 20,
+            //                           ),
+            //                           ElevatedButton.icon(
+            //                               icon: Icon(
+            //                                 Icons.delete,
+            //                                 size: 14,
+            //                               ),
+            //                               style: ElevatedButton.styleFrom(
+            //                                   primary: Colors.red),
+            //                               onPressed: () {
+            //                                 try{
+            //                                   userInfo.delete();
+            //                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //                                     content: Text("Invoice deleted successfully"),
+            //                                   ));
+            //                                 }catch(e){
+            //                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //                                     content: Text("An error occured while deleting"),
+            //                                   ));
+            //                                 }
+            //                                 Navigator.of(context).pop();
+            //                                 Navigator.push(
+            //                                   context,
+            //                                   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+            //                                 );
+            //                               },
+            //                               label: Text("Delete"))
+            //                         ],
+            //                       )
+            //                     ],
+            //                   ),
+            //                 ));
+            //           });
+            //     } ,
+            //     child: Icon( Icons.delete, color: Colors.red.withOpacity(0.5),)
+            // ),
           ],
         ),),
       ],

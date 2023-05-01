@@ -884,13 +884,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           label: Text("Description"),
                         ),
                         DataColumn(
-                          label: Text("Unit Price"),
+                          label: Text("U Price"),
                         ),
                         DataColumn(
                           label: Text("Amount"),
                         ),
                         DataColumn(
-                          label: Text("Action"),
+                          label: Text(""),
                         ),
                       ],
                       rows: List.generate(
@@ -1169,35 +1169,21 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 ],
                 keyboardType: TextInputType.number,
                 controller: myController[index][0],
-                decoration: InputDecoration(
-
-                  focusedBorder: OutlineInputBorder(
-                    //gapPadding: 16,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                ),
                 onChanged: (String value){
                   value!=null || value !=""
                       ? invoice!.invoiceitems![index].units =  int.parse(value)
                       :invoice!.invoiceitems![index].units =1 ;
 
 
-                  invoice!.invoiceitems![index].total!=null
+                  invoice!.invoiceitems![index].unitPrice!=null
                       ?''
-                      : invoice!.invoiceitems![index].total = 0;
+                      : invoice!.invoiceitems![index].unitPrice = 0;
 
-                  invoice!.invoiceitems![index].unitPrice = invoice!.invoiceitems![index].total! / invoice!.invoiceitems![index].units!;
+                  invoice!.invoiceitems![index].total = invoice!.invoiceitems![index].units! * invoice!.invoiceitems![index].unitPrice!;
 
-                  // print(invoice!.invoiceitems![index].toJson());
 
-                  // if(invoice!.invoiceitems![index].unitPrice == null) {
-                    setState(() {
-                      myController[index][2].text =  invoice!.invoiceitems![index].unitPrice.toString();
-                    });
-                  // }
+                  myController[index][3].text =  invoice!.invoiceitems![index].total.toString();
+
 
 
                 },
@@ -1236,17 +1222,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
                 ],
                 controller: myController[index][2],
-
-                decoration: InputDecoration(
-
-                  focusedBorder: OutlineInputBorder(
-                    //gapPadding: 16,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                ),
                 onChanged: (String value){
                   invoice!.invoiceitems![index].unitPrice =  double.parse(value) ;
                   invoice!.invoiceitems![index].total =  double.parse(value) * (invoice!.invoiceitems![index].units!=null ? invoice!.invoiceitems![index].units!:1);
@@ -1260,10 +1235,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                   invoice.subTotalAmount = total;
 
-                  setState(() {
-                    myController[index][3].text = invoice!.invoiceitems![index].total.toString();
+                  myController[index][3].text = invoice!.invoiceitems![index].total.toString();
 
-                  });
 
 
                 },
@@ -1304,23 +1277,20 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         DataCell(
           Row(
             children: [
-              invoice.invoiceitems?.length != 1
-                  ? TextButton(
-                    child: Icon(Icons.delete, color: Colors.redAccent,),
-                    onPressed: () {
-                      deleteRow(index);
-                      item.delete();
-                    },
-              )
-                  : SizedBox(width: 0,),
-              invoice.invoiceitems?.length == (index+1) ? TextButton(
-                child: Icon(Icons.add, color: Colors.blueAccent,),
-                onPressed: () {
+              invoice.invoiceitems?.length != 1 ? GestureDetector(
+                child:Icon(Icons.delete, color: Colors.redAccent,),
+                onTap: () {
+                  deleteRow(index);
+                  item.delete();
+                },
+              ) : SizedBox(width: 0,),
+              invoice.invoiceitems?.length == (index+1) ? GestureDetector(
+                child:Icon(Icons.add, color: Colors.blueAccent,),
+                onTap: () {
                   setState ((){
-                      invoice!.invoiceitems!.add(InvoiceItem.fromJson({}));
-                      myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
+                    invoice!.invoiceitems!.add(InvoiceItem.fromJson({}));
+                    myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
                   });
-
                 },
               ) : SizedBox(width: 0,),
             ],

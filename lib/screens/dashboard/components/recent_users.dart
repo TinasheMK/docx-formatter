@@ -236,7 +236,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
                                               content: Text("An error occured while deleting"),
                                             ));
                                           }
-                                            Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
@@ -264,7 +264,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
                              ),
                              content: Container(
                                color: secondaryColor,
-                               height: 70,
+                               height: 100,
                                child: Column(
                                  children: [
                                    Text(

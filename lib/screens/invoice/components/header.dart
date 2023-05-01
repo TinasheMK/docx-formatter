@@ -3,8 +3,6 @@ import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../profile/profile_home_screen.dart';
-
 class Header extends StatelessWidget {
   const Header({
     Key? key,
@@ -52,21 +50,19 @@ class ProfileCard extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap:(){
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
+          // );
         } ,
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: AssetImage("assets/images/profile_pic.png"),
-            ),
+            Icon(Icons.person),
             if (!Responsive.isMobile(context))
               Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-                child: Text("Tapiwa"),
+                child: Text("User"),
               ),
             // Icon(Icons.keyboard_arrow_down),
           ],

@@ -26,7 +26,7 @@ class Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Hello, Tapiwa 👋",
+                "Hello, User 👋",
                 style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(
@@ -74,14 +74,12 @@ class ProfileCard extends StatelessWidget {
         } ,
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: AssetImage("assets/images/profile_pic.png"),
-            ),
+            Icon(Icons.person),
             if (!Responsive.isMobile(context))
               Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-                child: Text("Tapiwa"),
+                child: Text("User"),
               ),
             // Icon(Icons.keyboard_arrow_down),
           ],

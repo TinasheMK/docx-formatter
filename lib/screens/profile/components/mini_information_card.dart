@@ -45,7 +45,7 @@ class MiniInformation extends StatelessWidget {
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Add Business Account",
+                "Add Business Profile",
               ),
             ),
           ],

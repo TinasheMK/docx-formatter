@@ -102,6 +102,7 @@ Future<String?> getDownloadPath() async {
       directory = await getApplicationDocumentsDirectory();
     } else if (Platform.isWindows) {
       directory = await getApplicationDocumentsDirectory();
+
     } else {
       directory = Directory('/storage/emulated/0/Download/');
       // Put file in global download folder, if for an unknown reason it didn't exist, we fallback

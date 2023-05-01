@@ -8,7 +8,7 @@ import './components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
 
-class ClientsScreen extends StatelessWidget {
+class ProfilesScreen extends StatelessWidget {
 
 
 

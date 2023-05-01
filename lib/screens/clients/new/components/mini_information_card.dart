@@ -29,7 +29,7 @@ class MiniInformation extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text(title, style: TextStyle(fontSize: 35, color: Colors.white) ),
+            Text(title, style: TextStyle(fontSize: 20, color: Colors.white) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,
