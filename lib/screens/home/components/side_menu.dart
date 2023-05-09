@@ -98,6 +98,7 @@ class SideMenu extends StatelessWidget {
               title: "Logout",
               svgSrc: "assets/icons/menu_setting.svg",
               press: () {
+                Navigator.pop(context, true);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Login(title: "You logged out.")),

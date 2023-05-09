@@ -4,14 +4,14 @@ import 'package:docx_template/docx_template.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../models/Memo.dart';
-import '../../models/registration/Company.dart';
-import '../../models/registration/Invoice.dart';
+import '../../providers/Memo.dart';
+import '../../providers/registration/Company.dart';
+import '../../providers/registration/Invoice.dart';
 
 ///
 /// Read file template.docx, produce it and save
 ///
-Future <String> invoiceGenerator(Invoice invoice, String code, Client) async {
+Future <String> invoiceGenerator(Invoice invoice, String code) async {
   try {
     // final f = File("assets/templates/invoicetemplate1.docx");
 
@@ -54,22 +54,23 @@ Future <String> invoiceGenerator(Invoice invoice, String code, Client) async {
 
 
     content
-      ..add(TextContent("fromcompany", "Kanjan Solutions" ))
-      ..add(TextContent("fromaddress", "276 Mainway Meadows" ))
-      ..add(TextContent("fromcity", "Harare"))
-      ..add(TextContent("fromcountry", "Zimbabwe"))
-      ..add(TextContent("fromphone", "+273 7878 2321"))
+      ..add(TextContent("fromcompany", invoice.companyFull?.companyName))
+      ..add(TextContent("fromaddress", invoice.companyFull?.street ?? "N/A"))
+      ..add(TextContent("fromcity", invoice.companyFull?.city ?? "N/A"))
+      ..add(TextContent("fromcountry", invoice.companyFull?.country ?? "N/A"))
+      ..add(TextContent("fromphone", invoice.companyFull?.telephone ?? "N/A"))
 
-      ..add(TextContent("fromcompany", invoice.clientFull?.companyName))
-      ..add(TextContent("toaddress", invoice.clientFull?.street))
-      ..add(TextContent("tocity", invoice.clientFull?.city))
-      ..add(TextContent("tocountry", invoice.clientFull?.country))
+      ..add(TextContent("tocompany", invoice.clientFull?.companyName))
+      ..add(TextContent("toaddress", invoice.clientFull?.street ?? "N/A"))
+      ..add(TextContent("tocity", invoice.clientFull?.city ?? "N/A"))
+      ..add(TextContent("tocountry", invoice.clientFull?.country ?? "N/A"))
 
-      ..add(TextContent("idate", invoice.invoiceDate))
-      ..add(TextContent("idue", invoice.dueDate))
+      ..add(TextContent("idate", invoice.invoiceDate.toString().split(" ")[0]))
+      ..add(TextContent("idue", invoice.dueDate.toString().split(" ")[0]))
       ..add(TextContent("sub", invoice.subTotalAmount))
-      ..add(TextContent("credit", ""))
+      ..add(TextContent("credit", 0))
       ..add(TextContent("tdue", invoice.totalAmount))
+      ..add(TextContent("invoice", invoice.id))
 
       ..add(TableContent("table", invoiceItemList,))
       ..add(TableContent("table2", paymentList,))
@@ -97,14 +98,17 @@ Future <String> invoiceGenerator(Invoice invoice, String code, Client) async {
 
 Future<String?> getDownloadPath() async {
   Directory? directory;
+  String directoryStr;
   try {
     if (Platform.isIOS ) {
       directory = await getApplicationDocumentsDirectory();
     } else if (Platform.isWindows) {
       directory = await getApplicationDocumentsDirectory();
+      directoryStr =  "${directory.path}\\Invoices\\";
+      directory = Directory(directoryStr);
 
     } else {
-      directory = Directory('/storage/emulated/0/Download/');
+      directory = Directory('/storage/emulated/0/Download/Invoices/');
       // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
       // ignore: avoid_slow_async_io
       if (!await directory.exists()) directory = await getExternalStorageDirectory();

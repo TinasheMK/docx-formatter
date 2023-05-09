@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
-import 'package:smart_admin_dashboard/models/registration/Employee.dart';
+import 'package:smart_admin_dashboard/providers/registration/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import '../../../core/utils/colorful_tag.dart';
-import '../../../models/Memo.dart';
+import '../../../providers/Memo.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../models/recent_user_model.dart';
-import '../../../models/registration/Client.dart';
-import '../../../models/registration/Company.dart';
+import '../../../providers/recent_user_model.dart';
+import '../../../providers/registration/Client.dart';
+import '../../../providers/registration/Company.dart';
 import '../../../responsive.dart';
 
 import '../../generator/CR6_form_generator.dart';

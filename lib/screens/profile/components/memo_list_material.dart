@@ -1,7 +1,7 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/Memo.dart';
+import '../../../providers/Memo.dart';
 import 'memos_widget.dart';
 
 

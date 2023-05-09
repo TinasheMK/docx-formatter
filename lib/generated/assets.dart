@@ -38,6 +38,5 @@ class Assets {
   static const String templatesMemoTemplate = 'assets/templates/memo_template.docx';
   static const String templatesMemocoverTemplate = 'assets/templates/memocover_template.docx';
   static const String templatesTocollectTemplate = 'assets/templates/tocollect_template.docx';
-  static const String templates~$voicetemplste1 = 'assets/templates/~$voicetemplste1.docx';
 
 }

@@ -3,6 +3,10 @@
 Flutter Web Smart Admin & Panel Dashboard with flutter UI kit.
 
 
+### Generate Freezed Files
+flutter pub run build_runner build --delete-conflicting-outputs
+
+
 ### Support 
 
 > ⭐️ If you want to access the backend(Firebase or Django) integrated fully management system with comprehensive features and good documentation. You can leave me message. ⭐️
@@ -26,4 +30,4 @@ Flutter Web Smart Admin & Panel Dashboard with flutter UI kit.
 
 ### 👨‍💻 Author
 
-Developed by Deniz Çolak
+Developed by Tinashe Makarudze

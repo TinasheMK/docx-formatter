@@ -1,6 +1,6 @@
-import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
+import 'package:smart_admin_dashboard/providers/registration/Company.dart';
 import '../../main.dart';
 import '../../screens/generator/databaseHelper.dart';
 import 'Client.dart';
@@ -13,14 +13,16 @@ class Invoice {
   double? vatPercent;
   double? vatAmount;
   double? subTotalAmount;
-  Bool? published;
+  bool? published;
   String? notes;
-  Double? discount;
+  double? discount;
   String? invoiceDate;
   String? dueDate;
   String? invoiceStatus;
   int?      client;
   Client?   clientFull;
+  int?   company;
+  Company?   companyFull;
   List<Payment>?     payments;
   List<InvoiceItem>? invoiceitems;
 

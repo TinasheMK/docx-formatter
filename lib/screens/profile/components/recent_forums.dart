@@ -1,9 +1,9 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
-import 'package:smart_admin_dashboard/models/recent_user_model.dart';
+import 'package:smart_admin_dashboard/providers/recent_user_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/registration/Invoice.dart';
+import '../../../providers/registration/Invoice.dart';
 
 
 class RecentDiscussions extends StatefulWidget {

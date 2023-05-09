@@ -1,11 +1,11 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
-import 'package:smart_admin_dashboard/models/daily_info_model.dart';
+import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/Memo.dart';
-import '../../../models/registration/Client.dart';
+import '../../../providers/Memo.dart';
+import '../../../providers/registration/Client.dart';
 
 class MemoSelectionSection extends StatelessWidget {
   const MemoSelectionSection({
@@ -213,13 +213,14 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   widget.callback(widget.memo.id.toString()!, "not");
                   selectedClient=='';
                   print(selectedClient);
-
+                  Navigator.of(context).pop();
                   setState(() {
                   });
                 }else{
                   widget.callback(widget.memo.id.toString()!, "set");
                   selectedClient = widget.memo.id!;
                   print(selectedClient);
+                  Navigator.of(context).pop();
                   setState(() {
                   });
 

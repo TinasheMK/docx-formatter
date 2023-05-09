@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 
 import '../../main.dart';
@@ -8,7 +6,7 @@ class Payment {
   int? id;
   String? ref;
   String? status;
-  Double? total;
+  double? total;
   DateTime? paymentDate;
   int? invoiceId;
 
