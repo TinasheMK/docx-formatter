@@ -72,7 +72,7 @@ class _NewClientHomeState extends State<NewClientHome> with SingleTickerProvider
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewProfileScreen(title: widget.title, code: widget.code, clientId: widget.clientId,),
+              child: NewProfileScreen(title: widget.title, code: widget.code, profileId: widget.clientId,),
             ),
           ],
         ),

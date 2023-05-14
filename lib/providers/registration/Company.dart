@@ -67,8 +67,18 @@ class Company {
       "email": this.email,
       "status": this.status,
     };
-    final id = await dbHelper.insert("company", row);
-    this.id = id;
+
+    var id;
+    if(this.id==null) {
+      final id = await dbHelper.insert("company", row);
+    }else{
+      dbHelper.update('company',row);
+      id = this.id;
+    }
+
+
+
+
     var emps = this.employees;
     for(int i=0; i<30; i++){{
       try {

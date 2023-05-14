@@ -1,6 +1,7 @@
 class UserPreference {
 
   static const String WORKER_ID = "workerId";
+  static const String skip = "skip";
   static const String agentId = "agentId";
   static const String clientId = "clientId";
   static const String firstName = "firstName";

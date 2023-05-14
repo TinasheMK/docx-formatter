@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../../../providers/Memo.dart';
 import '../../../providers/registration/Company.dart';
+import '../../clients/new/new_client_home_screen.dart';
+import '../new/new_profile_home_screen.dart';
 
 class MemoSelectionSection extends StatelessWidget {
   const MemoSelectionSection({
@@ -176,7 +178,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(defaultPadding * 0.4),
+                      padding: EdgeInsets.all(defaultPadding * 0),
                       height: 40,
                       width: 40,
                       decoration: BoxDecoration(
@@ -184,14 +186,14 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Icon(
-                        Icons.person,
+                        Icons.house,
                         color: Colors.lightBlue,
                         size: 18,
                       ),
                     ),
                     SizedBox(width: 6,),
                     Text(
-                      "${widget.memo.companyName!}",
+                      "${widget.memo.companyName??''}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -200,7 +202,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     Visibility(
                       visible: !_visible,
-                      child: widget.memo.set=="set"?Icon(Icons.cancel_outlined, size: 18):Icon(Icons.add, size: 18),
+                      child: widget.memo.set=="set"?Icon(Icons.cancel, size: 18):Icon(Icons.add, size: 18),
                     )
                   ],
                 ),
@@ -219,6 +221,27 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   });
 
                 }
+
+                //
+                // Navigator.of(context).push(new MaterialPageRoute<Null>(
+                //     builder: (BuildContext context) {
+                //       return new NewClientHome(title: "Edit Client", code: "edit", clientId: widget.memo.id );
+                //     },
+                //     fullscreenDialog: true));
+
+
+                print(widget.memo.toJson());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewProfileHome(title: 'New Invoice', code: 'invoice', profileId: widget.memo.id)),
+                );
+
+
+
+
+
+
+
               }
               ),
 

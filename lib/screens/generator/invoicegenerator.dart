@@ -21,7 +21,8 @@ Future <String> invoiceGenerator(Invoice invoice, String code) async {
     final docx = await DocxTemplate.fromBytes(bytes);
 
 
-    // final docx = await DocxTemplate.fromBytes(await f.readAsBytes());
+    final img = await rootBundle.load('assets/images/logo.png');
+    final testFileContent = img.buffer.asUint8List();
 
     final invoiceItems = invoice.invoiceitems != null ? invoice.invoiceitems! : [];
     final payments = invoice.payments != null ? invoice.payments! : [];
@@ -43,8 +44,8 @@ Future <String> invoiceGenerator(Invoice invoice, String code) async {
     }
     for (var n in payments) {
       final c = RowContent()
-        ..add(TextContent("pdate",n.paymentDate))
-        ..add(TextContent("pref", n.ref))
+        ..add(TextContent("pdate",n.paymentDate.toString().split(" ")[0]))
+        ..add(TextContent("pref", n.id ?? ""))
         ..add(TextContent("pamount", n.total))
       ;
       paymentList.add(c);
@@ -71,9 +72,11 @@ Future <String> invoiceGenerator(Invoice invoice, String code) async {
       ..add(TextContent("credit", 0))
       ..add(TextContent("tdue", invoice.totalAmount))
       ..add(TextContent("invoice", invoice.id))
+      ..add(ImageContent('img', testFileContent))
 
       ..add(TableContent("table", invoiceItemList,))
       ..add(TableContent("table2", paymentList,))
+
     ;
 
 

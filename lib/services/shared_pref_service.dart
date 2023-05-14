@@ -36,6 +36,18 @@ class SharedPreferencesService {
     return null;
   }
 
-  bool isOnboardingComplete() =>
-      sharedPreferences.getBool(onboardingCompleteKey) ?? false;
+  Map<String, dynamic>? getSkipSignIn() {
+    final res = sharedPreferences.getString(kUserPwdKey);
+
+    if (res != null) {
+      return json.decode(res) as Map<String, dynamic>;
+    }
+
+    return null;
+
+  }
+
+  bool skipSignIn() =>    sharedPreferences.getBool("skip") ?? false;
+
+  bool isOnboardingComplete() =>    sharedPreferences.getBool(onboardingCompleteKey) ?? false;
 }

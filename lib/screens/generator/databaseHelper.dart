@@ -151,6 +151,11 @@ class DatabaseHelper {
     return results;
   }
 
+  Future<List<Map<String, dynamic>>> findInvoicePayments(String table, int id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE invoice_id = $id');
+    return results;
+  }
+
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
   Future<int> update(String table, Map<String, dynamic> row) async {

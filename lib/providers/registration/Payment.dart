@@ -7,18 +7,18 @@ class Payment {
   String? ref;
   String? status;
   double? total;
-  DateTime? paymentDate;
+  String? paymentDate;
   int? invoiceId;
 
 
-  Payment(
+  Payment({
     this.id,
     this.ref,
     this.status,
     this.total,
     this.paymentDate,
-      this.invoiceId
-      );
+    this.invoiceId
+  } );
 
   Payment.fromJson(Map<String, dynamic> json) {
 
@@ -48,11 +48,19 @@ class Payment {
       'ref': this.ref,
       'status': this.status,
       'total': this.total,
-      'invoiceId': this.invoiceId,
-      'paymentDate': this.paymentDate,
+      'invoice_id': this.invoiceId,
+      'payment_date': this.paymentDate,
     };
-    final id = await dbHelper.insert("payment", row);
-    this.id = id;
+
+    var id;
+
+    if(this.id==null) {
+      final id = await dbHelper.insert("payment", row);
+    }else{
+      dbHelper.update('payment',row);
+      id = this.id;
+    }
+
     debugPrint('inserted payment row id: $id');
   }
 
@@ -63,12 +71,20 @@ class Payment {
       'id': this.id,
       'ref': this.ref,
       'status': this.status,
-      'invoiceId': this.invoiceId,
+      'invoice_id': this.invoiceId,
       'total': this.total,
-      'paymentDate': this.paymentDate,
+      'payment_date': this.paymentDate,
     };
-    final id = await dbHelper.insert("payment", row);
-    this.id = id;
+    var id;
+
+    if(this.id==null) {
+      final id = await dbHelper.insert("payment", row);
+    }else{
+      dbHelper.update('payment',row);
+      id = this.id;
+    }
+
+
     debugPrint('inserted payment row id: $id');
   }
 
@@ -100,4 +116,27 @@ class Payment {
     final rowsDeleted = await dbHelper.delete('payment',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
+}
+
+
+
+
+
+
+Future<List<Payment>> getInvoicePayments(id) async {
+  final maps = await dbHelper.findInvoicePayments("payment", id);
+
+  return List.generate(maps.length, (i) {
+    return Payment(
+      id : maps[i]['id'],
+      ref : maps[i]['ref'],
+      status : maps[i]['status'],
+      total : maps[i]['total'],
+      paymentDate : maps[i]['payment_date'],
+      invoiceId : maps[i]['invoice_id'],
+
+
+    );
+  });
+
 }

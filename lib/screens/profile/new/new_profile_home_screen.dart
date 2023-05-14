@@ -11,9 +11,10 @@ import 'package:flutter/material.dart';
 import 'new_profile_screen.dart';
 
 class NewProfileHome extends StatefulWidget {
-   NewProfileHome({required this.title, required this.code});
+   NewProfileHome({required this.title, required this.code, this.profileId});
   final String title;
   final String code;
+   int? profileId;
   @override
   _NewProfileHomeState createState() => _NewProfileHomeState();
 }
@@ -64,7 +65,7 @@ class _NewProfileHomeState extends State<NewProfileHome> with SingleTickerProvid
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewProfileScreen(title: widget.title, code: widget.code),
+              child: NewProfileScreen(title: widget.title, code: widget.code, profileId: widget.profileId),
             ),
           ],
         ),

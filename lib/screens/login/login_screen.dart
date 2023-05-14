@@ -1,5 +1,6 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/core/widgets/input_widget.dart';
@@ -10,7 +11,10 @@ import 'package:smart_admin_dashboard/screens/generator/data_store.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../common/UserPreference.dart';
 import '../../providers/auth/provider/auth_provider.dart';
+import '../../providers/profile/worker_profile.dart';
+import '../../responsive.dart';
 import '../../services/shared_pref_service.dart';
 import '../generator/databaseHelper.dart';
 import '../generator/register_download_screen.dart';
@@ -57,6 +61,17 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    slideCallback(){
+      if (_isMoved) {
+        _animationController!.reverse();
+      } else {
+        _animationController!.forward();
+      }
+      _isMoved = !_isMoved;
+    }
+
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -64,7 +79,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
+              if (!Responsive.isMobile(context))
+                Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width / 2,
                 color: Colors.white,
@@ -72,7 +88,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width / 2,
+                width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width /2 ,
                 color: bgColor,
                 child: Center(
                   child: Card(
@@ -80,12 +96,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                     color: bgColor,
                     child: Container(
                       padding: EdgeInsets.all(42),
-                      width: MediaQuery.of(context).size.width / 3.6,
+                      width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width / 2.5 ,
                       height: MediaQuery.of(context).size.height / 1.2,
                       child: Column(
                         children: <Widget>[
                           SizedBox(
-                            height: 60,
+                            height: 40,
                           ),
                           Image.asset("assets/logo/logo_icon.png", scale: 3),
                           SizedBox(height: 24.0),
@@ -102,7 +118,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       fit: StackFit.loose,
                                       clipBehavior: Clip.none,
                                       children: [
-                                        LoginListener(),
+                                        LoginListener(slideCallback: slideCallback),
                                       ]),
                                 ),
                                 SlideTransition(
@@ -112,7 +128,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       fit: StackFit.loose,
                                       clipBehavior: Clip.none,
                                       children: [
-                                        _registerScreen(),
+                                        _registerScreen(slideCallback: slideCallback,),
                                       ]),
                                 ),
                               ],
@@ -149,6 +165,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
 
 class _loginScreen extends ConsumerWidget {
+  _loginScreen({
+    required this.slideCallback
+  });
+
+  final Function() slideCallback;
+
   String? email;
 
   String? password;
@@ -220,14 +242,24 @@ class _loginScreen extends ConsumerWidget {
                     rememberMe: rememberme,
                   );
                 }
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => HomeScreen()),
-                // );
-                // dataStore();
-                // _query();
+
               },
             ),
+
+            SizedBox(height: 24.0),
+            Center( child:GestureDetector(
+              onTap: () {
+                // _insert();
+              },
+              child: Text(
+                "Forgot Password?",
+                textAlign: TextAlign.right,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2!
+                    .copyWith(color: greenColor),
+              ),
+            ),),
             SizedBox(height: 24.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,16 +279,21 @@ class _loginScreen extends ConsumerWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     // _insert();
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.setBool(UserPreference.skip,
+                        true);
+
+
                     Navigator.pop(context, true);
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                     );
                   },
                   child: Text(
-                    "Forgot Password?",
+                    "Skip",
                     textAlign: TextAlign.right,
                     style: Theme.of(context)
                         .textTheme
@@ -282,22 +319,18 @@ class _loginScreen extends ConsumerWidget {
                   SizedBox(
                     width: 8,
                   ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     if (_isMoved) {
-                  //       _animationController!.reverse();
-                  //     } else {
-                  //       _animationController!.forward();
-                  //     }
-                  //     _isMoved = !_isMoved;
-                  //   },
-                  //   child: Text("Sign up",
-                  //       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                  //           fontWeight: FontWeight.w400, color: greenColor)),
-                  // )
+                  TextButton(
+                    onPressed: () {
+                      slideCallback();
+                    },
+                    child: Text("Sign up",
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            fontWeight: FontWeight.w400, color: greenColor)),
+                  )
                 ],
               ),
             ),
+
           ],
         ),
       ),
@@ -307,6 +340,11 @@ class _loginScreen extends ConsumerWidget {
 
 
 class _registerScreen extends ConsumerWidget {
+  _registerScreen({
+    required this.slideCallback
+  });
+
+  final Function() slideCallback;
   String? email;
 
   String? password;
@@ -397,25 +435,6 @@ class _registerScreen extends ConsumerWidget {
               },
             ),
             SizedBox(height: 24.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    // Checkbox(
-                    //   value: isChecked,
-                    //   onChanged: (bool? value) {
-                    //     // setState(() {
-                    //     //   isChecked = value!;
-                    //     // });
-                    //   },
-                    // ),
-                    Text("Remember Me")
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 24.0),
             Center(
               child: Wrap(
                 runAlignment: WrapAlignment.center,
@@ -448,12 +467,7 @@ class _registerScreen extends ConsumerWidget {
                         );
                       }
 
-                      // if (_isMoved) {
-                      //   _animationController!.reverse();
-                      // } else {
-                      //   _animationController!.forward();
-                      // }
-                      // _isMoved = !_isMoved;
+                      slideCallback();
                     },
                     child: Text("Sign In",
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
@@ -471,70 +485,149 @@ class _registerScreen extends ConsumerWidget {
 
 
 class LoginListener extends ConsumerWidget {
+  LoginListener({
+    required this.slideCallback
+  });
+
+  final Function() slideCallback;
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final authProvider = watch(authNotifierProvider);
     final sharedPref = watch(sharedPreferencesServiceProvider);
 
-    resetState() {
-      if (!authProvider.isLoading) {
-        context
-            .read(authNotifierProvider.notifier)
-            .resetState();
-      }
-    }
+    return sharedPref.getCachedUserCredentials() != null ? FutureBuilder(
+      future: watch(authRepositoryProvider)
+          .login(sharedPref.getCachedUserCredentials()),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final wp = snapshot.data;
 
-    return
-      Expanded(
-        flex: 5,
-        child: authProvider.when(
-          initial: () => _loginScreen(),
-          loading: () =>
-              Center(child: CircularProgressIndicator()),
-          data: (data) {
-            print(data);
+          if (wp is WorkerProfile) {
 
 
 
-
-            SchedulerBinding.instance!
-                .addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Login Successful"),
-              ));
+            SchedulerBinding.instance!.addPostFrameCallback((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
             });
 
 
+          }
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              children: [
+                Text('Failed to login'),
+                SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: () async {
+                      await sharedPref.resetUserCredentials();
+
+                      SchedulerBinding.instance!
+                          .addPostFrameCallback((_) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      });
+                    },
+                    child: Text('Retry')),
+              ],
+            ),
+          );
+        }
+
+        return Center(
+            child: Container(child: CircularProgressIndicator()));
+      },
+    ) :
+     sharedPref.skipSignIn() == true ? FutureBuilder(
+      builder: (context, snapshot) {
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        });
+
+        return Center(
+            child: Container(child: CircularProgressIndicator()));
+      },
+    )
+
+        : Expanded(
+      flex: 5,
+      child: authProvider.when(
+        initial: () => _loginScreen(slideCallback: slideCallback,),
+        loading: () =>
+            Center(child: CircularProgressIndicator()),
+        data: (data) {
+          print(data);
 
 
+
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            context
+                .read(authNotifierProvider.notifier)
+                .resetState();
+
+          });
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Login Successful"),
+            ));
+          });
+
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HomeScreen()),
             );
-
-            return _loginScreen();
-          },
-
-          loaded: (loaded) => Text(loaded.toString()),
-          error: (e) {
+          });
 
 
 
-            SchedulerBinding.instance!
-                .addPostFrameCallback((_) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(e.toString()),
-                ));
-            });
-
-            // resetState();
 
 
-            return _loginScreen();
-          },
-        ),
-      );
+          return _loginScreen(slideCallback: slideCallback);
+        },
+
+        loaded: (loaded) => Text(loaded.toString()),
+        error: (e) {
+
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            context
+                .read(authNotifierProvider.notifier)
+                .resetState();
+
+          });
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(e.toString()),
+            ));
+          });
+
+          // resetState();
+
+
+          return _loginScreen(slideCallback: slideCallback);
+        },
+      ),
+    );
+
   }
 
 

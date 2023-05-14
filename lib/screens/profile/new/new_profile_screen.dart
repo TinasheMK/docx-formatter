@@ -1,7 +1,8 @@
-import 'dart:convert';
-
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:smart_admin_dashboard/providers/registration/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
@@ -18,6 +19,7 @@ import '../../../responsive.dart';
 
 import '../../clients/clients_home_screen.dart';
 import '../../generator/CR6_form_generator.dart';
+import '../../generator/invoicegenerator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import '../../invoice/components/header.dart';
@@ -33,19 +35,21 @@ import 'components/dropdown_search.dart';
 
 
 class NewProfileScreen extends StatefulWidget {
-  NewProfileScreen({required this.title, required this.code, this.clientId});
+  NewProfileScreen({required this.title, required this.code, this.profileId});
   final String title;
   final String code;
-  int? clientId;
+  int? profileId;
 
   @override
-  _NewProfileScreenState createState() => _NewProfileScreenState(clientId);
+  _NewProfileScreenState createState() => _NewProfileScreenState(profileId);
 }
 
 // class NewProfileScreen extends StatefulWidget {
 class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerProviderStateMixin {
-  _NewProfileScreenState(int? this.clientId);
-  int? clientId;
+
+
+  _NewProfileScreenState(int? this.profileId);
+  int? profileId;
 
   var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
       .chain(CurveTween(curve: Curves.ease));
@@ -82,8 +86,8 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   late Company client ;
 
   Future<void> _initclient() async {
-    if(clientId!=null) {
-      client = await getCompany(clientId);
+    if(profileId!=null) {
+      client = await getCompany(profileId);
     }else{
       client= Company.fromJson({});
     }
@@ -113,7 +117,9 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     print(client?.toJson().toString());
-    print(widget.code);
+    print(profileId);
+    print(profileId);
+    print(profileId);
 
     // print(widget.code);
     final Size _size = MediaQuery.of(context).size;
@@ -140,7 +146,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(title: client.companyName?? 'New Business Profile',),
+              MiniInformation(title: client.companyName?? 'Add Profile',),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,6 +166,43 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
 
+                                SizedBox(
+                                  height: 200,
+                                  child: Image.asset("assets/logo/logo_icon.png", scale:1),
+                                ),
+                                SizedBox(height: 16.0),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+
+                                    ElevatedButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.black38,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: defaultPadding * 1.5,
+                                          vertical:
+                                          defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+
+                                        var path = await getDownloadPath();
+
+
+                                        image!.saveTo('$path/Invoices/Logos/image1.png');
+
+                                        setState(() {
+                                        });
+
+                                      },
+                                      child: Text(
+                                        "Pick Image Company",
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(height: 16.0),
 
                                 Responsive.isMobile(context)
@@ -587,20 +630,24 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                               client!.save();
                                             }
 
+
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                               content: Text("Company saved successfully"),
                                             ));
 
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
-                                            );
+                                            SchedulerBinding.instance!
+                                                .addPostFrameCallback((_) {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
+                                              );
+                                            });
+
                                           }catch(e){
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                               content: Text("An error occured. Check all fields"),
                                             ));
                                           };
-
 
 
                                         }
@@ -613,6 +660,59 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                     ),
                                   ],
                                 ),
+                                SizedBox(height: 15,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+
+                                    ElevatedButton.icon(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.redAccent,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: defaultPadding * 1.5,
+                                          vertical:
+                                          defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          print(client!.toJson());
+                                          print(widget.code);
+                                          try {
+                                            client.delete();
+
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                              content: Text("Company deleted"),
+                                            ));
+
+
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
+                                            );
+                                          }catch(e){
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                              content: Text("An error occured."),
+                                            ));
+                                          };
+
+                                          setState(() {
+
+                                          });
+
+
+                                        }
+
+                                      },
+                                      icon: Icon(Icons.cancel),
+                                      label: Text(
+                                        "Delete Company",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
 
                                 // _listView(persons),
                               ],

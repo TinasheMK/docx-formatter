@@ -55,6 +55,7 @@ dependencies:
   sqflite_common_ffi: ^2.2.1+1
   syncfusion_flutter_datepicker: ^20.4.53
   flutter_datetime_picker: ^1.5.1
+  image_picker: ^0.8.7+4
 
 dependency_overrides:
   archive: 3.3.0

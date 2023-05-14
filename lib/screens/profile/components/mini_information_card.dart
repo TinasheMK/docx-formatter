@@ -23,31 +23,7 @@ class MiniInformation extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text( "Profile", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
-            SizedBox(
-              width: 10,
-            ),
-            ElevatedButton.icon(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding * 1.5,
-                  vertical:
-                  defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewProfileHome(title: 'New Invoice', code: 'invoice',)),
-                );
 
-
-              },
-              icon: Icon(Icons.add),
-              label: Text(
-                "Add Business Profile",
-              ),
-            ),
           ],
         ),
         SizedBox(height: defaultPadding),
