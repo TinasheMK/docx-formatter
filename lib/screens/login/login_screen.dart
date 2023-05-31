@@ -97,17 +97,14 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                     child: Container(
                       padding: EdgeInsets.all(42),
                       width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width / 2.5 ,
-                      height: MediaQuery.of(context).size.height / 1.2,
+                      height: Responsive.isMobile(context) ? MediaQuery.of(context).size.height / 1 : MediaQuery.of(context).size.height / 1.2,
                       child: Column(
                         children: <Widget>[
                           SizedBox(
-                            height: 40,
+                            height: Responsive.isMobile(context) ? 0:40,
                           ),
-                          Image.asset("assets/logo/logo_icon.png", scale: 3),
-                          SizedBox(height: 24.0),
-                          //Flexible(
-                          //  child: _loginScreen(context),
-                          //),
+                          if(!Responsive.isMobile(context))Image.asset("assets/logo/logo_icon.png", scale: 3),
+                          SizedBox(height: Responsive.isMobile(context) ? 0:24.0),
                           Flexible(
                             child: Stack(
                               children: [
@@ -128,7 +125,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       fit: StackFit.loose,
                                       clipBehavior: Clip.none,
                                       children: [
-                                        _registerScreen(slideCallback: slideCallback,),
+                                        RegisterListener(slideCallback: slideCallback),
                                       ]),
                                 ),
                               ],
@@ -230,8 +227,8 @@ class _loginScreen extends ConsumerWidget {
               text: "Sign In",
               onPressed: () async {
                 final payload = {
-                  'username': email,
-                  'password':password,
+                  "username": email,
+                  "password":password
                 };
 
                 if (!authProvider.isLoading) {
@@ -250,6 +247,67 @@ class _loginScreen extends ConsumerWidget {
             Center( child:GestureDetector(
               onTap: () {
                 // _insert();
+                showDialog(
+                    context: context,
+                    builder: (_) {
+                      return  Padding(
+                          padding: const EdgeInsets.only(bottom: defaultPadding*15),
+                          child:Dialog(
+                        // width: double.infinity,
+                        // constraints: BoxConstraints(
+                        //   minHeight: MediaQuery.of(context).size.height - 0.0,
+                        // ),
+                        child: Padding(
+                          padding: const EdgeInsets.all( defaultPadding),
+
+                          child: Form(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InputWidget(
+                                  keyboardType: TextInputType.emailAddress,
+                                  onSaved: (String? value) {
+                                    // This optional block of code can be used to run
+                                    // code when the user saves the form.
+                                  },
+                                  onChanged: (String? value) {email = value; },
+                                  validator: (String? value) {
+                                    return (value != null && value.contains('@'))
+                                        ? 'Do not use the @ char.'
+                                        : null;
+                                  },
+
+                                  topLabel: "Email",
+
+                                  hintText: "Enter E-mail",
+                                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                                ),
+                                SizedBox(height: 24.0),
+                                AppButton(
+                                  type: ButtonType.PRIMARY,
+                                  text: "Reset password",
+                                  onPressed: () async {
+                                    final payload = {
+                                      "email": email
+                                    };
+
+                                    if (!authProvider.isLoading) {
+                                      await context
+                                          .read(authNotifierProvider.notifier)
+                                          .resetPwd(email?? "");
+                                    }
+
+                                  },
+                                ),
+
+                                SizedBox(height: 24.0),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ));
+                    });
               },
               child: Text(
                 "Forgot Password?",
@@ -287,7 +345,7 @@ class _loginScreen extends ConsumerWidget {
 
 
                     Navigator.pop(context, true);
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                     );
@@ -303,14 +361,14 @@ class _loginScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 24.0),
+            SizedBox(height: 20.0),
             Center(
               child: Wrap(
                 runAlignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account yet?",
+                    "No account yet?",
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1!
@@ -346,6 +404,8 @@ class _registerScreen extends ConsumerWidget {
 
   final Function() slideCallback;
   String? email;
+  String? firstName;
+  String? lastName;
 
   String? password;
 
@@ -357,9 +417,7 @@ class _registerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final authProvider = watch(authNotifierProvider);
-    // final dialog = watch(dialogProvider);
     final sharedPref = watch(sharedPreferencesServiceProvider);
-
 
     return Container(
       width: double.infinity,
@@ -370,8 +428,8 @@ class _registerScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 8.0),
             InputWidget(
-              keyboardType: TextInputType.emailAddress,
               onSaved: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
@@ -379,6 +437,7 @@ class _registerScreen extends ConsumerWidget {
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                firstName = value;
               },
               validator: (String? value) {
                 return (value != null && value.contains('@'))
@@ -386,9 +445,31 @@ class _registerScreen extends ConsumerWidget {
                     : null;
               },
 
-              topLabel: "Name",
+              topLabel: "First Name",
 
-              hintText: "Enter Name",
+              hintText: "Enter E-mail",
+              // prefixIcon: FlutterIcons.chevron_left_fea,
+            ),
+            SizedBox(height: 8.0),
+            InputWidget(
+              onSaved: (String? value) {
+                // This optional block of code can be used to run
+                // code when the user saves the form.
+              },
+              onChanged: (String? value) {
+                // This optional block of code can be used to run
+                // code when the user saves the form.
+                lastName = value;
+              },
+              validator: (String? value) {
+                return (value != null && value.contains('@'))
+                    ? 'Do not use the @ char.'
+                    : null;
+              },
+
+              topLabel: "Last Name",
+
+              hintText: "Enter E-mail",
               // prefixIcon: FlutterIcons.chevron_left_fea,
             ),
             SizedBox(height: 8.0),
@@ -427,11 +508,30 @@ class _registerScreen extends ConsumerWidget {
             AppButton(
               type: ButtonType.PRIMARY,
               text: "Sign Up",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
+              onPressed: () async {
+
+
+
+                final payload = {
+                  "email": email,
+                  "firstName": firstName,
+                  "lastName": lastName,
+                  "password":password
+                };
+
+                if (!authProvider.isLoading) {
+                  await context
+                      .read(authNotifierProvider.notifier)
+                      .registerUser(
+                      payload
+                  );
+                }
+
+
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                // );
               },
             ),
             SizedBox(height: 24.0),
@@ -452,21 +552,6 @@ class _registerScreen extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () async {
-
-                      final payload = {
-                        'username': email,
-                        'password':password,
-                      };
-
-                      if (!authProvider.isLoading) {
-                        await context
-                            .read(authNotifierProvider.notifier)
-                            .loginUser(
-                          payload,
-                          rememberMe: rememberme,
-                        );
-                      }
-
                       slideCallback();
                     },
                     child: Text("Sign In",
@@ -558,8 +643,8 @@ class LoginListener extends ConsumerWidget {
       },
     )
 
-        : Expanded(
-      flex: 5,
+        : SizedBox(
+      // flex: 5,
       child: authProvider.when(
         initial: () => _loginScreen(slideCallback: slideCallback,),
         loading: () =>
@@ -601,6 +686,180 @@ class LoginListener extends ConsumerWidget {
           return _loginScreen(slideCallback: slideCallback);
         },
 
+        loaded: (loaded) {
+          Navigator.of(context).pop();
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            context
+                .read(authNotifierProvider.notifier)
+                .resetState();
+
+          });
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(loaded.toString()),
+            ));
+          });
+
+          // resetState();
+
+
+          return _loginScreen(slideCallback: slideCallback);
+        },
+        error: (e) {
+
+          Navigator.of(context).pop();
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            context
+                .read(authNotifierProvider.notifier)
+                .resetState();
+
+          });
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(e.toString()),
+            ));
+          });
+
+          // resetState();
+
+
+          return _loginScreen(slideCallback: slideCallback);
+        },
+      ),
+    );
+
+  }
+
+
+
+
+}
+
+
+class RegisterListener extends ConsumerWidget {
+  RegisterListener({
+    required this.slideCallback
+  });
+
+  final Function() slideCallback;
+
+  @override
+  Widget build(BuildContext context, ScopedReader watch) {
+    final authProvider = watch(authNotifierProvider);
+    final sharedPref = watch(sharedPreferencesServiceProvider);
+
+    return sharedPref.getCachedUserCredentials() != null ? FutureBuilder(
+      future: watch(authRepositoryProvider)
+          .login(sharedPref.getCachedUserCredentials()),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final wp = snapshot.data;
+
+          if (wp is WorkerProfile) {
+
+
+
+            SchedulerBinding.instance!.addPostFrameCallback((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            });
+
+
+          }
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              children: [
+                Text('Failed to login'),
+                SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: () async {
+                      await sharedPref.resetUserCredentials();
+
+                      SchedulerBinding.instance!
+                          .addPostFrameCallback((_) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      });
+                    },
+                    child: Text('Retry')),
+              ],
+            ),
+          );
+        }
+
+        return Center(
+            child: Container(child: CircularProgressIndicator()));
+      },
+    ) :
+    sharedPref.skipSignIn() == true ? FutureBuilder(
+      builder: (context, snapshot) {
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        });
+
+        return Center(
+            child: Container(child: CircularProgressIndicator()));
+      },
+    )
+
+        : SizedBox(
+      // flex: 5,
+      child: authProvider.when(
+        initial: () => _registerScreen(slideCallback: slideCallback,),
+        loading: () =>
+            Center(child: CircularProgressIndicator()),
+        data: (data) {
+          print(data);
+
+
+
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            context
+                .read(authNotifierProvider.notifier)
+                .resetState();
+
+          });
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Registration Successful"),
+            ));
+          });
+
+
+          SchedulerBinding.instance!
+              .addPostFrameCallback((_) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          });
+
+
+
+
+
+          return _loginScreen(slideCallback: slideCallback);
+        },
+
         loaded: (loaded) => Text(loaded.toString()),
         error: (e) {
 
@@ -623,7 +882,7 @@ class LoginListener extends ConsumerWidget {
           // resetState();
 
 
-          return _loginScreen(slideCallback: slideCallback);
+          return _registerScreen(slideCallback: slideCallback);
         },
       ),
     );

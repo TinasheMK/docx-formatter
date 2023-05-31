@@ -23,6 +23,16 @@ class DatabaseHelper {
     }catch(e){}
   }
 
+  // Helper methods
+
+  // Inserts a row in the database where each key in the Map is a column name
+
+  // inserted row.
+  Future<int> insert(String table, Map<String, dynamic> row) async {
+    return await _db.insert(table, row);
+  }
+  // All of the rows are returned as a list of maps, where each map is
+
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute('''
@@ -33,10 +43,21 @@ class DatabaseHelper {
             city TEXT ,
             country TEXT ,
             telephone TEXT, 
+            currency TEXT, 
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
+            
             email TEXT ,
             status TEXT 
           )
           ''');
+
     await db.execute('''
           CREATE TABLE company (
             id INTEGER PRIMARY KEY,
@@ -45,6 +66,14 @@ class DatabaseHelper {
             city TEXT ,
             country TEXT, 
             telephone TEXT, 
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
             email TEXT ,
             status TEXT 
           )
@@ -66,6 +95,17 @@ class DatabaseHelper {
             particulars TEXT,
             incDate TEXT,
             email TEXT,
+            
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
+            
+            
             company_id INTEGER NOT NULL 
           )
           ''');
@@ -81,8 +121,19 @@ class DatabaseHelper {
             discount FLOAT ,
             published BIT ,
             notes TEXT ,
+            currency TEXT ,
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
+            
             invoice_date TEXT ,
             due_date TEXT,
+            company_id INTEGER NOT NULL,
             invoice_status TEXT         
           )
           ''');
@@ -94,6 +145,14 @@ class DatabaseHelper {
             total FLOAT NOT NULL,
             product TEXT ,
             description TEXT NOT NULL,
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
             invoice_id INTEGER NOT NULL,      
             units INTEGER NOT NULL       
           )
@@ -105,31 +164,65 @@ class DatabaseHelper {
             total FLOAT NOT NULL,
             ref TEXT ,
             status TEXT ,
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
+            
             payment_date TEXT ,
             invoice_id INTEGER NOT NULL         
           )
           ''');
+
+    await db.execute('''
+          CREATE TABLE currency (
+            id TEXT PRIMARY KEY,
+            symbol TEXT NOT NULL,
+            country TEXT 
+          )
+          ''');
+
+    await db.execute('''
+          CREATE TABLE wallet (
+            id INTEGER PRIMARY KEY,
+            balance FLOAT NOT NULL,
+            client_id INTEGER NOT NULL,
+            currency TEXT 
+          )
+          ''');
+
+
+    await db.execute('''
+          insert into currency (
+            id,
+            symbol,
+            country
+            )
+            values("USD","USD","United States of America" )
+          ''');
   }
-
-  // Helper methods
-
-  // Inserts a row in the database where each key in the Map is a column name
   // and the value is the column value. The return value is the id of the
-  // inserted row.
-  Future<int> insert(String table, Map<String, dynamic> row) async {
-    return await _db.insert(table, row);
-  }
-
-  // All of the rows are returned as a list of maps, where each map is
   // a key-value list of columns.
   Future<List<Map<String, dynamic>>> queryAllRows(String table) async {
     return await _db.query(table);
   }
 
+  Future<List<Map<String, dynamic>>> softQueryAllRows(String table) async {
+    return await _db.rawQuery("select * from '$table' where deleted_at = '0'" );
+  }
 
-  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, {String? filter}) async {
-    return filter != null
+
+  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, {String? filter, String? client}) async {
+    return filter != null && client != null
         ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
+        :  filter != null
+        ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
+        :  client != null
+        ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "client_id = '${filter}'"  )
         : await _db.query(table,orderBy: 'invoice_date desc');
   }
 
@@ -143,6 +236,20 @@ class DatabaseHelper {
 
   Future<Map<String, dynamic>> findById(String table, int id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = $id');
+    return results[0];
+  }
+
+  Future<Map<String, dynamic>?> findClientWallet(String table, int id, String currency) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE client_id = $id and currency = "$currency"');
+    try{
+      return results?[0];
+    } catch(e){
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> findByIdStr(String table, var id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = "$id"');
     return results[0];
   }
 
@@ -160,6 +267,20 @@ class DatabaseHelper {
   // column values will be used to update the row.
   Future<int> update(String table, Map<String, dynamic> row) async {
     int id = row['id'];
+    return await _db.update(
+      table,
+      row,
+      where: 'id= ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> softDelete(String table, int id) async {
+
+    Map<String, dynamic> row = {
+      "deleted_at":  DateTime.now().toString(),
+    };
+
     return await _db.update(
       table,
       row,

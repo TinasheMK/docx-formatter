@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/all.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,18 +7,23 @@ import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 import 'package:smart_admin_dashboard/screens/tax/tax_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/tax/tax_screen.dart';
 
+import '../../../common/UserPreference.dart';
+import '../../../services/shared_pref_service.dart';
 import '../../clients/clients_home_screen.dart';
 import '../../invoice/register_home_screen.dart';
 import '../../invoice/register_screen.dart';
 import '../home_screen.dart';
 
-class SideMenu extends StatelessWidget {
+class SideMenu extends ConsumerWidget {
   const SideMenu({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final sharedPref = watch(sharedPreferencesServiceProvider);
+
+
     return Drawer(
       child: SingleChildScrollView(
         // it enables scrolling
@@ -97,7 +104,17 @@ class SideMenu extends StatelessWidget {
             DrawerListTile(
               title: "Logout",
               svgSrc: "assets/icons/menu_setting.svg",
-              press: () {
+              press: () async {
+                await sharedPref.resetUserCredentials();
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool(UserPreference.skip,
+                    false);
+
+
+
+
+
+
                 Navigator.pop(context, true);
                 Navigator.push(
                   context,

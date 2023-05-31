@@ -71,7 +71,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
                 Center(
                   child: Text("Your Business Profiles"),
                 ),
-                clients.length == 0 ? ElevatedButton.icon(
+                ElevatedButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: darkgreenColor,
                     padding: EdgeInsets.symmetric(
@@ -104,7 +104,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
                   label: Text(
                     "Add Business Profile",
                   ),
-                ) : SizedBox(),
+                ),
                 MemoSelectionSection(memos: memos,callback: widget.callback),
               ],
             )),

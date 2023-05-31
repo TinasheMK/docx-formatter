@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import '../../main.dart';
 import '../../screens/generator/databaseHelper.dart';
 import '../enums/status_enum.dart';
+import 'Currency.dart';
 import 'Employee.dart';
+import 'Wallet.dart';
 
 class Client {
   int?    id;
@@ -13,7 +15,15 @@ class Client {
   String? telephone;
   String? email;
   String? set;
+  String? currency;
+  Currency? currencyFull;
   Status? status;
+  String? createdDate;
+  String? createdBy;
+  String? version;
+  String? lastModifiedBy;
+  String? lastModifiedBate;
+  // String? deletedAt;
   List<Employee>? employees;
 
 
@@ -23,11 +33,19 @@ class Client {
     this.street,
     this.city,
     this.set,
+    this.currency,
+    this.currencyFull,
     this.country,
     this.telephone,
     this.email,
     this.status,
     this.employees,
+    this.createdDate,
+    this.createdBy,
+    this.version,
+    this.lastModifiedBy,
+    this.lastModifiedBate,
+    // this.deletedAt,
   });
 
  Client.fromJson(Map<String, dynamic> json) {
@@ -40,6 +58,15 @@ class Client {
    email = json['email'];
    status = json['status'];
    employees = json['employees'];
+   currencyFull = json['currencyFull'];
+   currency = json['currency'];
+
+   createdDate = json['createdDate'];
+   createdBy = json['createdBy'];
+   version = json['version'];
+   lastModifiedBy = json['lastModifiedBy'];
+   lastModifiedBate = json['lastModifiedBate'];
+   // deletedAt = json['deletedAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,7 +79,9 @@ class Client {
     data['telephone'] = this.telephone;
     data['email'] = this.email;
     data['status'] = this.status;
+    data['currency'] = this.currency;
     data['employees'] = this.employees?.map((item) => item.toJson());
+    // data['currencyFull'] = this.currencyFull?.map((item) => item.toJson());
     return data;
   }
 
@@ -66,6 +95,14 @@ class Client {
       "telephone": this.telephone,
       "email": this.email,
       "status": this.status,
+      "currency": this.currency,
+
+      "created_date": this.createdDate,
+      "created_by": this.createdBy,
+      "version": this.version,
+      "last_modified_by": this.lastModifiedBy,
+      "last_modified_date": this.lastModifiedBate,
+      // "deleted_at": this.deletedAt,
     };
     final id = await dbHelper.insert("client", row);
     this.id = id;
@@ -90,6 +127,7 @@ class Client {
       'country': this.country,
       'street': this.street,
       'email': this.email,
+      'currency': this.currency,
       'company_id': companyId
     };
     final id = await dbHelper.insert("director", row);
@@ -115,6 +153,7 @@ class Client {
       "country": this.country,
       "telephone": this.telephone,
       "email": this.email,
+      "currency": this.currency,
       "id" : this.id
     };
     final rowsAffected = await dbHelper.update('client',row);
@@ -124,16 +163,39 @@ class Client {
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
     // final id = await dbHelper.queryRowCount('client');
-    final rowsDeleted = await dbHelper.delete('client',this.id!);
+    final rowsDeleted = await dbHelper.softDelete('client',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
 
+
+  Future<Wallet> getWallet(String currency) async {
+
+    final maps = await dbHelper.findClientWallet("wallet", this.id!, currency);
+
+    if (maps == null){
+      Wallet wallet =  new Wallet(
+        currency : currency,
+        clientId : this.id,
+      );
+      wallet.save();
+      getWallet(wallet.currency!);
+    }
+
+    return Wallet(
+      id : maps!['id'],
+      balance : maps!['balance'],
+      currency : maps!['currency'],
+      clientId : maps!['client_id'],
+
+    );
+
+  }
 
 
 }
 
 Future<List<Client>> getClients() async {
-  final maps = await dbHelper.queryAllRows("client");
+  final maps = await dbHelper.softQueryAllRows("client");
 
   return List.generate(maps.length, (i) {
     return Client(
@@ -145,6 +207,7 @@ Future<List<Client>> getClients() async {
       telephone : maps[i]['telephone'],
       email : maps[i]['email'],
       status : maps[i]['status'],
+      currency : maps[i]['currency'],
       employees : maps[i]['employees'],
 
     );
@@ -163,8 +226,12 @@ Future<Client> getClient(id) async {
       telephone : maps['telephone'],
       email : maps['email'],
       status : maps['status'],
+      currency : maps['currency'],
       employees : maps['employees'],
 
     );
 
 }
+
+
+

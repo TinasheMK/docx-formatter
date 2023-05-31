@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/providers/registration/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
+import '../../../common/UserPreference.dart';
 import '../../../core/utils/colorful_tag.dart';
 import '../../../providers/Memo.dart';
 
@@ -13,6 +15,7 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../providers/recent_user_model.dart';
 import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Company.dart';
+import '../../../providers/registration/Wallet.dart';
 import '../../../responsive.dart';
 
 import '../../generator/CR6_form_generator.dart';
@@ -77,13 +80,36 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   late double childAspectRatio;
   late List<Memo> memosSet = [];
 
-  late Client client ;
+   Client client = new Client.fromJson({});
+  double balance = 0 ;
+
+  TextEditingController con1 = TextEditingController();
+  TextEditingController con2 = TextEditingController();
+  TextEditingController con3 = TextEditingController();
+  TextEditingController con4 = TextEditingController();
+  TextEditingController con5 = TextEditingController();
+  TextEditingController con6 = TextEditingController();
+
 
   Future<void> _initclient() async {
+
+    var prefs = await SharedPreferences.getInstance();
+
     if(clientId!=null) {
       client = await getClient(clientId);
-    }else{
-      client= Client.fromJson({});
+
+      con1.text = client.companyName?? "";
+      con2.text = client.email ?? "";
+      con3.text = client.street ?? "";
+      con4.text = client.city ?? "";
+      con5.text = client.country ?? "";
+      con6.text = client.telephone ?? "";
+
+      var activeCurrency = await prefs!.getString(UserPreference.activeCurrency);
+
+      Wallet wallet = await client.getWallet(client.currency ?? activeCurrency ?? 'USD' );
+      print(wallet.toJson());
+      balance = wallet.balance! ?? 0;
     }
     setState(() {});
   }
@@ -91,8 +117,9 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
 
   @override
   void initState() {
-    super.initState();
     _initclient();
+
+    super.initState();
     loadData();
     _animationController = AnimationController(
       vsync: this,
@@ -140,6 +167,9 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
               SizedBox(height: defaultPadding),
               MiniInformation(title: client.companyName?? 'New Client',),
               SizedBox(height: defaultPadding),
+              Text("Balance: \$"+balance.toString(), style: TextStyle(fontSize: 20, color: Colors.white) ),
+
+              SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -161,11 +191,214 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                 SizedBox(height: 16.0),
 
                                 Responsive.isMobile(context)
-                                    ? SizedBox( height: 480,child: Column(
+                                    ? SizedBox( height: 480,child: Column(children: [
+                                  Expanded(
+                                    child: Column(children: [
+
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child:
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5, right:5),
+                                              child: InputWidget(
+                                                topLabel: "Company Name",
+                                                keyboardType: TextInputType.text,
+                                                kController: con1,
+                                                onSaved: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                },
+                                                onChanged: (String? value) {
+                                                  print(client!.toJson());
+                                                  client!.companyName = value;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'Please enter company name.';
+                                                  }
+                                                  return null;
+                                                },
+                                                // kInitialValue: client.companyName ?? "",
+
+
+                                                // prefixIcon: FlutterIcons.chevron_left_fea,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                        ],),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child:
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5, right:5),
+                                              child: InputWidget(
+                                                topLabel: "Email",
+                                                kController: con2,
+                                                keyboardType: TextInputType.text,
+                                                onSaved: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                },
+                                                onChanged: (String? value) {
+                                                  client!.email = value;
+                                                },
+                                                // kInitialValue: client!.email ,
+
+
+                                                // prefixIcon: FlutterIcons.chevron_left_fea,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                        ],),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child:
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5, right:5),
+                                              child: InputWidget(
+                                                topLabel: "Address",
+                                                kController: con3,
+                                                keyboardType: TextInputType.text,
+                                                onSaved: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                },
+                                                onChanged: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                  // directorStreet = value!;
+                                                  //
+                                                  //
+                                                  client!.street = value;
+                                                },
+                                                // kInitialValue: client!.street ,
+
+
+                                                // prefixIcon: FlutterIcons.chevron_left_fea,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                        ],),
+                                    ],),
+
+                                  ),
+                                  Expanded(
+                                    child: Column(children: [
+
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child:
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5, right:5),
+                                              child: InputWidget(
+                                                topLabel: "City",
+                                                kController: con4,
+                                                keyboardType: TextInputType.text,
+                                                onSaved: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                },
+                                                onChanged: (String? value) {
+
+                                                  client!.city = value;
+                                                },
+                                                validator: (String? value) {
+                                                  return (value != null && value.contains('@'))
+                                                      ? 'Do not use the @ char.'
+                                                      : null;
+                                                },
+                                                // kInitialValue: client!.city,
+
+
+                                                // prefixIcon: FlutterIcons.chevron_left_fea,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                        ],),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child:
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5, right:5),
+                                              child: InputWidget(
+                                                topLabel: "Country",
+                                                kController: con5,
+                                                keyboardType: TextInputType.text,
+                                                onSaved: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                },
+                                                onChanged: (String? value) {
+                                                  client!.country = value;
+                                                },
+                                                validator: (String? value) {
+                                                  return (value != null && value.contains('@'))
+                                                      ? 'Do not use the @ char.'
+                                                      : null;
+                                                },
+                                                // kInitialValue: client!.country,
+
+
+                                                // prefixIcon: FlutterIcons.chevron_left_fea,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                        ],),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child:
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5, right:5),
+                                              child: InputWidget(
+                                                topLabel: "Phone Number",
+                                                kController: con6,
+                                                keyboardType: TextInputType.text,
+                                                onSaved: (String? value) {
+                                                  // This optional block of code can be used to run
+                                                  // code when the user saves the form.
+                                                },
+                                                onChanged: (String? value) {
+                                                  client!.telephone = value;
+                                                },
+                                                validator: (String? value) {
+                                                  return (value != null && value.contains('@'))
+                                                      ? 'Do not use the @ char.'
+                                                      : null;
+                                                },
+                                                // kInitialValue: client!.telephone ,
+
+
+                                                // prefixIcon: FlutterIcons.chevron_left_fea,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                        ],),
+                                    ],),
+
+                                  ),
+                                ],))
+                                    : Row(
                                   children: [
                                     Expanded(
                                       child: Column(children: [
-
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
@@ -176,7 +409,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Company Name",
                                                   keyboardType: TextInputType.text,
-
+                                                  kController: con1,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -191,7 +424,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                     }
                                                     return null;
                                                   },
-                                                  kInitialValue: client.companyName ?? "",
+                                                  // kInitialValue: client.companyName ?? '',
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -210,6 +443,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Email",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con2,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -217,7 +451,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                   onChanged: (String? value) {
                                                     client!.email = value;
                                                   },
-                                                  kInitialValue: client!.email ,
+                                                  // kInitialValue: client!.email ,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -236,6 +470,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Address",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con3,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -248,7 +483,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                     //
                                                     client!.street = value;
                                                   },
-                                                  kInitialValue: client!.street ,
+                                                  // kInitialValue: client!.street ,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -273,6 +508,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "City",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con4,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -286,7 +522,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.city,
+                                                  // kInitialValue: client!.city,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -304,6 +540,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 padding: EdgeInsets.only(left: 5, right:5),
                                                 child: InputWidget(
                                                   topLabel: "Country",
+                                                  kController: con5,
                                                   keyboardType: TextInputType.text,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
@@ -317,7 +554,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.country,
+                                                  // kInitialValue: client!.country,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -335,6 +572,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 padding: EdgeInsets.only(left: 5, right:5),
                                                 child: InputWidget(
                                                   topLabel: "Phone Number",
+                                                  kController: con6,
                                                   keyboardType: TextInputType.text,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
@@ -348,206 +586,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.telephone ,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
-
-                                    ),
-                                  ],))
-                                    :  Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Company Name",
-                                                  keyboardType: TextInputType.text,
-
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    print(client!.toJson());
-                                                    client!.companyName = value;
-                                                  },
-                                                  validator: (value) {
-                                                    if (value == null || value.isEmpty) {
-                                                      return 'Please enter company name.';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  kInitialValue: client.companyName ?? '',
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Email",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    client!.email = value;
-                                                  },
-                                                  kInitialValue: client!.email ,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Address",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                    // directorStreet = value!;
-                                                    //
-                                                    //
-                                                    client!.street = value;
-                                                  },
-                                                  kInitialValue: client!.email ,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
-
-                                    ),
-                                    Expanded(
-                                      child: Column(children: [
-
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "City",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-
-                                                    client!.city = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kInitialValue: client!.city,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Country",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    client!.country = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kInitialValue: client!.country,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Phone Number",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    client!.telephone = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kInitialValue: client!.telephone ,
+                                                  // kInitialValue: client!.telephone ,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,

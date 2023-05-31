@@ -1,6 +1,8 @@
 
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
+import '../../../common/UserPreference.dart';
 import '../../../core/utils/colorful_tag.dart';
 import '../../../providers/Memo.dart';
 
@@ -13,9 +15,11 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../providers/recent_user_model.dart';
 import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Company.dart';
+import '../../../providers/registration/Currency.dart';
 import '../../../providers/registration/Invoice.dart';
 import '../../../providers/registration/InvoiceItem.dart';
 import '../../../providers/registration/Payment.dart';
+import '../../../providers/registration/Wallet.dart';
 import '../../../responsive.dart';
 
 import '../../generator/CR6_form_generator.dart';
@@ -131,7 +135,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   late int crossAxisCount;
   late double childAspectRatio;
-  late Client selectedClient = Client.fromJson({});
   late String _dateCount;
   late String _range;
 
@@ -147,19 +150,33 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     super.dispose();
   }
 
-
+  List<Company> companies = [Company.fromJson({})];
+  List<Currency> currencies = [Currency.fromJson({})];
 
   Invoice invoice = Invoice.fromJson({});
-  Company activeCompany = Company.fromJson({});
 
   Future<void> _initInvoice() async {
+    currencies.clear();
+    var prefs = await SharedPreferences.getInstance();
+
+
     if(invoiceId!=null) {
       invoice = await getInvoice(invoiceId);
-      selectedClient = await getClient(invoice.client);
+      invoice.clientFull = await getClient(invoice.client);
       invoice.invoiceitems = await getInvoiceItems(invoiceId);
       invoice.payments = await getInvoicePayments(invoiceId);
+      invoice.companyFull = await getCompany(invoice.companyId);
+
     }else{
       invoice = Invoice.fromJson({});
+
+      var activeClient = await prefs!.getInt(UserPreference.activeClient);
+      if(activeClient !=null) {
+        invoice.clientFull = await getClient(activeClient);
+      }else{
+        invoice.clientFull = Client.fromJson({});
+      }
+
       invoice.invoiceStatus = 'DRAFT';
       invoice.invoiceDate = DateTime.now().toString();
       invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
@@ -170,28 +187,38 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     if(invoice.payments == null) {
       invoice.payments= [Payment.fromJson({})];
     }
+    if(invoice.companyFull == null) {
+      var activeCompany = await prefs!.getInt(UserPreference.activeCompany);
 
+      if(activeCompany!=null)invoice.companyFull= await getCompany(activeCompany);
+    }
+
+
+    companies = await getCompanys();
+    currencies = await getCurrencys();
+
+    var activeCurrency = await prefs!.getString(UserPreference.activeCurrency);
+
+    invoice.clientFull?.currency != null
+        ? invoice.currencyFull=  await getCurrency(invoice.clientFull?.currency)
+        :activeCurrency != null ? invoice.currencyFull = await getCurrency(activeCurrency)
+        : invoice.currencyFull = await getCurrency("USD");
 
     setState(() {
       invoice;
     });
   }
 
-  List<Company> companies = [Company.fromJson({})];
 
-  Future<void> _initCompanys() async {
-    companies = await getCompanys();
-    activeCompany = await getCompany(1);
 
-    setState(() {});
-  }
+
 
 
   @override
   void initState() {
-    super.initState();
+
     _initInvoice();
-    _initCompanys();
+    super.initState();
     myController.forEach((e) {
       e.forEach((a) {
         a.addListener(_printLatestValue);
@@ -213,6 +240,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+
     paymentAmount = invoice.subTotalAmount?.toString() ?? "0";
     return SafeArea(
       child: SingleChildScrollView(
@@ -273,10 +301,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       if(action=="set"){
         memoItems = mem;
         print("Selected client with id" + memoItems);
-        // print(memoItems);
-        selectedClient = await getClient(int.parse(mem));
-        // allClients.add(memos.where((element) => element.code ==mem).first);
-        // print(selectedClient);
+        invoice.clientFull = await getClient(int.parse(mem));
 
         setState(()  {
 
@@ -330,7 +355,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(activeCompany.companyName ?? "Select" , style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.companyFull?.companyName ?? "Select" , style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -391,29 +416,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     "Publish",
                   ),
                 ),
-                // SizedBox(
-                //   width: 10,
-                // ),
-                // ElevatedButton.icon(
-                //   style: TextButton.styleFrom(
-                //     backgroundColor: Colors.orange,
-                //     padding: EdgeInsets.symmetric(
-                //       horizontal: defaultPadding * 1.5,
-                //       vertical:
-                //       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                //     ),
-                //   ),
-                //   onPressed: () {
-                //     // Navigator.push(
-                //     //   context,
-                //     //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                //     // );
-                //   },
-                //   icon: Icon(Icons.mail),
-                //   label: Text(
-                //     "Publish & Send Email",
-                //   ),
-                // ),
               ],
             ),
 
@@ -445,7 +447,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
-                              selectedClient.companyName != null ? Container(
+                              invoice.clientFull?.companyName != null ? Container(
                                   margin: EdgeInsets.only(left: defaultPadding),
                                   padding: EdgeInsets.symmetric(
                                     horizontal: defaultPadding /2,
@@ -457,7 +459,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                     border: Border.all(color: Colors.white10),
                                   ),
                                   child: TextButton(
-                                    child: Text(selectedClient.companyName!, style: TextStyle(color: Colors.white)),
+                                    child: Text(invoice.clientFull?.companyName ?? "Select Client", style: TextStyle(color: Colors.white)),
                                     onPressed: () {
                                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                                           builder: (BuildContext context) {
@@ -647,7 +649,99 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       ),
                     ],
                   ),
+                  SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:
+                        Row(
+                            children:[
+                              Text( "Currency:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              ),
+                              invoice.currency != null ? Container(
+                                margin: EdgeInsets.only(left: defaultPadding),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: defaultPadding /4,
+                                  vertical: defaultPadding / 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: secondaryColor,
+                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                  border: Border.all(color: Colors.white10),
+                                ),
+                                child: TextButton(
+                                  child: Text(invoice.currency!, style: TextStyle(color: Colors.white)),
+                                  onPressed: () {
+                                  },
+                                  // Delete
+                                ),
+
+                              ):ElevatedButton.icon(
+                                  icon: Icon(
+                                    Icons.flag,
+                                    size: 14,
+                                  ),
+                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
+                                      primary: Colors.blueAccent),
+                                  label: Text(invoice.currencyFull?.id! ?? "Select Currency"),
+
+                                onPressed: () {
+
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) {
+                                        return AlertDialog(
+                                            content: Container(
+                                              color: secondaryColor,
+                                              height: 410,
+                                              child: Column(
+                                                children:
+                                                List.generate(
+                                                  currencies.length,
+                                                      (index) =>
+
+
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: defaultPadding),
+                                                    padding: EdgeInsets.symmetric(
+                                                      horizontal: defaultPadding,
+                                                      vertical: defaultPadding / 2,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: secondaryColor,
+                                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                      border: Border.all(color: Colors.white10),
+                                                    ),
+                                                    child: TextButton(
+                                                      child: Text(currencies[index].id??'', style: TextStyle(color: Colors.white)),
+                                                      onPressed: () {
+                                                        invoice.currency = currencies[index].id;
+                                                        invoice.clientFull?.currency = currencies[index].id;
+                                                        invoice.clientFull?.save();
+                                                        setState(() {
+                                                        });
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      // Delete
+                                                    ),
+
+                                                  )
+                                                ),
+
+
+                                              ),
+                                            ));
+                                      });
+                                },)
+                            ]
+                        ),
+
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 25.0),
+
                 ],
               ),),
 
@@ -684,23 +778,24 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     ),
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
+                    if(invoice.invoiceStatus == 'PAID'){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Invoice already paid."),
+                      ));
+                    }else {
 
-                    invoice.invoiceStatus = 'CANCELLED';
-                    invoice.save();
+                      invoice.invoiceStatus = 'CANCELLED';
+                      invoice.save();
 
-                    invoice.invoiceitems?.forEach((e) {
-                      print(e.toJson());
-                    });
+                      invoice.invoiceitems?.forEach((e) {
+                        print(e.toJson());
+                      });
 
 
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Marked as cancelled'),
-                    ));
-
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Marked as cancelled'),
+                      ));
+                    }
                     setState(() {
 
                     });
@@ -723,21 +818,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     ),
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    // );
-
-
-                    invoice.invoiceStatus = 'UNPAID';
-                    invoice.save();
-                    // print(invoice.toJson());
-
-
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Marked as unpaid'),
-                    ));
-
+                    if(invoice.invoiceStatus == 'PAID'){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Invoice already paid."),
+                      ));
+                    }else {
+                      invoice.invoiceStatus = 'UNPAID';
+                      invoice.save();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Marked as unpaid'),
+                      ));
+                    }
                     setState(() {
 
                     });
@@ -905,21 +996,45 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                     // invoice.invoiceitems! = invoice!.invoiceitems!;
                     invoice.totalAmount = invoice.subTotalAmount;
-                    invoice.client = selectedClient.id;
-                    invoice.company = activeCompany.id;
+                    invoice.client = invoice.clientFull?.id;
+                    invoice.companyId = invoice.companyFull?.id;
+                    double sum = 0.0;
+
+                    if(invoice.payments!.isNotEmpty) {
+                      if (invoice.payments?[0].total == null) invoice.payments!
+                          .remove(invoice.payments![0]);
+                    }
+                    invoice.payments?.forEach((e) {
+                      sum += e.total??0;
+                      // if(e.total==null) invoice.payments!.remove(e);
+                    });
+
+
+                    if(invoice.totalAmount! < sum && invoice.invoiceStatus != 'PAID') {
+                      Wallet wallet = await invoice.clientFull!.getWallet(invoice.currencyFull!.id!);
+                      wallet.deposit(sum - invoice.totalAmount!);
+                    }
+
+
+                    if(invoice.totalAmount! <= sum){
+                      invoice.invoiceStatus = 'PAID';
+
+                    }
                     await invoice.save();
 
-                    invoice.clientFull = selectedClient;
-                    invoice.companyFull = activeCompany;
-
-                    invoice.payments = await getInvoicePayments(invoiceId);
 
 
 
-                    var response = await invoiceGenerator(invoice, widget.code);
+                    if(invoiceId != null) invoice.payments = await getInvoicePayments(invoiceId);
+
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                    prefs.setInt(UserPreference.activeClient, invoice.clientFull?.id ?? 0);
+
+
 
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(response),
+                      content: Text("Invoice saved"),
                     ));
 
                     setState(() {
@@ -949,137 +1064,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   child: TextButton(
                     child: Text("Add Payment" , style: TextStyle(color: Colors.white)),
                     onPressed: () {
-                      addPayment = true;
+                      if(invoice.invoiceStatus == 'PAID'){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Invoice already paid."),
+                        ));
+                      }else {
+                        addPayment = true;
+                      }
                       setState(() {
 
                       });
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (_) {
-                      //       return AlertDialog(
-                      //           content: SizedBox(
-                      //             height: 113,
-                      //             // padding: EdgeInsets.all(defaultPadding),
-                      //             // decoration: BoxDecoration(
-                      //             //   borderRadius: const BorderRadius.all(Radius.circular(10)),),
-                      //             child: Column(
-                      //               crossAxisAlignment: CrossAxisAlignment.start,
-                      //               children: [
-                      //                 Row(
-                      //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //                   children: [
-                      //                     Expanded(
-                      //                       child:
-                      //                       Row(
-                      //                           children:[
-                      //                             Text( "Payment Date:   ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                      //                             ),
-                      //                             // Text( "10/12/2023", style: TextStyle( color: Colors.white),
-                      //                             // ),
-                      //                             SizedBox(
-                      //                               // width: 150,
-                      //                               child:
-                      //                               TextButton(
-                      //                                 child: Text(payDate.toString().split(" ")[0], style: TextStyle(color:Colors.blueAccent)),
-                      //                                 onPressed: () {
-                      //                                   showDialog(
-                      //                                       context: context,
-                      //                                       builder: (_) {
-                      //                                         return AlertDialog(
-                      //                                             title: Center(
-                      //                                               child: Column(
-                      //                                                 children: [
-                      //                                                   Text("Select Date"),
-                      //                                                 ],
-                      //                                               ),
-                      //                                             ),
-                      //                                             content: Container(
-                      //                                               color: secondaryColor,
-                      //                                               height: 350,
-                      //                                               width: 350,
-                      //                                               child: SizedBox(
-                      //                                                 width: 300,
-                      //                                                 height: 300,
-                      //                                                 child: SfDateRangePicker(
-                      //                                                   onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                      //                                                     print(payDate);
-                      //                                                     payDate = args.value.toString();
-                      //                                                     setState(() {
-                      //                                                     });
-                      //                                                   },
-                      //                                                   selectionMode: DateRangePickerSelectionMode.single,
-                      //                                                   initialSelectedRange: PickerDateRange(
-                      //                                                       DateTime.now().subtract(const Duration(days: 4)),
-                      //                                                       DateTime.now().add(const Duration(days: 3))),
-                      //                                                 ),
-                      //                                               ),
-                      //                                             ));
-                      //                                       });
-                      //                                 },
-                      //                                 // Delete
-                      //                               ),
-                      //                             ),
-                      //                           ]
-                      //                       ),
-                      //
-                      //                     ),
-                      //                   ],
-                      //                 ),
-                      //                 SizedBox(height: 3),
-                      //                 Row(
-                      //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //                   children: [
-                      //                     Expanded(
-                      //                       child:
-                      //                       Row(
-                      //                           children:[
-                      //                             Text( "Total Paid:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                      //                             ),
-                      //                             SizedBox(
-                      //                               width: 80,
-                      //                               child: TextFormField(
-                      //                                 inputFormatters: <TextInputFormatter>[
-                      //                                   FilteringTextInputFormatter.digitsOnly
-                      //                                 ],
-                      //                                 keyboardType: TextInputType.number,
-                      //                                 // controller: myController[index][0],
-                      //                                 onChanged: (String value){
-                      //
-                      //                                 },
-                      //
-                      //
-                      //                               ),
-                      //                             )
-                      //                           ]
-                      //                       ),
-                      //                     ),
-                      //                   ],
-                      //                 ),
-                      //                 SizedBox(height: 6),
-                      //                 ElevatedButton.icon(
-                      //                   style: TextButton.styleFrom(
-                      //                     backgroundColor: Colors.green,
-                      //                     padding: EdgeInsets.symmetric(
-                      //                       horizontal: defaultPadding * 1.5,
-                      //                       vertical:
-                      //                       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                      //                     ),
-                      //                   ),
-                      //                   onPressed: () async {
-                      //
-                      //
-                      //
-                      //                   },
-                      //                   icon: Icon(Icons.add),
-                      //                   label: Text(
-                      //                     "Add",
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //       );
-                      //     });
+
                     },
                     // Delete
                   ),
@@ -1336,20 +1331,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               type: ButtonType.PRIMARY,
               text: "Print Invoice",
               onPressed: () async {
+                var response = await invoiceGenerator(invoice);
 
-                // List<DailyInfoModel> dailyDatas =
-                // dailyData.map((item) => DailyInfoModel.fromJson(item)).toList();
-
-
-                // var register = {
-                //   "companyName":companyName,
-                //   "street":street,
-                //   "city":city,
-                //   "country":country,
-                // };
-
-                // Company company =  Company.fromJson(register);
-
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(response),
+                ));
               },
             ),
             SizedBox(height: 24.0),
@@ -1379,7 +1365,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     return GestureDetector(
       child: Text(c.companyName!) ,
       onTap: (){
-        activeCompany = c;
+        invoice.companyFull = c;
         Navigator.of(context).pop();
         setState(() {
 

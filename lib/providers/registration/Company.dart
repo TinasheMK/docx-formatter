@@ -57,10 +57,11 @@ class Company {
   }
 
 
-  Future<void> save() async {
+  Future<int> save() async {
     Map<String, dynamic> row = {
       "company_name": this.companyName,
       "street": this.street,
+      "id": this.id,
       "city": this.city,
       "country": this.country,
       "telephone": this.telephone,
@@ -70,7 +71,7 @@ class Company {
 
     var id;
     if(this.id==null) {
-      final id = await dbHelper.insert("company", row);
+      id = await dbHelper.insert("company", row);
     }else{
       dbHelper.update('company',row);
       id = this.id;
@@ -80,16 +81,20 @@ class Company {
 
 
     var emps = this.employees;
-    for(int i=0; i<30; i++){{
-      try {
-        emps?[i]?.saveAndAttach(id);
-      }catch(err) {}
+    for(int i=0; i<30; i++){
+      {
+        try {
+          emps?[i]?.saveAndAttach(id);
+        }catch(err) {}
 
-    }
+      }
     }
 
 
     debugPrint('inserted company row id: $id');
+
+    return id;
+
   }
 
   Future<void> saveAndAttach(int companyId) async {
@@ -134,7 +139,7 @@ class Company {
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
     // final id = await dbHelper.queryRowCount('company');
-    final rowsDeleted = await dbHelper.delete('company',this.id!);
+    final rowsDeleted = await dbHelper.softDelete('company',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
 
@@ -143,7 +148,7 @@ class Company {
 }
 
 Future<List<Company>> getCompanys() async {
-  final maps = await dbHelper.queryAllRows("company");
+  final maps = await dbHelper.softQueryAllRows("company");
 
   return List.generate(maps.length, (i) {
     return Company(

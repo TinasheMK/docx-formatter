@@ -46,14 +46,14 @@ class AuthRepository implements IAuthRepository {
   Future getWorkerProfile(int id) async {
     final options = _reader(accessKeyOptionsProvider).state;
 
-    print("worker data+++"+ '$dataService/api/v1/worker/$id');
+    print("worker data+++"+ '$invoicerService/api/v1/worker/$id');
     log(options.toString());
 
     // https: //api-test.myworklink.uk/$dataService/api/v1/agencies/0/100
 
     try {
       final result = await _dioClient.get(
-        '$dataService/api/v1/worker/$id',
+        '$invoicerService/api/v1/employee/$id',
         options: options,
       );
 
@@ -111,10 +111,12 @@ class AuthRepository implements IAuthRepository {
 
         _reader(loginResponseProvider).state = resp;
 
-        final WorkerProfile wp = await getWorkerProfile(resp.workerId!);
+        final WorkerProfile wp = new WorkerProfile(
+          firstname: resp.firstName
+        );
         prefs.setString(
-            UserPreference.assignmentCodeId, wp.assignmentCode.toString());
-        log(wp.toString());
+            UserPreference.assignmentCodeId, resp.workerId.toString());
+        log(resp.toString());
 
         _reader(workerProfileProvider).state = wp;
 
@@ -143,9 +145,9 @@ class AuthRepository implements IAuthRepository {
   @override
   Future register(Map? data) async {
     try {
-      final result = await _dioClient.post('auth/users/', data: data);
+        final result = await _dioClient.post('$invoicerService/api/v1/employee', data: data);
 
-      if (result.statusCode == 201) {
+      if (result.statusCode == 200) {
         // all good
         return WorkerProfile.fromJson(result.data);
       }

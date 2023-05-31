@@ -3,9 +3,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/providers/registration/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
+import '../../../common/UserPreference.dart';
 import '../../../core/utils/colorful_tag.dart';
 import '../../../providers/Memo.dart';
 
@@ -619,7 +621,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                           defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                                         ),
                                       ),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
                                           print(client!.toJson());
                                           print(widget.code);
@@ -627,8 +629,15 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                             if(widget.code == "edit"){
                                               client!.update();
                                             }else{
-                                              client!.save();
+                                              var clientId = await client!.save();
+
+                                              print('Client id is $clientId');
+
+                                              SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                                              prefs.setInt(UserPreference.activeCompany, clientId);
                                             }
+
 
 
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

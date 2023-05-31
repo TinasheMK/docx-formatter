@@ -11,7 +11,7 @@ import '../../providers/registration/Invoice.dart';
 ///
 /// Read file template.docx, produce it and save
 ///
-Future <String> invoiceGenerator(Invoice invoice, String code) async {
+Future <String> invoiceGenerator(Invoice invoice) async {
   try {
     // final f = File("assets/templates/invoicetemplate1.docx");
 
@@ -51,6 +51,12 @@ Future <String> invoiceGenerator(Invoice invoice, String code) async {
       paymentList.add(c);
     }
 
+    Content invoiceStatus =
+    invoice.invoiceStatus == 'PAID' ? TextContent("paid", 'PAID')
+        : invoice.invoiceStatus == 'CANCELLED' ? TextContent("cancelled", 'CANCELLED')
+        : invoice.invoiceStatus == 'UNPAID' ? TextContent("unpaid", 'UNPAID')
+        : TextContent("draft", 'DRAFT');
+
 
 
 
@@ -76,6 +82,7 @@ Future <String> invoiceGenerator(Invoice invoice, String code) async {
 
       ..add(TableContent("table", invoiceItemList,))
       ..add(TableContent("table2", paymentList,))
+      ..add(invoiceStatus)
 
     ;
 
@@ -91,7 +98,7 @@ Future <String> invoiceGenerator(Invoice invoice, String code) async {
       if (docGen != null) await file.writeAsBytes(docGen);
     });
 
-    return "Invoice created successfully. Check your downloads folder in invoices folder.";
+    return "Invoice printed. Check your downloads folder in invoices folder.";
   }catch(e){
     return e.toString();
   }

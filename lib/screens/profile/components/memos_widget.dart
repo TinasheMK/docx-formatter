@@ -1,9 +1,11 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/UserPreference.dart';
 import '../../../providers/Memo.dart';
 import '../../../providers/registration/Company.dart';
 import '../../clients/new/new_client_home_screen.dart';
@@ -138,30 +140,36 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
   bool status = false;
   bool _closeIcon = true;
 
-  _onChanged(String value) {
-    setState(() {
-      charLength = value.length;
-    });
+  SharedPreferences? prefs;
+  int? activeCompany;
 
-    if (charLength >= 6) {
-      setState(() {
-        _closeIcon = _closeIcon;
-        status = true;
-      });
-    } else {
-      setState(() {
-        _closeIcon = !_closeIcon;
-        status = false;
-      });
-    }
+  init() async {
+    prefs = await SharedPreferences.getInstance();
+    activeCompany = await prefs!.getInt(UserPreference.activeCompany);
+    setState(() {  activeCompany; });
+  }
+
+  @override
+  void initState() {
+    init();
+
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    var variaId = widget.memo.id;
+
+    print('This is the active company: $activeCompany');
+    print('Business id is: $variaId');
+
+
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
+        color: activeCompany==widget.memo.id?darkgreenColor:Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Row(
@@ -202,7 +210,10 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     Visibility(
                       visible: !_visible,
-                      child: widget.memo.set=="set"?Icon(Icons.cancel, size: 18):Icon(Icons.add, size: 18),
+                      child: activeCompany==widget.memo.id?Text("Active",   style: Theme.of(context)
+                          .textTheme
+                          .caption!
+                          .copyWith(color: Colors.blue),):SizedBox(),
                     )
                   ],
                 ),

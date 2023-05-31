@@ -43,15 +43,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> registerUser(Map? payload) async {
     state = AuthState.loading();
 
+    print(payload);
     try {
-      await _authRepository.register(payload);
+      final WorkerProfile user  = await _authRepository.register(payload);
 
       Map<String, dynamic>? _creds = {
-        "username": payload?['username'],
+        "email": payload?['email'],
         "password": payload?['password'],
+        "firstName": payload?['firstName'],
+        "lastName": payload?['lastName'],
       };
 
-      final WorkerProfile user = await _authRepository.login(_creds);
+      // final WorkerProfile user = await _authRepository.login(_creds);
 
       state = AuthState.data(workerProfile: user);
     }

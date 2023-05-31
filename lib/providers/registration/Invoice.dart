@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:smart_admin_dashboard/providers/registration/Company.dart';
+import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
 import '../../main.dart';
 import '../../screens/generator/databaseHelper.dart';
 import 'Client.dart';
@@ -19,9 +20,11 @@ class Invoice {
   String? invoiceDate;
   String? dueDate;
   String? invoiceStatus;
+  String? currency;
+  Currency? currencyFull;
   int?      client;
   Client?   clientFull;
-  int?   company;
+  int?   companyId;
   Company?   companyFull;
   List<Payment>?     payments;
   List<InvoiceItem>? invoiceitems;
@@ -35,9 +38,12 @@ class Invoice {
     this.subTotalAmount,
     this.published,
     this.notes,
+    this.currency,
+    this.currencyFull,
     this.discount,
     this.invoiceDate,
     this.dueDate,
+    this.companyId,
     this.invoiceStatus,
     this.client,
     this.clientFull,
@@ -53,15 +59,19 @@ class Invoice {
    subTotalAmount = json['subTotalAmount'];
    published = json['published'];
    notes = json['notes'];
+   currency = json['currency'];
    discount = json['discount'];
    invoiceDate = json['invoiceDate'];
    dueDate = json['dueDate'];
+   companyId = json['companyId'];
    invoiceStatus = json['invoiceStatus'];
    client = json['client'];
    payments = json['payments'];
    invoiceitems = json['invoiceitems'];
 
   }
+
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -73,6 +83,8 @@ class Invoice {
     data['subTotalAmount'] = this.subTotalAmount;
     data['published'] = this.published;
     data['notes'] = this.notes;
+    data['currency'] = this.currency;
+    data['companyId'] = this.companyId;
     data['discount'] = this.discount;
     data['invoiceDate'] = this.invoiceDate;
     data['dueDate'] = this.dueDate;
@@ -90,7 +102,6 @@ class Invoice {
 
   Future<void> save() async {
     Map<String, dynamic> row = {
-
       "id": this.id,
       "total_amount": this.totalAmount,
       "vat_percent": this.vatPercent,
@@ -98,6 +109,8 @@ class Invoice {
       "sub_total_amount": this.subTotalAmount,
       "published": this.published,
       "notes": this.notes,
+      "currency": this.currencyFull?.id,
+      "company_id": this.companyId,
       "discount": this.discount,
       "invoice_date": this.invoiceDate,
       "due_date": this.dueDate,
@@ -151,6 +164,8 @@ class Invoice {
       "subTotalAmount": this.subTotalAmount,
       "published": this.published,
       "notes": this.notes,
+      "currency": this.currency,
+      "company_id": this.companyId,
       "discount": this.discount,
       "invoiceDate": this.invoiceDate,
       "dueDate": this.dueDate,
@@ -185,11 +200,13 @@ enum InvoiceStatus {
 
 
 
-Future<List<Invoice>> getInvoices({String? filter}) async {
+Future<List<Invoice>> getInvoices({String? filter, String? client}) async {
   var maps;
 
   filter!=null && filter != 'ALL'
       ?maps = await dbHelper.queryFilteredInvoices("invoice",filter: filter)
+      :client!=null && client != 'CLIENTS'
+      ?maps = await dbHelper.queryFilteredInvoices("invoice",client: client)
       :maps = await dbHelper.queryFilteredInvoices("invoice");
 
   List<Invoice> invoices = [];
@@ -207,6 +224,8 @@ Future<List<Invoice>> getInvoices({String? filter}) async {
       subTotalAmount : maps[i]['sub_total_amount'],
       published : maps[i]['published'],
       notes : maps[i]['notes'],
+          currency : maps[i]['currency'],
+      companyId : maps[i]['company_id'],
       discount : maps[i]['discount'],
       invoiceDate : maps[i]['invoice_date'],
       dueDate : maps[i]['due_date'],
@@ -237,6 +256,7 @@ Future<Invoice> getInvoice(id) async {
     subTotalAmount : maps['sub_total_amount'],
     published : maps['published'],
     notes : maps['notes'],
+    currency : maps['currency'],
     discount : maps['discount'],
     invoiceDate : maps['invoice_date'],
     dueDate : maps['due_date'],
@@ -244,6 +264,7 @@ Future<Invoice> getInvoice(id) async {
     client : maps['client'],
     clientFull: client,
     payments : maps['payments'],
+    companyId : maps['company_id'],
     invoiceitems : invoiceItems,
 
   );

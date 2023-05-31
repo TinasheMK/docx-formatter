@@ -409,7 +409,7 @@ class _LoginPageState extends State<Login>  with SingleTickerProviderStateMixin 
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account yet?",
+                    "No account yet?",
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1!

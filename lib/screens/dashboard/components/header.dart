@@ -1,16 +1,22 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
 
+import '../../../common/UserPreference.dart';
+
 class Header extends StatelessWidget {
-  const Header({
-    Key? key,
+  Header({
+    Key? key
   }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
+
     return Row(
       children: [
         if (!Responsive.isDesktop(context))
@@ -25,10 +31,7 @@ class Header extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Hello, User 👋",
-                style: Theme.of(context).textTheme.headline6,
-              ),
+              HelloWidget(),
               SizedBox(
                 height: 8,
               ),
@@ -123,3 +126,42 @@ class SearchField extends StatelessWidget {
     );
   }
 }
+
+
+
+class HelloWidget extends StatefulWidget {
+  @override
+  _HelloWidgetState createState() => _HelloWidgetState();
+}
+
+class _HelloWidgetState extends State<HelloWidget> {
+
+
+
+  String user = "" ;
+
+  init() async {
+    var prefs = await SharedPreferences.getInstance();
+    user = (await prefs!.getString(UserPreference.firstName))?? "";
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    init();
+
+    super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Hello, "+ user! +" 👋",
+      style: Theme.of(context).textTheme.headline6,
+    );
+  }
+}
+

@@ -1,6 +1,11 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
+
+import '../../common/UserPreference.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/widgets/app_button_widget.dart';
 import '../../core/widgets/input_widget.dart';
+import '../../providers/registration/Wallet.dart';
 import '../../responsive.dart';
 
 import '../invoice/components/header.dart';
@@ -47,6 +52,9 @@ class ProfileScreen extends StatelessWidget {
                       children: [
 
                         _registerScreen(context),
+
+
+
                         SizedBox(
                           // height: 600,
                             child: MemoListMaterial(
@@ -54,6 +62,8 @@ class ProfileScreen extends StatelessWidget {
                         )
                         ),
                         // RecentUsers(),
+                        CurrencySelector(),
+
                         SizedBox(height: defaultPadding),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
@@ -135,4 +145,138 @@ Container _registerScreen(BuildContext context) {
       ),
     ),
   );
+}
+
+
+
+
+class CurrencySelector extends StatefulWidget {
+  @override
+  _CurrencySelectorState createState() => _CurrencySelectorState();
+
+  CurrencySelector({
+    Key? key,
+  }) : super(key: key);
+
+
+}
+
+
+
+
+
+class _CurrencySelectorState extends State<CurrencySelector> {
+
+  List<Currency> currencies = [];
+
+  String? activeCurrency = "";
+  SharedPreferences? prefs;
+
+
+  Future<void> _init() async {
+    currencies = await getCurrencys();
+    prefs = await SharedPreferences.getInstance();
+    activeCurrency= await prefs?.getString(UserPreference.activeCurrency);
+
+    setState(() {});
+
+  }
+
+  @override
+  void initState() {
+
+    _init();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    print(currencies);
+    print("clients");
+    return Card(
+      color: bgColor,
+      elevation: 5,
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: 16.0, horizontal: 16.0),
+            child: Column(
+              children: [
+
+
+                SizedBox(height: 10,),
+
+
+
+
+                ElevatedButton.icon(
+                  icon: Icon(
+                    Icons.flag,
+                    size: 14,
+                  ),
+                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
+                      primary: Colors.blueAccent),
+                  label: Text(activeCurrency ?? "Select Currency"),
+
+                  onPressed: () {
+
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                              content: Container(
+                                color: secondaryColor,
+                                height: 410,
+                                child: Column(
+                                  children:
+                                  List.generate(
+                                      currencies.length,
+                                          (index) =>
+
+
+                                          Container(
+                                            margin: EdgeInsets.only(left: defaultPadding),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: defaultPadding,
+                                              vertical: defaultPadding / 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: secondaryColor,
+                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                              border: Border.all(color: Colors.white10),
+                                            ),
+                                            child: TextButton(
+                                              child: Text(currencies[index].id!, style: TextStyle(color: Colors.white)),
+                                              onPressed: () {
+
+                                                prefs?.setString(UserPreference.activeCurrency, currencies[index].id ?? "");
+
+
+                                                setState(() {
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              // Delete
+                                            ),
+
+                                          )
+                                  ),
+
+
+                                ),
+                              ));
+                        });
+                  },)
+
+
+
+
+
+              ],
+            )),
+      ),
+    );
+  }
 }

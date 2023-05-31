@@ -48,6 +48,7 @@ class _NewRegisterHomeState extends State<NewRegisterHome> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       //key: context.read<MenuController>().scaffoldKey,
       drawer: SideMenu(),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/invoice/new/new_register_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/invoice/register_home_screen.dart';
 
+import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Invoice.dart';
 import '../../../responsive.dart';
 
@@ -23,11 +24,14 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
 
 
   List<Invoice> invoices = [Invoice.fromJson({})];
+  List<Client> clients = [Client.fromJson({})];
 
   String filter = 'ALL';
+  String filter2 = 'CLIENTS';
 
   Future<void> _initInvoices() async {
-    invoices = await getInvoices(filter: filter);
+    invoices = await getInvoices(filter: filter, client: filter2);
+    clients = await getClients();
     setState(() {});
   }
 
@@ -72,19 +76,104 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
                   border: Border.all(color: Colors.white10),
                 ),
                 child: TextButton(
+                  child: Text(filter2, style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                              content: Container(
+                                color: secondaryColor,
+                                height: 410,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: defaultPadding),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                        vertical: defaultPadding / 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        border: Border.all(color: Colors.white10),
+                                      ),
+                                      child: TextButton(
+                                        child: Text("All CLIENTS", style: TextStyle(color: Colors.white)),
+                                        onPressed: () {
+                                          filter = 'CLIENTS';
+                                          _initInvoices();
+                                          Navigator.of(context).pop();
+                                        },
+                                        // Delete
+                                      ),
+
+                                    ),
+                                    SizedBox(height: 7,),
+
+                                    Column(
+                                      children:
+                                      List.generate(
+                                          clients.length,
+                                              (index) =>
+
+
+                                              Container(
+                                                margin: EdgeInsets.only(left: defaultPadding),
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: defaultPadding,
+                                                  vertical: defaultPadding / 2,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: secondaryColor,
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                  border: Border.all(color: Colors.white10),
+                                                ),
+                                                child: TextButton(
+                                                  child: Text(clients[index].companyName!, style: TextStyle(color: Colors.white)),
+                                                  onPressed: () {
+
+
+
+                                                    setState(() {
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  // Delete
+                                                ),
+
+                                              )
+                                      ),
+
+
+                                    ),
+                                  ],
+                                ),
+                              ));
+                        });
+                  },
+                  // Delete
+                ),
+
+              ),
+              Container(
+                margin: EdgeInsets.only(left: defaultPadding),
+                padding: EdgeInsets.symmetric(
+                  horizontal: defaultPadding,
+                  vertical: defaultPadding / 2,
+                ),
+                decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(color: Colors.white10),
+                ),
+                child: TextButton(
                   child: Text(filter + ' INVOICES', style: TextStyle(color: Colors.white)),
                   onPressed: () {
                     showDialog(
                         context: context,
                         builder: (_) {
                           return AlertDialog(
-                              // title: Center(
-                              //   child: Column(
-                              //     children: [
-                              //       Text("Select Filter"),
-                              //     ],
-                              //   ),
-                              // ),
                               content: Container(
                                 color: secondaryColor,
                                 height: 410,
