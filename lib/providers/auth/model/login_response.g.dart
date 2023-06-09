@@ -10,7 +10,7 @@ _$_LoginResponse _$_$_LoginResponseFromJson(Map<String, dynamic> json) {
   return _$_LoginResponse(
     agentId: json['agentId'] as int?,
     clientId: json['clientId'] as int?,
-    workerId: json['workerId'] as int?,
+    userId: json['userId'] as int?,
     roles: (json['roles'] as List<dynamic>?)
         ?.map(
             (e) => e == null ? null : Role.fromJson(e as Map<String, dynamic>))
@@ -30,7 +30,7 @@ Map<String, dynamic> _$_$_LoginResponseToJson(_$_LoginResponse instance) =>
     <String, dynamic>{
       'agentId': instance.agentId,
       'clientId': instance.clientId,
-      'workerId': instance.workerId,
+      'userId': instance.userId,
       'roles': instance.roles,
       'id': instance.id,
       'firstName': instance.firstName,

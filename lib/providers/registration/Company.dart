@@ -9,6 +9,7 @@ class Company {
   String? companyName;
   String? street;
   String? city;
+  String? logo;
   String? country;
   String? telephone;
   String? email;
@@ -22,6 +23,7 @@ class Company {
     this.companyName,
     this.street,
     this.city,
+    this.logo,
     this.set,
     this.country,
     this.telephone,
@@ -35,6 +37,7 @@ class Company {
     companyName = json['companyName'];
     street = json['street'];
     city = json['city'];
+    logo = json['logo'];
     country = json['country'];
     telephone = json['telephone'];
     email = json['email'];
@@ -48,6 +51,7 @@ class Company {
     data['companyName'] = this.companyName;
     data['street'] = this.street;
     data['city'] = this.city;
+    data['logo'] = this.logo;
     data['country'] = this.country;
     data['telephone'] = this.telephone;
     data['email'] = this.email;
@@ -63,6 +67,7 @@ class Company {
       "street": this.street,
       "id": this.id,
       "city": this.city,
+      "logo": this.logo,
       "country": this.country,
       "telephone": this.telephone,
       "email": this.email,
@@ -102,6 +107,7 @@ class Company {
 
     Map<String, dynamic> row = {
       'city': this.city,
+      'logo': this.logo,
       'country': this.country,
       'street': this.street,
       'email': this.email,
@@ -127,6 +133,7 @@ class Company {
       "company_name": this.companyName,
       "street": this.street,
       "city": this.city,
+      "logo": this.logo,
       "country": this.country,
       "telephone": this.telephone,
       "email": this.email,
@@ -156,6 +163,7 @@ Future<List<Company>> getCompanys() async {
       companyName : maps[i]['company_name'],
       street : maps[i]['street'],
       city : maps[i]['city'],
+      logo : maps[i]['logo'],
       country : maps[i]['country'],
       telephone : maps[i]['telephone'],
       email : maps[i]['email'],
@@ -174,6 +182,7 @@ Future<Company> getCompany(id) async {
     companyName : maps['company_name'],
     street : maps['street'],
     city : maps['city'],
+    logo : maps['logo'],
     country : maps['country'],
     telephone : maps['telephone'],
     email : maps['email'],

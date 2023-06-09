@@ -23,7 +23,7 @@ class _$LoginResponseTearOff {
   _LoginResponse call(
       {int? agentId,
       int? clientId,
-      int? workerId,
+      int? userId,
       List<Role?>? roles,
       int? id,
       String? firstName,
@@ -36,7 +36,7 @@ class _$LoginResponseTearOff {
     return _LoginResponse(
       agentId: agentId,
       clientId: clientId,
-      workerId: workerId,
+      userId: userId,
       roles: roles,
       id: id,
       firstName: firstName,
@@ -61,7 +61,7 @@ const $LoginResponse = _$LoginResponseTearOff();
 mixin _$LoginResponse {
   int? get agentId => throw _privateConstructorUsedError;
   int? get clientId => throw _privateConstructorUsedError;
-  int? get workerId => throw _privateConstructorUsedError;
+  int? get userId => throw _privateConstructorUsedError;
   List<Role?>? get roles => throw _privateConstructorUsedError;
   int? get id => throw _privateConstructorUsedError;
   String? get firstName => throw _privateConstructorUsedError;
@@ -90,7 +90,7 @@ abstract class $LoginResponseCopyWith<$Res> {
   $Res call(
       {int? agentId,
       int? clientId,
-      int? workerId,
+      int? userId,
       List<Role?>? roles,
       int? id,
       String? firstName,
@@ -115,7 +115,7 @@ class _$LoginResponseCopyWithImpl<$Res>
   $Res call({
     Object? agentId = freezed,
     Object? clientId = freezed,
-    Object? workerId = freezed,
+    Object? userId = freezed,
     Object? roles = freezed,
     Object? id = freezed,
     Object? firstName = freezed,
@@ -135,9 +135,9 @@ class _$LoginResponseCopyWithImpl<$Res>
           ? _value.clientId
           : clientId // ignore: cast_nullable_to_non_nullable
               as int?,
-      workerId: workerId == freezed
-          ? _value.workerId
-          : workerId // ignore: cast_nullable_to_non_nullable
+      userId: userId == freezed
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as int?,
       roles: roles == freezed
           ? _value.roles
@@ -189,7 +189,7 @@ abstract class _$LoginResponseCopyWith<$Res>
   $Res call(
       {int? agentId,
       int? clientId,
-      int? workerId,
+      int? userId,
       List<Role?>? roles,
       int? id,
       String? firstName,
@@ -216,7 +216,7 @@ class __$LoginResponseCopyWithImpl<$Res>
   $Res call({
     Object? agentId = freezed,
     Object? clientId = freezed,
-    Object? workerId = freezed,
+    Object? userId = freezed,
     Object? roles = freezed,
     Object? id = freezed,
     Object? firstName = freezed,
@@ -236,9 +236,9 @@ class __$LoginResponseCopyWithImpl<$Res>
           ? _value.clientId
           : clientId // ignore: cast_nullable_to_non_nullable
               as int?,
-      workerId: workerId == freezed
-          ? _value.workerId
-          : workerId // ignore: cast_nullable_to_non_nullable
+      userId: userId == freezed
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as int?,
       roles: roles == freezed
           ? _value.roles
@@ -286,7 +286,7 @@ class _$_LoginResponse implements _LoginResponse {
   const _$_LoginResponse(
       {this.agentId,
       this.clientId,
-      this.workerId,
+      this.userId,
       this.roles,
       this.id,
       this.firstName,
@@ -305,7 +305,7 @@ class _$_LoginResponse implements _LoginResponse {
   @override
   final int? clientId;
   @override
-  final int? workerId;
+  final int? userId;
   @override
   final List<Role?>? roles;
   @override
@@ -331,7 +331,7 @@ class _$_LoginResponse implements _LoginResponse {
 
   @override
   String toString() {
-    return 'LoginResponse(agentId: $agentId, clientId: $clientId, workerId: $workerId, roles: $roles, id: $id, firstName: $firstName, lastName: $lastName, accessToken: $accessToken, tokenType: $tokenType, refreshToken: $refreshToken, scope: $scope, expiresIn: $expiresIn)';
+    return 'LoginResponse(agentId: $agentId, clientId: $clientId, userId: $userId, roles: $roles, id: $id, firstName: $firstName, lastName: $lastName, accessToken: $accessToken, tokenType: $tokenType, refreshToken: $refreshToken, scope: $scope, expiresIn: $expiresIn)';
   }
 
   @override
@@ -344,9 +344,9 @@ class _$_LoginResponse implements _LoginResponse {
             (identical(other.clientId, clientId) ||
                 const DeepCollectionEquality()
                     .equals(other.clientId, clientId)) &&
-            (identical(other.workerId, workerId) ||
+            (identical(other.userId, userId) ||
                 const DeepCollectionEquality()
-                    .equals(other.workerId, workerId)) &&
+                    .equals(other.userId, userId)) &&
             (identical(other.roles, roles) ||
                 const DeepCollectionEquality().equals(other.roles, roles)) &&
             (identical(other.id, id) ||
@@ -378,7 +378,7 @@ class _$_LoginResponse implements _LoginResponse {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(agentId) ^
       const DeepCollectionEquality().hash(clientId) ^
-      const DeepCollectionEquality().hash(workerId) ^
+      const DeepCollectionEquality().hash(userId) ^
       const DeepCollectionEquality().hash(roles) ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(firstName) ^
@@ -404,7 +404,7 @@ abstract class _LoginResponse implements LoginResponse {
   const factory _LoginResponse(
       {int? agentId,
       int? clientId,
-      int? workerId,
+      int? userId,
       List<Role?>? roles,
       int? id,
       String? firstName,
@@ -423,7 +423,7 @@ abstract class _LoginResponse implements LoginResponse {
   @override
   int? get clientId => throw _privateConstructorUsedError;
   @override
-  int? get workerId => throw _privateConstructorUsedError;
+  int? get userId => throw _privateConstructorUsedError;
   @override
   List<Role?>? get roles => throw _privateConstructorUsedError;
   @override

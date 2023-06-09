@@ -95,8 +95,8 @@ class AuthRepository implements IAuthRepository {
 
         log(resp.toString());
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString(UserPreference.WORKER_ID,
-            resp.workerId == null ? "" : resp.workerId.toString());
+        prefs.setString(UserPreference.userId,
+            resp.userId == null ? "" : resp.userId.toString());
         prefs.setString(UserPreference.agentId,
             resp.agentId == null ? "":resp.agentId.toString());
         prefs.setString(UserPreference.clientId,
@@ -115,7 +115,7 @@ class AuthRepository implements IAuthRepository {
           firstname: resp.firstName
         );
         prefs.setString(
-            UserPreference.assignmentCodeId, resp.workerId.toString());
+            UserPreference.assignmentCodeId, resp.userId.toString());
         log(resp.toString());
 
         _reader(workerProfileProvider).state = wp;

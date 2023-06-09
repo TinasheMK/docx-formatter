@@ -7,6 +7,7 @@ part 'invoice_state.freezed.dart';
 // extension method for easy comparison
 extension InvoiceGetters on InvoiceState {
   bool get isLoading => this is _InvoiceStateLoading;
+  bool get isError=> this is _InvoiceStateError;
 }
 
 @freezed

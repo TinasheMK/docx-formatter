@@ -8,7 +8,7 @@ export 'invoice_state.dart';
 /// dependency injection
 
 // logic
-final invoicesNotifierProvider =
+final invoiceNotifierProvider =
     StateNotifierProvider.autoDispose<InvoiceNotifier, InvoiceState>(
   (ref) => InvoiceNotifier(
     invoiceRepository: ref.watch(invoiceRepositoryProvider),

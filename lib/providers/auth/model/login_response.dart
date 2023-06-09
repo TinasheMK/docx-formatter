@@ -10,7 +10,7 @@ class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
     int? agentId,
     int? clientId,
-    int? workerId,
+    int? userId,
     List<Role?>? roles,
     int? id,
     String? firstName,

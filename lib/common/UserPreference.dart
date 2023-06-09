@@ -1,6 +1,6 @@
 class UserPreference {
 
-  static const String WORKER_ID = "workerId";
+  static const String userId = "userId";
   static const String skip = "skip";
   static const String agentId = "agentId";
   static const String clientId = "clientId";
@@ -15,6 +15,7 @@ class UserPreference {
   static const String synced = "synced";
   static const String getSynced = "getSynced";
   static const String postSynced = "postSynced";
+  static const String lastSyncDate = "postSynced";
 
 
 

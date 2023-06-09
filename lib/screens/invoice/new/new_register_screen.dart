@@ -113,7 +113,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
   void deleteRow(int index) {
-      invoice!.invoiceitems!.removeAt(index);
+      invoice!.invoiceItems!.removeAt(index);
       myController.removeAt(index);
       print("Deleting at index:");
       print(index);
@@ -162,8 +162,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
     if(invoiceId!=null) {
       invoice = await getInvoice(invoiceId);
-      invoice.clientFull = await getClient(invoice.client);
-      invoice.invoiceitems = await getInvoiceItems(invoiceId);
+      invoice.client = await getClient(invoice.clientId);
+      invoice.invoiceItems = await getInvoiceItems(invoiceId);
       invoice.payments = await getInvoicePayments(invoiceId);
       invoice.companyFull = await getCompany(invoice.companyId);
 
@@ -172,17 +172,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
       var activeClient = await prefs!.getInt(UserPreference.activeClient);
       if(activeClient !=null) {
-        invoice.clientFull = await getClient(activeClient);
+        invoice.client = await getClient(activeClient);
       }else{
-        invoice.clientFull = Client.fromJson({});
+        invoice.client = Client.fromJson({});
       }
 
       invoice.invoiceStatus = 'DRAFT';
       invoice.invoiceDate = DateTime.now().toString();
       invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
     }
-    if(invoice.invoiceitems == null) {
-      invoice.invoiceitems = [InvoiceItem.fromJson({})];
+    if(invoice.invoiceItems == null) {
+      invoice.invoiceItems = [InvoiceItem.fromJson({})];
     }
     if(invoice.payments == null) {
       invoice.payments= [Payment.fromJson({})];
@@ -199,8 +199,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
     var activeCurrency = await prefs!.getString(UserPreference.activeCurrency);
 
-    invoice.clientFull?.currency != null
-        ? invoice.currencyFull=  await getCurrency(invoice.clientFull?.currency)
+    invoice.client?.currency != null
+        ? invoice.currencyFull=  await getCurrency(invoice.client?.currency)
         :activeCurrency != null ? invoice.currencyFull = await getCurrency(activeCurrency)
         : invoice.currencyFull = await getCurrency("USD");
 
@@ -289,7 +289,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   Container _registerScreen(BuildContext context) {
 
     // invoice.subTotalAmount = 0;
-    invoice.invoiceitems?.forEach((e) {
+    invoice.invoiceItems?.forEach((e) {
       myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
 
       print(e.toJson());
@@ -301,7 +301,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       if(action=="set"){
         memoItems = mem;
         print("Selected client with id" + memoItems);
-        invoice.clientFull = await getClient(int.parse(mem));
+        invoice.client = await getClient(int.parse(mem));
 
         setState(()  {
 
@@ -317,7 +317,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
     double total = 0;
 
-      invoice.invoiceitems?.forEach((i) {
+      invoice.invoiceItems?.forEach((i) {
         total += i.total ?? 0;
       });
 
@@ -344,10 +344,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: defaultPadding),
+                  margin: EdgeInsets.only(left: defaultPadding/4),
                   padding: EdgeInsets.symmetric(
-                    horizontal: defaultPadding,
-                    vertical: defaultPadding / 16,
+                    horizontal: defaultPadding/100,
+                    vertical: defaultPadding / 100,
                   ),
                   decoration: BoxDecoration(
                     color: secondaryColor,
@@ -447,11 +447,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
-                              invoice.clientFull?.companyName != null ? Container(
+                              invoice.client?.companyName != null ? Container(
                                   margin: EdgeInsets.only(left: defaultPadding),
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: defaultPadding /2,
-                                    vertical: defaultPadding / 3,
+                                    horizontal: defaultPadding /100,
+                                    vertical: defaultPadding / 100,
                                   ),
                                   decoration: BoxDecoration(
                                     color: secondaryColor,
@@ -459,7 +459,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                     border: Border.all(color: Colors.white10),
                                   ),
                                   child: TextButton(
-                                    child: Text(invoice.clientFull?.companyName ?? "Select Client", style: TextStyle(color: Colors.white)),
+                                    child: Text(invoice.client?.companyName ?? "Select Client", style: TextStyle(color: Colors.white)),
                                     onPressed: () {
                                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                                           builder: (BuildContext context) {
@@ -717,8 +717,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                       child: Text(currencies[index].id??'', style: TextStyle(color: Colors.white)),
                                                       onPressed: () {
                                                         invoice.currency = currencies[index].id;
-                                                        invoice.clientFull?.currency = currencies[index].id;
-                                                        invoice.clientFull?.save();
+                                                        invoice.client?.currency = currencies[index].id;
+                                                        invoice.client?.save();
                                                         setState(() {
                                                         });
                                                         Navigator.of(context).pop();
@@ -787,7 +787,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       invoice.invoiceStatus = 'CANCELLED';
                       invoice.save();
 
-                      invoice.invoiceitems?.forEach((e) {
+                      invoice.invoiceItems?.forEach((e) {
                         print(e.toJson());
                       });
 
@@ -879,8 +879,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ),
                       ],
                       rows: List.generate(
-                        invoice.invoiceitems != null ? invoice.invoiceitems!.length : 0 ,
-                            (index) => _recentUserDataRow(invoice.invoiceitems?[index] ?? InvoiceItem.fromJson({}), index, context),
+                        invoice.invoiceItems != null ? invoice.invoiceItems!.length : 0 ,
+                            (index) => _recentUserDataRow(invoice.invoiceItems?[index] ?? InvoiceItem.fromJson({}), index, context),
                       ),
                     ),
                 ),
@@ -994,9 +994,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
                   onPressed: () async {
 
-                    // invoice.invoiceitems! = invoice!.invoiceitems!;
+                    // invoice.invoiceItems! = invoice!.invoiceItems!;
                     invoice.totalAmount = invoice.subTotalAmount;
-                    invoice.client = invoice.clientFull?.id;
+                    invoice.clientId = invoice.client?.id;
                     invoice.companyId = invoice.companyFull?.id;
                     double sum = 0.0;
 
@@ -1011,7 +1011,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
                     if(invoice.totalAmount! < sum && invoice.invoiceStatus != 'PAID') {
-                      Wallet wallet = await invoice.clientFull!.getWallet(invoice.currencyFull!.id!);
+                      Wallet wallet = await invoice.client!.getWallet(invoice.currencyFull!.id!);
                       wallet.deposit(sum - invoice.totalAmount!);
                     }
 
@@ -1029,7 +1029,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                    prefs.setInt(UserPreference.activeClient, invoice.clientFull?.id ?? 0);
+                    prefs.setInt(UserPreference.activeClient, invoice.client?.id ?? 0);
 
 
 
@@ -1387,22 +1387,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
                 ],
-                keyboardType: TextInputType.number,
+                // keyboardType: TextInputType.number,
                 controller: myController[index][0],
                 onChanged: (String value){
                   value!=null || value !=""
-                      ? invoice!.invoiceitems![index].units =  int.parse(value)
-                      :invoice!.invoiceitems![index].units =1 ;
+                      ? invoice!.invoiceItems![index].units =  int.parse(value)
+                      :invoice!.invoiceItems![index].units =1 ;
 
 
-                  invoice!.invoiceitems![index].unitPrice!=null
+                  invoice!.invoiceItems![index].unitPrice!=null
                       ?''
-                      : invoice!.invoiceitems![index].unitPrice = 0;
+                      : invoice!.invoiceItems![index].unitPrice = 0;
 
-                  invoice!.invoiceitems![index].total = invoice!.invoiceitems![index].units! * invoice!.invoiceitems![index].unitPrice!;
+                  invoice!.invoiceItems![index].total = invoice!.invoiceItems![index].units! * invoice!.invoiceItems![index].unitPrice!;
 
 
-                  myController[index][3].text =  invoice!.invoiceitems![index].total.toString();
+                  myController[index][3].text =  invoice!.invoiceItems![index].total.toString();
 
 
 
@@ -1428,8 +1428,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ),
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].description =  value;
-                  // print(invoice!.invoiceitems![index].toJson());
+                  invoice!.invoiceItems![index].description =  value;
+                  // print(invoice!.invoiceItems![index].toJson());
                 },
 
               ),)
@@ -1443,19 +1443,19 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 ],
                 controller: myController[index][2],
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].unitPrice =  double.parse(value) ;
-                  invoice!.invoiceitems![index].total =  double.parse(value) * (invoice!.invoiceitems![index].units!=null ? invoice!.invoiceitems![index].units!:1);
-                  // print(invoice!.invoiceitems![index].toJson());
+                  invoice!.invoiceItems![index].unitPrice =  double.parse(value) ;
+                  invoice!.invoiceItems![index].total =  double.parse(value) * (invoice!.invoiceItems![index].units!=null ? invoice!.invoiceItems![index].units!:1);
+                  // print(invoice!.invoiceItems![index].toJson());
 
                   var total = 0.0;
-                  invoice!.invoiceitems!.forEach((e) {
+                  invoice!.invoiceItems!.forEach((e) {
                     if(e.total==null){e.total = 0;}
                     total+=e.total!;
                   });
 
                   invoice.subTotalAmount = total;
 
-                  myController[index][3].text = invoice!.invoiceitems![index].total.toString();
+                  myController[index][3].text = invoice!.invoiceItems![index].total.toString();
 
 
 
@@ -1486,8 +1486,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 ),
 
                 onChanged: (String value){
-                  invoice!.invoiceitems![index].total =  double.parse(value);
-                  // print(invoice!.invoiceitems![index].toJson());
+                  invoice!.invoiceItems![index].total =  double.parse(value);
+                  // print(invoice!.invoiceItems![index].toJson());
                 },
 
 
@@ -1497,18 +1497,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         DataCell(
           Row(
             children: [
-              invoice.invoiceitems?.length != 1 ? GestureDetector(
+              invoice.invoiceItems?.length != 1 ? GestureDetector(
                 child:Icon(Icons.delete, color: Colors.redAccent,),
                 onTap: () {
                   deleteRow(index);
                   item.delete();
                 },
               ) : SizedBox(width: 0,),
-              invoice.invoiceitems?.length == (index+1) ? GestureDetector(
+              invoice.invoiceItems?.length == (index+1) ? GestureDetector(
                 child:Icon(Icons.add, color: Colors.blueAccent,),
                 onTap: () {
                   setState ((){
-                    invoice!.invoiceitems!.add(InvoiceItem.fromJson({}));
+                    invoice!.invoiceItems!.add(InvoiceItem.fromJson({}));
                     myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
                   });
                 },

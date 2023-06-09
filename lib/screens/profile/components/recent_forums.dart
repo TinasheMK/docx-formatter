@@ -91,7 +91,7 @@ DataRow recentUserDataRow(Invoice userInfo) {
             borderRadius: BorderRadius.all(Radius.circular(5.0) //
                 ),
           ),
-          child: Text(userInfo.clientFull != null ? userInfo.clientFull!.companyName! : ""))),
+          child: Text(userInfo.client != null ? userInfo.client!.companyName! : ""))),
       DataCell(Text(userInfo.invoiceDate.toString().split(" ")[0])),
       DataCell(Text(userInfo.totalAmount.toString())),
     ],

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/scheduler.dart';
+import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -35,6 +38,11 @@ import 'package:flutter/material.dart';
 
 import 'components/dropdown_search.dart';
 
+const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+Random _rnd = Random();
+
+String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+    length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
 class NewProfileScreen extends StatefulWidget {
   NewProfileScreen({required this.title, required this.code, this.profileId});
@@ -77,6 +85,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
 
 
 
+
   void loadData() async {
     setState(() {});
   }
@@ -86,6 +95,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   late List<Memo> memosSet = [];
 
   late Company client ;
+  String? logoPath;
 
   Future<void> _initclient() async {
     if(profileId!=null) {
@@ -93,6 +103,9 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
     }else{
       client= Company.fromJson({});
     }
+
+    final directory = await getDownloadPath2();
+    if(client.logo!=null)logoPath = "${directory}${client.logo}";
     setState(() {});
   }
 
@@ -170,7 +183,8 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
 
                                 SizedBox(
                                   height: 200,
-                                  child: Image.asset("assets/logo/logo_icon.png", scale:1),
+                                  child: logoPath ==null ? Image.asset("assets/logo/logo_icon.png", scale:1)
+                                      : Image.file(File(logoPath!), scale:1),
                                 ),
                                 SizedBox(height: 16.0),
                                 Row(
@@ -190,17 +204,31 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                         final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
 
-                                        var path = await getDownloadPath();
+                                        // var path = await getExternalStorageDirectory();
+                                        //
+                                        // String p = path.toString();
+                                        // p = p.replaceAll("'", '');
+                                        String logo = "${getRandomString(5)}_logo.png";
 
+                                        final directory = await getDownloadPath2();
+                                        print(directory);
+                                        new File("${directory}${logo}").create(recursive: true)
+                                            .then((File file) async {
+                                          if (image != null) await file.writeAsBytes(await image!.readAsBytes());
+                                        });
 
-                                        image!.saveTo('$path/Invoices/Logos/image1.png');
+                                        client.logo = logo;
+                                        client.save();
 
+                                        // image!.saveTo('/storage/emulated/0/Download/Invoices/logo${getRandomString(5)}.png');
+                                        // image!.saveTo('$p/logo${getRandomString(5)}.png');
+                                        // print('${p}/logo${getRandomString(5)}.png');
                                         setState(() {
                                         });
 
                                       },
                                       child: Text(
-                                        "Pick Image Company",
+                                        "Pick Company Logo",
                                       ),
                                     ),
                                   ],
@@ -751,6 +779,30 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
     );
   }
 
+}
+
+Future<String?> getDownloadPath2() async {
+  Directory? directory;
+  String directoryStr;
+  try {
+    if (Platform.isIOS ) {
+      directory = await getApplicationDocumentsDirectory();
+    } else if (Platform.isWindows) {
+      directory = await getApplicationDocumentsDirectory();
+      directoryStr =  "${directory.path}\\Invoices\\";
+      directory = Directory(directoryStr);
+
+    } else {
+      // directory = Directory('/storage/emulated/0/Download/Invoices/');
+      // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+      // ignore: avoid_slow_async_io
+
+       directory = await getExternalStorageDirectory();
+    }
+  } catch (err, stack) {
+    print("Cannot get download folder path");
+  }
+  return directory?.path;
 }
 
 

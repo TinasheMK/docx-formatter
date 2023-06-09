@@ -30,7 +30,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
   String filter2 = 'CLIENTS';
 
   Future<void> _initInvoices() async {
-    invoices = await getInvoices(filter: filter, client: filter2);
+    invoices = await getInvoices(filter: filter, clientId: filter2);
     clients = await getClients();
     setState(() {});
   }
@@ -65,10 +65,10 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
               ),
 
               Container(
-                margin: EdgeInsets.only(left: defaultPadding),
+                margin: EdgeInsets.only(left: defaultPadding/4),
                 padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding,
-                  vertical: defaultPadding / 2,
+                  horizontal: defaultPadding/ 4,
+                  vertical: defaultPadding / 100,
                 ),
                 decoration: BoxDecoration(
                   color: secondaryColor,
@@ -157,10 +157,10 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
 
               ),
               Container(
-                margin: EdgeInsets.only(left: defaultPadding),
+                margin: EdgeInsets.only(left: defaultPadding/4),
                 padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding,
-                  vertical: defaultPadding / 2,
+                  horizontal: defaultPadding/4,
+                  vertical: defaultPadding / 100,
                 ),
                 decoration: BoxDecoration(
                   color: secondaryColor,
@@ -423,7 +423,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
               borderRadius: BorderRadius.all(Radius.circular(5.0) //
               ),
             ),
-            child: Text(userInfo.clientFull != null ? userInfo.clientFull!.companyName! : ""))),
+            child: Text(userInfo.client != null ? userInfo.client!.companyName! : ""))),
         DataCell(Text(userInfo.invoiceDate.toString().split(" ")[0])),
         DataCell(Text(userInfo.totalAmount.toString())),
         DataCell(Row(

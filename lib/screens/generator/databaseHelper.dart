@@ -36,7 +36,7 @@ class DatabaseHelper {
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE client (
+          CREATE TABLE IF NOT EXISTS client (
             id INTEGER PRIMARY KEY,
             company_name TEXT NOT NULL,
             street TEXT ,
@@ -44,6 +44,10 @@ class DatabaseHelper {
             country TEXT ,
             telephone TEXT, 
             currency TEXT, 
+            
+            universal_id INTEGER,
+            device_id TEXT,
+            
             
             created_date TEXT,
             created_by TEXT,
@@ -64,8 +68,13 @@ class DatabaseHelper {
             company_name TEXT NOT NULL,
             street TEXT ,
             city TEXT ,
+            logo TEXT ,
             country TEXT, 
             telephone TEXT, 
+            
+            universal_id INTEGER,
+            device_id TEXT,
+            
             
             created_date TEXT,
             created_by TEXT,
@@ -96,6 +105,9 @@ class DatabaseHelper {
             incDate TEXT,
             email TEXT,
             
+            universal_id INTEGER,
+            device_id TEXT,
+            
             
             created_date TEXT,
             created_by TEXT,
@@ -113,7 +125,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE invoice (
             id INTEGER PRIMARY KEY,
-            client INTEGER NOT NULL,
+            client_id INTEGER NOT NULL,
             total_amount FLOAT ,
             vat_percent FLOAT ,
             vat_amount FLOAT ,
@@ -122,7 +134,12 @@ class DatabaseHelper {
             published BIT ,
             notes TEXT ,
             currency TEXT ,
+            invoice_date TEXT ,
+            due_date TEXT,
+            company_id INTEGER NOT NULL,
+            invoice_status TEXT,
             
+                    
             created_date TEXT,
             created_by TEXT,
             version TEXT,
@@ -130,11 +147,13 @@ class DatabaseHelper {
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
             
+
             
-            invoice_date TEXT ,
-            due_date TEXT,
-            company_id INTEGER NOT NULL,
-            invoice_status TEXT         
+            is_optimised BOOLEAN,
+            is_synced BOOLEAN,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_changed   BOOLEAN     
           )
           ''');
 
@@ -145,6 +164,9 @@ class DatabaseHelper {
             total FLOAT NOT NULL,
             product TEXT ,
             description TEXT NOT NULL,
+            
+            universal_id INTEGER,
+            device_id TEXT,
             
             created_date TEXT,
             created_by TEXT,
@@ -165,6 +187,9 @@ class DatabaseHelper {
             ref TEXT ,
             status TEXT ,
             
+            universal_id INTEGER,
+            device_id TEXT,
+            
             created_date TEXT,
             created_by TEXT,
             version TEXT,
@@ -182,6 +207,7 @@ class DatabaseHelper {
           CREATE TABLE currency (
             id TEXT PRIMARY KEY,
             symbol TEXT NOT NULL,
+            
             country TEXT 
           )
           ''');
@@ -190,6 +216,10 @@ class DatabaseHelper {
           CREATE TABLE wallet (
             id INTEGER PRIMARY KEY,
             balance FLOAT NOT NULL,
+            
+            universal_id INTEGER,
+            device_id TEXT,
+            
             client_id INTEGER NOT NULL,
             currency TEXT 
           )
@@ -216,12 +246,12 @@ class DatabaseHelper {
   }
 
 
-  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, {String? filter, String? client}) async {
-    return filter != null && client != null
+  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, {String? filter, String? clientId}) async {
+    return filter != null && clientId != null
         ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
         :  filter != null
         ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
-        :  client != null
+        :  clientId != null
         ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "client_id = '${filter}'"  )
         : await _db.query(table,orderBy: 'invoice_date desc');
   }
@@ -236,6 +266,11 @@ class DatabaseHelper {
 
   Future<Map<String, dynamic>> findById(String table, int id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = $id');
+    return results[0];
+  }
+
+  Future<Map<String, dynamic>> findByIdUni(String table, String id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE universal_id = $id');
     return results[0];
   }
 

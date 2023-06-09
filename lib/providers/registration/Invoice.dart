@@ -1,9 +1,13 @@
 
+
+
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:smart_admin_dashboard/providers/registration/Company.dart';
 import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
 import '../../main.dart';
-import '../../screens/generator/databaseHelper.dart';
+import '../compare_res.dart';
 import 'Client.dart';
 import 'InvoiceItem.dart';
 import 'Payment.dart';
@@ -22,12 +26,19 @@ class Invoice {
   String? invoiceStatus;
   String? currency;
   Currency? currencyFull;
-  int?      client;
-  Client?   clientFull;
+  int?      clientId;
+  Client?   client;
   int?   companyId;
+
   Company?   companyFull;
   List<Payment>?     payments;
-  List<InvoiceItem>? invoiceitems;
+  List<InvoiceItem>? invoiceItems;
+  int?   universalId;
+  bool?   isOptimised;
+  int?   originId;
+  bool?   isSynced;
+  int?   version;
+  bool?   isChanged;
 
 
   Invoice({
@@ -45,10 +56,16 @@ class Invoice {
     this.dueDate,
     this.companyId,
     this.invoiceStatus,
+    this.clientId,
     this.client,
-    this.clientFull,
     this.payments,
-    this.invoiceitems,
+    this.invoiceItems,
+    this.universalId,
+    this.isOptimised,
+    this.isSynced,
+    this.originId,
+    this.version,
+    this.isChanged
   });
 
  Invoice.fromJson(Map<String, dynamic> json) {
@@ -64,10 +81,13 @@ class Invoice {
    invoiceDate = json['invoiceDate'];
    dueDate = json['dueDate'];
    companyId = json['companyId'];
+   originId = json['originId'];
    invoiceStatus = json['invoiceStatus'];
-   client = json['client'];
+   clientId = json['clientId'];
    payments = json['payments'];
-   invoiceitems = json['invoiceitems'];
+   isOptimised = json['isOptimised'];
+   invoiceItems = json['invoiceItems'];
+   isChanged = json['isChanged'];
 
   }
 
@@ -76,7 +96,13 @@ class Invoice {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data['id'] = this.id;
+    data['originId'] = this.id;
+    data['universalId'] = this.universalId??null;
+    data['isOptimised'] = this.isOptimised??null;
+    data['isSynced'] = this.isSynced??"dev";
+    data['originId'] = this.originId??"dev";
+    data['version'] = this.version??null;
+    data['isChanged'] = this.isChanged??null;
     data['totalAmount'] = this.totalAmount;
     data['vatPercent'] = this.vatPercent;
     data['vatAmount'] = this.vatAmount;
@@ -86,13 +112,13 @@ class Invoice {
     data['currency'] = this.currency;
     data['companyId'] = this.companyId;
     data['discount'] = this.discount;
-    data['invoiceDate'] = this.invoiceDate;
-    data['dueDate'] = this.dueDate;
+    // data['invoiceDate'] = this.invoiceDate.toString();
+    // data['dueDate'] = this.dueDate.toString();
     data['invoiceStatus'] = this.invoiceStatus;
-    data['client'] = this.client;
-    data['invoiceitems'] = this.invoiceitems?.map((item) => item.toJson());
+    data['clientId'] = this.clientId;
+    data['invoiceItems'] = this.invoiceItems?.map((item) => item.toJson());
     data['payments'] = this.payments?.map((item) => item.toJson());
-    // data['clientFull'] = this.clientFull.toJson();
+    // data['client'] = this.client.toJson();
 
     return data;
 
@@ -115,7 +141,13 @@ class Invoice {
       "invoice_date": this.invoiceDate,
       "due_date": this.dueDate,
       "invoice_status": this.invoiceStatus,
-      "client": this.client
+      "client_id": this.clientId,
+      "universal_id" : this.universalId,
+      "is_optimised" : this.isOptimised,
+      "is_synced" : this.isSynced,
+      "origin_id" : this.originId,
+      "version" : this.version,
+      "is_changed" : this.isChanged,
 
 
     };
@@ -124,12 +156,13 @@ class Invoice {
 
     if(this.id==null) {
       id = await dbHelper.insert("invoice", row);
+      this.id = id;
     }else{
       final rowsAffected = await dbHelper.update("invoice",row);
       id = this.id;
     }
 
-    var invs = this.invoiceitems;
+    var invs = this.invoiceItems;
     var pays = this.payments;
 
     for(int i=0; i<30; i++){{
@@ -170,8 +203,9 @@ class Invoice {
       "invoiceDate": this.invoiceDate,
       "dueDate": this.dueDate,
       "invoiceStatus": this.invoiceStatus,
-      "clients": this.client,
+      "client_id": this.clientId,
       "payments": this.payments,
+      "isChanged": this.isChanged,
 
 
     };
@@ -185,7 +219,29 @@ class Invoice {
     final rowsDeleted = await dbHelper.delete('invoice',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
+
+
+  Future compare() async {
+   Invoice newInv = await getInvoiceByUni(this.id);
+   Invoice oldInv = await getInvoiceByUni(this.id, copy: true);
+
+   List<CompareRes> comps = [] ;
+   CompareRes comp = new CompareRes();
+
+   if(newInv.invoiceStatus != oldInv.invoiceStatus && this.invoiceStatus != oldInv.invoiceStatus && newInv.invoiceStatus != this.invoiceStatus){
+     comp.localValue = newInv.invoiceStatus;
+     comp.oldValue = this.invoiceStatus;
+     comp.field = "invoiceStatus";
+     comps.add(comp);
+    }
+   //todo: Merge non conflicting fields
+
+
+   return comps;
+
+  }
 }
+
 
 enum InvoiceStatus {
   UNPAID,
@@ -200,19 +256,20 @@ enum InvoiceStatus {
 
 
 
-Future<List<Invoice>> getInvoices({String? filter, String? client}) async {
+Future<List<Invoice>> getInvoices({String? filter, String? clientId}) async {
   var maps;
+  print("Getting all invoices");
 
   filter!=null && filter != 'ALL'
       ?maps = await dbHelper.queryFilteredInvoices("invoice",filter: filter)
-      :client!=null && client != 'CLIENTS'
-      ?maps = await dbHelper.queryFilteredInvoices("invoice",client: client)
+      :clientId!=null && clientId != 'CLIENTS'
+      ?maps = await dbHelper.queryFilteredInvoices("invoice",clientId: clientId)
       :maps = await dbHelper.queryFilteredInvoices("invoice");
 
   List<Invoice> invoices = [];
   for( int i =0; i  <maps.length; i++)   {
 
-    Client client = await getClient(maps[i]['client']);
+    Client client = await getClient(maps[i]['client_id']);
 
     invoices.add(
         Invoice(
@@ -230,10 +287,16 @@ Future<List<Invoice>> getInvoices({String? filter, String? client}) async {
       invoiceDate : maps[i]['invoice_date'],
       dueDate : maps[i]['due_date'],
       invoiceStatus : maps[i]['invoice_status'],
-      client : maps[i]['client'],
-      clientFull: client,
+      clientId : maps[i]['client_id'],
+      client: client,
       payments : maps[i]['payments'],
-      invoiceitems : maps[i]['invoice_items'],
+      invoiceItems : maps[i]['invoice_items'],
+            universalId : maps[i]["universal_id"],
+            isOptimised : maps[i]["is_optimised"],
+            isSynced : maps[i]["is_synced"],
+          originId : maps[i]["origin_id"],
+            version : maps[i]["version"],
+            isChanged : maps[i]["is_changed"],
 
 
     ));
@@ -245,7 +308,7 @@ Future<List<Invoice>> getInvoices({String? filter, String? client}) async {
 
 Future<Invoice> getInvoice(id) async {
   final maps = await dbHelper.findById("invoice", id);
-  Client client = await getClient(maps['client']);
+  Client client = await getClient(maps['client_id']);
   List<InvoiceItem> invoiceItems = await getInvoiceItems(maps['id']);
 
   return Invoice(
@@ -261,11 +324,63 @@ Future<Invoice> getInvoice(id) async {
     invoiceDate : maps['invoice_date'],
     dueDate : maps['due_date'],
     invoiceStatus : maps['invoice_status'],
-    client : maps['client'],
-    clientFull: client,
+    clientId : maps['client_id'],
+    client: client,
     payments : maps['payments'],
     companyId : maps['company_id'],
-    invoiceitems : invoiceItems,
+    universalId : maps["universal_id"],
+    isOptimised : maps["is_optimised"],
+    isSynced : maps["is_synced"],
+    originId : maps["origin_id"],
+    version : maps["version"],
+    isChanged : maps["is_changed"],
+    invoiceItems : invoiceItems,
+
+  );
+
+}
+
+Future<Invoice> getInvoiceByUni(id, {bool? copy}) async {
+  var maps;
+  Client client;
+  List<InvoiceItem> invoiceItems;
+
+  if(copy != null && copy==true){
+    final maps = await dbHelper.findByIdUni("invoice", id.toString()+"cp");
+    client = await getClient(maps['client_id']);
+    invoiceItems = await getInvoiceItems(maps['id']);
+  }else{
+    final maps = await dbHelper.findByIdUni("invoice", id.toString());
+
+    client = await getClient(maps['client_id']);
+    invoiceItems = await getInvoiceItems(maps['id']);
+  }
+
+
+  return Invoice(
+    id : maps['id'],
+    totalAmount : maps['total_amount'],
+    vatPercent : maps['vat_percent'],
+    vatAmount : maps['vat_amount'],
+    subTotalAmount : maps['sub_total_amount'],
+    published : maps['published'],
+    notes : maps['notes'],
+    currency : maps['currency'],
+    discount : maps['discount'],
+    invoiceDate : maps['invoice_date'],
+    dueDate : maps['due_date'],
+    invoiceStatus : maps['invoice_status'],
+    clientId : maps['client_id'],
+    client: client,
+    payments : maps['payments'],
+    companyId : maps['company_id'],
+    universalId : maps["universal_id"],
+    isOptimised : maps["is_optimised"],
+    isSynced : maps["is_synced"],
+    originId : maps["origin_id"],
+    version : maps["version"],
+    isChanged : maps["is_changed"],
+    invoiceItems : invoiceItems,
 
   );
 

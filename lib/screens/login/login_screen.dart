@@ -643,96 +643,95 @@ class LoginListener extends ConsumerWidget {
       },
     )
 
-        : SizedBox(
-      // flex: 5,
-      child: authProvider.when(
-        initial: () => _loginScreen(slideCallback: slideCallback,),
-        loading: () =>
-            Center(child: CircularProgressIndicator()),
-        data: (data) {
-          print(data);
+        : SizedBox(child: authProvider.when(
+       initial: () => _loginScreen(slideCallback: slideCallback,),
+       loading: () =>
+           Center(child: CircularProgressIndicator()),
+       data: (data) {
+         print(data);
 
 
 
 
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            context
-                .read(authNotifierProvider.notifier)
-                .resetState();
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           context
+               .read(authNotifierProvider.notifier)
+               .resetState();
 
-          });
+         });
 
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Login Successful"),
-            ));
-          });
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+             content: Text("Login Successful"),
+           ));
+         });
 
 
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
-          });
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           Navigator.push(
+             context,
+             MaterialPageRoute(builder: (context) => HomeScreen()),
+           );
+         });
 
 
 
 
 
-          return _loginScreen(slideCallback: slideCallback);
-        },
+         return _loginScreen(slideCallback: slideCallback);
+       },
 
-        loaded: (loaded) {
-          Navigator.of(context).pop();
+       loaded: (loaded) {
+         Navigator.of(context).pop();
 
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            context
-                .read(authNotifierProvider.notifier)
-                .resetState();
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           context
+               .read(authNotifierProvider.notifier)
+               .resetState();
 
-          });
+         });
 
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(loaded.toString()),
-            ));
-          });
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+             content: Text(loaded.toString()),
+           ));
+         });
 
-          // resetState();
-
-
-          return _loginScreen(slideCallback: slideCallback);
-        },
-        error: (e) {
-
-          Navigator.of(context).pop();
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            context
-                .read(authNotifierProvider.notifier)
-                .resetState();
-
-          });
-
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(e.toString()),
-            ));
-          });
-
-          // resetState();
+         // resetState();
 
 
-          return _loginScreen(slideCallback: slideCallback);
-        },
-      ),
+         return _loginScreen(slideCallback: slideCallback);
+       },
+       error: (e) {
+
+         Navigator.of(context).pop();
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           context
+               .read(authNotifierProvider.notifier)
+               .resetState();
+
+         });
+
+         SchedulerBinding.instance!
+             .addPostFrameCallback((_) {
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+             content: Text(e.toString()),
+           ));
+         });
+
+         // resetState();
+
+
+         return _loginScreen(slideCallback: slideCallback);
+       },
+     ),
+
     );
 
   }
