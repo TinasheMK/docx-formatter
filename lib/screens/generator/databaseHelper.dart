@@ -138,6 +138,7 @@ class DatabaseHelper {
             due_date TEXT,
             company_id INTEGER NOT NULL,
             invoice_status TEXT,
+            invoice_number TEXT,
             
                     
             created_date TEXT,

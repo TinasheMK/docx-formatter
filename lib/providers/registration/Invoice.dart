@@ -23,6 +23,7 @@ class Invoice {
   double? discount;
   String? invoiceDate;
   String? dueDate;
+  String? invoiceNumber;
   String? invoiceStatus;
   String? currency;
   Currency? currencyFull;
@@ -54,6 +55,7 @@ class Invoice {
     this.discount,
     this.invoiceDate,
     this.dueDate,
+    this.invoiceNumber,
     this.companyId,
     this.invoiceStatus,
     this.clientId,
@@ -80,6 +82,7 @@ class Invoice {
    discount = json['discount'];
    invoiceDate = json['invoiceDate'];
    dueDate = json['dueDate'];
+   invoiceNumber = json['invoiceNumber'];
    companyId = json['companyId'];
    originId = json['originId'];
    invoiceStatus = json['invoiceStatus'];
@@ -114,6 +117,7 @@ class Invoice {
     data['discount'] = this.discount;
     // data['invoiceDate'] = this.invoiceDate.toString();
     // data['dueDate'] = this.dueDate.toString();
+    data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
     data['clientId'] = this.clientId;
     data['invoiceItems'] = this.invoiceItems?.map((item) => item.toJson());
@@ -140,6 +144,7 @@ class Invoice {
       "discount": this.discount,
       "invoice_date": this.invoiceDate,
       "due_date": this.dueDate,
+      "invoice_number": this.invoiceNumber,
       "invoice_status": this.invoiceStatus,
       "client_id": this.clientId,
       "universal_id" : this.universalId,
@@ -174,6 +179,10 @@ class Invoice {
       }
     }
 
+    if(this.invoiceNumber == null){
+      this.invoiceNumber = '#'+this.id.toString();
+      save();
+    };
 
     debugPrint('inserted invoice row id: $id');
   }
@@ -202,6 +211,7 @@ class Invoice {
       "discount": this.discount,
       "invoiceDate": this.invoiceDate,
       "dueDate": this.dueDate,
+      "invoiceNumber": this.invoiceNumber,
       "invoiceStatus": this.invoiceStatus,
       "client_id": this.clientId,
       "payments": this.payments,
@@ -286,6 +296,7 @@ Future<List<Invoice>> getInvoices({String? filter, String? clientId}) async {
       discount : maps?[i]['discount'],
       invoiceDate : maps?[i]['invoice_date'],
       dueDate : maps?[i]['due_date'],
+      invoiceNumber : maps?[i]['invoice_number'],
       invoiceStatus : maps?[i]['invoice_status'],
       clientId : maps?[i]['client_id'],
       client: client,
@@ -323,6 +334,7 @@ Future<Invoice> getInvoice(id) async {
     discount : maps?['discount'],
     invoiceDate : maps?['invoice_date'],
     dueDate : maps?['due_date'],
+    invoiceNumber : maps?['invoice_number'],
     invoiceStatus : maps?['invoice_status'],
     clientId : maps?['client_id'],
     client: client,
@@ -369,6 +381,7 @@ Future<Invoice> getInvoiceByUni(id, {bool? copy}) async {
     discount : maps?['discount'],
     invoiceDate : maps?['invoice_date'],
     dueDate : maps?['due_date'],
+    invoiceNumber : maps?['invoice_number'],
     invoiceStatus : maps?['invoice_status'],
     clientId : maps?['client_id'],
     client: client,

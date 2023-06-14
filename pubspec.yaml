@@ -62,6 +62,7 @@ dependencies:
   desktop_window: ^0.4.0
   url_launcher: ^6.1.11
   open_file_plus: ^3.4.1
+  permission_handler: ^10.3.0
 
 dependency_overrides:
   archive: 3.3.0
@@ -90,6 +91,7 @@ flutter:
     - assets/slides/
     - assets/logo/
     - assets/jsons/
+    - lib/services/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
