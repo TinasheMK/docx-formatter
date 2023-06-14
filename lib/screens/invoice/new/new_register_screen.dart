@@ -1,5 +1,6 @@
 
 import 'package:flutter/services.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import '../../../common/UserPreference.dart';
@@ -24,6 +25,7 @@ import '../../../responsive.dart';
 
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/invoicegenerator.dart';
+import '../../generator/pdf_invoice.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import '../../memos/memo_list_material.dart';
@@ -371,7 +373,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                 content: Container(
                                   color: secondaryColor,
                                   height: 410,
-                                  child: Column(
+                                  child: companies.isEmpty? Text("Please go to profile and add your company details."):Column(
                                     children: List.generate(
                                       companies.length,
                                           (index) => companyProfile(companies[index]),
@@ -395,6 +397,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
                   onPressed: () {
 
+                    if(invoice.client?.id == null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select or add a client."),
+                      ));
+                      return;
+                    }
+                    if(invoice.companyFull == null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select or add your company details in profile."),
+                      ));
+                      return;
+                    }
 
                     invoice.invoiceStatus = 'UNPAID';
                     invoice.save();
@@ -783,6 +797,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         content: Text("Invoice already paid."),
                       ));
                     }else {
+                      if(invoice.client?.id == null){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Please select or add a client."),
+                        ));
+                        return;
+                      }
+                      if(invoice.companyFull == null){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Please select or add your company details in profile."),
+                        ));
+                        return;
+                      }
 
                       invoice.invoiceStatus = 'CANCELLED';
                       invoice.save();
@@ -818,6 +844,19 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     ),
                   ),
                   onPressed: () {
+                    if(invoice.client?.id == null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select or add a client."),
+                      ));
+                      return;
+                    }
+                    if(invoice.companyFull == null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select or add your company details in profile."),
+                      ));
+                      return;
+                    }
+
                     if(invoice.invoiceStatus == 'PAID'){
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Invoice already paid."),
@@ -994,7 +1033,19 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
                   onPressed: () async {
 
-                    // invoice.invoiceItems! = invoice!.invoiceItems!;
+                    var state = 0;
+                    if(invoice.client?.id == null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select or add a client."),
+                      ));
+                      return;
+                    }
+                    if(invoice.companyFull == null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select or add your company details in profile."),
+                      ));
+                      return;
+                    }
                     invoice.totalAmount = invoice.subTotalAmount;
                     invoice.clientId = invoice.client?.id;
                     invoice.companyId = invoice.companyFull?.id;
@@ -1331,6 +1382,14 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               type: ButtonType.PRIMARY,
               text: "Print Invoice",
               onPressed: () async {
+                OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
+
+                if(invoice.id == null){
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Please save the invoice first"),
+                  ));
+                  return;
+                }
                 var response = await invoiceGenerator(invoice);
 
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1339,6 +1398,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               },
             ),
             SizedBox(height: 24.0),
+            SizedBox(
+              height: 500,
+              child:InvoicePdf(),
+            ),
             // AppButton(
             //   type: ButtonType.PRIMARY,
             //   text: "Back",

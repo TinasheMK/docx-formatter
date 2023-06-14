@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:docx_template/docx_template.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../../providers/Memo.dart';
 import '../../providers/registration/Company.dart';
@@ -115,6 +116,16 @@ Future <String> invoiceGenerator(Invoice invoice) async {
       if (docGen != null) await file.writeAsBytes(docGen);
     });
 
+    //Load the existing docx document.
+    // final PdfDocument document = PdfDocument(inputBytes: docGen);
+
+
+// //Save the document.
+//   File("${invoice.id}_invoice.pdf").writeAsBytes(await document.save());
+// //Dispose the document.
+//   document.dispose();
+
+
     return "Invoice printed. Check your downloads folder in invoices folder.";
   // }catch(e){
   //   return e.toString();
@@ -135,7 +146,7 @@ Future<String?> getDownloadPath() async {
       directory = Directory(directoryStr);
 
     } else {
-      directory = Directory('/storage/emulated/0/Download/Invoices/');
+      directory = Directory('/storage/emulated/0/Documents/Invoices/');
       // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
       // ignore: avoid_slow_async_io
 

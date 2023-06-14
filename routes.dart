@@ -14,7 +14,7 @@ class Routes {
     login: (BuildContext context) => Login(
           title: '',
         ),
-    home: (BuildContext context) => HomeScreen(),
+    home: (BuildContext context) => HomeScreen(source: 'I was called by router',),
   };
 }
 
@@ -22,7 +22,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
     case "/":
       return MaterialPageRoute(builder: (BuildContext context) {
-        return HomeScreen();
+        return HomeScreen(source: "Router function");
       });
     default:
       return MaterialPageRoute(builder: (BuildContext context) {

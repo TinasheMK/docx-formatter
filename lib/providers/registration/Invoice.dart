@@ -267,36 +267,36 @@ Future<List<Invoice>> getInvoices({String? filter, String? clientId}) async {
       :maps = await dbHelper.queryFilteredInvoices("invoice");
 
   List<Invoice> invoices = [];
-  for( int i =0; i  <maps.length; i++)   {
+  for( int i =0; i  <maps?.length; i++)   {
 
-    Client client = await getClient(maps[i]['client_id']);
+    Client client = await getClient(maps?[i]['client_id']);
 
     invoices.add(
         Invoice(
 
-      id : maps[i]['id'],
-      totalAmount : maps[i]['total_amount'],
-      vatPercent : maps[i]['vat_percent'],
-      vatAmount : maps[i]['vat_amount'],
-      subTotalAmount : maps[i]['sub_total_amount'],
-      published : maps[i]['published'],
-      notes : maps[i]['notes'],
-          currency : maps[i]['currency'],
-      companyId : maps[i]['company_id'],
-      discount : maps[i]['discount'],
-      invoiceDate : maps[i]['invoice_date'],
-      dueDate : maps[i]['due_date'],
-      invoiceStatus : maps[i]['invoice_status'],
-      clientId : maps[i]['client_id'],
+      id : maps?[i]['id'],
+      totalAmount : maps?[i]['total_amount'],
+      vatPercent : maps?[i]['vat_percent'],
+      vatAmount : maps?[i]['vat_amount'],
+      subTotalAmount : maps?[i]['sub_total_amount'],
+      published : maps?[i]['published'],
+      notes : maps?[i]['notes'],
+          currency : maps?[i]['currency'],
+      companyId : maps?[i]['company_id'],
+      discount : maps?[i]['discount'],
+      invoiceDate : maps?[i]['invoice_date'],
+      dueDate : maps?[i]['due_date'],
+      invoiceStatus : maps?[i]['invoice_status'],
+      clientId : maps?[i]['client_id'],
       client: client,
-      payments : maps[i]['payments'],
-      invoiceItems : maps[i]['invoice_items'],
-            universalId : maps[i]["universal_id"],
-            isOptimised : maps[i]["is_optimised"],
-            isSynced : maps[i]["is_synced"],
-          originId : maps[i]["origin_id"],
-            version : maps[i]["version"],
-            isChanged : maps[i]["is_changed"],
+      payments : maps?[i]['payments'],
+      invoiceItems : maps?[i]['invoice_items'],
+            universalId : maps?[i]["universal_id"],
+            isOptimised : maps?[i]["is_optimised"],
+            isSynced : maps?[i]["is_synced"],
+          originId : maps?[i]["origin_id"],
+            version : maps?[i]["version"],
+            isChanged : maps?[i]["is_changed"],
 
 
     ));
@@ -308,32 +308,32 @@ Future<List<Invoice>> getInvoices({String? filter, String? clientId}) async {
 
 Future<Invoice> getInvoice(id) async {
   final maps = await dbHelper.findById("invoice", id);
-  Client client = await getClient(maps['client_id']);
-  List<InvoiceItem> invoiceItems = await getInvoiceItems(maps['id']);
+  Client client = await getClient(maps?['client_id']);
+  List<InvoiceItem> invoiceItems = await getInvoiceItems(maps?['id']);
 
   return Invoice(
-    id : maps['id'],
-    totalAmount : maps['total_amount'],
-    vatPercent : maps['vat_percent'],
-    vatAmount : maps['vat_amount'],
-    subTotalAmount : maps['sub_total_amount'],
-    published : maps['published'],
-    notes : maps['notes'],
-    currency : maps['currency'],
-    discount : maps['discount'],
-    invoiceDate : maps['invoice_date'],
-    dueDate : maps['due_date'],
-    invoiceStatus : maps['invoice_status'],
-    clientId : maps['client_id'],
+    id : maps?['id'],
+    totalAmount : maps?['total_amount'],
+    vatPercent : maps?['vat_percent'],
+    vatAmount : maps?['vat_amount'],
+    subTotalAmount : maps?['sub_total_amount'],
+    published : maps?['published'],
+    notes : maps?['notes'],
+    currency : maps?['currency'],
+    discount : maps?['discount'],
+    invoiceDate : maps?['invoice_date'],
+    dueDate : maps?['due_date'],
+    invoiceStatus : maps?['invoice_status'],
+    clientId : maps?['client_id'],
     client: client,
-    payments : maps['payments'],
-    companyId : maps['company_id'],
-    universalId : maps["universal_id"],
-    isOptimised : maps["is_optimised"],
-    isSynced : maps["is_synced"],
-    originId : maps["origin_id"],
-    version : maps["version"],
-    isChanged : maps["is_changed"],
+    payments : maps?['payments'],
+    companyId : maps?['company_id'],
+    universalId : maps?["universal_id"],
+    isOptimised : maps?["is_optimised"],
+    isSynced : maps?["is_synced"],
+    originId : maps?["origin_id"],
+    version : maps?["version"],
+    isChanged : maps?["is_changed"],
     invoiceItems : invoiceItems,
 
   );
@@ -347,39 +347,39 @@ Future<Invoice> getInvoiceByUni(id, {bool? copy}) async {
 
   if(copy != null && copy==true){
     final maps = await dbHelper.findByIdUni("invoice", id.toString()+"cp");
-    client = await getClient(maps['client_id']);
-    invoiceItems = await getInvoiceItems(maps['id']);
+    client = await getClient(maps?['client_id']);
+    invoiceItems = await getInvoiceItems(maps?['id']);
   }else{
     final maps = await dbHelper.findByIdUni("invoice", id.toString());
 
-    client = await getClient(maps['client_id']);
-    invoiceItems = await getInvoiceItems(maps['id']);
+    client = await getClient(maps?['client_id']);
+    invoiceItems = await getInvoiceItems(maps?['id']);
   }
 
 
   return Invoice(
-    id : maps['id'],
-    totalAmount : maps['total_amount'],
-    vatPercent : maps['vat_percent'],
-    vatAmount : maps['vat_amount'],
-    subTotalAmount : maps['sub_total_amount'],
-    published : maps['published'],
-    notes : maps['notes'],
-    currency : maps['currency'],
-    discount : maps['discount'],
-    invoiceDate : maps['invoice_date'],
-    dueDate : maps['due_date'],
-    invoiceStatus : maps['invoice_status'],
-    clientId : maps['client_id'],
+    id : maps?['id'],
+    totalAmount : maps?['total_amount'],
+    vatPercent : maps?['vat_percent'],
+    vatAmount : maps?['vat_amount'],
+    subTotalAmount : maps?['sub_total_amount'],
+    published : maps?['published'],
+    notes : maps?['notes'],
+    currency : maps?['currency'],
+    discount : maps?['discount'],
+    invoiceDate : maps?['invoice_date'],
+    dueDate : maps?['due_date'],
+    invoiceStatus : maps?['invoice_status'],
+    clientId : maps?['client_id'],
     client: client,
-    payments : maps['payments'],
-    companyId : maps['company_id'],
-    universalId : maps["universal_id"],
-    isOptimised : maps["is_optimised"],
-    isSynced : maps["is_synced"],
-    originId : maps["origin_id"],
-    version : maps["version"],
-    isChanged : maps["is_changed"],
+    payments : maps?['payments'],
+    companyId : maps?['company_id'],
+    universalId : maps?["universal_id"],
+    isOptimised : maps?["is_optimised"],
+    isSynced : maps?["is_synced"],
+    originId : maps?["origin_id"],
+    version : maps?["version"],
+    isChanged : maps?["is_changed"],
     invoiceItems : invoiceItems,
 
   );

@@ -11,8 +11,8 @@ import '../../../providers/registration/Company.dart';
 import '../../clients/new/new_client_home_screen.dart';
 import '../new/new_profile_home_screen.dart';
 
-class MemoSelectionSection extends StatelessWidget {
-  const MemoSelectionSection({
+class AddBusinessProfile extends StatelessWidget {
+  const AddBusinessProfile({
     Key? key,
     required this.memos,
     required this.callback
@@ -95,7 +95,7 @@ class _InformationCardState extends State<InformationCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return clients.isEmpty ? Text("Add a business profile") :GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: clients.length,

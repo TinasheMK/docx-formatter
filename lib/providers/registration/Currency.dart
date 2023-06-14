@@ -79,13 +79,13 @@ class Currency {
 }
 
 Future<List<Currency>> getCurrencys() async {
-  final maps = await dbHelper.queryAllRows("currency");
+  final maps= await dbHelper.queryAllRows("currency");
 
   return List.generate(maps.length, (i) {
     return Currency(
-      id : maps[i]['id'],
-      symbol : maps[i]['symbol'],
-      country : maps[i]['country']
+      id : maps?[i]['id'],
+      symbol : maps?[i]['symbol'],
+      country : maps?[i]['country']
 
     );
   });
@@ -95,9 +95,9 @@ Future<Currency> getCurrency(id) async {
   final maps = await dbHelper.findByIdStr("currency", id);
 
     return Currency(
-      id : maps['id'],
-      symbol : maps['symbol'],
-      country : maps['country']
+      id : maps?['id'],
+      symbol : maps?['symbol'],
+      country : maps?['country']
 
     );
 

@@ -107,7 +107,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
           upperCase: true,
           numberLetters: 1,
           shape: Shape.Rectangle,
-          text: userInfo.companyName != null ? userInfo.companyName! : "",
+          text: userInfo.companyName != null  ?  RegExp(r'^[A-Za-z_.]+$').hasMatch(userInfo.companyName![0]) ? userInfo.companyName!: 'a' : "a",
         ),
       ),
       DataCell(Container(

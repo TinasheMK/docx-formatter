@@ -91,7 +91,7 @@ class _InformationCardState extends State<InformationCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return clients.isEmpty? Text("You have not added any clients yet."): GridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: clients.length,

@@ -94,7 +94,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   late double childAspectRatio;
   late List<Memo> memosSet = [];
 
-  late Company client ;
+  Company client = Company.fromJson({});
   String? logoPath;
 
   Future<void> _initclient() async {
@@ -218,6 +218,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                         });
 
                                         client.logo = logo;
+                                        if(client.companyName==null) client.companyName = "N/A";
                                         client.save();
 
                                         // image!.saveTo('/storage/emulated/0/Download/Invoices/logo${getRandomString(5)}.png');
@@ -712,7 +713,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                         ),
                                       ),
                                       onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
+                                        if (true) {
                                           print(client!.toJson());
                                           print(widget.code);
                                           try {

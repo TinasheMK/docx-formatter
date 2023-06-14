@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'components/side_menu.dart';
 
 class HomeScreen extends StatelessWidget {
+  final String source;
+
+  const HomeScreen({Key? key, required this.source}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    print("I was called by" + source);
     return Scaffold(
       //key: context.read<MenuController>().scaffoldKey,
       drawer: SideMenu(),

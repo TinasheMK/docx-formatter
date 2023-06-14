@@ -175,7 +175,7 @@ class SideMenu extends ConsumerWidget {
               press: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => HomeScreen(source: 'side menu',)),
                 );
               },
             ),

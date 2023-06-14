@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
+import 'package:smart_admin_dashboard/screens/profile/components/add_business_profile_home.dart';
 
 import '../../common/UserPreference.dart';
 import '../../core/constants/color_constants.dart';
@@ -16,7 +17,7 @@ import './components/recent_users.dart';
 import './components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'components/memo_list_material.dart';
+// import 'components/memo_list_material.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -26,6 +27,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("This is profile screen");
     return SafeArea(
       child: SingleChildScrollView(
         //padding: EdgeInsets.all(defaultPadding),
@@ -57,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
 
                         SizedBox(
                           // height: 600,
-                            child: MemoListMaterial(
+                            child: AddBusinessProfileHome(
                             callback: callback
                         )
                         ),

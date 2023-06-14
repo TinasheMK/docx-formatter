@@ -97,7 +97,7 @@ class Company {
 
 
     debugPrint('inserted company row id: $id');
-
+    this.id = id;
     return id;
 
   }
@@ -159,16 +159,16 @@ Future<List<Company>> getCompanys() async {
 
   return List.generate(maps.length, (i) {
     return Company(
-      id : maps[i]['id'],
-      companyName : maps[i]['company_name'],
-      street : maps[i]['street'],
-      city : maps[i]['city'],
-      logo : maps[i]['logo'],
-      country : maps[i]['country'],
-      telephone : maps[i]['telephone'],
-      email : maps[i]['email'],
-      status : maps[i]['status'],
-      employees : maps[i]['employees'],
+      id : maps?[i]['id'],
+      companyName : maps?[i]['company_name'],
+      street : maps?[i]['street'],
+      city : maps?[i]['city'],
+      logo : maps?[i]['logo'],
+      country : maps?[i]['country'],
+      telephone : maps?[i]['telephone'],
+      email : maps?[i]['email'],
+      status : maps?[i]['status'],
+      employees : maps?[i]['employees'],
 
     );
   });
@@ -178,16 +178,16 @@ Future<Company> getCompany(id) async {
   final maps = await dbHelper.findById("company", id);
 
   return Company(
-    id : maps['id'],
-    companyName : maps['company_name'],
-    street : maps['street'],
-    city : maps['city'],
-    logo : maps['logo'],
-    country : maps['country'],
-    telephone : maps['telephone'],
-    email : maps['email'],
-    status : maps['status'],
-    employees : maps['employees'],
+    id : maps?['id'],
+    companyName : maps?['company_name'],
+    street : maps?['street'],
+    city : maps?['city'],
+    logo : maps?['logo'],
+    country : maps?['country'],
+    telephone : maps?['telephone'],
+    email : maps?['email'],
+    status : maps?['status'],
+    employees : maps?['employees'],
 
   );
 

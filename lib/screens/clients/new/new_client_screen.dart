@@ -48,21 +48,15 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   _NewClientScreenState(int? this.clientId);
   int? clientId;
 
-  var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-      .chain(CurveTween(curve: Curves.ease));
-  var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
-      .chain(CurveTween(curve: Curves.ease));
 
-  AnimationController? _animationController;
 
   final _formKey = GlobalKey<FormState>();
 
   bool isChecked = false;
 
-  int _directors = 2;
 
-  List persons = [];
-  List original = [];
+  // List persons = [];
+  // List original = [];
 
 
   Employee employee = Employee.fromJson({});
@@ -72,15 +66,13 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
 
 
 
-  void loadData() async {
-    setState(() {});
-  }
 
-  late int crossAxisCount;
-  late double childAspectRatio;
-  late List<Memo> memosSet = [];
 
-   Client client = new Client.fromJson({});
+  // late int crossAxisCount;
+  // late double childAspectRatio;
+  // late List<Memo> memosSet = [];
+
+  Client client = new Client.fromJson({});
   double balance = 0 ;
 
   TextEditingController con1 = TextEditingController();
@@ -120,18 +112,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
     _initclient();
 
     super.initState();
-    loadData();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 750),
-    );
 
-  }
-
-  @override
-  void dispose() {
-    _animationController?.dispose();
-    super.dispose();
   }
 
 
@@ -142,19 +123,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
 
     // print(widget.code);
     final Size _size = MediaQuery.of(context).size;
-    crossAxisCount= _size.width < 650 ? 2 : 4;
-    childAspectRatio= _size.width < 650 ? 3 : 3;
 
-    memosSet = memoInits;
-
-    for( int i = 0 ; i < memos.length; i++ ) {
-      if(memos[i].set!="set"){
-        memosSet.removeWhere((element) => element.code == memos[i].code);
-        print(i);
-      }else if(memos.length==0){
-        memosSet.add(memos[1]);
-      }
-    }
 
     return SafeArea(
       child: SingleChildScrollView(

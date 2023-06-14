@@ -61,6 +61,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("this is login the state");
     slideCallback(){
       if (_isMoved) {
         _animationController!.reverse();
@@ -78,6 +79,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         fit: StackFit.loose,
         children: <Widget>[
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               if (!Responsive.isMobile(context))
                 Container(
@@ -192,8 +194,9 @@ class _loginScreen extends ConsumerWidget {
       ),
       child: Form(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: MediaQuery.of(context).size.height/6),
             InputWidget(
               keyboardType: TextInputType.emailAddress,
               onSaved: (String? value) {
@@ -347,7 +350,7 @@ class _loginScreen extends ConsumerWidget {
                     Navigator.pop(context, true);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen1")),
                     );
                   },
                   child: Text(
@@ -530,7 +533,7 @@ class _registerScreen extends ConsumerWidget {
 
                 // Navigator.push(
                 //   context,
-                //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                //   MaterialPageRoute(builder: (context) => HomeScreensource: ("login screen2)),
                 // );
               },
             ),
@@ -578,6 +581,8 @@ class LoginListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
+    print("this is login listener");
+
     final authProvider = watch(authNotifierProvider);
     final sharedPref = watch(sharedPreferencesServiceProvider);
 
@@ -593,9 +598,11 @@ class LoginListener extends ConsumerWidget {
 
 
             SchedulerBinding.instance!.addPostFrameCallback((_) {
+              Navigator.pop(context, true);
+
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+                MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen3")),
               );
             });
 
@@ -613,9 +620,11 @@ class LoginListener extends ConsumerWidget {
 
                       SchedulerBinding.instance!
                           .addPostFrameCallback((_) {
+                        Navigator.pop(context, true);
+
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                          MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen4")),
                         );
                       });
                     },
@@ -628,109 +637,110 @@ class LoginListener extends ConsumerWidget {
         return Center(
             child: Container(child: CircularProgressIndicator()));
       },
-    ) :
-     sharedPref.skipSignIn() == true ? FutureBuilder(
+    ): sharedPref.skipSignIn() == true ? FutureBuilder(
       builder: (context, snapshot) {
         SchedulerBinding.instance!.addPostFrameCallback((_) {
-          Navigator.push(
+          // Navigator.pop(context, true);
+
+          Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen5")),
           );
         });
 
         return Center(
             child: Container(child: CircularProgressIndicator()));
       },
-    )
-
-        : SizedBox(child: authProvider.when(
-       initial: () => _loginScreen(slideCallback: slideCallback,),
-       loading: () =>
-           Center(child: CircularProgressIndicator()),
-       data: (data) {
-         print(data);
+    ) : SizedBox(child: authProvider.when(
+      initial: () => _loginScreen(slideCallback: slideCallback,),
+      loading: () =>
+          Center(child: CircularProgressIndicator()),
+      data: (data) {
+        print(data);
 
 
 
 
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           context
-               .read(authNotifierProvider.notifier)
-               .resetState();
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          context
+              .read(authNotifierProvider.notifier)
+              .resetState();
 
-         });
+        });
 
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-             content: Text("Login Successful"),
-           ));
-         });
-
-
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           Navigator.push(
-             context,
-             MaterialPageRoute(builder: (context) => HomeScreen()),
-           );
-         });
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Login Successful"),
+          ));
+        });
 
 
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          Navigator.pop(context, true);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen6")),
+          );
+        });
 
 
 
-         return _loginScreen(slideCallback: slideCallback);
-       },
-
-       loaded: (loaded) {
-         Navigator.of(context).pop();
-
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           context
-               .read(authNotifierProvider.notifier)
-               .resetState();
-
-         });
-
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-             content: Text(loaded.toString()),
-           ));
-         });
-
-         // resetState();
 
 
-         return _loginScreen(slideCallback: slideCallback);
-       },
-       error: (e) {
+        return _loginScreen(slideCallback: slideCallback);
+      },
 
-         Navigator.of(context).pop();
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           context
-               .read(authNotifierProvider.notifier)
-               .resetState();
+      loaded: (loaded) {
+        Navigator.of(context).pop();
 
-         });
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          context
+              .read(authNotifierProvider.notifier)
+              .resetState();
 
-         SchedulerBinding.instance!
-             .addPostFrameCallback((_) {
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-             content: Text(e.toString()),
-           ));
-         });
+        });
 
-         // resetState();
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(loaded.toString()),
+          ));
+        });
+
+        // resetState();
 
 
-         return _loginScreen(slideCallback: slideCallback);
-       },
-     ),
+        return _loginScreen(slideCallback: slideCallback);
+      },
+      error: (e) {
+
+        Navigator.of(context).pop();
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          context
+              .read(authNotifierProvider.notifier)
+              .resetState();
+
+        });
+
+        SchedulerBinding.instance!
+            .addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.toString()),
+          ));
+        });
+
+        // resetState();
+
+
+        return _loginScreen(slideCallback: slideCallback);
+      },
+    ),
 
     );
 
@@ -752,71 +762,8 @@ class RegisterListener extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final authProvider = watch(authNotifierProvider);
-    final sharedPref = watch(sharedPreferencesServiceProvider);
 
-    return sharedPref.getCachedUserCredentials() != null ? FutureBuilder(
-      future: watch(authRepositoryProvider)
-          .login(sharedPref.getCachedUserCredentials()),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final wp = snapshot.data;
-
-          if (wp is WorkerProfile) {
-
-
-
-            SchedulerBinding.instance!.addPostFrameCallback((_) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-            });
-
-
-          }
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              children: [
-                Text('Failed to login'),
-                SizedBox(height: 20),
-                ElevatedButton(
-                    onPressed: () async {
-                      await sharedPref.resetUserCredentials();
-
-                      SchedulerBinding.instance!
-                          .addPostFrameCallback((_) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      });
-                    },
-                    child: Text('Retry')),
-              ],
-            ),
-          );
-        }
-
-        return Center(
-            child: Container(child: CircularProgressIndicator()));
-      },
-    ) :
-    sharedPref.skipSignIn() == true ? FutureBuilder(
-      builder: (context, snapshot) {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-        });
-
-        return Center(
-            child: Container(child: CircularProgressIndicator()));
-      },
-    )
-
-        : SizedBox(
+    return SizedBox(
       // flex: 5,
       child: authProvider.when(
         initial: () => _registerScreen(slideCallback: slideCallback,),
@@ -846,9 +793,11 @@ class RegisterListener extends ConsumerWidget {
 
           SchedulerBinding.instance!
               .addPostFrameCallback((_) {
+            Navigator.pop(context, true);
+
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen10")),
             );
           });
 

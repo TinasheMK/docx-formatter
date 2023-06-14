@@ -7,14 +7,15 @@ import '../../../providers/Memo.dart';
 import '../../../providers/registration/Company.dart';
 import '../../../responsive.dart';
 import '../new/new_profile_home_screen.dart';
-import 'memos_widget.dart';
+import 'add_business_profile.dart';
+// import 'memos_widget.dart';
 
 
-class MemoListMaterial extends StatefulWidget {
+class AddBusinessProfileHome extends StatefulWidget {
   @override
-  _MemoListMaterialState createState() => _MemoListMaterialState();
+  _AddBusinessProfileHomeState createState() => _AddBusinessProfileHomeState();
 
-  MemoListMaterial({
+  AddBusinessProfileHome({
     Key? key,
     required this.callback
 
@@ -23,16 +24,11 @@ class MemoListMaterial extends StatefulWidget {
   final Function(String, String) callback;
 
 
-
-
-
 }
 
 
 
-
-
-class _MemoListMaterialState extends State<MemoListMaterial> {
+class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
 
   List<Company> clients = [];
 
@@ -51,8 +47,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
 
   @override
   Widget build(BuildContext context) {
-    print(clients);
-    print("clients");
+    print("This is add business profile home.");
     return Card(
       color: bgColor,
       elevation: 5,
@@ -105,7 +100,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
                     "Add Business Profile",
                   ),
                 ),
-                MemoSelectionSection(memos: memos,callback: widget.callback),
+                AddBusinessProfile(memos: memos,callback: widget.callback),
               ],
             )),
       ),

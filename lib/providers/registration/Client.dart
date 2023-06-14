@@ -184,8 +184,8 @@ class Client {
     return Wallet(
       id : maps!['id'],
       balance : maps!['balance'],
-      currency : maps!['currency'],
-      clientId : maps!['client_id'],
+      currency : maps?['currency'],
+      clientId : maps?['client_id'],
 
     );
 
@@ -215,19 +215,19 @@ Future<List<Client>> getClients() async {
 }
 
 Future<Client> getClient(id) async {
-  final maps = await dbHelper.findById("client", id);
+  var maps = await dbHelper.findById("client", id);
 
     return Client(
-      id : maps['id'],
-      companyName : maps['company_name'],
-      street : maps['street'],
-      city : maps['city'],
-      country : maps['country'],
-      telephone : maps['telephone'],
-      email : maps['email'],
-      status : maps['status'],
-      currency : maps['currency'],
-      employees : maps['employees'],
+      id : maps?['id'],
+      companyName : maps?['company_name'],
+      street : maps?['street'],
+      city : maps?['city'],
+      country : maps?['country'],
+      telephone : maps?['telephone'],
+      email : maps?['email'],
+      status : maps?['status'],
+      currency : maps?['currency'],
+      employees : maps?['employees'],
 
     );
 

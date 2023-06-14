@@ -99,23 +99,23 @@ Future<List<Wallet>> getWallets() async {
 
   return List.generate(maps.length, (i) {
     return Wallet(
-      id : maps[i]['id'],
-      balance : maps[i]['balance'],
-      currency : maps[i]['currency'],
-      clientId : maps[i]['client_id'],
+      id : maps?[i]['id'],
+      balance : maps?[i]['balance'],
+      currency : maps?[i]['currency'],
+      clientId : maps?[i]['client_id'],
 
     );
   });
 }
 
 Future<Wallet> getWallet(id) async {
-  final maps = await dbHelper.findById("wallet", id);
+  final maps= await dbHelper.findById("wallet", id);
 
     return Wallet(
-      id : maps['id'],
-      balance : maps['balance'],
-      currency : maps['currency'],
-      clientId : maps['client_id'],
+      id : maps?['id'],
+      balance : maps?['balance'],
+      currency : maps?['currency'],
+      clientId : maps?['client_id'],
 
     );
 

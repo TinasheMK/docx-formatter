@@ -264,28 +264,28 @@ class DatabaseHelper {
   }
 
 
-  Future<Map<String, dynamic>> findById(String table, int id) async {
+  Future<Map<String, dynamic>?> findById(String table, int id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = $id');
-    return results[0];
+    return results.isEmpty ? null : results?[0];
   }
 
-  Future<Map<String, dynamic>> findByIdUni(String table, String id) async {
+  Future<Map<String, dynamic>?> findByIdUni(String table, String id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE universal_id = $id');
-    return results[0];
+    return results.isEmpty ? null : results?[0];
   }
 
   Future<Map<String, dynamic>?> findClientWallet(String table, int id, String currency) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE client_id = $id and currency = "$currency"');
     try{
-      return results?[0];
+      return results.isEmpty ? null : results?[0];
     } catch(e){
       return null;
     }
   }
 
-  Future<Map<String, dynamic>> findByIdStr(String table, var id) async {
+  Future<Map<String, dynamic>?> findByIdStr(String table, var id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE id = "$id"');
-    return results[0];
+    return results.isEmpty ? null : results?[0];
   }
 
   Future<List<Map<String, dynamic>>> findInvoiceItems(String table, int id) async {
