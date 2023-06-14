@@ -13,7 +13,7 @@ import 'InvoiceItem.dart';
 import 'Payment.dart';
 
 class Invoice {
-  int?    id;
+  int? id;
   double? totalAmount;
   double? vatPercent;
   double? vatAmount;

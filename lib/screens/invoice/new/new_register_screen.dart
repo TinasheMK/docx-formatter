@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:open_file_plus/open_file_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -44,6 +47,7 @@ import 'package:flutter/material.dart' as _Size;
 import '../components/header.dart';
 import 'components/dropdown_search.dart';
 
+String? logoPath;
 
 class NewRegisterScreen extends StatefulWidget {
   NewRegisterScreen({required this.title, required this.code, this.invoiceId});
@@ -1622,6 +1626,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   Future<void> _generatePDF() async {
     var _model = ImageModel();
+
+    final directory = await getDownloadPath2();
+    if(invoice.companyFull!.logo!=null) logoPath = "${directory}${invoice.companyFull!.logo!}";
+
+
     _model.requestFilePermission();
     //Create a PDF document.
     final PdfDocument document = PdfDocument();
@@ -1636,7 +1645,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     //Generate PDF grid.
     final PdfGrid grid = _getGrid();
     //Draw the header section by creating text element
-    final PdfLayoutResult result = _drawHeader(page, pageSize, grid);
+    final PdfLayoutResult result = await _drawHeader(page, pageSize, grid);
     //Draw grid
     _drawGrid(page, grid, result);
     //Add invoice footer
@@ -1649,7 +1658,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   }
 
   //Draws the invoice header
-  PdfLayoutResult _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) {
+  Future<PdfLayoutResult> _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) async {
     //Draw rectangle
     page.graphics.drawRectangle(
         brush: PdfSolidBrush(PdfColor(91, 126, 215)),
@@ -1671,6 +1680,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             alignment: PdfTextAlignment.center,
             lineAlignment: PdfVerticalAlignment.middle));
     final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 9);
+
     //Draw string
     page.graphics.drawString('Amount', contentFont,
         brush: PdfBrushes.white,
@@ -1678,6 +1688,24 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         format: PdfStringFormat(
             alignment: PdfTextAlignment.center,
             lineAlignment: PdfVerticalAlignment.bottom));
+
+    print(logoPath);
+    double height  =0;
+    if(logoPath!=null) {
+      var image = File(logoPath!).readAsBytesSync();
+      var decodedImage = await decodeImageFromList(image);
+      print(decodedImage.width);
+      print(decodedImage.height);
+
+      var x = decodedImage.width/(pageSize.width - 400);
+      height = decodedImage.height / x;
+
+      page.graphics.drawImage(
+          PdfBitmap(image),
+          Rect.fromLTWH(
+              395, height+33, pageSize.width - 400, height));
+    }
+
     //Create data foramt and convert it to text.
     final DateFormat format = DateFormat.yMMMMd('en_US');
     final String invoiceNumber = 'Invoice Number: '+invoice.invoiceNumber!+'\r\n\r\nDate: ' +
@@ -1691,8 +1719,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         'Bill To: \r\n\r\n'+invoice.client!.companyName!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
     PdfTextElement(text: invoiceNumber, font: contentFont).draw(
         page: page,
-        bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 120,
+        bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 120+height,
             contentSize.width + 30, pageSize.height - 120));
+
+
+
     return PdfTextElement(text: address, font: contentFont).draw(
         page: page,
         bounds: Rect.fromLTWH(30, 120,
@@ -1902,5 +1933,29 @@ class _MiniMemoState extends State<MiniMemo> {
 
 }
 
+
+Future<String?> getDownloadPath2() async {
+  Directory? directory;
+  String directoryStr;
+  try {
+    if (Platform.isIOS ) {
+      directory = await getApplicationDocumentsDirectory();
+    } else if (Platform.isWindows) {
+      directory = await getApplicationDocumentsDirectory();
+      directoryStr =  "${directory.path}\\Invoices\\";
+      directory = Directory(directoryStr);
+
+    } else {
+      // directory = Directory('/storage/emulated/0/Download/Invoices/');
+      // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+      // ignore: avoid_slow_async_io
+
+      directory = await getExternalStorageDirectory();
+    }
+  } catch (err, stack) {
+    print("Cannot get download folder path");
+  }
+  return directory?.path;
+}
 
 
