@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/providers/Conflict.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
-import 'package:smart_admin_dashboard/screens/tax/tax_home_screen.dart';
-import 'package:smart_admin_dashboard/screens/tax/tax_screen.dart';
 
 import '../../../common/UserPreference.dart';
 import '../../../core/widgets/app_button_widget.dart';

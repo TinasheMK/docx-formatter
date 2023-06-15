@@ -1,16 +1,23 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/responsive.dart';
 
+import '../../core/constants/color_constants.dart';
+import '../../../responsive.dart';
+import '../../providers/registration/Client.dart';
+import '../dashboard/components/header.dart';
+import '../dashboard/components/recent_users.dart';
+import '../invoice/components/header.dart';
 
 import 'package:flutter/material.dart';
 
-import '../invoice/components/mini_information_card.dart';
-import '../invoice/components/recent_forums.dart';
-import '../invoice/components/recent_users copy.dart';
-import '../invoice/components/user_details_widget.dart';
-import 'components/header.dart';
+import 'components/search_results.dart';
 
-class TaxScreen extends StatelessWidget {
+
+class SearchResultsScreen extends StatelessWidget {
+
+  final List<Client> clients;
+
+  const SearchResultsScreen({Key? key, required this.clients}) : super(key: key);
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -22,7 +29,7 @@ class TaxScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(),
+              // MiniInformation(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,23 +40,23 @@ class TaxScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        RecentUsers(),
+                        SearchResults(clients: clients),
                         SizedBox(height: defaultPadding),
-                        RecentDiscussions(),
+                        // RecentDiscussions(),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
-                        if (Responsive.isMobile(context)) UserDetailsWidget(),
+                        // if (Responsive.isMobile(context)) UserDetailsWidget(),
                       ],
                     ),
                   ),
                   if (!Responsive.isMobile(context))
                     SizedBox(width: defaultPadding),
                   // On Mobile means if the screen is less than 850 we dont want to show it
-                  if (!Responsive.isMobile(context))
-                    Expanded(
-                      flex: 2,
-                      child: UserDetailsWidget(),
-                    ),
+                  // if (!Responsive.isMobile(context))
+                    // Expanded(
+                    //   flex: 2,
+                    //   child: UserDetailsWidget(),
+                    // ),
                 ],
               )
             ],

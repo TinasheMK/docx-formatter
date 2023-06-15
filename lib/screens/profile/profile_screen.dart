@@ -9,6 +9,7 @@ import '../../core/widgets/input_widget.dart';
 import '../../providers/registration/Wallet.dart';
 import '../../responsive.dart';
 
+import '../dashboard/components/header.dart';
 import '../invoice/components/header.dart';
 import './components/mini_information_card.dart';
 

@@ -4,6 +4,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
+import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 import 'package:smart_admin_dashboard/providers/registration/Company.dart';
 import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
 import '../../main.dart';
@@ -170,10 +171,23 @@ class Invoice {
     var invs = this.invoiceItems;
     var pays = this.payments;
 
-    for(int i=0; i<30; i++){{
+    for(int i=0; i<this.invoiceItems!.length; i++){{
       try {
-        invs?[i]?.saveAndAttach(id);
-        pays?[i]?.saveAndAttach(id);
+        this.invoiceItems![i].id = await invs?[i].saveAndAttach(id);
+      }catch(err) {}
+
+      }
+    }
+
+    for(int i=0; i<this.payments!.length; i++){{
+      debugPrint('\n');
+      debugPrint('\n');
+      debugPrint(this.payments![i].toJson().toString());
+      debugPrint('\n');
+      debugPrint('\n');
+      debugPrint('\n');
+      try {
+        this.payments![i].id = await pays?[i].saveAndAttach(id);
       }catch(err) {}
 
       }
@@ -266,15 +280,24 @@ enum InvoiceStatus {
 
 
 
-Future<List<Invoice>> getInvoices({String? filter, String? clientId}) async {
+Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clientId}) async {
   var maps;
-  print("Getting all invoices");
+  print(filter );
+  print(clientId);
+  print(dateSort);
+  if(filter == 'ALL') filter = null;
+  if(clientId == 'CLIENTS') clientId = null;
+  // if(order == 'id') order = null;
+  // if(asc == null) asc = true;
 
-  filter!=null && filter != 'ALL'
-      ?maps = await dbHelper.queryFilteredInvoices("invoice",filter: filter)
-      :clientId!=null && clientId != 'CLIENTS'
-      ?maps = await dbHelper.queryFilteredInvoices("invoice",clientId: clientId)
-      :maps = await dbHelper.queryFilteredInvoices("invoice");
+  maps = await dbHelper.queryFilteredInvoices("invoice",dateSort, invoiceStatus: filter, clientId: clientId);
+
+
+  // filter!=null && filter != 'ALL'
+  //     ?maps = await dbHelper.queryFilteredInvoices("invoice",filter: filter)
+  //     :clientId!=null && clientId != 'CLIENTS'
+  //     ?maps = await dbHelper.queryFilteredInvoices("invoice",clientId: clientId)
+  //     :maps = await dbHelper.queryFilteredInvoices("invoice");
 
   List<Invoice> invoices = [];
   for( int i =0; i  <maps?.length; i++)   {

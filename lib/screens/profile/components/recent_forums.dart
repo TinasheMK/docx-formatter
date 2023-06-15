@@ -22,7 +22,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
   List<Invoice> invoices = [Invoice.fromJson({})];
 
   Future<void> _initclients() async {
-    invoices = await getInvoices();
+    invoices = await getInvoices('desc');
     setState(() {});
   }
 

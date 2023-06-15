@@ -233,9 +233,28 @@ class DatabaseHelper {
             symbol,
             country
             )
-            values("USD","USD","United States of America" )
+            values("USD","\$","United States of America" )
           ''');
+    await db.execute('''
+          insert into currency (
+            id,
+            symbol,
+            country
+            )
+            values("POUND","£","United States of America" )
+          ''');
+
+    await db.execute('''
+          insert into currency (
+            id,
+            symbol,
+            country
+            )
+            values("ZWL","ZWL","United States of America" )
+          ''');
+
   }
+
   // and the value is the column value. The return value is the id of the
   // a key-value list of columns.
   Future<List<Map<String, dynamic>>> queryAllRows(String table) async {
@@ -247,14 +266,14 @@ class DatabaseHelper {
   }
 
 
-  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, {String? filter, String? clientId}) async {
-    return filter != null && clientId != null
-        ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
-        :  filter != null
-        ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "invoice_status = '${filter}'"  )
+  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, String dateSort, {String? invoiceStatus, String? clientId}) async {
+    return invoiceStatus != null && clientId != null
+        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "invoice_status = '${invoiceStatus}' and client_id = '${clientId}'"  )
+        :  invoiceStatus != null
+        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "invoice_status = '${invoiceStatus}'"  )
         :  clientId != null
-        ?  await _db.query(table,orderBy: 'invoice_date desc' , where: "client_id = '${filter}'"  )
-        : await _db.query(table,orderBy: 'invoice_date desc');
+        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "client_id = '${clientId}'"  )
+        : await _db.query(table,orderBy: 'invoice_date ${dateSort}');
   }
 
   // All of the methods (insert, query, update, delete) can also be done using
@@ -293,6 +312,13 @@ class DatabaseHelper {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE invoice_id = $id');
     return results;
   }
+
+
+  Future<List<Map<String, dynamic>>> searchClients(String query) async {
+    List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM client WHERE company_name LIKE '%$query%' OR email LIKE '%$query%'");
+    return results;
+  }
+
 
   Future<List<Map<String, dynamic>>> findInvoicePayments(String table, int id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE invoice_id = $id');

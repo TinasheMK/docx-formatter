@@ -31,3 +31,11 @@ flutter pub run build_runner build --delete-conflicting-outputs
 ### 👨‍💻 Author
 
 Developed by Tinashe Makarudze
+
+
+### Generate app icon
+```bash
+$ flutter clean
+$ flutter pub get
+$ flutter pub run flutter_launcher_icons:main
+```

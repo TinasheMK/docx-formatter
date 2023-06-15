@@ -1,4 +1,4 @@
-package com.example.tap2
+package com.kanjan.invoicer
 
 import io.flutter.embedding.android.FlutterActivity
 

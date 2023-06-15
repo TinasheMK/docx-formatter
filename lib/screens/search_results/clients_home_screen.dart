@@ -1,11 +1,15 @@
 import 'package:smart_admin_dashboard/responsive.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../providers/registration/Client.dart';
 import '../home/components/side_menu.dart';
-import '../invoice/register_screen.dart';
+import 'search_results_screen.dart';
 
-class TaxHomeScreen extends StatelessWidget {
+class SearchResultsHomeScreen extends StatelessWidget {
+  final List<Client> clients;
+
+  const SearchResultsHomeScreen({Key? key, required this.clients}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +29,7 @@ class TaxHomeScreen extends StatelessWidget {
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: RegisterScreen(),
+              child: SearchResultsScreen(clients: clients),
             ),
           ],
         ),

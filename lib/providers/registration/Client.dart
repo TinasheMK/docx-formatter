@@ -213,6 +213,25 @@ Future<List<Client>> getClients() async {
     );
   });
 }
+Future<List<Client>> searchClients(String query) async {
+  final maps = await dbHelper.searchClients(query);
+
+  return List.generate(maps.length, (i) {
+    return Client(
+      id : maps[i]['id'],
+      companyName : maps[i]['company_name'],
+      street : maps[i]['street'],
+      city : maps[i]['city'],
+      country : maps[i]['country'],
+      telephone : maps[i]['telephone'],
+      email : maps[i]['email'],
+      status : maps[i]['status'],
+      currency : maps[i]['currency'],
+      employees : maps[i]['employees'],
+
+    );
+  });
+}
 
 Future<Client> getClient(id) async {
   var maps = await dbHelper.findById("client", id);

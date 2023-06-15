@@ -64,8 +64,13 @@ class Payment {
     debugPrint('inserted payment row id: $id');
   }
 
-  Future<void> saveAndAttach(int companyId) async {
+  Future<int> saveAndAttach(int companyId) async {
+    debugPrint('\n');
+    debugPrint('\n');
     debugPrint('adding   payment');
+    debugPrint('\n');
+    debugPrint('\n');
+    debugPrint('\n');
 
     Map<String, dynamic> row = {
       'id': this.id,
@@ -86,6 +91,7 @@ class Payment {
 
 
     debugPrint('inserted payment row id: $id');
+    return id;
   }
 
   Future<void> query() async {

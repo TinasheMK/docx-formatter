@@ -18,6 +18,7 @@ import '../../../providers/registration/Company.dart';
 import '../../../providers/registration/Wallet.dart';
 import '../../../responsive.dart';
 
+import '../../dashboard/components/header.dart';
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';

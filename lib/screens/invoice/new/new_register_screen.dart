@@ -2,8 +2,10 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -28,6 +30,7 @@ import '../../../providers/registration/Wallet.dart';
 import '../../../responsive.dart';
 
 import '../../../services/permissions.dart';
+import '../../dashboard/components/header.dart';
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/invoicegenerator.dart';
 import '../../generator/pdf_invoice.dart';
@@ -48,6 +51,8 @@ import '../components/header.dart';
 import 'components/dropdown_search.dart';
 
 String? logoPath;
+String? invoicePath;
+String? invoiceName;
 
 class NewRegisterScreen extends StatefulWidget {
   NewRegisterScreen({required this.title, required this.code, this.invoiceId});
@@ -165,6 +170,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   Invoice invoice = Invoice.fromJson({});
 
   Future<void> _initInvoice() async {
+    invoice.currencyFull =   Currency(
+      id: 'USD',
+      symbol: '\$',
+      country: 'USA',
+    );
+
     currencies.clear();
     var prefs = await SharedPreferences.getInstance();
 
@@ -250,7 +261,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   @override
   Widget build(BuildContext context) {
 
-    paymentAmount = invoice.subTotalAmount?.toString() ?? "0";
+    // paymentAmount = invoice.subTotalAmount?.toString() ?? "0";
     return SafeArea(
       child: SingleChildScrollView(
         //padding: EdgeInsets.all(defaultPadding),
@@ -469,11 +480,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                               Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                               invoice.client?.companyName != null ? Container(
-                                  margin: EdgeInsets.only(left: defaultPadding),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: defaultPadding /100,
-                                    vertical: defaultPadding / 100,
-                                  ),
+                                  // margin: EdgeInsets.only(left: defaultPadding),
+                                  // padding: EdgeInsets.symmetric(
+                                  //   horizontal: defaultPadding /100,
+                                  //   vertical: defaultPadding / 100,
+                                  // ),
                                   decoration: BoxDecoration(
                                     color: secondaryColor,
                                     borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -642,7 +653,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             children:[
                               Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Text( "\$"+ invoice.subTotalAmount.toString() != null
+                              Text( invoice.currencyFull!.symbol!+" "+ invoice.subTotalAmount.toString() != null
                                   ?   invoice.subTotalAmount.toString()
                                   : '0', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
@@ -681,11 +692,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                               Text( "Currency:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                               invoice.currency != null ? Container(
-                                margin: EdgeInsets.only(left: defaultPadding),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: defaultPadding /4,
-                                  vertical: defaultPadding / 5,
-                                ),
+                                // margin: EdgeInsets.only(left: defaultPadding),
+                                // padding: EdgeInsets.symmetric(
+                                //   horizontal: defaultPadding /4,
+                                //   vertical: defaultPadding / 5,
+                                // ),
                                 decoration: BoxDecoration(
                                   color: secondaryColor,
                                   borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -693,7 +704,66 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                 ),
                                 child: TextButton(
                                   child: Text(invoice.currency!, style: TextStyle(color: Colors.white)),
-                                  onPressed: () {
+                                  onPressed: ()  {
+
+                                    if(invoice.id!=null){
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text("Cannot change currency of saved invoice"),
+                                      ));
+                                    }
+                                    else{
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) {
+                                            return AlertDialog(
+                                                content: Container(
+                                                  color: secondaryColor,
+                                                  height: 410,
+                                                  child: Column(
+                                                    children:
+                                                    List.generate(
+                                                        currencies.length,
+                                                            (index) =>
+
+
+                                                            Container(
+                                                              margin: EdgeInsets.only(bottom: defaultPadding),
+                                                              // padding: EdgeInsets.symmetric(
+                                                              //   horizontal: defaultPadding,
+                                                              //   vertical: defaultPadding / 2,
+                                                              // ),
+                                                              decoration: BoxDecoration(
+                                                                color: secondaryColor,
+                                                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                                border: Border.all(color: Colors.white10),
+                                                              ),
+                                                              child: TextButton(
+                                                                child: Text(currencies[index].id??'', style: TextStyle(color: Colors.white)),
+                                                                onPressed: () {
+                                                                  invoice.currency = currencies[index].id;
+                                                                  invoice.currencyFull = currencies[index];
+                                                                  invoice.client?.currency = currencies[index].id;
+                                                                  invoice.client?.save();
+                                                                  setState(() {});
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                                // Delete
+                                                              ),
+
+                                                            )
+                                                    ),
+
+
+                                                  ),
+                                                ));
+                                          });
+                                    }
+
+
+
+
+
+
                                   },
                                   // Delete
                                 ),
@@ -724,11 +794,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
                                                   Container(
-                                                    margin: EdgeInsets.only(left: defaultPadding),
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: defaultPadding,
-                                                      vertical: defaultPadding / 2,
-                                                    ),
+                                                    margin: EdgeInsets.only(bottom: defaultPadding),
+                                                    // padding: EdgeInsets.symmetric(
+                                                    //   horizontal: defaultPadding,
+                                                    //   vertical: defaultPadding / 2,
+                                                    // ),
                                                     decoration: BoxDecoration(
                                                       color: secondaryColor,
                                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -738,10 +808,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                       child: Text(currencies[index].id??'', style: TextStyle(color: Colors.white)),
                                                       onPressed: () {
                                                         invoice.currency = currencies[index].id;
+                                                        invoice.currencyFull = currencies[index];
                                                         invoice.client?.currency = currencies[index].id;
                                                         invoice.client?.save();
-                                                        setState(() {
-                                                        });
+                                                        setState(() {});
                                                         Navigator.of(context).pop();
                                                       },
                                                       // Delete
@@ -942,18 +1012,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Text("Subtotal"),
                 SizedBox(width: 60.0),
                 Container(
-                  margin: EdgeInsets.only(left: defaultPadding),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: defaultPadding,
-                    vertical: defaultPadding / 2,
-                  ),
+                  // margin: EdgeInsets.only(left: defaultPadding),
+                  // padding: EdgeInsets.symmetric(
+                  //   horizontal: defaultPadding,
+                  //   vertical: defaultPadding / 2,
+                  // ),
                   decoration: BoxDecoration(
                     color: secondaryColor,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text("\$" + invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.currencyFull!.symbol!+" " + invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
                     onPressed: () {
                     },
                     // Delete
@@ -972,18 +1042,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Text("Credit"),
                 SizedBox(width: 60.0,),
                 Container(
-                  margin: EdgeInsets.only(left: defaultPadding),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: defaultPadding,
-                    vertical: defaultPadding / 2,
-                  ),
+                  // margin: EdgeInsets.only(left: defaultPadding),
+                  // padding: EdgeInsets.symmetric(
+                  //   horizontal: defaultPadding,
+                  //   vertical: defaultPadding / 2,
+                  // ),
                   decoration: BoxDecoration(
                     color: secondaryColor,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text("\$0", style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.currencyFull!.symbol!+" 0", style: TextStyle(color: Colors.white)),
                     onPressed: () {
                     },
                     // Delete
@@ -1002,18 +1072,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Text("Total Due"),
                 SizedBox(width: 60.0, height: 15,),
                 Container(
-                  margin: EdgeInsets.only(left: defaultPadding),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: defaultPadding,
-                    vertical: defaultPadding / 2,
-                  ),
+                  // margin: EdgeInsets.only(left: defaultPadding),
+                  // padding: EdgeInsets.symmetric(
+                  //   horizontal: defaultPadding,
+                  //   vertical: defaultPadding / 2,
+                  // ),
                   decoration: BoxDecoration(
                     color: secondaryColor,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text("\$"+invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.currencyFull!.symbol!+" "+invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
                     onPressed: () {
                     },
                     // Delete
@@ -1109,11 +1179,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
                 Container(
-                  margin: EdgeInsets.only(left: defaultPadding),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: defaultPadding,
-                    vertical: defaultPadding / 16,
-                  ),
+                  // margin: EdgeInsets.only(left: defaultPadding),
+                  // padding: EdgeInsets.symmetric(
+                  //   horizontal: defaultPadding,
+                  //   vertical: defaultPadding / 16,
+                  // ),
                   decoration: BoxDecoration(
                     color: secondaryColor,
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -1243,7 +1313,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                   onChanged: (String value){
                                     paymentAmount = value;
                                   },
-                                  initialValue: paymentAmount,
+                                  initialValue: invoice.totalAmount.toString(),
 
 
                                 ),
@@ -1385,30 +1455,61 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
             SizedBox(height: 20.0),
             // generatorResp!=""?Text(generatorResp):SizedBox(),
-            AppButton(
-              type: ButtonType.PRIMARY,
-              text: "Print Invoice",
-              onPressed: () async {
 
-                if(invoice.id == null){
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("Please save the invoice first"),
-                  ));
-                  return;
-                }
-                // var response = await invoiceGenerator(invoice);
+            SizedBox(width: 200,
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children:[
+                    ElevatedButton(
+                      // type: ButtonType.PRIMARY,
+                      child: Text("Open Invoice"),
+                      onPressed: () async {
 
-                _generatePDF();
-                var _model = ImageModel();
-                _model.requestFilePermission();
-                // OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
-                var res = await OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice_'+invoice.id.toString()+'.pdf');
-                print(res.message);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Invoice printed. Check documents/invoices folder."),
-                ));
-              },
-            ),
+                        if(invoice.id == null){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Please save the invoice first"),
+                          ));
+                          return;
+                        }
+                        // var response = await invoiceGenerator(invoice);
+
+                        _generatePDF();
+                        var _model = ImageModel();
+                        _model.requestFilePermission();
+                        // OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
+                        invoicePath = "/storage/emulated/0/Documents/Invoices/";
+                        invoiceName = 'Invoice_'+invoice.id.toString()+'.pdf';
+                        var res = await OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice_'+invoice.id.toString()+'.pdf');
+                        print(res.message);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Invoice printed. Check documents/invoices folder."),
+                        ));
+                        setState(() {
+
+                        });
+                      },
+                    ),
+
+                    if(invoicePath!=null&&invoiceName!=null)
+                    ElevatedButton.icon(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        // padding: EdgeInsets.symmetric(
+                        //   horizontal: defaultPadding ,
+                        //   vertical:
+                        //   defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                        // ),
+                      ),
+                      onPressed:  invoicePath==null
+                          ? null
+                          : () => _onShare(context),
+                      icon: Icon(Icons.share),
+                      label: Text("Share"),
+                    ),
+                  ]
+              ),),
+
+
             SizedBox(height: 24.0),
 
             // AppButton(
@@ -1459,7 +1560,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
                 ],
-                // keyboardType: TextInputType.number,
+                keyboardType: TextInputType.number,
                 controller: myController[index][0],
                 onChanged: (String value){
                   value!=null || value !=""
@@ -1513,6 +1614,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
                 ],
+                keyboardType: TextInputType.number,
+
                 controller: myController[index][2],
                 onChanged: (String value){
                   invoice!.invoiceItems![index].unitPrice =  double.parse(value) ;
@@ -1672,7 +1775,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     page.graphics.drawRectangle(
         bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 90),
         brush: PdfSolidBrush(PdfColor(65, 104, 205)));
-    page.graphics.drawString(r'$' + _getTotalAmount(grid).toString(),
+    page.graphics.drawString(r''+invoice.currencyFull!.symbol! + _getTotalAmount(grid).toString(),
         PdfStandardFont(PdfFontFamily.helvetica, 18),
         bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 100),
         brush: PdfBrushes.white,
@@ -1958,4 +2061,31 @@ Future<String?> getDownloadPath2() async {
   return directory?.path;
 }
 
+
+
+void _onShare(BuildContext context) async {
+  // A builder is used to retrieve the context immediately
+  // surrounding the ElevatedButton.
+  //
+  // The context's `findRenderObject` returns the first
+  // RenderObject in its descendent tree when it's not
+  // a RenderObjectWidget. The ElevatedButton's RenderObject
+  // has its position and size after it's built.
+  final box = context.findRenderObject() as RenderBox?;
+
+  if (invoicePath!=null) {
+    final files = <XFile>[];
+    // for (var i = 0; i < imagePaths.length; i++) {
+      files.add(XFile(invoicePath!, name: invoiceName));
+    // }
+    await Share.shareXFiles(files,
+        text: "Share invoice",
+        subject: "Invoice",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+  } else {
+    await Share.share("Share invoice",
+        subject: "Invoice",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+  }
+}
 

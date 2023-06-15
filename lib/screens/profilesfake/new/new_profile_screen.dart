@@ -16,6 +16,7 @@ import '../../../providers/registration/Company.dart';
 import '../../../responsive.dart';
 
 import '../../clients/clients_home_screen.dart';
+import '../../dashboard/components/header.dart';
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
@@ -66,23 +67,29 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   Employee employee = Employee.fromJson({});
 
 
-  TextEditingController txtQuery = new TextEditingController();
-
-
-
-  void loadData() async {
-    setState(() {});
-  }
-
   late int crossAxisCount;
   late double childAspectRatio;
   late List<Memo> memosSet = [];
 
   late Client client ;
 
+  TextEditingController con1 = TextEditingController();
+  TextEditingController con2 = TextEditingController();
+  TextEditingController con3 = TextEditingController();
+  TextEditingController con4 = TextEditingController();
+  TextEditingController con5 = TextEditingController();
+  TextEditingController con6 = TextEditingController();
+
   Future<void> _initclient() async {
     if(clientId!=null) {
       client = await getClient(clientId);
+
+      con1.text = client.companyName?? "";
+      con2.text = client.email ?? "";
+      con3.text = client.street ?? "";
+      con4.text = client.city ?? "";
+      con5.text = client.country ?? "";
+      con6.text = client.telephone ?? "";
     }else{
       client= Client.fromJson({});
     }
@@ -94,11 +101,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
   void initState() {
     super.initState();
     _initclient();
-    loadData();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 750),
-    );
+
 
   }
 
@@ -177,7 +180,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Company Name",
                                                   keyboardType: TextInputType.text,
-
+                                                  kController: con1,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -210,6 +213,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 padding: EdgeInsets.only(left: 5, right:5),
                                                 child: InputWidget(
                                                   topLabel: "Email",
+                                                  kController: con2,
                                                   keyboardType: TextInputType.text,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
@@ -237,6 +241,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Address",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con3,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -274,6 +279,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "City",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con4,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -306,6 +312,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Country",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con5,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -337,6 +344,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Phone Number",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con6,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -376,7 +384,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Company Name",
                                                   keyboardType: TextInputType.text,
-
+                                                  kController: con1,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -410,6 +418,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Email",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con2,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -436,6 +445,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Address",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con3,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -473,6 +483,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "City",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con4,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -505,6 +516,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Country",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con5,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -536,6 +548,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
                                                 child: InputWidget(
                                                   topLabel: "Phone Number",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con6,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.

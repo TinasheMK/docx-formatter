@@ -23,6 +23,7 @@ import '../../../providers/registration/Company.dart';
 import '../../../responsive.dart';
 
 import '../../clients/clients_home_screen.dart';
+import '../../dashboard/components/header.dart';
 import '../../generator/CR6_form_generator.dart';
 import '../../generator/invoicegenerator.dart';
 import '../../generator/register_download_screen.dart';
@@ -61,18 +62,10 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   _NewProfileScreenState(int? this.profileId);
   int? profileId;
 
-  var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-      .chain(CurveTween(curve: Curves.ease));
-  var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
-      .chain(CurveTween(curve: Curves.ease));
-
-  AnimationController? _animationController;
-
   final _formKey = GlobalKey<FormState>();
 
   bool isChecked = false;
 
-  int _directors = 2;
 
   List persons = [];
   List original = [];
@@ -84,12 +77,6 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   TextEditingController txtQuery = new TextEditingController();
 
 
-
-
-  void loadData() async {
-    setState(() {});
-  }
-
   late int crossAxisCount;
   late double childAspectRatio;
   late List<Memo> memosSet = [];
@@ -97,9 +84,22 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   Company client = Company.fromJson({});
   String? logoPath;
 
+  TextEditingController con1 = TextEditingController();
+  TextEditingController con2 = TextEditingController();
+  TextEditingController con3 = TextEditingController();
+  TextEditingController con4 = TextEditingController();
+  TextEditingController con5 = TextEditingController();
+  TextEditingController con6 = TextEditingController();
+
   Future<void> _initclient() async {
     if(profileId!=null) {
       client = await getCompany(profileId);
+      con1.text = client.companyName?? "";
+      con2.text = client.email ?? "";
+      con3.text = client.street ?? "";
+      con4.text = client.city ?? "";
+      con5.text = client.country ?? "";
+      con6.text = client.telephone ?? "";
     }else{
       client= Company.fromJson({});
     }
@@ -114,19 +114,10 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   void initState() {
     super.initState();
     _initclient();
-    loadData();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 750),
-    );
 
   }
 
-  @override
-  void dispose() {
-    _animationController?.dispose();
-    super.dispose();
-  }
+
 
 
   @override
@@ -252,7 +243,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                 child: InputWidget(
                                                   topLabel: "Company Profile Name",
                                                   keyboardType: TextInputType.text,
-
+                                                  kController: con1,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -267,7 +258,6 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                     }
                                                     return null;
                                                   },
-                                                  kInitialValue: client.companyName ?? "",
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -286,14 +276,14 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                 child: InputWidget(
                                                   topLabel: "Email",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con2,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
                                                     client!.email = value;
-                                                  },
-                                                  kInitialValue: client!.email ,
+                                                  }
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -312,6 +302,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                 child: InputWidget(
                                                   topLabel: "Address",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con3,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -324,7 +315,6 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                     //
                                                     client!.street = value;
                                                   },
-                                                  kInitialValue: client!.street ,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -362,7 +352,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.city,
+                                                  kController: con4,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -393,7 +383,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.country,
+                                                  kController: con5,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -424,8 +414,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.telephone ,
-
+                                                  kController: con6,
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
                                                 ),
@@ -466,7 +455,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                     }
                                                     return null;
                                                   },
-                                                  kInitialValue: client.companyName ?? '',
+                                                  kController: con1,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -492,7 +481,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                   onChanged: (String? value) {
                                                     client!.email = value;
                                                   },
-                                                  kInitialValue: client!.email ,
+                                                  kController: con2,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -523,7 +512,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                     //
                                                     client!.street = value;
                                                   },
-                                                  kInitialValue: client!.email ,
+                                                  kController: con3,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -561,8 +550,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.city,
-
+                                                  kController: con4,
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
                                                 ),
@@ -592,7 +580,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.country,
+                                                  kController: con5,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -611,6 +599,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                 child: InputWidget(
                                                   topLabel: "Phone Number",
                                                   keyboardType: TextInputType.text,
+                                                  kController: con6,
                                                   onSaved: (String? value) {
                                                     // This optional block of code can be used to run
                                                     // code when the user saves the form.
@@ -623,7 +612,6 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                                         ? 'Do not use the @ char.'
                                                         : null;
                                                   },
-                                                  kInitialValue: client!.telephone ,
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,

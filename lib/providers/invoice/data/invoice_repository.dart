@@ -30,7 +30,7 @@ class InvoiceRepository implements IInvoiceRepository {
   @override
   Future postSyncInvoices() async {
     InvoiceSyncResult syncres = new InvoiceSyncResult();
-    var invoices = await getInvoices();
+    var invoices = await getInvoices('desc');
     // var invoices = await getPostSyncInvoices();
     List allInvoices = invoices.map((item) => item.toJson()).toList();
     print(allInvoices);

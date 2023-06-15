@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
 
 import '../../../common/UserPreference.dart';
+import '../../../providers/registration/Client.dart';
+import '../../search_results/clients_home_screen.dart';
 
 class Header extends StatelessWidget {
   Header({
@@ -91,11 +93,13 @@ class ProfileCard extends StatelessWidget {
     );
   }
 }
-
+String query = '';
 class SearchField extends StatelessWidget {
-  const SearchField({
+  SearchField({
     Key? key,
   }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +113,19 @@ class SearchField extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         suffixIcon: InkWell(
-          onTap: () {},
+          onTap: () async {
+            print(query);
+            List<Client> clients = [];
+            if(query!='')clients = await searchClients(query);
+            clients.forEach((e) {
+              print(e.toJson());
+            });
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchResultsHomeScreen(clients: clients)),
+            );
+          },
           child: Container(
             padding: EdgeInsets.all(defaultPadding * 0.75),
             margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
@@ -123,6 +139,10 @@ class SearchField extends StatelessWidget {
           ),
         ),
       ),
+      onChanged: (value){
+        query = value;
+        print(query);
+      },
     );
   }
 }

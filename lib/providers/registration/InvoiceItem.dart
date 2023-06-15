@@ -63,7 +63,7 @@ class InvoiceItem {
     debugPrint('inserted invoice_item row id: $id');
   }
 
-  Future<void> saveAndAttach(int invoiceId) async {
+  Future<int> saveAndAttach(int invoiceId) async {
     debugPrint('adding   invoice_item');
 
     Map<String, dynamic> row = {
@@ -76,10 +76,13 @@ class InvoiceItem {
       'description': this.description,
     };
 
+    print(row);
     var id;
 
     if(this.id==null) {
-      final id = await dbHelper.insert("invoice_item", row);
+      id = await dbHelper.insert("invoice_item", row);
+      this.id = id;
+      print('the id is $id');
     }else{
       dbHelper.update('invoice_item',row);
       id = this.id;
@@ -88,6 +91,7 @@ class InvoiceItem {
 
     this.id = id;
     debugPrint('inserted invoice_item row id: $id');
+    return id;
   }
 
   Future<void> query() async {

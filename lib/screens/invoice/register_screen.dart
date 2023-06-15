@@ -1,6 +1,7 @@
 import '../../core/constants/color_constants.dart';
 import '../../responsive.dart';
 
+import '../dashboard/components/header.dart';
 import './components/mini_information_card.dart';
 
 import './components/recent_forums.dart';

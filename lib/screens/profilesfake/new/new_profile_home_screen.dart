@@ -10,7 +10,7 @@ import './components/slider_widget.dart';
 
 import 'package:flutter/material.dart';
 
-import 'new_client_screen.dart';
+import 'new_profile_screen.dart';
 
 class NewClientHome extends StatefulWidget {
   NewClientHome({required this.title, required this.code, this.clientId});
