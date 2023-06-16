@@ -10,6 +10,7 @@ class Company {
   String? street;
   String? city;
   String? logo;
+  int? color;
   String? country;
   String? telephone;
   String? email;
@@ -24,6 +25,7 @@ class Company {
     this.street,
     this.city,
     this.logo,
+    this.color,
     this.set,
     this.country,
     this.telephone,
@@ -38,6 +40,7 @@ class Company {
     street = json['street'];
     city = json['city'];
     logo = json['logo'];
+    color = json['color'];
     country = json['country'];
     telephone = json['telephone'];
     email = json['email'];
@@ -52,6 +55,7 @@ class Company {
     data['street'] = this.street;
     data['city'] = this.city;
     data['logo'] = this.logo;
+    data['color'] = this.color;
     data['country'] = this.country;
     data['telephone'] = this.telephone;
     data['email'] = this.email;
@@ -68,6 +72,7 @@ class Company {
       "id": this.id,
       "city": this.city,
       "logo": this.logo,
+      "color": this.color,
       "country": this.country,
       "telephone": this.telephone,
       "email": this.email,
@@ -108,6 +113,7 @@ class Company {
     Map<String, dynamic> row = {
       'city': this.city,
       'logo': this.logo,
+      'color': this.color,
       'country': this.country,
       'street': this.street,
       'email': this.email,
@@ -134,6 +140,7 @@ class Company {
       "street": this.street,
       "city": this.city,
       "logo": this.logo,
+      "color": this.color,
       "country": this.country,
       "telephone": this.telephone,
       "email": this.email,
@@ -164,6 +171,7 @@ Future<List<Company>> getCompanys() async {
       street : maps?[i]['street'],
       city : maps?[i]['city'],
       logo : maps?[i]['logo'],
+      color : maps?[i]['color'],
       country : maps?[i]['country'],
       telephone : maps?[i]['telephone'],
       email : maps?[i]['email'],
@@ -183,6 +191,7 @@ Future<Company> getCompany(id) async {
     street : maps?['street'],
     city : maps?['city'],
     logo : maps?['logo'],
+    color : maps?['color'],
     country : maps?['country'],
     telephone : maps?['telephone'],
     email : maps?['email'],

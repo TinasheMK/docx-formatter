@@ -69,6 +69,7 @@ class DatabaseHelper {
             street TEXT ,
             city TEXT ,
             logo TEXT ,
+            color INTEGER ,
             country TEXT, 
             telephone TEXT, 
             

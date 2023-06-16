@@ -37,10 +37,10 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               Header(),
-              SizedBox(height: 60,),
+              SizedBox(height: 30,),
               MiniInformation(),
-              SizedBox(height: 60,),
-              Image.asset("assets/logo/logo_icon.png", scale:1),
+              // SizedBox(height: 60,),
+              // Image.asset("assets/logo/logo_icon.png", scale:4),
               SizedBox(height: defaultPadding),
               SizedBox(height: defaultPadding),
               Row(
@@ -240,11 +240,11 @@ class _CurrencySelectorState extends State<CurrencySelector> {
 
 
                                           Container(
-                                            margin: EdgeInsets.only(left: defaultPadding),
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: defaultPadding,
-                                              vertical: defaultPadding / 2,
-                                            ),
+                                            margin: EdgeInsets.only(bottom: defaultPadding),
+                                            // padding: EdgeInsets.symmetric(
+                                            //   horizontal: defaultPadding,
+                                            //   vertical: defaultPadding / 2,
+                                            // ),
                                             decoration: BoxDecoration(
                                               color: secondaryColor,
                                               borderRadius: const BorderRadius.all(Radius.circular(10)),

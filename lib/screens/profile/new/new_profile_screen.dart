@@ -4,6 +4,7 @@ import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/scheduler.dart';
 import 'dart:math';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,9 +78,10 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   TextEditingController txtQuery = new TextEditingController();
 
 
-  late int crossAxisCount;
-  late double childAspectRatio;
-  late List<Memo> memosSet = [];
+  // late int crossAxisCount;
+  // late double childAspectRatio;
+  // late List<Memo> memosSet = [];
+  Color currentColor = Colors.green;
 
   Company client = Company.fromJson({});
   String? logoPath;
@@ -94,6 +96,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
   Future<void> _initclient() async {
     if(profileId!=null) {
       client = await getCompany(profileId);
+      if(client.color != null)currentColor = Color(client.color!);
       con1.text = client.companyName?? "";
       con2.text = client.email ?? "";
       con3.text = client.street ?? "";
@@ -128,20 +131,20 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
     print(profileId);
 
     // print(widget.code);
-    final Size _size = MediaQuery.of(context).size;
-    crossAxisCount= _size.width < 650 ? 2 : 4;
-    childAspectRatio= _size.width < 650 ? 3 : 3;
-
-    memosSet = memoInits;
-
-    for( int i = 0 ; i < memos.length; i++ ) {
-      if(memos[i].set!="set"){
-        memosSet.removeWhere((element) => element.code == memos[i].code);
-        print(i);
-      }else if(memos.length==0){
-        memosSet.add(memos[1]);
-      }
-    }
+    // final Size _size = MediaQuery.of(context).size;
+    // crossAxisCount= _size.width < 650 ? 2 : 4;
+    // childAspectRatio= _size.width < 650 ? 3 : 3;
+    //
+    // memosSet = memoInits;
+    //
+    // for( int i = 0 ; i < memos.length; i++ ) {
+    //   if(memos[i].set!="set"){
+    //     memosSet.removeWhere((element) => element.code == memos[i].code);
+    //     print(i);
+    //   }else if(memos.length==0){
+    //     memosSet.add(memos[1]);
+    //   }
+    // }
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -179,7 +182,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                 ),
                                 SizedBox(height: 16.0),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
 
                                     ElevatedButton(
@@ -212,9 +215,8 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                         if(client.companyName==null) client.companyName = "N/A";
                                         client.save();
 
-                                        // image!.saveTo('/storage/emulated/0/Download/Invoices/logo${getRandomString(5)}.png');
-                                        // image!.saveTo('$p/logo${getRandomString(5)}.png');
-                                        // print('${p}/logo${getRandomString(5)}.png');
+                                        if(client.logo!=null)logoPath = "${directory}${client.logo}";
+
                                         setState(() {
                                         });
 
@@ -223,6 +225,51 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
                                         "Pick Company Logo",
                                       ),
                                     ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              titlePadding: const EdgeInsets.all(0),
+                                              contentPadding: const EdgeInsets.all(0),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: MediaQuery.of(context).orientation == Orientation.portrait
+                                                    ? const BorderRadius.vertical(
+                                                  top: Radius.circular(500),
+                                                  bottom: Radius.circular(100),
+                                                )
+                                                    : const BorderRadius.horizontal(right: Radius.circular(500)),
+                                              ),
+                                              content: SingleChildScrollView(
+                                                child: HueRingPicker(
+                                                  pickerColor: currentColor,
+                                                  onColorChanged: (color){
+                                                    currentColor = color;
+                                                    // print(color.value);
+                                                    client.color = color.value;
+                                                    setState(() {
+
+                                                    });
+                                                  },
+                                                  enableAlpha: true,
+                                                  displayThumbColor: true,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Text(
+                                        'Brand Color',
+                                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: currentColor,
+                                        shadowColor: currentColor.withOpacity(1),
+                                        elevation: 10,
+                                      ),
+                                    )
                                   ],
                                 ),
                                 SizedBox(height: 16.0),
