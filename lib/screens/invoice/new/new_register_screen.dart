@@ -11,6 +11,7 @@ import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../../../common/UserPreference.dart';
 import '../../../core/utils/colorful_tag.dart';
+import '../../../pdf/app.dart';
 import '../../../providers/Memo.dart';
 
 import 'package:intl/intl.dart';
@@ -1462,31 +1463,37 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   children:[
                     ElevatedButton(
                       // type: ButtonType.PRIMARY,
-                      child: Text("Open Invoice"),
+                      child: Text("Print Invoice"),
                       onPressed: () async {
 
-                        if(invoice.id == null){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Please save the invoice first"),
-                          ));
-                          return;
-                        }
-                        // var response = await invoiceGenerator(invoice);
 
-                        _generatePDF();
-                        var _model = ImageModel();
-                        _model.requestFilePermission();
-                        // OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
-                        invoicePath = "/storage/emulated/0/Documents/Invoices/";
-                        invoiceName = 'Invoice_'+invoice.id.toString()+'.pdf';
-                        var res = await OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice_'+invoice.id.toString()+'.pdf');
-                        print(res.message);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Invoice printed. Check documents/invoices folder."),
-                        ));
-                        setState(() {
-
-                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PdfInvoice()),
+                        );
+                        //
+                        // if(invoice.id == null){
+                        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        //     content: Text("Please save the invoice first"),
+                        //   ));
+                        //   return;
+                        // }
+                        // // var response = await invoiceGenerator(invoice);
+                        //
+                        // _generatePDF();
+                        // var _model = ImageModel();
+                        // _model.requestFilePermission();
+                        // // OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
+                        // invoicePath = "/storage/emulated/0/Documents/Invoices/";
+                        // invoiceName = 'Invoice_'+invoice.id.toString()+'.pdf';
+                        // var res = await OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice_'+invoice.id.toString()+'.pdf');
+                        // print(res.message);
+                        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        //   content: Text("Invoice printed. Check documents/invoices folder."),
+                        // ));
+                        // setState(() {
+                        //
+                        // });
                       },
                     ),
 

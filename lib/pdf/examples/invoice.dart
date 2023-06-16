@@ -20,9 +20,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-// import '../data.dart';
+import '../data.dart';
 
 Future<Uint8List> generateInvoice(
     PdfPageFormat pageFormat, CustomData data) async {
@@ -45,13 +46,13 @@ Future<Uint8List> generateInvoice(
     Product('98387', lorem.sentence(5), 7.99, 2),
   ];
 
-  final invoice = Invoices(
+  final invoice = Invoice(
     invoiceNumber: '982347',
     products: products,
     customerName: 'Abraham Swearegin',
     customerAddress: '54 rue de Rivoli\n75001 Paris, France',
     paymentInfo:
-    '4509 Wiseman Street\nKnoxville, Tennessee(TN), 37929\n865-372-0425',
+        '4509 Wiseman Street\nKnoxville, Tennessee(TN), 37929\n865-372-0425',
     tax: .15,
     baseColor: PdfColors.teal,
     accentColor: PdfColors.blueGrey900,
@@ -60,8 +61,8 @@ Future<Uint8List> generateInvoice(
   return await invoice.buildPdf(pageFormat);
 }
 
-class Invoices {
-  Invoices({
+class Invoice {
+  Invoice({
     required this.products,
     required this.customerName,
     required this.customerAddress,
@@ -101,17 +102,25 @@ class Invoices {
     // Create a PDF document.
     final doc = pw.Document();
 
-    _logo = await rootBundle.loadString('assets/logo/logo_name.svg');
-    _bgShape = await rootBundle.loadString('assets/logo/logo_name.svg');
+    _logo = await rootBundle.loadString('assets/logo/logo.svg');
+    _bgShape = await rootBundle.loadString('assets/logo/invoice.svg');
+
+    var robotoRegularFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Regular.ttf");
+    var robotoBoldFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Bold.ttf");
+    var robotoItalicFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Italic.ttf");
+    var robotoRegular = Font.ttf(robotoRegularFont);
+    var robotoBold = Font.ttf(robotoRegularFont);
+    var robotoItalic = Font.ttf(robotoRegularFont);
+
 
     // Add page to the PDF
     doc.addPage(
       pw.MultiPage(
         pageTheme: _buildTheme(
           pageFormat,
-          await PdfGoogleFonts.robotoRegular(),
-          await PdfGoogleFonts.robotoBold(),
-          await PdfGoogleFonts.robotoItalic(),
+          await robotoRegular,
+          await robotoBold,
+          await robotoItalic,
         ),
         header: _buildHeader,
         footer: _buildFooter,
@@ -155,7 +164,7 @@ class Invoices {
                   pw.Container(
                     decoration: pw.BoxDecoration(
                       borderRadius:
-                      const pw.BorderRadius.all(pw.Radius.circular(2)),
+                          const pw.BorderRadius.all(pw.Radius.circular(2)),
                       color: accentColor,
                     ),
                     padding: const pw.EdgeInsets.only(
@@ -190,7 +199,7 @@ class Invoices {
                     padding: const pw.EdgeInsets.only(bottom: 8, left: 30),
                     height: 72,
                     child:
-                    _logo != null ? pw.SvgImage(svg: _logo!) : pw.PdfLogo(),
+                        _logo != null ? pw.SvgImage(svg: _logo!) : pw.PdfLogo(),
                   ),
                   // pw.Container(
                   //   color: baseColor,
@@ -293,20 +302,20 @@ class Invoices {
                             fontSize: 12,
                           ),
                           children: [
-                            const pw.TextSpan(
-                              text: '\n',
-                              style: pw.TextStyle(
-                                fontSize: 5,
-                              ),
-                            ),
-                            pw.TextSpan(
-                              text: customerAddress,
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.normal,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ])),
+                        const pw.TextSpan(
+                          text: '\n',
+                          style: pw.TextStyle(
+                            fontSize: 5,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: customerAddress,
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.normal,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ])),
                 ),
               ),
             ],
@@ -486,13 +495,13 @@ class Invoices {
       ),
       headers: List<String>.generate(
         tableHeaders.length,
-            (col) => tableHeaders[col],
+        (col) => tableHeaders[col],
       ),
       data: List<List<String>>.generate(
         products.length,
-            (row) => List<String>.generate(
+        (row) => List<String>.generate(
           tableHeaders.length,
-              (col) => products[row].getIndex(col),
+          (col) => products[row].getIndex(col),
         ),
       ),
     );
@@ -510,11 +519,11 @@ String _formatDate(DateTime date) {
 
 class Product {
   const Product(
-      this.sku,
-      this.productName,
-      this.price,
-      this.quantity,
-      );
+    this.sku,
+    this.productName,
+    this.price,
+    this.quantity,
+  );
 
   final String sku;
   final String productName;
@@ -537,11 +546,4 @@ class Product {
     }
     return '';
   }
-}
-
-
-class CustomData {
-  const CustomData({this.name = '[your name]'});
-
-  final String name;
 }
