@@ -1,512 +1,273 @@
-/*
- * Copyright (C) 2017, David PHAM-VAN <dev.nfet.net@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
-import 'dart:typed_data';
+import 'dart:io';
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart' as pdf;
+import 'package:smart_admin_dashboard/providers/registration/Company.dart';
+import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart' ;
 import 'package:intl/intl.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/widgets.dart';
-import 'package:printing/printing.dart';
+import '../../../services/permissions.dart';
+import 'package:flutter/material.dart';
 
+import '../../providers/registration/Client.dart';
+import '../../providers/registration/Invoice.dart';
+import '../../screens/generator/save_file_mobile.dart';
 import '../data.dart';
 
-Future<Uint8List> generateInvoice2(
-    PdfPageFormat pageFormat, CustomData data) async {
-  final lorem = pw.LoremText();
 
-  final products = <Product>[
-    Product('19874', lorem.sentence(4), 3.99, 2),
-    Product('98452', lorem.sentence(6), 15, 2),
-    Product('28375', lorem.sentence(4), 6.95, 3),
-    Product('95673', lorem.sentence(3), 49.99, 4),
-    Product('23763', lorem.sentence(2), 560.03, 1),
-    Product('55209', lorem.sentence(5), 26, 1),
-    Product('09853', lorem.sentence(5), 26, 1),
-    Product('23463', lorem.sentence(5), 34, 1),
-    Product('56783', lorem.sentence(5), 7, 4),
-    Product('78256', lorem.sentence(5), 23, 1),
-    Product('23745', lorem.sentence(5), 94, 1),
-    Product('07834', lorem.sentence(5), 12, 1),
-    Product('23547', lorem.sentence(5), 34, 1),
-    Product('98387', lorem.sentence(5), 7.99, 2),
-  ];
 
-  final invoice = Invoice(
-    invoiceNumber: '982347',
-    products: products,
-    customerName: 'Abraham Swearegin',
-    customerAddress: '54 rue de Rivoli\n75001 Paris, France',
-    paymentInfo:
-        '4509 Wiseman Street\nKnoxville, Tennessee(TN), 37929\n865-372-0425',
-    tax: .15,
-    baseColor: PdfColors.purple,
-    accentColor: PdfColors.pink,
-  );
 
-  return await invoice.buildPdf(pageFormat);
+
+
+var logoPath;
+var invoice = Invoice.fromJson({});
+Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, CustomData data) async {
+  invoice.currencyFull = Currency();
+  invoice.invoiceNumber = 'fetr';
+  invoice.currencyFull!.symbol = '\$';
+  invoice.client = Client();
+  invoice.client!.companyName = 'fgh';
+  invoice.companyFull = Company();
+  invoice.companyFull!.companyName = 'kl;';
+
+  var _model = ImageModel();
+
+  final directory = await getDownloadPath2();
+  if(invoice.companyFull?.logo!=null) logoPath = "${directory}${invoice.companyFull!.logo!}";
+
+
+  _model.requestFilePermission();
+  //Create a PDF document.
+  final PdfDocument document = PdfDocument();
+  //Add page to the PDF
+  final PdfPage page = document.pages.add();
+  //Get page client size
+  final Size pageSize = page.getClientSize();
+  //Draw rectangle
+  page.graphics.drawRectangle(
+      bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),
+      pen: PdfPen(PdfColor(142, 170, 219)));
+  //Generate PDF grid.
+  final PdfGrid grid = _getGrid();
+  //Draw the header section by creating text element
+  final PdfLayoutResult result = await _drawHeader(page, pageSize, grid);
+  //Draw grid
+  _drawGrid(page, grid, result);
+  //Add invoice footer
+  _drawFooter(page, pageSize);
+  //Save and dispose the document.
+  final List<int> bytes = await document.save();
+  //Launch file.
+  // await FileSaveHelper.saveAndLaunchFile(bytes, 'Invoice_'+invoice.id.toString()+'.pdf');
+  
+  Uint8List byte =  Uint8List.fromList(bytes);
+  document.dispose();
+
+  return byte;
 }
 
-class Invoice {
-  Invoice({
-    required this.products,
-    required this.customerName,
-    required this.customerAddress,
-    required this.invoiceNumber,
-    required this.tax,
-    required this.paymentInfo,
-    required this.baseColor,
-    required this.accentColor,
+//Draws the invoice header
+Future<PdfLayoutResult> _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) async {
+  //Draw rectangle
+  page.graphics.drawRectangle(
+      brush: PdfSolidBrush(PdfColor(91, 126, 215)),
+      bounds: Rect.fromLTWH(0, 0, pageSize.width - 115, 90));
+  //Draw string
+  page.graphics.drawString(
+      'INVOICE', PdfStandardFont(PdfFontFamily.helvetica, 30),
+      brush: PdfBrushes.white,
+      bounds: Rect.fromLTWH(25, 0, pageSize.width - 115, 90),
+      format: PdfStringFormat(lineAlignment: PdfVerticalAlignment.middle));
+  page.graphics.drawRectangle(
+      bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 90),
+      brush: PdfSolidBrush(PdfColor(65, 104, 205)));
+  page.graphics.drawString(r''+invoice.currencyFull!.symbol! + _getTotalAmount(grid).toString(),
+      PdfStandardFont(PdfFontFamily.helvetica, 18),
+      bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 100),
+      brush: PdfBrushes.white,
+      format: PdfStringFormat(
+          alignment: PdfTextAlignment.center,
+          lineAlignment: PdfVerticalAlignment.middle));
+  final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 9);
+
+  //Draw string
+  page.graphics.drawString('Amount', contentFont,
+      brush: PdfBrushes.white,
+      bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 33),
+      format: PdfStringFormat(
+          alignment: PdfTextAlignment.center,
+          lineAlignment: PdfVerticalAlignment.bottom));
+
+  print(logoPath);
+  double height  =0;
+  if(logoPath!=null) {
+    var image = File(logoPath!).readAsBytesSync();
+    var decodedImage = await decodeImageFromList(image);
+    print(decodedImage.width);
+    print(decodedImage.height);
+
+    var x = decodedImage.width/(pageSize.width - 400);
+    height = decodedImage.height / x;
+
+    page.graphics.drawImage(
+        PdfBitmap(image),
+        Rect.fromLTWH(
+            395, height+33, pageSize.width - 400, height));
+  }
+
+  //Create data foramt and convert it to text.
+  final DateFormat format = DateFormat.yMMMMd('en_US');
+  final String invoiceNumber = 'Invoice Number: '+invoice.invoiceNumber!+'\r\n\r\nDate: ' +
+      invoice.invoiceDate.toString().split(" ")[0];
+  // format.format(DateTime.now());
+  final Size contentSize = contentFont.measureString(invoiceNumber);
+  String addr = invoice.client!.street ?? '';
+  String city = invoice.client!.city ?? '';
+  String country = invoice.client!.country ?? '';
+  String address =
+      'Bill To: \r\n\r\n'+invoice.client!.companyName!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
+  PdfTextElement(text: invoiceNumber, font: contentFont).draw(
+      page: page,
+      bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 120+height,
+          contentSize.width + 30, pageSize.height - 120));
+
+
+
+  return PdfTextElement(text: address, font: contentFont).draw(
+      page: page,
+      bounds: Rect.fromLTWH(30, 120,
+          pageSize.width - (contentSize.width + 30), pageSize.height - 120))!;
+}
+
+//Draws the grid
+void _drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result) {
+  Rect? totalPriceCellBounds;
+  Rect? quantityCellBounds;
+  //Invoke the beginCellLayout event.
+  grid.beginCellLayout = (Object sender, PdfGridBeginCellLayoutArgs args) {
+    final PdfGrid grid = sender as PdfGrid;
+    if (args.cellIndex == grid.columns.count - 1) {
+      totalPriceCellBounds = args.bounds;
+    } else if (args.cellIndex == grid.columns.count - 2) {
+      quantityCellBounds = args.bounds;
+    }
+  };
+  //Draw the PDF grid and get the result.
+  result = grid.draw(
+      page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 40, 0, 0))!;
+  //Draw grand total.
+  page.graphics.drawString('Grand Total',
+      PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
+      bounds: Rect.fromLTWH(
+          quantityCellBounds!.left,
+          result.bounds.bottom + 10,
+          quantityCellBounds!.width,
+          quantityCellBounds!.height));
+  page.graphics.drawString(_getTotalAmount(grid).toString(),
+      PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
+      bounds: Rect.fromLTWH(
+          totalPriceCellBounds!.left,
+          result.bounds.bottom + 10,
+          totalPriceCellBounds!.width,
+          totalPriceCellBounds!.height));
+}
+
+//Draw the invoice footer data.
+void _drawFooter(PdfPage page, Size pageSize) {
+  final PdfPen linePen =
+  PdfPen(PdfColor(142, 170, 219), dashStyle: PdfDashStyle.custom);
+  linePen.dashPattern = <double>[3, 3];
+  //Draw line
+  page.graphics.drawLine(linePen, Offset(0, pageSize.height - 100),
+      Offset(pageSize.width, pageSize.height - 100));
+
+  String addr = invoice.companyFull!.street??"";
+  String city = invoice.companyFull!.city??"";
+  String country = invoice.companyFull!.country??"";
+  String email = invoice.companyFull!.email??"";
+  String footerContent =
+      invoice.companyFull!.companyName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
+  //Added 30 as a margin for the layout
+  page.graphics.drawString(
+      footerContent, PdfStandardFont(PdfFontFamily.helvetica, 9),
+      format: PdfStringFormat(alignment: PdfTextAlignment.right),
+      bounds: Rect.fromLTWH(pageSize.width - 30, pageSize.height - 70, 0, 0));
+}
+
+//Create PDF grid and return
+PdfGrid _getGrid() {
+  //Create a PDF grid
+  final PdfGrid grid = PdfGrid();
+  //Secify the columns count to the grid.
+  grid.columns.add(count: 5);
+  //Create the header row of the grid.
+  final PdfGridRow headerRow = grid.headers.add(1)[0];
+  //Set style
+  headerRow.style.backgroundBrush = PdfSolidBrush(PdfColor(68, 114, 196));
+  headerRow.style.textBrush = PdfBrushes.white;
+  headerRow.cells[0].value = 'Units';
+  headerRow.cells[0].stringFormat.alignment = PdfTextAlignment.center;
+  headerRow.cells[1].value = 'Code';
+  headerRow.cells[2].value = 'Product Name';
+  headerRow.cells[3].value = 'Price';
+  headerRow.cells[4].value = 'Total';
+
+  invoice.invoiceItems?.forEach((p) {
+    _addProducts(p.units?.toString()??'','789RT' , p.description??'', p.unitPrice??0.0, p.total??0.0, grid);
   });
 
-  final List<Product> products;
-  final String customerName;
-  final String customerAddress;
-  final String invoiceNumber;
-  final double tax;
-  final String paymentInfo;
-  final PdfColor baseColor;
-  final PdfColor accentColor;
 
-  static const _darkColor = PdfColors.blueGrey800;
-  static const _lightColor = PdfColors.white;
-
-  PdfColor get _baseTextColor => baseColor.isLight ? _lightColor : _darkColor;
-
-  PdfColor get _accentTextColor => baseColor.isLight ? _lightColor : _darkColor;
-
-  double get _total =>
-      products.map<double>((p) => p.total).reduce((a, b) => a + b);
-
-  double get _grandTotal => _total * (1 + tax);
-
-  String? _logo;
-
-  String? _bgShape;
-
-  Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
-    // Create a PDF document.
-    final doc = pw.Document();
-
-    _logo = await rootBundle.loadString('assets/logo/logo.svg');
-    _bgShape = await rootBundle.loadString('assets/logo/invoice.svg');
-
-    var robotoRegularFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Regular.ttf");
-    var robotoBoldFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Bold.ttf");
-    var robotoItalicFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Italic.ttf");
-    var robotoRegular = Font.ttf(robotoRegularFont);
-    var robotoBold = Font.ttf(robotoRegularFont);
-    var robotoItalic = Font.ttf(robotoRegularFont);
-
-
-    // Add page to the PDF
-    doc.addPage(
-      pw.MultiPage(
-        pageTheme: _buildTheme(
-          pageFormat,
-          await robotoRegular,
-          await robotoBold,
-          await robotoItalic,
-        ),
-        header: _buildHeader,
-        footer: _buildFooter,
-        build: (context) => [
-          _contentHeader(context),
-          _contentTable(context),
-          pw.SizedBox(height: 20),
-          _contentFooter(context),
-          pw.SizedBox(height: 20),
-          _termsAndConditions(context),
-        ],
-      ),
-    );
-
-    // Return the PDF file content
-    return doc.save();
+  // _addProducts(
+  //     'LJ-0192', 'Long-Sleeve Logo Jersey,M', 49.99, 3, 149.97, grid);
+  // _addProducts('So-B909-M', 'Mountain Bike Socks,M', 9.5, 2, 19, grid);
+  // _addProducts(
+  //     'LJ-0192', 'Long-Sleeve Logo Jersey,M', 49.99, 4, 199.96, grid);
+  // _addProducts('FK-5136', 'ML Fork', 175.49, 6, 1052.94, grid);
+  // _addProducts('HL-U509', 'Sports-100 Helmet,Black', 34.99, 1, 34.99, grid);
+  grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
+  grid.columns[2].width = 200;
+  for (int i = 0; i < headerRow.cells.count; i++) {
+    headerRow.cells[i].style.cellPadding =
+        PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
   }
-
-  pw.Widget _buildHeader(pw.Context context) {
-    return pw.Column(
-      children: [
-        pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Expanded(
-              child: pw.Column(
-                children: [
-                  pw.Container(
-                    height: 50,
-                    padding: const pw.EdgeInsets.only(left: 20),
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      'INVOICE',
-                      style: pw.TextStyle(
-                        color: baseColor,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 40,
-                      ),
-                    ),
-                  ),
-                  pw.Container(
-                    decoration: pw.BoxDecoration(
-                      borderRadius:
-                          const pw.BorderRadius.all(pw.Radius.circular(2)),
-                      color: accentColor,
-                    ),
-                    padding: const pw.EdgeInsets.only(
-                        left: 40, top: 10, bottom: 10, right: 20),
-                    alignment: pw.Alignment.centerLeft,
-                    height: 50,
-                    child: pw.DefaultTextStyle(
-                      style: pw.TextStyle(
-                        color: _accentTextColor,
-                        fontSize: 12,
-                      ),
-                      child: pw.GridView(
-                        crossAxisCount: 2,
-                        children: [
-                          pw.Text('Invoice #'),
-                          pw.Text(invoiceNumber),
-                          pw.Text('Date:'),
-                          pw.Text(_formatDate(DateTime.now())),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            pw.Expanded(
-              child: pw.Column(
-                mainAxisSize: pw.MainAxisSize.min,
-                children: [
-                  pw.Container(
-                    alignment: pw.Alignment.topRight,
-                    padding: const pw.EdgeInsets.only(bottom: 8, left: 30),
-                    height: 72,
-                    child:
-                        _logo != null ? pw.SvgImage(svg: _logo!) : pw.PdfLogo(),
-                  ),
-                  // pw.Container(
-                  //   color: baseColor,
-                  //   padding: pw.EdgeInsets.only(top: 3),
-                  // ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        if (context.pageNumber > 1) pw.SizedBox(height: 20)
-      ],
-    );
+  for (int i = 0; i < grid.rows.count; i++) {
+    final PdfGridRow row = grid.rows[i];
+    for (int j = 0; j < row.cells.count; j++) {
+      final PdfGridCell cell = row.cells[j];
+      if (j == 0) {
+        cell.stringFormat.alignment = PdfTextAlignment.center;
+      }
+      cell.style.cellPadding =
+          PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+    }
   }
-
-  pw.Widget _buildFooter(pw.Context context) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
-      children: [
-        pw.Container(
-          height: 20,
-          width: 100,
-          child: pw.BarcodeWidget(
-            barcode: pw.Barcode.pdf417(),
-            data: 'Invoice# $invoiceNumber',
-            drawText: false,
-          ),
-        ),
-        pw.Text(
-          'Page ${context.pageNumber}/${context.pagesCount}',
-          style: const pw.TextStyle(
-            fontSize: 12,
-            color: PdfColors.white,
-          ),
-        ),
-      ],
-    );
-  }
-
-  pw.PageTheme _buildTheme(
-      PdfPageFormat pageFormat, pw.Font base, pw.Font bold, pw.Font italic) {
-    return pw.PageTheme(
-      pageFormat: pageFormat,
-      theme: pw.ThemeData.withFont(
-        base: base,
-        bold: bold,
-        italic: italic,
-      ),
-      buildBackground: (context) => pw.FullPage(
-        ignoreMargins: true,
-        child: pw.SvgImage(svg: _bgShape!),
-      ),
-    );
-  }
-
-  pw.Widget _contentHeader(pw.Context context) {
-    return pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Expanded(
-          child: pw.Container(
-            margin: const pw.EdgeInsets.symmetric(horizontal: 20),
-            height: 70,
-            child: pw.FittedBox(
-              child: pw.Text(
-                'Total: ${_formatCurrency(_grandTotal)}',
-                style: pw.TextStyle(
-                  color: baseColor,
-                  fontStyle: pw.FontStyle.italic,
-                ),
-              ),
-            ),
-          ),
-        ),
-        pw.Expanded(
-          child: pw.Row(
-            children: [
-              pw.Container(
-                margin: const pw.EdgeInsets.only(left: 10, right: 10),
-                height: 70,
-                child: pw.Text(
-                  'Invoice to:',
-                  style: pw.TextStyle(
-                    color: _darkColor,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              pw.Expanded(
-                child: pw.Container(
-                  height: 70,
-                  child: pw.RichText(
-                      text: pw.TextSpan(
-                          text: '$customerName\n',
-                          style: pw.TextStyle(
-                            color: _darkColor,
-                            fontWeight: pw.FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                          children: [
-                        const pw.TextSpan(
-                          text: '\n',
-                          style: pw.TextStyle(
-                            fontSize: 5,
-                          ),
-                        ),
-                        pw.TextSpan(
-                          text: customerAddress,
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ])),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  pw.Widget _contentFooter(pw.Context context) {
-    return pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Expanded(
-          flex: 2,
-          child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'Thank you for your business',
-                style: pw.TextStyle(
-                  color: _darkColor,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.Container(
-                margin: const pw.EdgeInsets.only(top: 20, bottom: 8),
-                child: pw.Text(
-                  'Payment Info:',
-                  style: pw.TextStyle(
-                    color: baseColor,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-              ),
-              pw.Text(
-                paymentInfo,
-                style: const pw.TextStyle(
-                  fontSize: 8,
-                  lineSpacing: 5,
-                  color: _darkColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-        pw.Expanded(
-          flex: 1,
-          child: pw.DefaultTextStyle(
-            style: const pw.TextStyle(
-              fontSize: 10,
-              color: _darkColor,
-            ),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Sub Total:'),
-                    pw.Text(_formatCurrency(_total)),
-                  ],
-                ),
-                pw.SizedBox(height: 5),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Tax:'),
-                    pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
-                  ],
-                ),
-                pw.Divider(color: accentColor),
-                pw.DefaultTextStyle(
-                  style: pw.TextStyle(
-                    color: baseColor,
-                    fontSize: 14,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  child: pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text('Total:'),
-                      pw.Text(_formatCurrency(_grandTotal)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  pw.Widget _termsAndConditions(pw.Context context) {
-    return pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
-      children: [
-        pw.Expanded(
-          child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Container(
-                decoration: pw.BoxDecoration(
-                  border: pw.Border(top: pw.BorderSide(color: accentColor)),
-                ),
-                padding: const pw.EdgeInsets.only(top: 10, bottom: 4),
-                child: pw.Text(
-                  'Terms & Conditions',
-                  style: pw.TextStyle(
-                    fontSize: 12,
-                    color: baseColor,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-              ),
-              pw.Text(
-                pw.LoremText().paragraph(40),
-                textAlign: pw.TextAlign.justify,
-                style: const pw.TextStyle(
-                  fontSize: 6,
-                  lineSpacing: 2,
-                  color: _darkColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-        pw.Expanded(
-          child: pw.SizedBox(),
-        ),
-      ],
-    );
-  }
-
-  pw.Widget _contentTable(pw.Context context) {
-    const tableHeaders = [
-      'SKU#',
-      'Item Description',
-      'Price',
-      'Quantity',
-      'Total'
-    ];
-
-    return pw.Table.fromTextArray(
-      border: null,
-      cellAlignment: pw.Alignment.centerLeft,
-      headerDecoration: pw.BoxDecoration(
-        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(2)),
-        color: baseColor,
-      ),
-      headerHeight: 25,
-      cellHeight: 40,
-      cellAlignments: {
-        0: pw.Alignment.centerLeft,
-        1: pw.Alignment.centerLeft,
-        2: pw.Alignment.centerRight,
-        3: pw.Alignment.center,
-        4: pw.Alignment.centerRight,
-      },
-      headerStyle: pw.TextStyle(
-        color: _baseTextColor,
-        fontSize: 10,
-        fontWeight: pw.FontWeight.bold,
-      ),
-      cellStyle: const pw.TextStyle(
-        color: _darkColor,
-        fontSize: 10,
-      ),
-      rowDecoration: pw.BoxDecoration(
-        border: pw.Border(
-          bottom: pw.BorderSide(
-            color: accentColor,
-            width: .5,
-          ),
-        ),
-      ),
-      headers: List<String>.generate(
-        tableHeaders.length,
-        (col) => tableHeaders[col],
-      ),
-      data: List<List<String>>.generate(
-        products.length,
-        (row) => List<String>.generate(
-          tableHeaders.length,
-          (col) => products[row].getIndex(col),
-        ),
-      ),
-    );
-  }
+  return grid;
 }
+
+//Create and row for the grid.
+void _addProducts(String units,String code, String productName, double price,
+    double total, PdfGrid grid) {
+  final PdfGridRow row = grid.rows.add();
+  row.cells[0].value = units;
+  row.cells[1].value = code;
+  row.cells[2].value = productName;
+  row.cells[3].value = price.toString();
+  row.cells[4].value = total.toString();
+}
+
+//Get the total amount.
+double _getTotalAmount(PdfGrid grid) {
+  double total = 0;
+  // for (int i = 0; i < grid.rows.count; i++) {
+  //   final String value =
+  //   grid.rows[i].cells[grid.columns.count - 1].value as String;
+  //   total += double.parse(value);
+  // }
+  return invoice.totalAmount?? 0.0;
+}
+
 
 String _formatCurrency(double amount) {
   return '\$${amount.toStringAsFixed(2)}';
@@ -546,4 +307,29 @@ class Product {
     }
     return '';
   }
+}
+
+
+Future<String?> getDownloadPath2() async {
+  Directory? directory;
+  String directoryStr;
+  try {
+    if (Platform.isIOS ) {
+      directory = await getApplicationDocumentsDirectory();
+    } else if (Platform.isWindows) {
+      directory = await getApplicationDocumentsDirectory();
+      directoryStr =  "${directory.path}\\Invoices\\";
+      directory = Directory(directoryStr);
+
+    } else {
+      // directory = Directory('/storage/emulated/0/Download/Invoices/');
+      // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+      // ignore: avoid_slow_async_io
+
+      directory = await getExternalStorageDirectory();
+    }
+  } catch (err, stack) {
+    print("Cannot get download folder path");
+  }
+  return directory?.path;
 }

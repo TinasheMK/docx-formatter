@@ -54,6 +54,7 @@ class Assets {
   static const String enumsStatusEnum = 'lib/providers/enums/status_enum.dart';
   static const String examplesInvoice = 'lib/pdf/examples/invoice.dart';
   static const String examplesInvoice2 = 'lib/pdf/examples/invoice2.dart';
+  static const String examplesInvoice3 = 'lib/pdf/examples/invoice3.dart';
   static const String formsInputForm = 'lib/screens/forms/input_form.dart';
   static const String formsInputFormBak = 'lib/screens/forms/input_form_bak.dart';
   static const String formsNewTask = 'lib/screens/forms/new_task.dart';
