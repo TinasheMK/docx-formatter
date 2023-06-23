@@ -11,4 +11,4 @@ PRODUCT_NAME = Invoicer
 PRODUCT_BUNDLE_IDENTIFIER = com.kanjan.invoicer
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.kanjan. All rights reserved.

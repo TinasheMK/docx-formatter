@@ -39,3 +39,12 @@ $ flutter clean
 $ flutter pub get
 $ flutter pub run flutter_launcher_icons:main
 ```
+
+
+Post Sync Test Cases
+1. New invoice
+2. Updated invoice
+
+Get sync test cases
+1. New incoming invoices
+2. Local changed

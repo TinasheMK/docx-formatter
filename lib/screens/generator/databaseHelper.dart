@@ -144,7 +144,7 @@ class DatabaseHelper {
                     
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
@@ -155,7 +155,7 @@ class DatabaseHelper {
             is_synced BOOLEAN,
             origin_id INTEGER,
             universal_id INTEGER,
-            is_changed   BOOLEAN     
+            is_confirmed   BOOLEAN     
           )
           ''');
 
@@ -277,6 +277,16 @@ class DatabaseHelper {
         : await _db.query(table,orderBy: 'invoice_date ${dateSort}');
   }
 
+  Future<List<Map<String, dynamic>>>  getReadyForSyc(table) async {
+    // List<Map<String, Object?>> results =
+    return await _db.rawQuery('SELECT * FROM $table WHERE is_synced = "false" or is_synced is null');;
+  }
+
+  // Future<Map<String, Object?>?> getNotOptimised(table) async {
+  //   List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE optimised = false');
+  //   return results.isEmpty ? null : results?[0];
+  // }
+
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
   Future<int> queryRowCount(String table) async {
@@ -290,7 +300,7 @@ class DatabaseHelper {
     return results.isEmpty ? null : results?[0];
   }
 
-  Future<Map<String, dynamic>?> findByIdUni(String table, String id) async {
+  Future<Map<String, dynamic>?> findByIdUni(String table, int id) async {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE universal_id = $id');
     return results.isEmpty ? null : results?[0];
   }

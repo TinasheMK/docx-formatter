@@ -36,14 +36,23 @@ class InvoiceNotifier extends StateNotifier<InvoiceState> {
     state = InvoiceState.loading();
 
     try {
+      print("Get sync starts");
       InvoiceSyncResult getResp = await _invoiceRepository.getSyncInvoices();
-      log("Response:");
-      print( getResp);
+      print( getResp.message);
       if(!getResp.success!){
-        state = InvoiceState.data( invoice: getResp.invoice!);
+        if(getResp.code ==1){
+          state = InvoiceState.error(getResp.message);
+        }else{
+          state = InvoiceState.data( invoice: getResp.invoice!);
+        }
       }else{
-        final resp = await _invoiceRepository.postSyncInvoices();
-        state = InvoiceState.loaded();
+        print("Post sync starts");
+        final InvoiceSyncResult resp = await _invoiceRepository.postSyncInvoices();
+        if(!resp.success!){
+          state = InvoiceState.error(resp.message);
+        }else{
+          state = InvoiceState.loaded(resp.message);
+        }
       }
     }catch (e) {
       if (e is CustomException) {

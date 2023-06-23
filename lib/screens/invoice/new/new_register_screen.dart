@@ -346,6 +346,63 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
 
+
+    Future<Invoice?> saveInvoice() async {
+
+      var state = 0;
+      if(invoice.client?.id == null){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Please select or add a client."),
+        ));
+        return null;
+      }
+      if(invoice.companyFull == null){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Please select or add your company details in profile."),
+        ));
+        return null;
+      }
+
+      invoice.totalAmount = invoice.subTotalAmount;
+      invoice.clientId = invoice.client?.id;
+      invoice.companyId = invoice.companyFull?.id;
+      double sum = 0.0;
+
+      if(invoice.payments!.isNotEmpty) {
+        if (invoice.payments?[0].total == null) invoice.payments!
+            .remove(invoice.payments![0]);
+      }
+      invoice.payments?.forEach((e) {
+        sum += e.total??0;
+        // if(e.total==null) invoice.payments!.remove(e);
+      });
+
+
+      if(invoice.totalAmount! < sum && invoice.invoiceStatus != 'PAID') {
+        Wallet wallet = await invoice.client!.getWallet(invoice.currencyFull!.id!);
+        wallet.deposit(sum - invoice.totalAmount!);
+      }
+
+
+      if(invoice.totalAmount! <= sum){
+        invoice.invoiceStatus = 'PAID';
+
+      }
+      invoice.isSynced = false;
+      await invoice.save();
+
+
+
+
+      if(invoiceId != null) invoice.payments = await getInvoicePayments(invoiceId);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setInt(UserPreference.activeClient, invoice.client?.id ?? 0);
+      return invoice;
+    }
+
+
     return Container(
       width: double.infinity,
       constraints: BoxConstraints(
@@ -430,6 +487,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     }
 
                     invoice.invoiceStatus = 'UNPAID';
+                    invoice.isSynced = false;
                     invoice.save();
 
 
@@ -889,6 +947,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       }
 
                       invoice.invoiceStatus = 'CANCELLED';
+                      invoice.isSynced = false;
                       invoice.save();
 
                       invoice.invoiceItems?.forEach((e) {
@@ -941,6 +1000,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       ));
                     }else {
                       invoice.invoiceStatus = 'UNPAID';
+                      invoice.isSynced = false;
                       invoice.save();
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('Marked as unpaid'),
@@ -1111,55 +1171,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   ),
                   onPressed: () async {
 
-                    var state = 0;
-                    if(invoice.client?.id == null){
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Please select or add a client."),
-                      ));
-                      return;
-                    }
-                    if(invoice.companyFull == null){
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Please select or add your company details in profile."),
-                      ));
-                      return;
-                    }
-                    invoice.totalAmount = invoice.subTotalAmount;
-                    invoice.clientId = invoice.client?.id;
-                    invoice.companyId = invoice.companyFull?.id;
-                    double sum = 0.0;
-
-                    if(invoice.payments!.isNotEmpty) {
-                      if (invoice.payments?[0].total == null) invoice.payments!
-                          .remove(invoice.payments![0]);
-                    }
-                    invoice.payments?.forEach((e) {
-                      sum += e.total??0;
-                      // if(e.total==null) invoice.payments!.remove(e);
-                    });
-
-
-                    if(invoice.totalAmount! < sum && invoice.invoiceStatus != 'PAID') {
-                      Wallet wallet = await invoice.client!.getWallet(invoice.currencyFull!.id!);
-                      wallet.deposit(sum - invoice.totalAmount!);
-                    }
-
-
-                    if(invoice.totalAmount! <= sum){
-                      invoice.invoiceStatus = 'PAID';
-
-                    }
-                    await invoice.save();
-
-
-
-
-                    if(invoiceId != null) invoice.payments = await getInvoicePayments(invoiceId);
-
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-                    prefs.setInt(UserPreference.activeClient, invoice.client?.id ?? 0);
-
+                    await saveInvoice();
 
 
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1466,10 +1478,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       child: Text("Print Invoice"),
                       onPressed: () async {
 
+                        var inv =  await saveInvoice();
 
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => PdfInvoice()),
+                          MaterialPageRoute(builder: (context) => PdfInvoice(invoice: inv ?? invoice,)),
                         );
                         //
                         // if(invoice.id == null){

@@ -9,6 +9,7 @@ import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dar
 import 'package:smart_admin_dashboard/screens/generator/data_store.dart';
 
 import 'package:flutter/material.dart';
+import 'package:smart_admin_dashboard/screens/login/register_screen.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../common/UserPreference.dart';
@@ -117,19 +118,9 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       fit: StackFit.loose,
                                       clipBehavior: Clip.none,
                                       children: [
-                                        LoginListener(slideCallback: slideCallback),
+                                        LoginListener(),
                                       ]),
-                                ),
-                                SlideTransition(
-                                  position:
-                                  _animationController!.drive(tweenLeft),
-                                  child: Stack(
-                                      fit: StackFit.loose,
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        RegisterListener(slideCallback: slideCallback),
-                                      ]),
-                                ),
+                                )
                               ],
                             ),
                           ),
@@ -164,11 +155,11 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
 
 class _loginScreen extends ConsumerWidget {
-  _loginScreen({
-    required this.slideCallback
-  });
-
-  final Function() slideCallback;
+  // _loginScreen({
+  //   required this.slideCallback
+  // });
+  //
+  // final Function() slideCallback;
 
   String? email;
 
@@ -382,7 +373,10 @@ class _loginScreen extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      slideCallback();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Register(title: 'Register',)),
+                      );
                     },
                     child: Text("Sign up",
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
@@ -399,186 +393,7 @@ class _loginScreen extends ConsumerWidget {
   }
 }
 
-
-class _registerScreen extends ConsumerWidget {
-  _registerScreen({
-    required this.slideCallback
-  });
-
-  final Function() slideCallback;
-  String? email;
-  String? firstName;
-  String? lastName;
-
-  String? password;
-
-  bool isChecked = false;
-  bool rememberme = false;
-
-
-
-  @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final authProvider = watch(authNotifierProvider);
-    final sharedPref = watch(sharedPreferencesServiceProvider);
-
-    return Container(
-      width: double.infinity,
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height - 0.0,
-      ),
-      child: Form(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: 8.0),
-            InputWidget(
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                firstName = value;
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
-
-              topLabel: "First Name",
-
-              hintText: "Enter E-mail",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                lastName = value;
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
-
-              topLabel: "Last Name",
-
-              hintText: "Enter E-mail",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              keyboardType: TextInputType.emailAddress,
-              onSaved: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-              },
-              onChanged: (String? value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
-                email = value;
-              },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
-
-              topLabel: "Email",
-
-              hintText: "Enter E-mail",
-              // prefixIcon: FlutterIcons.chevron_left_fea,
-            ),
-            SizedBox(height: 8.0),
-            InputWidget(
-              topLabel: "Password",
-              obscureText: true,
-              hintText: "Enter Password",
-              onSaved: (String? uPassword) {},
-              onChanged: (String? value) {password = value;},
-              validator: (String? value) {},
-            ),
-            SizedBox(height: 24.0),
-            AppButton(
-              type: ButtonType.PRIMARY,
-              text: "Sign Up",
-              onPressed: () async {
-
-
-
-                final payload = {
-                  "email": email,
-                  "firstName": firstName,
-                  "lastName": lastName,
-                  "password":password
-                };
-
-                if (!authProvider.isLoading) {
-                  await context
-                      .read(authNotifierProvider.notifier)
-                      .registerUser(
-                      payload
-                  );
-                }
-
-
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => HomeScreensource: ("login screen2)),
-                // );
-              },
-            ),
-            SizedBox(height: 24.0),
-            Center(
-              child: Wrap(
-                runAlignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account?",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(fontWeight: FontWeight.w300),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      slideCallback();
-                    },
-                    child: Text("Sign In",
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontWeight: FontWeight.w400, color: greenColor)),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
 class LoginListener extends ConsumerWidget {
-  LoginListener({
-    required this.slideCallback
-  });
-
-  final Function() slideCallback;
-
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     print("this is login listener");
@@ -652,7 +467,7 @@ class LoginListener extends ConsumerWidget {
             child: Container(child: CircularProgressIndicator()));
       },
     ) : SizedBox(child: authProvider.when(
-      initial: () => _loginScreen(slideCallback: slideCallback,),
+      initial: () => _loginScreen(),
       loading: () =>
           Center(child: CircularProgressIndicator()),
       data: (data) {
@@ -691,7 +506,7 @@ class LoginListener extends ConsumerWidget {
 
 
 
-        return _loginScreen(slideCallback: slideCallback);
+        return _loginScreen();
       },
 
       loaded: (loaded) {
@@ -715,11 +530,10 @@ class LoginListener extends ConsumerWidget {
         // resetState();
 
 
-        return _loginScreen(slideCallback: slideCallback);
+        return _loginScreen();
       },
       error: (e) {
 
-        Navigator.of(context).pop();
         SchedulerBinding.instance!
             .addPostFrameCallback((_) {
           context
@@ -737,8 +551,7 @@ class LoginListener extends ConsumerWidget {
 
         // resetState();
 
-
-        return _loginScreen(slideCallback: slideCallback);
+        return _loginScreen();
       },
     ),
 
@@ -750,95 +563,3 @@ class LoginListener extends ConsumerWidget {
 
 
 }
-
-
-class RegisterListener extends ConsumerWidget {
-  RegisterListener({
-    required this.slideCallback
-  });
-
-  final Function() slideCallback;
-
-  @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final authProvider = watch(authNotifierProvider);
-
-    return SizedBox(
-      // flex: 5,
-      child: authProvider.when(
-        initial: () => _registerScreen(slideCallback: slideCallback,),
-        loading: () =>
-            Center(child: CircularProgressIndicator()),
-        data: (data) {
-          print(data);
-
-
-
-
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            context
-                .read(authNotifierProvider.notifier)
-                .resetState();
-
-          });
-
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Registration Successful"),
-            ));
-          });
-
-
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            Navigator.pop(context, true);
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen10")),
-            );
-          });
-
-
-
-
-
-          return _loginScreen(slideCallback: slideCallback);
-        },
-
-        loaded: (loaded) => Text(loaded.toString()),
-        error: (e) {
-
-
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            context
-                .read(authNotifierProvider.notifier)
-                .resetState();
-
-          });
-
-          SchedulerBinding.instance!
-              .addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(e.toString()),
-            ));
-          });
-
-          // resetState();
-
-
-          return _registerScreen(slideCallback: slideCallback);
-        },
-      ),
-    );
-
-  }
-
-
-
-
-}
-

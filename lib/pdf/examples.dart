@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:pdf/pdf.dart';
 
+import '../providers/registration/Invoice.dart';
 import 'data.dart';
 import 'examples/invoice.dart';
 import 'examples/invoice2.dart';
@@ -13,7 +14,7 @@ const examples = <Example>[
 ];
 
 typedef LayoutCallbackWithData = Future<Uint8List> Function(
-    PdfPageFormat pageFormat, CustomData data);
+    PdfPageFormat pageFormat, Invoice data);
 
 class Example {
   const Example(this.name, this.file, this.builder, [this.needsData = false]);

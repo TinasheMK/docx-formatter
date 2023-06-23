@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/all.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,18 +135,11 @@ class SideMenu extends ConsumerWidget {
               },
 
               loaded: (loaded) {
-                Navigator.of(context).pop();
 
-                // SchedulerBinding.instance!
-                //     .addPostFrameCallback((_) {
-                //   context
-                //       .read(invoiceNotifierProvider.notifier)
-                //       .resetState();
-                //
-                // });
 
                 SchedulerBinding.instance!
                     .addPostFrameCallback((_) {
+                  Navigator.pop(context, true);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(loaded.toString()),
                   ));
@@ -156,9 +151,12 @@ class SideMenu extends ConsumerWidget {
               },
               error: (e) {
 
-                // SchedulerBinding.instance!.addPostFrameCallback((_) {
-                //   context.read(invoiceNotifierProvider.notifier).resetState();
-                // });
+                // print("I am king but error eoccured");
+                log(e.toString());
+
+                SchedulerBinding.instance!.addPostFrameCallback((_) {
+                  context.read(invoiceNotifierProvider.notifier).resetState();
+                });
 
 
 
@@ -301,7 +299,6 @@ class syncWidgetState extends State<syncWidget> {
     // TODO: implement initState
     super.initState();
     // print(widget.error);
-    // print("I am king");
   }
 
 

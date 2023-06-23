@@ -23,14 +23,15 @@ import '../data.dart';
 
 var logoPath;
 var invoice = Invoice.fromJson({});
-Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, CustomData data) async {
-  invoice.currencyFull = Currency();
-  invoice.invoiceNumber = 'fetr';
-  invoice.currencyFull!.symbol = '\$';
-  invoice.client = Client();
-  invoice.client!.companyName = 'fgh';
-  invoice.companyFull = Company();
-  invoice.companyFull!.companyName = 'kl;';
+Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, Invoice data) async {
+  invoice = data;
+  // invoice.currencyFull = Currency();
+  // invoice.invoiceNumber = 'fetr';
+  // invoice.currencyFull!.symbol = '\$';
+  // invoice.client = Client();
+  // invoice.client!.companyName = 'fgh';
+  // invoice.companyFull = Company();
+  // invoice.companyFull!.companyName = 'kl;';
 
   var _model = ImageModel();
 
@@ -51,10 +52,12 @@ Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, CustomData data
       pen: PdfPen(PdfColor(142, 170, 219)));
   //Generate PDF grid.
   final PdfGrid grid = _getGrid();
+
   //Draw the header section by creating text element
   final PdfLayoutResult result = await _drawHeader(page, pageSize, grid);
   //Draw grid
   _drawGrid(page, grid, result);
+
   //Add invoice footer
   _drawFooter(page, pageSize);
   //Save and dispose the document.
@@ -102,19 +105,28 @@ Future<PdfLayoutResult> _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) a
 
   print(logoPath);
   double height  =0;
+  double width  =0;
   if(logoPath!=null) {
     var image = File(logoPath!).readAsBytesSync();
     var decodedImage = await decodeImageFromList(image);
     print(decodedImage.width);
     print(decodedImage.height);
 
-    var x = decodedImage.width/(pageSize.width - 400);
-    height = decodedImage.height / x;
+    // var x = decodedImage.width/(pageSize.width - 400);
+
+
+    if(decodedImage.width > decodedImage.height) {
+      width = 108;
+      height = 108 * decodedImage.height / decodedImage.width;
+    }else {
+      height = 80;
+      width = (decodedImage.width / decodedImage.height) * 80;
+    }
 
     page.graphics.drawImage(
         PdfBitmap(image),
         Rect.fromLTWH(
-            395, height+33, pageSize.width - 400, height));
+            400, 95, width , height));
   }
 
   //Create data foramt and convert it to text.
@@ -130,7 +142,7 @@ Future<PdfLayoutResult> _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) a
       'Bill To: \r\n\r\n'+invoice.client!.companyName!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
   PdfTextElement(text: invoiceNumber, font: contentFont).draw(
       page: page,
-      bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 120+height,
+      bounds: Rect.fromLTWH(400, 100 + height,
           contentSize.width + 30, pageSize.height - 120));
 
 
@@ -172,6 +184,18 @@ void _drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result) {
           result.bounds.bottom + 10,
           totalPriceCellBounds!.width,
           totalPriceCellBounds!.height));
+
+
+  page.graphics.drawString('Payments',
+      PdfStandardFont(PdfFontFamily.helvetica, 12),
+      bounds: Rect.fromLTWH(
+          25,
+          result.bounds.bottom + 22 ,
+          quantityCellBounds!.width,
+          quantityCellBounds!.height));
+
+  //Invoice payments
+  final PdfGrid grid2 = _getGrid2(result, page);
 }
 
 //Draw the invoice footer data.
@@ -246,6 +270,57 @@ PdfGrid _getGrid() {
   return grid;
 }
 
+PdfGrid _getGrid2(PdfLayoutResult res, PdfPage page) {
+  //Create a PDF grid
+  final PdfGrid grid = PdfGrid();
+  //Secify the columns count to the grid.
+  grid.columns.add(count: 3);
+  //Create the header row of the grid.
+  final PdfGridRow headerRow = grid.headers.add(1)[0];
+  //Set style
+  headerRow.style.backgroundBrush = PdfSolidBrush(PdfColor(68, 114, 196));
+  headerRow.style.textBrush = PdfBrushes.white;
+  headerRow.cells[0].value = 'Reference';
+  headerRow.cells[0].stringFormat.alignment = PdfTextAlignment.center;
+  headerRow.cells[1].value = 'Date';
+  headerRow.cells[2].value = 'Amount';
+
+  invoice.payments?.forEach((p) {
+    _addPayments(p.ref?.toString()?? p.id?.toString() ?? '', p.paymentDate??'', p.total.toString()??'', p.total??0.0, grid);
+  });
+
+
+  // _addProducts(
+  //     'LJ-0192', 'Long-Sleeve Logo Jersey,M', 49.99, 3, 149.97, grid);
+  // _addProducts('So-B909-M', 'Mountain Bike Socks,M', 9.5, 2, 19, grid);
+  // _addProducts(
+  //     'LJ-0192', 'Long-Sleeve Logo Jersey,M', 49.99, 4, 199.96, grid);
+  // _addProducts('FK-5136', 'ML Fork', 175.49, 6, 1052.94, grid);
+  // _addProducts('HL-U509', 'Sports-100 Helmet,Black', 34.99, 1, 34.99, grid);
+  grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
+  grid.columns[2].width = 200;
+  for (int i = 0; i < headerRow.cells.count; i++) {
+    headerRow.cells[i].style.cellPadding =
+        PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+  }
+  for (int i = 0; i < grid.rows.count; i++) {
+    final PdfGridRow row = grid.rows[i];
+    for (int j = 0; j < row.cells.count; j++) {
+      final PdfGridCell cell = row.cells[j];
+      if (j == 0) {
+        cell.stringFormat.alignment = PdfTextAlignment.center;
+      }
+      cell.style.cellPadding =
+          PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
+    }
+  }
+
+  grid.draw(
+      page: page, bounds: Rect.fromLTWH(0, res.bounds.bottom + 40, 0, 0))!;
+
+  return grid;
+}
+
 //Create and row for the grid.
 void _addProducts(String units,String code, String productName, double price,
     double total, PdfGrid grid) {
@@ -255,6 +330,15 @@ void _addProducts(String units,String code, String productName, double price,
   row.cells[2].value = productName;
   row.cells[3].value = price.toString();
   row.cells[4].value = total.toString();
+}
+
+//Create and row for the grid.
+void _addPayments(String units,String code, String productName, double price,
+    PdfGrid grid) {
+  final PdfGridRow row = grid.rows.add();
+  row.cells[0].value = units;
+  row.cells[1].value = code;
+  row.cells[2].value = productName;
 }
 
 //Get the total amount.
@@ -271,11 +355,6 @@ double _getTotalAmount(PdfGrid grid) {
 
 String _formatCurrency(double amount) {
   return '\$${amount.toStringAsFixed(2)}';
-}
-
-String _formatDate(DateTime date) {
-  final format = DateFormat.yMMMd('en_US');
-  return format.format(date);
 }
 
 class Product {

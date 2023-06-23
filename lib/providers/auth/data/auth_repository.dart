@@ -95,8 +95,7 @@ class AuthRepository implements IAuthRepository {
 
         log(resp.toString());
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString(UserPreference.userId,
-            resp.userId == null ? "" : resp.userId.toString());
+        if(resp.userId == null)prefs.setString(UserPreference.userId, resp.userId.toString());
         prefs.setString(UserPreference.agentId,
             resp.agentId == null ? "":resp.agentId.toString());
         prefs.setString(UserPreference.clientId,
@@ -145,13 +144,14 @@ class AuthRepository implements IAuthRepository {
   @override
   Future register(Map? data) async {
     try {
-        final result = await _dioClient.post('$invoicerService/api/v1/employee', data: data);
+      print("Register employee data: "+ data.toString());
 
+      final result = await _dioClient.post('$invoicerService/api/v1/employee', data: data);
+
+        print("Register employee result: "+ result.data.toString());
       if (result.statusCode == 200) {
-        // all good
         return WorkerProfile.fromJson(result.data);
       }
-
       // throw error
       else {
         throw Exception('Failed to register. Please try again later');
@@ -160,7 +160,7 @@ class AuthRepository implements IAuthRepository {
 
     //
     catch (e) {
-      networkErrorHandler(e, 'register user');
+      networkErrorHandler(e, 'Network connection error');
     }
   }
 

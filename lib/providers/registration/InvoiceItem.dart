@@ -122,6 +122,22 @@ class InvoiceItem {
     final rowsDeleted = await dbHelper.delete('invoice_item',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
+
+  String? getIndex(int index) {
+    switch (index) {
+      case 0:
+        return id.toString();
+      case 1:
+        return description;
+      case 2:
+        return unitPrice.toString();
+      case 3:
+        return units.toString();
+      case 4:
+        return total.toString();
+    }
+    return '';
+  }
 }
 
 Future<List<InvoiceItem>> getInvoiceItems(id) async {

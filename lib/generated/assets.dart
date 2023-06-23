@@ -118,6 +118,7 @@ class Assets {
   static const String libResponsive = 'lib/responsive.dart';
   static const String libSharefilecopythiscode = 'lib/sharefilecopythiscode.dart';
   static const String loginLoginScreen = 'lib/screens/login/login_screen.dart';
+  static const String loginRegisterScreen = 'lib/screens/login/register_screen.dart';
   static const String logoInvoice = 'assets/logo/invoice.svg';
   static const String logoLogo = 'assets/logo/logo.png';
   static const String logoLogoIcon = 'assets/logo/logo_icon.png';

@@ -23,10 +23,11 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
+import '../../providers/registration/Invoice.dart';
 import '../data.dart';
 
 Future<Uint8List> generateInvoice3(
-    PdfPageFormat pageFormat, CustomData data) async {
+    PdfPageFormat pageFormat, Invoice data) async {
   final lorem = pw.LoremText();
 
   final products = <Product>[
@@ -46,7 +47,7 @@ Future<Uint8List> generateInvoice3(
     Product('98387', lorem.sentence(5), 7.99, 2),
   ];
 
-  final invoice = Invoice(
+  final invoice = LocalInvoice(
     invoiceNumber: '982347',
     products: products,
     customerName: 'Abraham Swearegin',
@@ -61,8 +62,8 @@ Future<Uint8List> generateInvoice3(
   return await invoice.buildPdf(pageFormat);
 }
 
-class Invoice {
-  Invoice({
+class LocalInvoice {
+  LocalInvoice({
     required this.products,
     required this.customerName,
     required this.customerAddress,

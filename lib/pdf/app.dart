@@ -25,13 +25,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:smart_admin_dashboard/providers/registration/Invoice.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'data.dart';
 import 'examples.dart';
 
 class PdfInvoice extends StatefulWidget {
-  const PdfInvoice({Key? key}) : super(key: key);
+  const PdfInvoice({Key? key, required this.invoice}) : super(key: key);
+  final Invoice invoice;
 
   @override
   PdfInvoiceState createState() {
@@ -45,7 +47,6 @@ class PdfInvoiceState extends State<PdfInvoice> with SingleTickerProviderStateMi
 
   PrintingInfo? printingInfo;
 
-  var _data = const CustomData();
   var _hasData = false;
   var _pending = false;
 
@@ -115,6 +116,7 @@ class PdfInvoiceState extends State<PdfInvoice> with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
     pw.RichText.debug = true;
+    var _data = widget.invoice;
 
     if (_tabController == null) {
       return const Center(child: CircularProgressIndicator());
