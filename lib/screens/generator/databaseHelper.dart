@@ -3,8 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
-  static const _databaseName = "database.db";
-  static const _databaseVersion = 1;
+  static const _databaseName = "db.db";
+  static const _databaseVersion = 2;
 
 
 
@@ -36,7 +36,7 @@ class DatabaseHelper {
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE IF NOT EXISTS client (
+          CREATE TABLE client (
             id INTEGER PRIMARY KEY,
             company_name TEXT NOT NULL,
             street TEXT ,
@@ -49,9 +49,10 @@ class DatabaseHelper {
             
             created_date TEXT,
             created_by TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -77,10 +78,10 @@ class DatabaseHelper {
             
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -110,11 +111,11 @@ class DatabaseHelper {
             company_id INTEGER NOT NULL,
             
             created_date TEXT,
-            created_by TEXT,
-            version TEXT,
+            created_by TEXT,            
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -152,7 +153,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
 
             
@@ -177,10 +178,10 @@ class DatabaseHelper {
             
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
       
             
@@ -204,10 +205,10 @@ class DatabaseHelper {
             
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -227,10 +228,10 @@ class DatabaseHelper {
             
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -249,10 +250,10 @@ class DatabaseHelper {
             
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
+            version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT 0,
+            deleted_at TEXT DEFAULT "0",
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -314,13 +315,9 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>>  getReadyForSyc(table) async {
     // List<Map<String, Object?>> results =
-    return await _db.rawQuery('SELECT * FROM $table WHERE is_synced = "false" or is_synced is null');;
+    return await _db.rawQuery('SELECT * FROM $table WHERE is_synced = 0 or is_synced is null');;
   }
 
-  // Future<Map<String, Object?>?> getNotOptimised(table) async {
-  //   List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE optimised = false');
-  //   return results.isEmpty ? null : results?[0];
-  // }
 
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.

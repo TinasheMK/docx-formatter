@@ -90,7 +90,6 @@ class Invoice {
    invoiceStatus = json['invoiceStatus'];
    clientId = json['clientId'];
    payments = json['payments'];
-   // isOptimised = json['isOptimised'];
    invoiceItems = json['invoiceItems'];
    isConfirmed = json['isConfirmed'];
 
@@ -182,7 +181,7 @@ class Invoice {
     data['dueDate'] = this.dueDate;
     data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
-    data['clientId'] = this.clientId;
+    // data['clientId'] = this.clientId;
     data['invoiceItems'] = this.invoiceItems?.map((item) => item.toJson())??[];
     data['payments'] = this.payments?.map((item) => item.toJson())??[];
     data['client'] = client;
@@ -201,7 +200,7 @@ class Invoice {
       "vat_percent": this.vatPercent,
       "vat_amount": this.vatAmount,
       "sub_total_amount": this.subTotalAmount,
-      "published": this.published,
+      "published": (this.published??false)?1:0,
       "notes": this.notes,
       "currency": this.currencyFull?.id,
       "company_id": this.companyId,
@@ -213,10 +212,10 @@ class Invoice {
       "client_id": this.clientId,
 
       "universal_id" : this.universalId,
-      "is_synced" : this.isSynced??false?'true':'false',
+      "is_synced" : (this.isSynced??false)?1:0,
       "origin_id" : this.originId,
       "version" : this.version,
-      "is_confirmed" : this.isConfirmed??false?'true':'false',
+      "is_confirmed" : (this.isConfirmed??false)?1:0,
 
 
     };
@@ -277,32 +276,32 @@ class Invoice {
     }
   }
 
-  void update() async {
-    // row to update
-    Map<String, dynamic> row = {
-
-      "totalAmount": this.totalAmount,
-      "vatPercent": this.vatPercent,
-      "vatAmount": this.vatAmount,
-      "subTotalAmount": this.subTotalAmount,
-      "published": this.published,
-      "notes": this.notes,
-      "currency": this.currency,
-      "company_id": this.companyId,
-      "discount": this.discount,
-      "invoiceDate": this.invoiceDate,
-      "dueDate": this.dueDate,
-      "invoiceNumber": this.invoiceNumber,
-      "invoiceStatus": this.invoiceStatus,
-      "client_id": this.clientId,
-      "payments": this.payments,
-      "isConfirmed": this.isConfirmed,
-
-
-    };
-    final rowsAffected = await dbHelper.update('invoice',row);
-    debugPrint('updated $rowsAffected row(s)');
-  }
+  // void update() async {
+  //   // row to update
+  //   Map<String, dynamic> row = {
+  //
+  //     "totalAmount": this.totalAmount,
+  //     "vatPercent": this.vatPercent,
+  //     "vatAmount": this.vatAmount,
+  //     "subTotalAmount": this.subTotalAmount,
+  //     "published": this.published,
+  //     "notes": this.notes,
+  //     "currency": this.currency,
+  //     "company_id": this.companyId,
+  //     "discount": this.discount,
+  //     "invoiceDate": this.invoiceDate,
+  //     "dueDate": this.dueDate,
+  //     "invoiceNumber": this.invoiceNumber,
+  //     "invoiceStatus": this.invoiceStatus,
+  //     "client_id": this.clientId,
+  //     "payments": this.payments,
+  //     "isConfirmed": this.isConfirmed,
+  //
+  //
+  //   };
+  //   final rowsAffected = await dbHelper.update('invoice',row);
+  //   debugPrint('updated $rowsAffected row(s)');
+  // }
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
@@ -379,7 +378,7 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
       vatPercent : maps?[i]['vat_percent'],
       vatAmount : maps?[i]['vat_amount'],
       subTotalAmount : maps?[i]['sub_total_amount'],
-      published : maps?[i]['published'],
+      published : maps?[i]['published']==1?true:false,
       notes : maps?[i]['notes'],
           currency : maps?[i]['currency'],
       companyId : maps?[i]['company_id'],
@@ -393,11 +392,10 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
       payments : maps?[i]['payments'],
       invoiceItems : maps?[i]['invoice_items'],
             universalId : maps?[i]["universal_id"],
-            // isOptimised : maps?[i]["is_optimised"],
-            isSynced : maps?[i]["is_synced"]=='true'?true:false,
+            isSynced : maps?[i]["is_synced"]==1?true:false,
           originId : maps?[i]["origin_id"],
             version : maps?[i]["version"],
-            isConfirmed : maps?[i]["is_confirmed"]=='true'?true:false,
+            isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
 
 
     ));
@@ -428,7 +426,7 @@ Future<List<Invoice>> getInvoicesForSync() async {
       vatPercent : maps?[i]['vat_percent'],
       vatAmount : maps?[i]['vat_amount'],
       subTotalAmount : maps?[i]['sub_total_amount'],
-      published : maps?[i]['published'],
+      published : maps?[i]['published']==1?true:false,
       notes : maps?[i]['notes'],
           currency : maps?[i]['currency'],
       companyId : maps?[i]['company_id'],
@@ -443,10 +441,10 @@ Future<List<Invoice>> getInvoicesForSync() async {
       invoiceItems : maps?[i]['invoice_items'],
             universalId : maps?[i]["universal_id"],
             // isOptimised : maps?[i]["is_optimised"],
-            isSynced : maps?[i]["is_synced"]=='true'?true:false,
+            isSynced : maps?[i]["is_synced"]==1?true:false,
           originId : maps?[i]["origin_id"],
             version : maps?[i]["version"],
-          isConfirmed : maps?[i]["is_confirmed"]=='true'?true:false,
+          isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
 
 
     ));
@@ -467,7 +465,7 @@ Future<Invoice> getInvoice(id) async {
     vatPercent : maps?['vat_percent'],
     vatAmount : maps?['vat_amount'],
     subTotalAmount : maps?['sub_total_amount'],
-    published : maps?['published'],
+    published : maps?['published']==1?true:false,
     notes : maps?['notes'],
     currency : maps?['currency'],
     discount : maps?['discount'],
@@ -481,8 +479,8 @@ Future<Invoice> getInvoice(id) async {
     companyId : maps?['company_id'],
     universalId : maps?["universal_id"],
     // isOptimised : maps?["is_optimised"],
-    isSynced :  maps?["is_synced"]=='true'?true:false,
-    isConfirmed :  maps?["is_confirmed"]=='true'?true:false,
+    isSynced :  maps?["is_synced"]==1?true:false,
+    isConfirmed :  maps?["is_confirmed"]==1?true:false,
     originId : maps?["origin_id"],
     version : maps?["version"],
     invoiceItems : invoiceItems,
@@ -505,7 +503,7 @@ Future<Invoice?> getInvoiceByUniversalId(int id) async {
     vatPercent : maps?['vat_percent'],
     vatAmount : maps?['vat_amount'],
     subTotalAmount : maps?['sub_total_amount'],
-    published : maps?['published'],
+    published : maps?['published']==1?true:false,
     notes : maps?['notes'],
     currency : maps?['currency'],
     discount : maps?['discount'],
@@ -519,10 +517,10 @@ Future<Invoice?> getInvoiceByUniversalId(int id) async {
     companyId : maps?['company_id'],
     universalId : maps?["universal_id"],
     // isOptimised : maps?["is_optimised"],
-    isSynced :  maps?["is_synced"]=='true'?true:false,
+    isSynced :  maps?["is_synced"]==1?true:false,
     originId : maps?["origin_id"],
     version : maps?["version"],
-    isConfirmed : maps?["is_confirmed"]=='true'?true:false,
+    isConfirmed : maps?["is_confirmed"]==1?true:false,
     invoiceItems : invoiceItems,
 
   );
@@ -552,7 +550,7 @@ Future<Invoice> getInvoiceByUni(id, {bool? copy}) async {
     vatPercent : maps?['vat_percent'],
     vatAmount : maps?['vat_amount'],
     subTotalAmount : maps?['sub_total_amount'],
-    published : maps?['published'],
+    published : maps?['published']==1?true:false,
     notes : maps?['notes'],
     currency : maps?['currency'],
     discount : maps?['discount'],
@@ -565,11 +563,10 @@ Future<Invoice> getInvoiceByUni(id, {bool? copy}) async {
     payments : maps?['payments'],
     companyId : maps?['company_id'],
     universalId : maps?["universal_id"],
-    // isOptimised : maps?["is_optimised"],
-    isSynced : maps?["is_synced"]=='true'?true:false,
+    isSynced : maps?["is_synced"]==1?true:false,
     originId : maps?["origin_id"],
     version : maps?["version"],
-    isConfirmed :  maps?["is_confirmed"]=='true'?true:false,
+    isConfirmed :  maps?["is_confirmed"]==1?true:false,
     invoiceItems : invoiceItems,
 
   );

@@ -180,7 +180,7 @@ class _registerScreen extends ConsumerWidget {
       constraints: BoxConstraints(
         minHeight: MediaQuery.of(context).size.height - 0.0,
       ),
-      child: Form(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -238,6 +238,8 @@ class _registerScreen extends ConsumerWidget {
               onChanged: (String? value) {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
+                print("hello");
+                print(value);
                 email = value;
               },
               validator: (String? value) {
@@ -365,7 +367,7 @@ class RegisterListener extends ConsumerWidget {
               .addPostFrameCallback((_) {
             Navigator.pop(context, true);
 
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Login(title: "login screen10")),
             );

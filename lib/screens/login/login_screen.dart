@@ -178,11 +178,11 @@ class _loginScreen extends ConsumerWidget {
     final sharedPref = watch(sharedPreferencesServiceProvider);
 
 
-    return Container(
-      width: double.infinity,
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height - 0.0,
-      ),
+    return SingleChildScrollView(
+      // width: double.infinity,
+      // constraints: BoxConstraints(
+      //   minHeight: MediaQuery.of(context).size.height - 0.0,
+      // ),
       child: Form(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -338,8 +338,8 @@ class _loginScreen extends ConsumerWidget {
                         true);
 
 
-                    Navigator.pop(context, true);
-                    Navigator.push(
+                    // Navigator.pop(context, true);
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen1")),
                     );
@@ -413,9 +413,9 @@ class LoginListener extends ConsumerWidget {
 
 
             SchedulerBinding.instance!.addPostFrameCallback((_) {
-              Navigator.pop(context, true);
+              // Navigator.pop(context, true);
 
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen3")),
               );
@@ -435,9 +435,9 @@ class LoginListener extends ConsumerWidget {
 
                       SchedulerBinding.instance!
                           .addPostFrameCallback((_) {
-                        Navigator.pop(context, true);
+                        // Navigator.pop(context, true);
 
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen4")),
                         );
@@ -494,9 +494,9 @@ class LoginListener extends ConsumerWidget {
 
         SchedulerBinding.instance!
             .addPostFrameCallback((_) {
-          Navigator.pop(context, true);
+          // Navigator.pop(context, true);
 
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen(source: "login screen6")),
           );
