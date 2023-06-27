@@ -18,6 +18,12 @@ class Company {
   Status? status;
   List<Employee>? employees;
 
+  int?   universalId;
+  int?   originId;
+  bool?   isSynced;
+  int?   version;
+  bool?   isConfirmed;
+
 
   Company({
     this.id,
@@ -32,6 +38,11 @@ class Company {
     this.email,
     this.status,
     this.employees,
+    this.universalId,
+    this.isSynced,
+    this.originId,
+    this.version,
+    this.isConfirmed
   });
 
   Company.fromJson(Map<String, dynamic> json) {

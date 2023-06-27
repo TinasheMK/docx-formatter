@@ -4,6 +4,7 @@
 // import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 import 'package:smart_admin_dashboard/providers/registration/Company.dart';
 import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
@@ -35,8 +36,8 @@ class Invoice {
   Company?   companyFull;
   List<Payment>?     payments;
   List<InvoiceItem>? invoiceItems;
+
   int?   universalId;
-  bool?   isOptimised;
   int?   originId;
   bool?   isSynced;
   int?   version;
@@ -63,8 +64,8 @@ class Invoice {
     this.client,
     this.payments,
     this.invoiceItems,
+
     this.universalId,
-    this.isOptimised,
     this.isSynced,
     this.originId,
     this.version,
@@ -89,7 +90,7 @@ class Invoice {
    invoiceStatus = json['invoiceStatus'];
    clientId = json['clientId'];
    payments = json['payments'];
-   isOptimised = json['isOptimised'];
+   // isOptimised = json['isOptimised'];
    invoiceItems = json['invoiceItems'];
    isConfirmed = json['isConfirmed'];
 
@@ -114,7 +115,7 @@ class Invoice {
    invoiceStatus = json['invoiceStatus'];
    clientId = 1;
    // payments = json['payments'];
-   isOptimised = json['isOptimised'];
+   // isOptimised = json['isOptimised'];
    // invoiceItems = json['invoiceItems'];
    isConfirmed = json['isConfirmed'];
 
@@ -127,7 +128,7 @@ class Invoice {
 
     data['originId'] = this.id;
     data['universalId'] = this.universalId??null;
-    data['isOptimised'] = this.isOptimised??null;
+    // data['isOptimised'] = this.isOptimised??null;
     data['isSynced'] = this.isSynced??false;
     data['version'] = this.version;
     data['isConfirmed'] = this.isConfirmed??null;
@@ -140,8 +141,8 @@ class Invoice {
     data['currency'] = this.currency;
     data['companyId'] = this.companyId;
     data['discount'] = this.discount;
-    // data['invoiceDate'] = this.invoiceDate.toString();
-    // data['dueDate'] = this.dueDate.toString();
+    data['invoiceDate'] = this.invoiceDate;
+    data['dueDate'] = this.dueDate;
     data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
     data['clientId'] = this.clientId;
@@ -156,13 +157,18 @@ class Invoice {
 
   Map<String, dynamic> toSyncJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> client = new Map<String, dynamic>();
+    final Map<String, dynamic> business = new Map<String, dynamic>();
 
-    data['originId'] = this.id;
+    client['id'] = this.client?.universalId??1;
+    business['id'] = this.companyFull?.universalId??1;
+
     data['id'] = this.universalId??null;
-    data['isOptimised'] = this.isOptimised??null;
+
     data['isSynced'] = this.isSynced??false;
     data['version'] = this.version;
     data['isConfirmed'] = this.isConfirmed??null;
+
     data['totalAmount'] = this.totalAmount;
     data['vatPercent'] = this.vatPercent;
     data['vatAmount'] = this.vatAmount;
@@ -172,14 +178,15 @@ class Invoice {
     data['currency'] = this.currency;
     data['companyId'] = this.companyId;
     data['discount'] = this.discount;
-    // data['invoiceDate'] = this.invoiceDate.toString();
-    // data['dueDate'] = this.dueDate.toString();
+    data['invoiceDate'] = this.invoiceDate;
+    data['dueDate'] = this.dueDate;
     data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
     data['clientId'] = this.clientId;
     data['invoiceItems'] = this.invoiceItems?.map((item) => item.toJson())??[];
     data['payments'] = this.payments?.map((item) => item.toJson())??[];
-    // data['client'] = this.client.toJson();
+    data['client'] = client;
+    data['business'] = business;
 
     return data;
 
@@ -204,8 +211,8 @@ class Invoice {
       "invoice_number": this.invoiceNumber,
       "invoice_status": this.invoiceStatus,
       "client_id": this.clientId,
+
       "universal_id" : this.universalId,
-      "is_optimised" : this.isOptimised,
       "is_synced" : this.isSynced??false?'true':'false',
       "origin_id" : this.originId,
       "version" : this.version,
@@ -386,7 +393,7 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
       payments : maps?[i]['payments'],
       invoiceItems : maps?[i]['invoice_items'],
             universalId : maps?[i]["universal_id"],
-            isOptimised : maps?[i]["is_optimised"],
+            // isOptimised : maps?[i]["is_optimised"],
             isSynced : maps?[i]["is_synced"]=='true'?true:false,
           originId : maps?[i]["origin_id"],
             version : maps?[i]["version"],
@@ -435,7 +442,7 @@ Future<List<Invoice>> getInvoicesForSync() async {
       payments : maps?[i]['payments'],
       invoiceItems : maps?[i]['invoice_items'],
             universalId : maps?[i]["universal_id"],
-            isOptimised : maps?[i]["is_optimised"],
+            // isOptimised : maps?[i]["is_optimised"],
             isSynced : maps?[i]["is_synced"]=='true'?true:false,
           originId : maps?[i]["origin_id"],
             version : maps?[i]["version"],
@@ -473,7 +480,7 @@ Future<Invoice> getInvoice(id) async {
     payments : maps?['payments'],
     companyId : maps?['company_id'],
     universalId : maps?["universal_id"],
-    isOptimised : maps?["is_optimised"],
+    // isOptimised : maps?["is_optimised"],
     isSynced :  maps?["is_synced"]=='true'?true:false,
     isConfirmed :  maps?["is_confirmed"]=='true'?true:false,
     originId : maps?["origin_id"],
@@ -511,7 +518,7 @@ Future<Invoice?> getInvoiceByUniversalId(int id) async {
     payments : maps?['payments'],
     companyId : maps?['company_id'],
     universalId : maps?["universal_id"],
-    isOptimised : maps?["is_optimised"],
+    // isOptimised : maps?["is_optimised"],
     isSynced :  maps?["is_synced"]=='true'?true:false,
     originId : maps?["origin_id"],
     version : maps?["version"],
@@ -558,7 +565,7 @@ Future<Invoice> getInvoiceByUni(id, {bool? copy}) async {
     payments : maps?['payments'],
     companyId : maps?['company_id'],
     universalId : maps?["universal_id"],
-    isOptimised : maps?["is_optimised"],
+    // isOptimised : maps?["is_optimised"],
     isSynced : maps?["is_synced"]=='true'?true:false,
     originId : maps?["origin_id"],
     version : maps?["version"],

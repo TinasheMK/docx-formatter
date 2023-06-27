@@ -169,6 +169,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   List<Currency> currencies = [Currency.fromJson({})];
 
   Invoice invoice = Invoice.fromJson({});
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
 
   Future<void> _initInvoice() async {
     invoice.currencyFull =   Currency(
@@ -199,8 +201,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       }
 
       invoice.invoiceStatus = 'DRAFT';
-      invoice.invoiceDate = DateTime.now().toString();
-      invoice.dueDate = DateTime.now().add(const Duration(days: 7)).toString();
+
+      invoice.invoiceDate = dateFormat.format(DateTime.now());
+      invoice.dueDate = dateFormat.format(DateTime.now().add(const Duration(days: 7))) ;
     }
     if(invoice.invoiceItems == null) {
       invoice.invoiceItems = [InvoiceItem.fromJson({})];
@@ -599,7 +602,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                 // width: 150,
                                 child:
                                 TextButton(
-                                  child: Text(invoice.invoiceDate.toString().split(" ")[0], style: TextStyle(color:Colors.blueAccent)),
+                                  child: Text(invoice.invoiceDate??"", style: TextStyle(color:Colors.blueAccent)),
                                   onPressed: () {
                                     showDialog(
                                         context: context,
@@ -623,7 +626,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                     onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                                                       setState(() {
                                                         // print(args.value);
-                                                        invoice.invoiceDate = args.value.toString();
+                                                        invoice.invoiceDate = dateFormat.format(args.value);
                                                       });
                                                     },
                                                     selectionMode: DateRangePickerSelectionMode.single,
@@ -657,7 +660,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                               // Text( "10/12/2023", style: TextStyle( color: Colors.white),
                               // ),
                               TextButton(
-                                child: Text(invoice.dueDate.toString().split(" ")[0], style: TextStyle(color: Colors.blueAccent)),
+                                child: Text(invoice.dueDate??"", style: TextStyle(color: Colors.blueAccent)),
                                 onPressed: () {
                                   showDialog(
                                       context: context,
@@ -680,7 +683,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                                                 child: SfDateRangePicker(
                                                   onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                                                     // print(args.value);
-                                                    invoice.dueDate = args.value.toString();
+                                                    invoice.dueDate = dateFormat.format(args.value);
                                                     setState(() {
 
                                                     });
@@ -1832,7 +1835,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     //Create data foramt and convert it to text.
     final DateFormat format = DateFormat.yMMMMd('en_US');
     final String invoiceNumber = 'Invoice Number: '+invoice.invoiceNumber!+'\r\n\r\nDate: ' +
-        invoice.invoiceDate.toString().split(" ")[0];
+        (invoice.invoiceDate??"");
         // format.format(DateTime.now());
     final Size contentSize = contentFont.measureString(invoiceNumber);
     String addr = invoice.client!.street ?? '';

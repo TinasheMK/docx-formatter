@@ -20,11 +20,15 @@ class Client {
   Status? status;
   String? createdDate;
   String? createdBy;
-  String? version;
   String? lastModifiedBy;
   String? lastModifiedBate;
-  // String? deletedAt;
   List<Employee>? employees;
+
+  int?   universalId;
+  int?   originId;
+  bool?   isSynced;
+  int?   version;
+  bool?   isConfirmed;
 
 
   Client({
@@ -42,10 +46,14 @@ class Client {
     this.employees,
     this.createdDate,
     this.createdBy,
-    this.version,
     this.lastModifiedBy,
     this.lastModifiedBate,
-    // this.deletedAt,
+
+    this.universalId,
+    this.isSynced,
+    this.originId,
+    this.version,
+    this.isConfirmed
   });
 
  Client.fromJson(Map<String, dynamic> json) {

@@ -36,7 +36,8 @@ class InvoiceRepository implements IInvoiceRepository {
     InvoiceSyncResult syncres = new InvoiceSyncResult();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     var prefs = await SharedPreferences.getInstance();
-    var lastSyncDate = (await prefs!.getString(UserPreference.lastSyncDate))?? dateFormat.format(DateTime.now().subtract(Duration(days: 15)));
+    var lastSyncDate =  dateFormat.format(DateTime.now().subtract(Duration(days: 15)));
+    // var lastSyncDate = (await prefs!.getString(UserPreference.lastSyncDate))?? dateFormat.format(DateTime.now().subtract(Duration(days: 15)));
     var userId = (await prefs!.getString(UserPreference.userId));
 
     if(userId==null){
@@ -47,7 +48,6 @@ class InvoiceRepository implements IInvoiceRepository {
     }
 
     var url = '$invoicerService/api/v1/invoices/1/${lastSyncDate}';
-    // var url = '$invoicerService/api/v1/invoices/${userId}/${lastSyncDate}';
 
       Response result = await _dioClient.get(
         url
@@ -71,12 +71,18 @@ class InvoiceRepository implements IInvoiceRepository {
           Invoice? localInvoice = await getInvoiceByUniversalId(invoices[i].universalId!);
 
           if(localInvoice != null) {
+
+            // Skip if both local and server objects have no changes (on same version)
             if(invoices[i].version == localInvoice.version) continue;
 
-            if (localInvoice!.isSynced == true) {invoices[i].isSynced = true;
+            //Save incoming if local has no changes (isSync still true)
+            if (localInvoice!.isSynced == true) {
+              invoices[i].isSynced = true;
               invoices[i].id = localInvoice.id;
               invoices[i].save();
             }
+
+            //
             else if (localInvoice!.isSynced == false) {
               List<CompareRes> comps = await invoices[i].compare();
               if (comps.isEmpty) {invoices[i].isSynced = true;

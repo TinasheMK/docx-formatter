@@ -44,21 +44,21 @@ class DatabaseHelper {
             country TEXT ,
             telephone TEXT, 
             currency TEXT, 
-            
-            universal_id INTEGER,
-            device_id TEXT,
-            
+            email TEXT ,
+            status TEXT,
             
             created_date TEXT,
             created_by TEXT,
-            version TEXT,
             last_modified_by TEXT,
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
             
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
             
-            email TEXT ,
-            status TEXT 
           )
           ''');
 
@@ -71,11 +71,9 @@ class DatabaseHelper {
             logo TEXT ,
             color INTEGER ,
             country TEXT, 
-            telephone TEXT, 
-            
-            universal_id INTEGER,
-            device_id TEXT,
-            
+            telephone TEXT,   
+            email TEXT ,
+            status TEXT,
             
             created_date TEXT,
             created_by TEXT,
@@ -84,8 +82,12 @@ class DatabaseHelper {
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
             
-            email TEXT ,
-            status TEXT 
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
+
           )
           ''');
 
@@ -105,10 +107,7 @@ class DatabaseHelper {
             particulars TEXT,
             incDate TEXT,
             email TEXT,
-            
-            universal_id INTEGER,
-            device_id TEXT,
-            
+            company_id INTEGER NOT NULL,
             
             created_date TEXT,
             created_by TEXT,
@@ -117,9 +116,15 @@ class DatabaseHelper {
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
             
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
             
             
-            company_id INTEGER NOT NULL 
+            
+
           )
           ''');
 
@@ -151,11 +156,11 @@ class DatabaseHelper {
             
 
             
-            is_optimised BOOLEAN,
-            is_synced BOOLEAN,
+            is_optimised INTEGER,
+            is_synced INTEGER,
             origin_id INTEGER,
             universal_id INTEGER,
-            is_confirmed   BOOLEAN     
+            is_confirmed   INTEGER   
           )
           ''');
 
@@ -166,9 +171,9 @@ class DatabaseHelper {
             total FLOAT NOT NULL,
             product TEXT ,
             description TEXT NOT NULL,
+            invoice_id INTEGER NOT NULL,      
+            units INTEGER NOT NULL, 
             
-            universal_id INTEGER,
-            device_id TEXT,
             
             created_date TEXT,
             created_by TEXT,
@@ -177,8 +182,13 @@ class DatabaseHelper {
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
             
-            invoice_id INTEGER NOT NULL,      
-            units INTEGER NOT NULL       
+      
+            
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
           )
           ''');
 
@@ -188,9 +198,9 @@ class DatabaseHelper {
             total FLOAT NOT NULL,
             ref TEXT ,
             status TEXT ,
-            
-            universal_id INTEGER,
-            device_id TEXT,
+            payment_date TEXT ,
+            invoice_id INTEGER NOT NULL,     
+
             
             created_date TEXT,
             created_by TEXT,
@@ -199,9 +209,13 @@ class DatabaseHelper {
             last_modified_date TEXT,
             deleted_at TEXT DEFAULT 0,
             
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
             
-            payment_date TEXT ,
-            invoice_id INTEGER NOT NULL         
+   
           )
           ''');
 
@@ -209,8 +223,20 @@ class DatabaseHelper {
           CREATE TABLE currency (
             id TEXT PRIMARY KEY,
             symbol TEXT NOT NULL,
+            country TEXT ,
             
-            country TEXT 
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
           )
           ''');
 
@@ -218,12 +244,21 @@ class DatabaseHelper {
           CREATE TABLE wallet (
             id INTEGER PRIMARY KEY,
             balance FLOAT NOT NULL,
-            
-            universal_id INTEGER,
-            device_id TEXT,
-            
             client_id INTEGER NOT NULL,
-            currency TEXT 
+            currency TEXT,
+            
+            created_date TEXT,
+            created_by TEXT,
+            version TEXT,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            deleted_at TEXT DEFAULT 0,
+            
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER,
+            is_confirmed   INTEGER   
           )
           ''');
 
