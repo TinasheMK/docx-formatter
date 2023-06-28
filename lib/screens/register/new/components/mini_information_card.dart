@@ -1,11 +1,11 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 
-import 'package:smart_admin_dashboard/responsive.dart';
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
-import 'package:smart_admin_dashboard/screens/forms/input_form.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/register/register_home_screen.dart';
+
+import '../../../../core/models/daily_info_model.dart';
 
 // import '../new/new_register_home_screen.dart';
 // import '../new/new_register_screen.dart';
@@ -47,7 +47,7 @@ class MiniInformation extends StatelessWidget {
 
 
               },
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.cancel),
               label: Text(
                 "Cancel",
               ),

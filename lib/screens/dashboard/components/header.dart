@@ -1,5 +1,5 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/responsive.dart';
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,6 +11,8 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
       children: [
         if (!Responsive.isDesktop(context))
           IconButton(
@@ -35,8 +37,9 @@ class Header extends StatelessWidget {
               ),
             ],
           ),
-        if (!Responsive.isMobile(context))
-          Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
+        // if (!Responsive.isMobile(context))
+        //   Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
+        SizedBox(width: 20,),
         Expanded(child: SearchField()),
         ProfileCard()
       ],

@@ -1,10 +1,11 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/models/data.dart';
 
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 
 import 'package:flutter/material.dart';
+
+import '../models/data.dart';
 
 class CalendarItem extends StatelessWidget {
   final CalendarData calendarItemData;

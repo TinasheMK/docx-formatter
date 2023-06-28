@@ -11,8 +11,8 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: this.onPressed,
+    return SingleChildScrollView(
+      // onTap: this.onPressed,
       child: Container(
         width: double.infinity,
         height: 45,
@@ -43,7 +43,7 @@ class AppButton extends StatelessWidget {
 Color getButtonColor(context, ButtonType type) {
   switch (type) {
     case ButtonType.PRIMARY:
-      return Theme.of(context).buttonColor;
+      return Theme.of(context).primaryColor;
     case ButtonType.PLAIN:
       return Colors.white;
     default:
@@ -58,6 +58,6 @@ Color getTextColor(context, ButtonType type) {
     case ButtonType.PRIMARY:
       return Colors.white;
     default:
-      return Theme.of(context).buttonColor;
+      return Theme.of(context).primaryColor;
   }
 }

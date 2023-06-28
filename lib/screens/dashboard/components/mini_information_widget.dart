@@ -1,12 +1,11 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/models/daily_info_model.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../responsive.dart';
-import '../../forms/input_form.dart';
-import '../../forms/new_task.dart';
+import '../../../core/models/daily_info_model.dart';
+import '../../../core/utils/responsive.dart';
+import '../../register/new/new_register_home_screen.dart';
 
 class MiniInformationWidget extends StatefulWidget {
   const MiniInformationWidget({
@@ -54,51 +53,33 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               ),
 
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                         child: Container(
-                          padding: EdgeInsets.all(defaultPadding * 0.75),
-                          height: 40,
-                          width: 55,
                           decoration: BoxDecoration(
                             color: widget.dailyData.color!.withOpacity(0.1),
                             borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
-                          child: Text(
+                          child: Padding(
+                            padding: EdgeInsets.all(defaultPadding * 0.75),
+                            child: Text(
                             "New",
-                          ),
+                            ),
+                          )
                         ),
                         onTap: () {
-                          Navigator.of(context).push(new MaterialPageRoute<Null>(
-                              builder: (BuildContext context) {
-                                return new NewTask(dailyData: widget.dailyData,);
-                              },
-                              fullscreenDialog: true));
-                        }
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.all(defaultPadding * 0.75),
-                          height: 40,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: widget.dailyData.color!.withOpacity(0.1),
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Text(
-                            "View",
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(new MaterialPageRoute<Null>(
-                              builder: (BuildContext context) {
-                                return new NewTask(dailyData: widget.dailyData,);
-                              },
-                              fullscreenDialog: true));
+                          if(widget.dailyData.title=="DEEDS"){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => NewRegisterHome(title: widget.dailyData.title! , code: widget.dailyData.code != null?
+                              widget.dailyData.code!:"reg")),
+                            );
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Feature not yet available"),
+                            ));
+                          }
                         }
                     ),
                     ]

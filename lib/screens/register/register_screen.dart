@@ -1,14 +1,12 @@
 import '../../core/constants/color_constants.dart';
-import '../../responsive.dart';
+import '../../core/utils/responsive.dart';
 
-import './components/mini_information_card.dart';
+import '../dashboard/components/header.dart';
+import './components/registration_page_header.dart';
 
-import './components/recent_forums.dart';
-import './components/recent_users.dart';
-import './components/user_details_widget.dart';
+import './components/client_list_registration.dart';
 import 'package:flutter/material.dart';
 
-import 'components/header.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override

@@ -1,8 +1,9 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/models/data.dart';
 import 'package:smart_admin_dashboard/core/widgets/calendar_item.dart';
 
 import 'package:flutter/material.dart';
+
+import '../../../core/models/data.dart';
 
 class ListCalendarData extends StatelessWidget {
   final List<CalendarData> calendarData;
@@ -23,9 +24,7 @@ class ListCalendarData extends StatelessWidget {
               padding: EdgeInsets.only(
                   bottom:
                       data.key != calendarData.length - 1 ? defaultPadding : 0),
-              child: CalendarItem(
-                calendarItemData: data.value,
-              ),
+              child: Text("Wii"),
             ),
           )
           .toList(),

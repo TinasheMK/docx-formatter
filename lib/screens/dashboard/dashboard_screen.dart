@@ -1,13 +1,10 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/responsive.dart';
-
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_card.dart';
-
-import 'package:smart_admin_dashboard/screens/dashboard/components/recent_forums.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/components/recent_users.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../clients/components/client_list.dart';
+import '../objectives/components/objective_list.dart';
 import 'components/header.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -33,22 +30,22 @@ class DashboardScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        RecentUsers(),
+                        ClientList(),
                         SizedBox(height: defaultPadding),
-                        RecentDiscussions(),
+                        ObjectiveList(),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
                       ],
                     ),
                   ),
-                  if (!Responsive.isMobile(context))
-                    SizedBox(width: defaultPadding),
-                  // On Mobile means if the screen is less than 850 we dont want to show it
-                  if (!Responsive.isMobile(context))
-                    Expanded(
-                      flex: 2,
-                      child: UserDetailsWidget(),
-                    ),
+                  // if (!Responsive.isMobile(context))
+                  //   SizedBox(width: defaultPadding),
+                  // // On Mobile means if the screen is less than 850 we dont want to show it
+                  // if (!Responsive.isMobile(context))
+                  //   Expanded(
+                  //     flex: 2,
+                  //     child: UserDetailsWidget(),
+                  //   ),
                 ],
               )
             ],

@@ -1,39 +1,33 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:smart_admin_dashboard/models/registration/Secretary.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
-import 'package:smart_admin_dashboard/screens/register/register_screen.dart';
-import '../../../models/Memo.dart';
-import '../../../models/registration/Client.dart';
+import '../../../core/models/Client.dart';
+import '../../../core/models/Company.dart';
+import '../../../core/models/Director.dart';
 
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/models/Secretary.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../models/registration/Director.dart';
-import '../../../models/registration/Company.dart';
-import '../../../responsive.dart';
+import '../../../core/utils/responsive.dart';
 
-import '../../generator/CR6_form_generator.dart';
-import '../../generator/register_download_screen.dart';
-import '../../home/home_screen.dart';
-import '../../memos/memo_list_material.dart';
+import '../../../core/utils/company_reg_doc_generator.dart';
+import '../../dashboard/components/header.dart';
+import '../../dashboard/home_screen.dart';
+import '../components/memo_list_material.dart';
 import './components/mini_information_card.dart';
 
-import '../components/recent_forums.dart';
-import '../components/recent_users.dart';
-import '../components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../components/header.dart';
 import 'components/dropdown_search.dart';
 
 
 class NewRegisterScreen extends StatefulWidget {
-  NewRegisterScreen({required this.title, required this.code});
+  NewRegisterScreen({required this.title, required this.code, this.companyId});
   final String title;
   final String code;
+  final int? companyId;
 
   @override
   _NewRegisterScreenState createState() => _NewRegisterScreenState();
@@ -800,7 +794,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
                 ElevatedButton.icon(
                     icon: Icon(
-                      Icons.close,
+                      Icons.add,
                       size: 14,
                     ),
                     style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),

@@ -1,11 +1,11 @@
 
+import 'package:smart_admin_dashboard/screens/clients/components/client_list.dart';
+
 import '../../core/constants/color_constants.dart';
-import '../../../responsive.dart';
-import '../dashboard/components/recent_forums.dart';
-import '../dashboard/components/recent_users.dart';
-import '../register/components/header.dart';
+import '../../core/utils/responsive.dart';
+import '../dashboard/components/header.dart';
+import '../dashboard/components/user_details_widget.dart';
 import './components/mini_information_card.dart';
-import './components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
 
@@ -37,7 +37,7 @@ class ClientsScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        RecentUsers(),
+                        ClientList(),
                         SizedBox(height: defaultPadding),
                         // RecentDiscussions(),
                         if (Responsive.isMobile(context))
@@ -46,14 +46,7 @@ class ClientsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!Responsive.isMobile(context))
-                    SizedBox(width: defaultPadding),
-                  // On Mobile means if the screen is less than 850 we dont want to show it
-                  if (!Responsive.isMobile(context))
-                    Expanded(
-                      flex: 2,
-                      child: UserDetailsWidget(),
-                    ),
+
                 ],
               )
             ],

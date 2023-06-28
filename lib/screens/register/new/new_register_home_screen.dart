@@ -1,19 +1,15 @@
-import '../../../core/constants/color_constants.dart';
-import '../../../core/widgets/app_button_widget.dart';
-import '../../../core/widgets/input_widget.dart';
-import '../../../responsive.dart';
-import '../../../screens/home/home_screen.dart';
-import '../../home/components/side_menu.dart';
-import './components/slider_widget.dart';
+import '../../../core/utils/responsive.dart';
+import '../../dashboard/components/side_menu.dart';
 
 import 'package:flutter/material.dart';
 
 import 'new_register_screen.dart';
 
 class NewRegisterHome extends StatefulWidget {
-  NewRegisterHome({required this.title, required this.code});
+  NewRegisterHome({required this.title, required this.code, this.companyId});
   final String title;
   final String code;
+  final int? companyId;
   @override
   _NewRegisterHomeState createState() => _NewRegisterHomeState();
 }
@@ -64,7 +60,7 @@ class _NewRegisterHomeState extends State<NewRegisterHome> with SingleTickerProv
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewRegisterScreen(title: widget.title, code: widget.code),
+              child: NewRegisterScreen(title: widget.title, code: widget.code, companyId: widget.companyId),
             ),
           ],
         ),

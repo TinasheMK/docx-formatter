@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:smart_admin_dashboard/models/slider_model.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../../../../core/models/slider_model.dart';
 
 class SliderWidget extends StatefulWidget {
   const SliderWidget({
