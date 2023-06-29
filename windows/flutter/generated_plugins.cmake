@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_window
   file_selector_windows
-  flutter_localization
   permission_handler_windows
   printing
   share_plus

@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_window
   file_selector_linux
-  flutter_localization
   printing
   url_launcher_linux
 )

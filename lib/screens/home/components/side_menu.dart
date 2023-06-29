@@ -137,13 +137,13 @@ class SideMenu extends ConsumerWidget {
               loaded: (loaded) {
 
 
-                SchedulerBinding.instance!
-                    .addPostFrameCallback((_) {
-                  Navigator.pop(context, true);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(loaded.toString()),
-                  ));
-                });
+                // SchedulerBinding.instance!
+                //     .addPostFrameCallback((_) {
+                //   Navigator.pop(context, true);
+                //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //     content: Text(loaded.toString()),
+                //   ));
+                // });
 
 
 

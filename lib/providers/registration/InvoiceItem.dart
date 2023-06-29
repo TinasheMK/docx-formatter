@@ -48,6 +48,25 @@ class InvoiceItem {
     data['description'] = this.description;
     return data;
   }
+  Map<String, dynamic> toSyncJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    // data['id'] = this.universalId??null;
+    // data['originId'] = this.id;
+    // data['isSynced'] = this.isSynced??false;
+    // data['version'] = this.version;
+    // data['isConfirmed'] = this.isConfirmed??null;
+
+
+    data['product'] = this.product;
+    data['productId'] = null;
+    data['unitPrice'] = this.unitPrice;
+    data['units'] = this.units;
+    data['total'] = this.total;
+    // data['invoiceId'] = this.invoiceId;
+    data['description'] = this.description;
+    return data;
+  }
 
   Future<void> save() async {
     Map<String, dynamic> row = {

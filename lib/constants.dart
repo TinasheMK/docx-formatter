@@ -1,6 +1,7 @@
 bool useTestUrl = true;
 
-final String testBaseUrl = 'http://10.0.2.2:8765/';
+// final String testBaseUrl = 'http://10.0.2.2:8765/';
+final String testBaseUrl = 'http://localhost:8765/';
 // 'https://testa.myworklink.uk/';
 final String liveBaseUrl = 'https://api.myworklink.uk/';
 

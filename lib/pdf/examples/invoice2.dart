@@ -30,13 +30,13 @@ Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, Invoice data) a
   // invoice.currencyFull!.symbol = '\$';
   // invoice.client = Client();
   // invoice.client!.companyName = 'fgh';
-  // invoice.companyFull = Company();
-  // invoice.companyFull!.companyName = 'kl;';
+  // invoice.company = Company();
+  // invoice.company!.companyName = 'kl;';
 
   var _model = ImageModel();
 
   final directory = await getDownloadPath2();
-  if(invoice.companyFull?.logo!=null) logoPath = "${directory}${invoice.companyFull!.logo!}";
+  if(invoice.company?.logo!=null) logoPath = "${directory}${invoice.company!.logo!}";
 
 
   _model.requestFilePermission();
@@ -207,12 +207,12 @@ void _drawFooter(PdfPage page, Size pageSize) {
   page.graphics.drawLine(linePen, Offset(0, pageSize.height - 100),
       Offset(pageSize.width, pageSize.height - 100));
 
-  String addr = invoice.companyFull!.street??"";
-  String city = invoice.companyFull!.city??"";
-  String country = invoice.companyFull!.country??"";
-  String email = invoice.companyFull!.email??"";
+  String addr = invoice.company!.street??"";
+  String city = invoice.company!.city??"";
+  String country = invoice.company!.country??"";
+  String email = invoice.company!.email??"";
   String footerContent =
-      invoice.companyFull!.companyName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
+      invoice.company!.companyName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
   //Added 30 as a margin for the layout
   page.graphics.drawString(
       footerContent, PdfStandardFont(PdfFontFamily.helvetica, 9),

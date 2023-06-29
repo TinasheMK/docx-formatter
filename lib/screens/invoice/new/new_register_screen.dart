@@ -90,7 +90,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   List persons = [];
   List original = [];
-
+  DateFormat dateTimeFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
   List<Client> directors = [];
 
 
@@ -188,7 +188,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       invoice.client = await getClient(invoice.clientId);
       invoice.invoiceItems = await getInvoiceItems(invoiceId);
       invoice.payments = await getInvoicePayments(invoiceId);
-      invoice.companyFull = await getCompany(invoice.companyId);
+      invoice.company = await getCompany(invoice.companyId);
 
     }else{
       invoice = Invoice.fromJson({});
@@ -211,10 +211,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     if(invoice.payments == null) {
       invoice.payments= [Payment.fromJson({})];
     }
-    if(invoice.companyFull == null) {
+    if(invoice.company == null) {
       var activeCompany = await prefs!.getInt(UserPreference.activeCompany);
 
-      if(activeCompany!=null)invoice.companyFull= await getCompany(activeCompany);
+      if(activeCompany!=null)invoice.company= await getCompany(activeCompany);
     }
 
 
@@ -359,7 +359,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         ));
         return null;
       }
-      if(invoice.companyFull == null){
+      if(invoice.company == null){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Please select or add your company details in profile."),
         ));
@@ -368,7 +368,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
       invoice.totalAmount = invoice.subTotalAmount;
       invoice.clientId = invoice.client?.id;
-      invoice.companyId = invoice.companyFull?.id;
+      invoice.companyId = invoice.company?.id;
       double sum = 0.0;
 
       if(invoice.payments!.isNotEmpty) {
@@ -436,7 +436,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(invoice.companyFull?.companyName ?? "Select" , style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.company?.companyName ?? "Select" , style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -482,7 +482,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       ));
                       return;
                     }
-                    if(invoice.companyFull == null){
+                    if(invoice.company == null){
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Please select or add your company details in profile."),
                       ));
@@ -942,7 +942,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ));
                         return;
                       }
-                      if(invoice.companyFull == null){
+                      if(invoice.company == null){
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Please select or add your company details in profile."),
                         ));
@@ -990,7 +990,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       ));
                       return;
                     }
-                    if(invoice.companyFull == null){
+                    if(invoice.company == null){
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Please select or add your company details in profile."),
                       ));
@@ -1382,7 +1382,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                             var pay = new Payment.fromJson({});
 
                             pay.total = double.parse(paymentAmount);
-                            pay.paymentDate = payDate.toString();
+                            pay.paymentDate = dateTimeFormat.format(payDate);
                             pay.invoiceId = invoice.id;
 
                             print(invoice.payments);
@@ -1561,7 +1561,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     return GestureDetector(
       child: Text(c.companyName!) ,
       onTap: (){
-        invoice.companyFull = c;
+        invoice.company = c;
         Navigator.of(context).pop();
         setState(() {
 
@@ -1754,7 +1754,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     var _model = ImageModel();
 
     final directory = await getDownloadPath2();
-    if(invoice.companyFull!.logo!=null) logoPath = "${directory}${invoice.companyFull!.logo!}";
+    if(invoice.company!.logo!=null) logoPath = "${directory}${invoice.company!.logo!}";
 
 
     _model.requestFilePermission();
@@ -1898,12 +1898,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     page.graphics.drawLine(linePen, Offset(0, pageSize.height - 100),
         Offset(pageSize.width, pageSize.height - 100));
 
-    String addr = invoice.companyFull!.street??"";
-    String city = invoice.companyFull!.city??"";
-    String country = invoice.companyFull!.country??"";
-    String email = invoice.companyFull!.email??"";
+    String addr = invoice.company!.street??"";
+    String city = invoice.company!.city??"";
+    String country = invoice.company!.country??"";
+    String email = invoice.company!.email??"";
     String footerContent =
-        invoice.companyFull!.companyName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
+        invoice.company!.companyName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
     //Added 30 as a margin for the layout
     page.graphics.drawString(
         footerContent, PdfStandardFont(PdfFontFamily.helvetica, 9),

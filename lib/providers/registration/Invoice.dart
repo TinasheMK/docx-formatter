@@ -33,7 +33,7 @@ class Invoice {
   Client?   client;
   int?   companyId;
 
-  Company?   companyFull;
+  Company?   company;
   List<Payment>?     payments;
   List<InvoiceItem>? invoiceItems;
 
@@ -62,6 +62,7 @@ class Invoice {
     this.invoiceStatus,
     this.clientId,
     this.client,
+    this.company,
     this.payments,
     this.invoiceItems,
 
@@ -158,12 +159,11 @@ class Invoice {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     final Map<String, dynamic> client = new Map<String, dynamic>();
     final Map<String, dynamic> business = new Map<String, dynamic>();
-
     client['id'] = this.client?.universalId??1;
-    business['id'] = this.companyFull?.universalId??1;
+    business['id'] = this.company?.universalId??1;
 
     data['id'] = this.universalId??null;
-
+    data['originId'] = this.id;
     data['isSynced'] = this.isSynced??false;
     data['version'] = this.version;
     data['isConfirmed'] = this.isConfirmed??null;
@@ -182,8 +182,8 @@ class Invoice {
     data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
     // data['clientId'] = this.clientId;
-    data['invoiceItems'] = this.invoiceItems?.map((item) => item.toJson())??[];
-    data['payments'] = this.payments?.map((item) => item.toJson())??[];
+    data['invoiceItems'] = this.invoiceItems?.map((item) => item.toSyncJson()).toList();
+    data['payments'] = this.payments?.map((item) => item.toJson()).toList();
     data['client'] = client;
     data['business'] = business;
 
@@ -417,6 +417,9 @@ Future<List<Invoice>> getInvoicesForSync() async {
   for( int i =0; i  <maps?.length; i++)   {
 
     Client client = await getClient(maps?[i]['client_id']);
+    List<InvoiceItem>invoiceItems = await getInvoiceItems(maps?[i]['id']);
+    List<Payment>payments = await getInvoicePayments(maps?[i]['id']);
+    Company company = await getCompany(maps?[i]['company_id']);
 
     invoices.add(
         Invoice(
@@ -437,8 +440,10 @@ Future<List<Invoice>> getInvoicesForSync() async {
       invoiceStatus : maps?[i]['invoice_status'],
       clientId : maps?[i]['client_id'],
       client: client,
-      payments : maps?[i]['payments'],
-      invoiceItems : maps?[i]['invoice_items'],
+      company: company,
+      payments :payments,
+      invoiceItems : invoiceItems,
+
             universalId : maps?[i]["universal_id"],
             // isOptimised : maps?[i]["is_optimised"],
             isSynced : maps?[i]["is_synced"]==1?true:false,

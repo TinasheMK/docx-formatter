@@ -24,7 +24,7 @@ Future <String> invoiceGenerator(Invoice invoice) async {
     String? logoPath;
 
     final directory2 = await getDownloadPath2();
-    if(invoice.companyFull!.logo!=null) logoPath = "${directory2}${invoice.companyFull!.logo}";
+    if(invoice.company!.logo!=null) logoPath = "${directory2}${invoice.company!.logo}";
 
     var testFileContent;
     var img;
@@ -79,11 +79,11 @@ Future <String> invoiceGenerator(Invoice invoice) async {
 
 
     content
-      ..add(TextContent("fromcompany", invoice.companyFull?.companyName))
-      ..add(TextContent("fromaddress", invoice.companyFull?.street ?? "N/A"))
-      ..add(TextContent("fromcity", invoice.companyFull?.city ?? "N/A"))
-      ..add(TextContent("fromcountry", invoice.companyFull?.country ?? "N/A"))
-      ..add(TextContent("fromphone", invoice.companyFull?.telephone ?? "N/A"))
+      ..add(TextContent("fromcompany", invoice.company?.companyName))
+      ..add(TextContent("fromaddress", invoice.company?.street ?? "N/A"))
+      ..add(TextContent("fromcity", invoice.company?.city ?? "N/A"))
+      ..add(TextContent("fromcountry", invoice.company?.country ?? "N/A"))
+      ..add(TextContent("fromphone", invoice.company?.telephone ?? "N/A"))
 
       ..add(TextContent("tocompany", invoice.client?.companyName))
       ..add(TextContent("toaddress", invoice.client?.street ?? "N/A"))
