@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:smart_admin_dashboard/providers/slider_model.dart';
+import 'package:smart_admin_dashboard/core/types/slider_model.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

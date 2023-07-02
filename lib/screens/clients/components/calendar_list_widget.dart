@@ -1,4 +1,4 @@
-import 'package:smart_admin_dashboard/core/models/data.dart';
+import 'package:smart_admin_dashboard/core/types/data.dart';
 import 'package:smart_admin_dashboard/core/widgets/wrapper.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/list_calendar_data.dart';
 

@@ -11,7 +11,7 @@ import '../../../core/utils/UserPreference.dart';
 import '../../../core/providers/registration/InvoiceItem.dart';
 import '../../../core/providers/registration/Payment.dart';
 import '../../invoice_templates/app.dart';
-import '../../../providers/Memo.dart';
+import '../../../core/types/Memo.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/models/Company.dart';
 import '../../../core/models/Currency.dart';

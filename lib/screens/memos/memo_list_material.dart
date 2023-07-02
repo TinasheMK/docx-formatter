@@ -2,7 +2,7 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import './components/memos_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../providers/Memo.dart';
+import '../../core/types/Memo.dart';
 
 class MemoListMaterial extends StatefulWidget {
   @override

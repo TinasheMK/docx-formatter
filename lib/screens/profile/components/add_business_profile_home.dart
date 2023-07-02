@@ -1,9 +1,9 @@
 import 'package:flutter/scheduler.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
+import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
 
-import '../../../providers/Memo.dart';
+import '../../../core/types/Memo.dart';
 import '../../../core/models/Company.dart';
 import '../../../core/utils/responsive.dart';
 import '../new/new_profile_home_screen.dart';

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
-import 'package:smart_admin_dashboard/providers/recent_user_model.dart';
+import 'package:smart_admin_dashboard/core/types/recent_user_model.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/material.dart';
 

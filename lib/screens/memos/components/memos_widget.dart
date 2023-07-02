@@ -1,10 +1,10 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
-import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
+import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
 import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 
-import '../../../providers/Memo.dart';
+import '../../../core/types/Memo.dart';
 import '../../../core/models/Client.dart';
 
 class MemoSelectionSection extends StatelessWidget {

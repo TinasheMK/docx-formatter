@@ -1,4 +1,4 @@
-import '../../../core/models/data.dart';
+import '../../../core/types/data.dart';
 import '../../../core/widgets/wrapper.dart';
 import '../../../screens/dashboard/components/list_calendar_data.dart';
 

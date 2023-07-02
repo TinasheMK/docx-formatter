@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 
 import 'core/constants/constants.dart';
 import 'core/providers/auth/model/login_response.dart';
-import 'providers/custom_exception.dart';
+import 'core/exceptions/custom_exception.dart';
 import 'core/providers/profile/worker_profile.dart';
 
 

@@ -5,7 +5,7 @@ import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 
 import 'package:flutter/material.dart';
 
-import '../models/data.dart';
+import '../types/data.dart';
 
 class CalendarItem extends StatelessWidget {
   final CalendarData calendarItemData;

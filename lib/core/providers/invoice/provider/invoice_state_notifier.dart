@@ -8,7 +8,7 @@ import 'package:smart_admin_dashboard/core/providers/invoice/model/syncresult.da
 // import 'package:work_link/src/models/custom_exception.dart';
 // import 'package:work_link/src/models/profile/worker_profile.dart';
 
-import '../../../../providers/custom_exception.dart';
+import '../../../exceptions/custom_exception.dart';
 import '../../profile/worker_profile.dart';
 import '../../../models/Invoice.dart';
 import '../data/invoice_repository.dart';

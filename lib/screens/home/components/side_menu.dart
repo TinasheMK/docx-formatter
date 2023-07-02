@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:smart_admin_dashboard/providers/Conflict.dart';
+import 'package:smart_admin_dashboard/core/types/Conflict.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 
 import '../../../core/utils/UserPreference.dart';

@@ -2,7 +2,7 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/screens/forms/components/add_new_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../providers/daily_info_model.dart';
+import '../../core/types/daily_info_model.dart';
 
 class NewTask extends StatefulWidget {
   const NewTask({

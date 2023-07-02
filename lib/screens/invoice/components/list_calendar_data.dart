@@ -1,5 +1,5 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/models/data.dart';
+import 'package:smart_admin_dashboard/core/types/data.dart';
 import 'package:smart_admin_dashboard/core/widgets/calendar_item.dart';
 
 import 'package:flutter/material.dart';

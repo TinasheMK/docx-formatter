@@ -11,7 +11,7 @@ import '../../../../../app_providers.dart';
 import '../../../utils/UserPreference.dart';
 import '../../../constants/constants.dart';
 import '../../services/exception_handler.dart';
-import '../../../../providers/compare_res.dart';
+import '../../../types/compare_res.dart';
 import '../../../models/Invoice.dart';
 import '../model/syncresult.dart';
 
