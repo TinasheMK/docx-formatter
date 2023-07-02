@@ -6,7 +6,6 @@ import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/core/widgets/input_widget.dart';
 import 'package:smart_admin_dashboard/screens/home/home_screen.dart';
 import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dart';
-import 'package:smart_admin_dashboard/screens/generator/data_store.dart';
 
 import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/login/register_screen.dart';
@@ -17,8 +16,7 @@ import '../../core/providers/auth/provider/auth_provider.dart';
 import '../../core/providers/profile/worker_profile.dart';
 import '../../core/utils/responsive.dart';
 import '../../core/providers/services/shared_pref_service.dart';
-import '../generator/databaseHelper.dart';
-import '../generator/register_download_screen.dart';
+import '../../core/db/databaseHelper.dart';
 
 // final dbHelper = DatabaseHelper();
 class Login extends StatefulWidget {

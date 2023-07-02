@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import '../../main.dart';
-import '../../screens/generator/databaseHelper.dart';
+import '../db/databaseHelper.dart';
 import '../providers/enums/status_enum.dart';
 import 'Employee.dart';
 

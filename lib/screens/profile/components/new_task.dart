@@ -1,6 +1,5 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/screens/forms/components/add_new_widget.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 
 import '../../../core/types/daily_info_model.dart';
 
@@ -39,7 +38,7 @@ class _NewTaskState extends State<NewTask> {
                     Center(
                       child: Text("What do you want to add? Select from below."),
                     ),
-                    SelectionSection(tasks: billings),
+                    // SelectionSection(tasks: billings),
                   ],
                 )),
           ),

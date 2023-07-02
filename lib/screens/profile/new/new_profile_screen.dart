@@ -25,9 +25,6 @@ import '../../../core/utils/responsive.dart';
 
 import '../../clients/clients_home_screen.dart';
 import '../../dashboard/components/header.dart';
-import '../../generator/CR6_form_generator.dart';
-import '../../generator/invoicegenerator.dart';
-import '../../generator/register_download_screen.dart';
 import '../../home/home_screen.dart';
 import '../../invoice/components/header.dart';
 import '../../memos/memo_list_material.dart';

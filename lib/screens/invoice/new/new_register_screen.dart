@@ -26,7 +26,7 @@ import '../../../core/constants/color_constants.dart';
 
 import '../../../core/providers/services/permissions.dart';
 import '../../dashboard/components/header.dart';
-import '../../generator/save_file_mobile.dart';
+import '../../../core/utils/save_file_mobile.dart';
 import '../../memos/memo_list_material.dart';
 import '../register_home_screen.dart';
 import './components/mini_information_card.dart';

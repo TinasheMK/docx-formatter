@@ -100,7 +100,7 @@ flutter:
     - assets/logo/
     - assets/fonts/Roboto/
     - assets/jsons/
-    - lib/services/
+#    - lib/services/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

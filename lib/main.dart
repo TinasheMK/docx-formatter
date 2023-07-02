@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/init/provider_list.dart';
-import 'package:smart_admin_dashboard/screens/generator/databaseHelper.dart';
+import 'package:smart_admin_dashboard/core/db/databaseHelper.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
