@@ -1,22 +1,15 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/core/widgets/input_widget.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/home_screen.dart';
 import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
-import 'package:sqflite/sqflite.dart';
-
-import '../../core/utils/UserPreference.dart';
 import '../../core/providers/auth/provider/auth_provider.dart';
-import '../../core/providers/profile/worker_profile.dart';
 import '../../core/utils/responsive.dart';
-import '../../core/providers/services/shared_pref_service.dart';
-import '../../core/db/databaseHelper.dart';
+import '../../core/utils/shared_pref_service.dart';
 
 // final dbHelper = DatabaseHelper();
 class Register extends StatefulWidget {

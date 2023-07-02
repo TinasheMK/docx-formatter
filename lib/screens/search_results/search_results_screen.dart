@@ -3,8 +3,6 @@ import '../../core/constants/color_constants.dart';
 import '../../core/utils/responsive.dart';
 import '../../core/models/Client.dart';
 import '../dashboard/components/header.dart';
-import '../dashboard/components/recent_users.dart';
-import '../invoice/components/header.dart';
 
 import 'package:flutter/material.dart';
 

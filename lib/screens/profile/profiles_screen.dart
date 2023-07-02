@@ -4,18 +4,11 @@ import 'package:smart_admin_dashboard/screens/profile/components/add_business_pr
 
 import '../../core/utils/UserPreference.dart';
 import '../../core/constants/color_constants.dart';
-import '../../core/widgets/app_button_widget.dart';
 import '../../core/widgets/input_widget.dart';
-import '../../core/models/Wallet.dart';
 import '../../core/utils/responsive.dart';
-
 import '../dashboard/components/header.dart';
-import '../invoice/components/header.dart';
 import './components/profiles_header.dart';
-
 import 'package:flutter/material.dart';
-
-// import 'components/select_client.dart';
 
 
 class ProfileScreen extends StatelessWidget {

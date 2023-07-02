@@ -5,8 +5,8 @@
 
 import 'package:flutter/cupertino.dart';
 import '../../../main.dart';
-import '../providers/registration/InvoiceItem.dart';
-import '../providers/registration/Payment.dart';
+import 'InvoiceItem.dart';
+import 'Payment.dart';
 import '../types/compare_res.dart';
 import 'Client.dart';
 import 'Company.dart';

@@ -7,10 +7,11 @@ import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_admin_dashboard/core/providers/services/shared_pref_service.dart';
-import 'package:sqflite/sqflite.dart';
+ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
+
+import 'core/utils/shared_pref_service.dart';
 final dbHelper = DatabaseHelper();
 
 Future<void> main() async {

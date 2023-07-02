@@ -9,14 +9,12 @@ import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dar
 
 import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/login/register_screen.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../../core/utils/UserPreference.dart';
 import '../../core/providers/auth/provider/auth_provider.dart';
 import '../../core/providers/profile/worker_profile.dart';
 import '../../core/utils/responsive.dart';
-import '../../core/providers/services/shared_pref_service.dart';
-import '../../core/db/databaseHelper.dart';
+import '../../core/utils/shared_pref_service.dart';
 
 // final dbHelper = DatabaseHelper();
 class Login extends StatefulWidget {
