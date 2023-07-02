@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:smart_admin_dashboard/providers/registration/Company.dart';
+import 'package:smart_admin_dashboard/core/models/Company.dart';
 
 import '../main.dart';
 

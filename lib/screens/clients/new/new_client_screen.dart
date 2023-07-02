@@ -6,9 +6,9 @@ import '../../../core/utils/UserPreference.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/input_widget.dart';
 
-import '../../../providers/registration/Client.dart';
-import '../../../providers/registration/Employee.dart';
-import '../../../providers/registration/Wallet.dart';
+import '../../../core/models/Client.dart';
+import '../../../core/models/Employee.dart';
+import '../../../core/models/Wallet.dart';
 import '../../../core/utils/responsive.dart';
 import '../../dashboard/components/header.dart';
 import '../clients_home_screen.dart';

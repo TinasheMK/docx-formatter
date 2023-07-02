@@ -26,8 +26,8 @@ import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
 import '../../../core/providers/registration/InvoiceItem.dart';
-import '../../../providers/registration/Invoice.dart';
-import '../../../providers/registration/InvoiceItem.dart';
+import '../../../core/models/Invoice.dart';
+import '../../../core/models/InvoiceItem.dart';
 import '../data.dart';
 
 Future<Uint8List> generateInvoice(

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:smart_admin_dashboard/providers/registration/Invoice.dart';
+import 'package:smart_admin_dashboard/core/models/Invoice.dart';
 
 
 part 'invoice_state.freezed.dart';

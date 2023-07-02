@@ -1,7 +1,7 @@
 import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 
-import '../../providers/registration/Client.dart';
+import '../../core/models/Client.dart';
 import '../home/components/side_menu.dart';
 import 'search_results_screen.dart';
 

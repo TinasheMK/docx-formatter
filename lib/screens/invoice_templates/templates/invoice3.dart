@@ -23,7 +23,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-import '../../../providers/registration/Invoice.dart';
+import '../../../core/models/Invoice.dart';
 import '../data.dart';
 
 Future<Uint8List> generateInvoice3(

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // import '../../../providers/Conflict.dart';
 import '../../../providers/Conflict.dart';
-import '../../../providers/registration/Client.dart';
+import '../../../core/models/Client.dart';
 
 class ConflictSelectionSection extends StatelessWidget {
   ConflictSelectionSection({

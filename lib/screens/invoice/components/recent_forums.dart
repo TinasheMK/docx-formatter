@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/invoice/new/new_register_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/invoice/register_home_screen.dart';
 
-import '../../../providers/registration/Client.dart';
-import '../../../providers/registration/Invoice.dart';
+import '../../../core/models/Client.dart';
+import '../../../core/models/Invoice.dart';
 import '../../../core/utils/responsive.dart';
 
 

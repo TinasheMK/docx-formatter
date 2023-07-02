@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 
 import '../../../providers/Memo.dart';
-import '../../../providers/registration/Company.dart';
+import '../../../core/models/Company.dart';
 import '../../../core/utils/responsive.dart';
 import '../new/new_profile_home_screen.dart';
 import 'add_business_profile.dart';

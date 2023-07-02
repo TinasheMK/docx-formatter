@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/UserPreference.dart';
 import '../../../providers/Memo.dart';
-import '../../../providers/registration/Company.dart';
+import '../../../core/models/Company.dart';
 import '../../clients/new/new_client_home_screen.dart';
 import '../new/new_profile_home_screen.dart';
 

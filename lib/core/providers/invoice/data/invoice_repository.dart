@@ -12,7 +12,7 @@ import '../../../utils/UserPreference.dart';
 import '../../../constants/constants.dart';
 import '../../services/exception_handler.dart';
 import '../../../../providers/compare_res.dart';
-import '../../../../providers/registration/Invoice.dart';
+import '../../../models/Invoice.dart';
 import '../model/syncresult.dart';
 
 abstract class IInvoiceRepository {

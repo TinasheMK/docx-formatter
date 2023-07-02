@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../../providers/Memo.dart';
-import '../../providers/registration/Company.dart';
-import '../../providers/registration/Invoice.dart';
+import '../../core/models/Company.dart';
+import '../../core/models/Invoice.dart';
 
 ///
 /// Read file template.docx, produce it and save

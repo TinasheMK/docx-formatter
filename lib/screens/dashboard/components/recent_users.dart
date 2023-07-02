@@ -8,7 +8,7 @@ import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
-import '../../../providers/registration/Client.dart';
+import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
 import '../../clients/clients_home_screen.dart';
 import '../../clients/new/new_client_home_screen.dart';

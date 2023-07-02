@@ -1,4 +1,4 @@
-import '../../../../providers/registration/Invoice.dart';
+import '../../../models/Invoice.dart';
 
 class InvoiceSyncResult {
   bool?    success;

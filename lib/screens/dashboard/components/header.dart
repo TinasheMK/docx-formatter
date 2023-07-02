@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
 
 import '../../../core/utils/UserPreference.dart';
-import '../../../providers/registration/Client.dart';
+import '../../../core/models/Client.dart';
 import '../../search_results/clients_home_screen.dart';
 
 class Header extends StatelessWidget {

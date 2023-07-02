@@ -25,7 +25,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:smart_admin_dashboard/providers/registration/Invoice.dart';
+import 'package:smart_admin_dashboard/core/models/Invoice.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'data.dart';

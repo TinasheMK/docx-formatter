@@ -10,7 +10,7 @@ import 'package:smart_admin_dashboard/core/providers/invoice/model/syncresult.da
 
 import '../../../../providers/custom_exception.dart';
 import '../../profile/worker_profile.dart';
-import '../../../../providers/registration/Invoice.dart';
+import '../../../models/Invoice.dart';
 import '../data/invoice_repository.dart';
 import 'invoice_state.dart';
 

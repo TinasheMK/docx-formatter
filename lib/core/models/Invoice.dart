@@ -5,13 +5,13 @@
 
 import 'package:flutter/cupertino.dart';
 import '../../../main.dart';
-import '../../core/providers/registration/InvoiceItem.dart';
-import '../../core/providers/registration/Payment.dart';
-import '../compare_res.dart';
+import '../providers/registration/InvoiceItem.dart';
+import '../providers/registration/Payment.dart';
+import '../../providers/compare_res.dart';
 import 'Client.dart';
 import 'Company.dart';
 import 'Currency.dart';
-import 'InvoiceItem.dart'; 
+import 'InvoiceItem.dart';
 
 class Invoice {
   int? id;

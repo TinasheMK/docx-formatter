@@ -1,12 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
+import 'package:smart_admin_dashboard/core/models/Currency.dart';
 import 'package:smart_admin_dashboard/screens/profile/components/add_business_profile_home.dart';
 
 import '../../core/utils/UserPreference.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/widgets/app_button_widget.dart';
 import '../../core/widgets/input_widget.dart';
-import '../../providers/registration/Wallet.dart';
+import '../../core/models/Wallet.dart';
 import '../../core/utils/responsive.dart';
 
 import '../dashboard/components/header.dart';

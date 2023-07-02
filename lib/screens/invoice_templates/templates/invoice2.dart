@@ -4,15 +4,15 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart' as pdf;
-import 'package:smart_admin_dashboard/providers/registration/Company.dart';
-import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
+import 'package:smart_admin_dashboard/core/models/Company.dart';
+import 'package:smart_admin_dashboard/core/models/Currency.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart' ;
 import 'package:intl/intl.dart';
 import '../../../core/providers/services/permissions.dart';
 import 'package:flutter/material.dart';
 
-import '../../../providers/registration/Client.dart';
-import '../../../providers/registration/Invoice.dart';
+import '../../../core/models/Client.dart';
+import '../../../core/models/Invoice.dart';
 import '../../generator/save_file_mobile.dart';
 import '../data.dart';
 

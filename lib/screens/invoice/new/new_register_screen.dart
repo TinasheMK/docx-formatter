@@ -12,11 +12,11 @@ import '../../../core/providers/registration/InvoiceItem.dart';
 import '../../../core/providers/registration/Payment.dart';
 import '../../invoice_templates/app.dart';
 import '../../../providers/Memo.dart';
-import '../../../providers/registration/Client.dart';
-import '../../../providers/registration/Company.dart';
-import '../../../providers/registration/Currency.dart';
-import '../../../providers/registration/Invoice.dart';
-import '../../../providers/registration/Wallet.dart';
+import '../../../core/models/Client.dart';
+import '../../../core/models/Company.dart';
+import '../../../core/models/Currency.dart';
+import '../../../core/models/Invoice.dart';
+import '../../../core/models/Wallet.dart';
 import '../../../core/utils/responsive.dart';
 
 import 'package:intl/intl.dart';
