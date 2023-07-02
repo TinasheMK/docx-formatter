@@ -3,10 +3,8 @@ import '../../core/constants/color_constants.dart';
 import '../../core/utils/responsive.dart';
 import '../dashboard/components/header.dart';
 import '../dashboard/components/recent_users.dart';
-import '../invoice/components/header.dart';
-import './components/mini_information_card.dart';
-import './components/user_details_widget.dart';
-import 'package:flutter/material.dart';
+import './components/clients_header.dart';
+ import 'package:flutter/material.dart';
 
 
 class ClientsScreen extends StatelessWidget {
@@ -26,7 +24,7 @@ class ClientsScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(),
+              ClientsHeader(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

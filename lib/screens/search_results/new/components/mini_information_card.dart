@@ -2,7 +2,7 @@
 // import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 //
 // import 'package:smart_admin_dashboard/responsive.dart';
-// import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
+// import 'package:smart_admin_dashboard/screens/dashboard/components/clients_header_widget.dart';
 // import 'package:flutter/material.dart';
 //
 // import '../../clients_home_screen.dart';

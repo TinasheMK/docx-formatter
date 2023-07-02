@@ -11,7 +11,7 @@ import '../../../main.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
 import '../../client/clients_home_screen.dart';
-import '../../client/new/new_client_home_screen.dart';
+import '../../client/new/client_home_screen.dart';
 
 
 
@@ -145,7 +145,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewClientHome(title: "Edit Client", code: "edit", clientId: userInfo.id );
+                      return new ClientHome(title: "Edit Client", code: "edit", clientId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -157,7 +157,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
               onTap:(){
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewClientHome(title: "Edit Client", code: "edit", clientId: userInfo.id );
+                      return new ClientHome(title: "Edit Client", code: "edit", clientId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },

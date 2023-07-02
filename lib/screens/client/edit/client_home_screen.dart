@@ -1,27 +1,21 @@
 
-import '../../../core/constants/color_constants.dart';
-import '../../../core/widgets/app_button_widget.dart';
-import '../../../core/widgets/input_widget.dart';
-import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
-import '../../dashboard/home_screen.dart';
 import '../../dashboard/components/side_menu.dart';
-import './components/slider_widget.dart';
 
 import 'package:flutter/material.dart';
 
-import 'new_client_screen.dart';
+import 'client_screen.dart';
 
-class NewClientHome extends StatefulWidget {
-  NewClientHome({required this.title, required this.code, this.clientId});
+class ClientHome extends StatefulWidget {
+  ClientHome({required this.title, required this.code, this.clientId});
   final String title;
   final String code;
   int? clientId;
   @override
-  _NewClientHomeState createState() => _NewClientHomeState();
+  _ClientHomeState createState() => _ClientHomeState();
 }
 
-class _NewClientHomeState extends State<NewClientHome> with SingleTickerProviderStateMixin {
+class _ClientHomeState extends State<ClientHome> with SingleTickerProviderStateMixin {
 
 
   var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
@@ -78,7 +72,7 @@ class _NewClientHomeState extends State<NewClientHome> with SingleTickerProvider
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewClientScreen(title: widget.title, code: widget.code, clientId: widget.clientId,),
+              child: ClientScreen(title: widget.title, code: widget.code, clientId: widget.clientId,),
             ),
           ],
         ),

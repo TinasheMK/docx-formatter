@@ -7,8 +7,8 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 
 import '../../profile/profiles_home_screen.dart';
 
-class MiniInformation extends StatelessWidget {
-  const MiniInformation({
+class ClientsHeader extends StatelessWidget {
+  const ClientsHeader({
     Key? key,
   }) : super(key: key);
 
@@ -59,34 +59,6 @@ class MiniInformation extends StatelessWidget {
         //   ),
         // ),
       ],
-    );
-  }
-}
-
-class InformationCard extends StatelessWidget {
-  const InformationCard({
-    Key? key,
-    this.crossAxisCount = 5,
-    this.childAspectRatio = 1,
-  }) : super(key: key);
-
-  final int crossAxisCount;
-  final double childAspectRatio;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: dailyDatas.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: defaultPadding,
-        mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemBuilder: (context, index) =>
-          MiniInformationWidget(dailyData: dailyDatas[index]),
     );
   }
 }

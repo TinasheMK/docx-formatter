@@ -12,23 +12,23 @@ import '../../../core/models/Wallet.dart';
 import '../../../core/utils/responsive.dart';
 import '../../dashboard/components/header.dart';
 import '../clients_home_screen.dart';
-import 'components/mini_information_card.dart';
+import '../components/client_header.dart';
 import 'package:flutter/material.dart';
 
 
-class NewClientScreen extends StatefulWidget {
-  NewClientScreen({required this.title, required this.code, this.clientId});
+class ClientScreen extends StatefulWidget {
+  ClientScreen({required this.title, required this.code, this.clientId});
   final String title;
   final String code;
   int? clientId;
 
   @override
-  _NewClientScreenState createState() => _NewClientScreenState(clientId);
+  _ClientScreenState createState() => _ClientScreenState(clientId);
 }
 
-// class NewClientScreen extends StatefulWidget {
-class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProviderStateMixin {
-  _NewClientScreenState(int? this.clientId);
+// class ClientScreen extends StatefulWidget {
+class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderStateMixin {
+  _ClientScreenState(int? this.clientId);
   int? clientId;
 
 
@@ -117,7 +117,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(title: client.companyName?? 'New Client',),
+              ClientHeader(title: client.companyName?? 'New Client',),
               SizedBox(height: defaultPadding),
               Text("Balance: \$"+balance.toString(), style: TextStyle(fontSize: 20, color: Colors.white) ),
 

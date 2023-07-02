@@ -25,7 +25,7 @@
 // import '../../invoice/components/header.dart';
 // import '../../memos/memo_list_material.dart';
 // import '../clients_home_screen.dart';
-// import 'components/mini_information_card.dart';
+// import 'components/clients_header.dart';
 //
 // import '../components/recent_users.dart';
 // import '../components/user_details_widget.dart';

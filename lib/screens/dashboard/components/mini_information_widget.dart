@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../../client/clients_home_screen.dart';
-import '../../client/new/new_client_home_screen.dart';
+import '../../client/new/client_home_screen.dart';
 import '../../invoice/new/new_invoice_home_screen.dart';
 import '../../invoice/invoices_home_screen.dart';
 
@@ -62,7 +62,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     }else if(widget.dailyData.code == 'newclie'){
                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                           builder: (BuildContext context) {
-                            return new NewClientHome(title: "New Client", code: "client");
+                            return new ClientHome(title: "New Client", code: "client");
                           },
                           fullscreenDialog: true));
                     }else if(widget.dailyData.code == 'clients'){
