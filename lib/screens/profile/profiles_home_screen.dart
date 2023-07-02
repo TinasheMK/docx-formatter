@@ -1,5 +1,5 @@
 
-import '../../../responsive.dart';
+import '../../core/utils/responsive.dart';
 import '../home/components/side_menu.dart';
 
 import 'package:flutter/material.dart';

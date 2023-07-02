@@ -4,7 +4,7 @@ import 'package:smart_admin_dashboard/providers/daily_info_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../responsive.dart';
+import '../../../core/utils/responsive.dart';
 import '../../clients/clients_home_screen.dart';
 import '../../clients/new/new_client_home_screen.dart';
 import '../../forms/input_form.dart';

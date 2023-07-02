@@ -1,6 +1,6 @@
 
 import '../../core/constants/color_constants.dart';
-import '../../../responsive.dart';
+import '../../core/utils/responsive.dart';
 import '../../providers/registration/Client.dart';
 import '../dashboard/components/header.dart';
 import '../dashboard/components/recent_users.dart';

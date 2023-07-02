@@ -12,11 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../common/UserPreference.dart';
+import '../../core/utils/UserPreference.dart';
 import '../../providers/auth/provider/auth_provider.dart';
 import '../../providers/profile/worker_profile.dart';
-import '../../responsive.dart';
-import '../../services/shared_pref_service.dart';
+import '../../core/utils/responsive.dart';
+import '../../core/providers/services/shared_pref_service.dart';
 import '../generator/databaseHelper.dart';
 import '../generator/register_download_screen.dart';
 

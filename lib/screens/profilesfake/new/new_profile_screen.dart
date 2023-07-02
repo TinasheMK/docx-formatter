@@ -13,7 +13,7 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../providers/recent_user_model.dart';
 import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Company.dart';
-import '../../../responsive.dart';
+import '../../../core/utils/responsive.dart';
 
 import '../../clients/clients_home_screen.dart';
 import '../../dashboard/components/header.dart';

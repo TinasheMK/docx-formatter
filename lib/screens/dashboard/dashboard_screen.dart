@@ -1,5 +1,5 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/responsive.dart';
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_card.dart';
 

@@ -8,12 +8,12 @@ import 'package:smart_admin_dashboard/providers/registration/Company.dart';
 import 'package:smart_admin_dashboard/providers/registration/Currency.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart' ;
 import 'package:intl/intl.dart';
-import '../../../services/permissions.dart';
+import '../../../core/providers/services/permissions.dart';
 import 'package:flutter/material.dart';
 
-import '../../providers/registration/Client.dart';
-import '../../providers/registration/Invoice.dart';
-import '../../screens/generator/save_file_mobile.dart';
+import '../../../providers/registration/Client.dart';
+import '../../../providers/registration/Invoice.dart';
+import '../../generator/save_file_mobile.dart';
 import '../data.dart';
 
 

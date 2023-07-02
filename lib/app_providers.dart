@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import 'constants.dart';
+import 'core/constants/constants.dart';
 import 'providers/auth/model/login_response.dart';
 import 'providers/custom_exception.dart';
 import 'providers/profile/worker_profile.dart';

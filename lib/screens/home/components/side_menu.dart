@@ -9,11 +9,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/providers/Conflict.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
 
-import '../../../common/UserPreference.dart';
+import '../../../core/utils/UserPreference.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
 import '../../../providers/invoice/provider/invoice_provider.dart';
-import '../../../services/shared_pref_service.dart';
+import '../../../core/providers/services/shared_pref_service.dart';
 import '../../clients/clients_home_screen.dart';
 import '../../invoice/register_home_screen.dart';
 import '../../invoice/register_screen.dart';

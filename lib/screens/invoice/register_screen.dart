@@ -1,5 +1,5 @@
 import '../../core/constants/color_constants.dart';
-import '../../responsive.dart';
+import '../../core/utils/responsive.dart';
 
 import '../dashboard/components/header.dart';
 import './components/mini_information_card.dart';

@@ -1,4 +1,4 @@
-import 'package:smart_admin_dashboard/responsive.dart';
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 

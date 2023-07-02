@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../providers/custom_exception.dart';
+import '../../../providers/custom_exception.dart';
 
 
 CustomException exceptionHandler(Object? e, String? topic) {

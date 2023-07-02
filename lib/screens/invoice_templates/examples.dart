@@ -3,10 +3,10 @@ import 'dart:typed_data';
 
 import 'package:pdf/pdf.dart';
 
-import '../providers/registration/Invoice.dart';
+import '../../providers/registration/Invoice.dart';
 import 'data.dart';
-import 'examples/invoice.dart';
-import 'examples/invoice2.dart';
+import 'templates/invoice.dart';
+import 'templates/invoice2.dart';
 
 const examples = <Example>[
   Example('Cars', 'invoice.dart', generateInvoice),

@@ -7,24 +7,24 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import '../../../common/UserPreference.dart';
+import '../../../core/utils/UserPreference.dart';
 import '../../../core/providers/registration/InvoiceItem.dart';
 import '../../../core/providers/registration/Payment.dart';
-import '../../../pdf/app.dart';
+import '../../invoice_templates/app.dart';
 import '../../../providers/Memo.dart';
 import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Company.dart';
 import '../../../providers/registration/Currency.dart';
 import '../../../providers/registration/Invoice.dart';
 import '../../../providers/registration/Wallet.dart';
-import '../../../responsive.dart';
+import '../../../core/utils/responsive.dart';
 
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../../core/constants/color_constants.dart';
 
-import '../../../services/permissions.dart';
+import '../../../core/providers/services/permissions.dart';
 import '../../dashboard/components/header.dart';
 import '../../generator/save_file_mobile.dart';
 import '../../memos/memo_list_material.dart';

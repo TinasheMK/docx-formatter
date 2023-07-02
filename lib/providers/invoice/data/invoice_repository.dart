@@ -8,9 +8,9 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app_providers.dart';
-import '../../../../common/UserPreference.dart';
-import '../../../../constants.dart';
-import '../../../../services/exception_handler.dart';
+import '../../../core/utils/UserPreference.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/providers/services/exception_handler.dart';
 import '../../compare_res.dart';
 import '../../registration/Invoice.dart';
 import '../model/syncresult.dart';

@@ -1,7 +1,7 @@
 
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../common/UserPreference.dart';
+import '../../../core/utils/UserPreference.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/input_widget.dart';
@@ -9,7 +9,7 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Employee.dart';
 import '../../../providers/registration/Wallet.dart';
-import '../../../responsive.dart';
+import '../../../core/utils/responsive.dart';
 import '../../dashboard/components/header.dart';
 import '../clients_home_screen.dart';
 import 'components/mini_information_card.dart';

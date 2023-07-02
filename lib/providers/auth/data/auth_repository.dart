@@ -6,10 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app_providers.dart';
-import '../../../common/UserPreference.dart';
-import '../../../constants.dart';
-import '../../../services/exception_handler.dart';
-import '../../../services/shared_pref_service.dart';
+import '../../../core/utils/UserPreference.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/providers/services/exception_handler.dart';
+import '../../../core/providers/services/shared_pref_service.dart';
 import '../../profile/worker_profile.dart';
 import '../model/login_response.dart';
 // import 'package:work_link/src/app_providers.dart';

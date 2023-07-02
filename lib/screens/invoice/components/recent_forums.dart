@@ -7,7 +7,7 @@ import 'package:smart_admin_dashboard/screens/invoice/register_home_screen.dart'
 
 import '../../../providers/registration/Client.dart';
 import '../../../providers/registration/Invoice.dart';
-import '../../../responsive.dart';
+import '../../../core/utils/responsive.dart';
 
 
 class RecentDiscussions extends StatefulWidget {

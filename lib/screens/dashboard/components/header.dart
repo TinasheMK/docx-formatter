@@ -1,11 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/responsive.dart';
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
 
-import '../../../common/UserPreference.dart';
+import '../../../core/utils/UserPreference.dart';
 import '../../../providers/registration/Client.dart';
 import '../../search_results/clients_home_screen.dart';
 
