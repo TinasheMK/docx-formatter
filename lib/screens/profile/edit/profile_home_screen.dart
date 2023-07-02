@@ -4,22 +4,21 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../core/utils/responsive.dart';
 import '../../dashboard/home_screen.dart';
 import '../../dashboard/components/side_menu.dart';
-import './components/slider_widget.dart';
 
 import 'package:flutter/material.dart';
 
-import 'new_profile_screen.dart';
+import 'profile_screen.dart';
 
-class NewProfileHome extends StatefulWidget {
-   NewProfileHome({required this.title, required this.code, this.profileId});
+class ProfileHome extends StatefulWidget {
+   ProfileHome({required this.title, required this.code, this.profileId});
   final String title;
   final String code;
    int? profileId;
   @override
-  _NewProfileHomeState createState() => _NewProfileHomeState();
+  _ProfileHomeState createState() => _ProfileHomeState();
 }
 
-class _NewProfileHomeState extends State<NewProfileHome> with SingleTickerProviderStateMixin {
+class _ProfileHomeState extends State<ProfileHome> with SingleTickerProviderStateMixin {
   var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
       .chain(CurveTween(curve: Curves.ease));
   var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
@@ -65,7 +64,7 @@ class _NewProfileHomeState extends State<NewProfileHome> with SingleTickerProvid
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewProfileScreen(title: widget.title, code: widget.code, profileId: widget.profileId),
+              child: ProfileScreen(title: widget.title, code: widget.code, profileId: widget.profileId),
             ),
           ],
         ),

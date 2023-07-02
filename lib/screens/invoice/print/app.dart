@@ -29,7 +29,7 @@ import 'package:smart_admin_dashboard/core/models/Invoice.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'data.dart';
-import 'examples.dart';
+import 'templates.dart';
 
 class PdfInvoice extends StatefulWidget {
   const PdfInvoice({Key? key, required this.invoice}) : super(key: key);

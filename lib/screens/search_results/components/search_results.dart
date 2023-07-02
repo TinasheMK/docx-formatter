@@ -11,7 +11,7 @@ import '../../../main.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
 import '../../client/clients_home_screen.dart';
-import '../../client/new/client_home_screen.dart';
+import '../../client/edit/client_home_screen.dart';
 
 
 

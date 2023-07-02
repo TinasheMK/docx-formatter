@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../../client/clients_home_screen.dart';
-import '../../client/new/client_home_screen.dart';
-import '../../invoice/new/new_invoice_home_screen.dart';
+import '../../client/edit/client_home_screen.dart';
+ import '../../invoice/edit/invoice_home_screen.dart';
 import '../../invoice/invoices_home_screen.dart';
 
 class MiniInformationWidget extends StatefulWidget {
@@ -57,7 +57,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     if(widget.dailyData.code == 'newin') {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Invoice', code: 'invoice',)),
+                        MaterialPageRoute(builder: (context) => InvoiceHome(title: 'New Invoice', code: 'invoice',)),
                       );
                     }else if(widget.dailyData.code == 'newclie'){
                       Navigator.of(context).push(new MaterialPageRoute<Null>(

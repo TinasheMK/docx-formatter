@@ -5,11 +5,9 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
  import 'package:flutter/material.dart';
 
-import '../new/new_profile_home_screen.dart';
-import '../new/new_profile_screen.dart';
 
-class MiniInformation extends StatelessWidget {
-  const MiniInformation({
+class ProfilesHeader extends StatelessWidget {
+  const ProfilesHeader({
     Key? key,
   }) : super(key: key);
 
@@ -37,34 +35,6 @@ class MiniInformation extends StatelessWidget {
         //   ),
         // ),
       ],
-    );
-  }
-}
-
-class InformationCard extends StatelessWidget {
-  const InformationCard({
-    Key? key,
-    this.crossAxisCount = 5,
-    this.childAspectRatio = 1,
-  }) : super(key: key);
-
-  final int crossAxisCount;
-  final double childAspectRatio;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: dailyDatas.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: defaultPadding,
-        mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemBuilder: (context, index) =>
-          MiniInformationWidget(dailyData: dailyDatas[index]),
     );
   }
 }

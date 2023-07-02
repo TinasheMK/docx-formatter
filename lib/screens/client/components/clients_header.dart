@@ -6,6 +6,7 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
  import 'package:flutter/material.dart';
 
 import '../../profile/profiles_home_screen.dart';
+import '../edit/client_home_screen.dart';
 
 class ClientsHeader extends StatelessWidget {
   const ClientsHeader({
@@ -36,7 +37,7 @@ class ClientsHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewClientHome(title: "New Client", code: "client");
+                      return new ClientHome(title: "New Client", code: "client");
                     },
                     fullscreenDialog: true));
               },

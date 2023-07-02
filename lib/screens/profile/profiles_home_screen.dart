@@ -1,60 +1,14 @@
-
-import '../../core/utils/responsive.dart';
-import '../dashboard/components/side_menu.dart';
-
+import 'package:smart_admin_dashboard/core/utils/responsive.dart';
+import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_admin_dashboard/screens/invoice/invoices_screen.dart';
 
-import 'new/new_profile_screen.dart';
+import '../dashboard/components/side_menu.dart';
+import 'profiles_screen.dart';
 
-class NewClientHome extends StatefulWidget {
-  NewClientHome({required this.title, required this.code, this.clientId});
-  final String title;
-  final String code;
-  int? clientId;
-  @override
-  _NewClientHomeState createState() => _NewClientHomeState();
-}
-
-class _NewClientHomeState extends State<NewClientHome> with SingleTickerProviderStateMixin {
-
-
-  var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-      .chain(CurveTween(curve: Curves.ease));
-  var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
-      .chain(CurveTween(curve: Curves.ease));
-
-  AnimationController? _animationController;
-
-  var _isMoved = false;
-
-  bool isChecked = false;
-
-
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 750),
-    );
-  }
-
-
-
-  @override
-  void dispose() {
-    _animationController?.dispose();
-    super.dispose();
-  }
-
+class ProfileHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-
-
-
-
     return Scaffold(
       //key: context.read<MenuController>().scaffoldKey,
       drawer: SideMenu(),
@@ -72,12 +26,11 @@ class _NewClientHomeState extends State<NewClientHome> with SingleTickerProvider
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewProfileScreen(title: widget.title, code: widget.code, profileId: widget.clientId,),
+              child: ProfileScreen(),
             ),
           ],
         ),
       ),
     );
   }
-
 }

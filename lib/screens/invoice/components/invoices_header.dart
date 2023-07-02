@@ -5,18 +5,13 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
  import 'package:flutter/material.dart';
 
-import '../../invoices_home_screen.dart';
-
-// import '../new/new_invoice_home_screen.dart';
-// import '../new/new_invoice_screen.dart';
-
-class MiniInformation extends StatelessWidget {
+import '../edit/invoice_home_screen.dart';
 
 
-  const MiniInformation({
-    Key? key,required this.title
+class InvoicesHeader extends StatelessWidget {
+  const InvoicesHeader({
+    Key? key,
   }) : super(key: key);
-  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +21,13 @@ class MiniInformation extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text( "Invoices", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
             SizedBox(
               width: 10,
             ),
-            Text(title, style: TextStyle(fontSize: 20, color: Colors.white) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.green,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:
@@ -42,14 +37,14 @@ class MiniInformation extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                  MaterialPageRoute(builder: (context) => InvoiceHome(title: 'New Invoice', code: 'invoice',)),
                 );
 
 
               },
-              icon: Icon(Icons.cancel),
+              icon: Icon(Icons.add),
               label: Text(
-                "Cancel",
+                "Add New Invoice",
               ),
             ),
           ],
@@ -66,34 +61,6 @@ class MiniInformation extends StatelessWidget {
         //   ),
         // ),
       ],
-    );
-  }
-}
-
-class InformationCard extends StatelessWidget {
-  const InformationCard({
-    Key? key,
-    this.crossAxisCount = 5,
-    this.childAspectRatio = 1,
-  }) : super(key: key);
-
-  final int crossAxisCount;
-  final double childAspectRatio;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: dailyDatas.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: defaultPadding,
-        mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemBuilder: (context, index) =>
-          MiniInformationWidget(dailyData: dailyDatas[index]),
     );
   }
 }

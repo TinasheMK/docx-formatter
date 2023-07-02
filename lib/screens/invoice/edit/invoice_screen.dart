@@ -27,9 +27,9 @@ import '../../../core/constants/color_constants.dart';
 import '../../../core/providers/services/permissions.dart';
 import '../../dashboard/components/header.dart';
 import '../../../core/utils/save_file_mobile.dart';
-import '../components/memo_list_material.dart';
+import '../components/select_client.dart';
 import '../invoices_home_screen.dart';
-import './components/mini_information_card.dart';
+import '../components/invoice_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as _Size;
 
@@ -37,18 +37,18 @@ String? logoPath;
 String? invoicePath;
 String? invoiceName;
 
-class NewRegisterScreen extends StatefulWidget {
-  NewRegisterScreen({required this.title, required this.code, this.invoiceId});
+class InvoiceScreen extends StatefulWidget {
+  InvoiceScreen({required this.title, required this.code, this.invoiceId});
   final String title;
   final int? invoiceId;
   final String code;
 
   @override
-  _NewRegisterScreenState createState() => _NewRegisterScreenState(invoiceId);
+  _InvoiceScreenState createState() => _InvoiceScreenState(invoiceId);
 }
 
-// class NewRegisterScreen extends StatefulWidget {
-class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTickerProviderStateMixin {
+// class InvoiceScreen extends StatefulWidget {
+class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProviderStateMixin {
   DateTime payDate = DateTime.now();
   var paymentAmount;
 
@@ -57,7 +57,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
 
-  _NewRegisterScreenState(int? this.invoiceId);
+  _InvoiceScreenState(int? this.invoiceId);
   int? invoiceId;
 
 
@@ -257,7 +257,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(title: widget.title,),
+              InvoiceHeader(title: widget.title,),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

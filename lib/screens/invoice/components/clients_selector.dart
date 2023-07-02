@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import '../../../core/types/Memo.dart';
 import '../../../core/models/Client.dart';
 
-class MemoSelectionSection extends StatelessWidget {
-  const MemoSelectionSection({
+class ClientsSelector extends StatelessWidget {
+  const ClientsSelector({
     Key? key,
     required this.memos,
     required this.callback

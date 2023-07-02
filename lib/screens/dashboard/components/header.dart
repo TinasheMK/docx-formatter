@@ -3,7 +3,7 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
+import 'package:smart_admin_dashboard/screens/profile/profiles_home_screen.dart';
 
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/models/Client.dart';

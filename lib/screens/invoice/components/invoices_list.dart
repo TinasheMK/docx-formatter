@@ -1,26 +1,23 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
-import 'package:smart_admin_dashboard/core/types/recent_user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_admin_dashboard/screens/invoice/new/new_invoice_home_screen.dart';
-import 'package:smart_admin_dashboard/screens/invoice/invoices_home_screen.dart';
-
 import '../../../core/models/Client.dart';
 import '../../../core/models/Invoice.dart';
 import '../../../core/utils/responsive.dart';
+import '../edit/invoice_home_screen.dart';
 
 
-class RecentDiscussions extends StatefulWidget {
-  const RecentDiscussions({
+class InvoicesList extends StatefulWidget {
+  const InvoicesList({
     Key? key,
   }) : super(key: key);
 
   @override
-  _RecentDiscussionsState createState() => _RecentDiscussionsState();
+  _InvoicesListState createState() => _InvoicesListState();
 }
 
 
-class _RecentDiscussionsState extends State<RecentDiscussions> {
+class _InvoicesListState extends State<InvoicesList> {
 
 
   List<Invoice> invoices = [Invoice.fromJson({})];
@@ -464,7 +461,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewRegisterHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
+                      return new InvoiceHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -476,7 +473,7 @@ class _RecentDiscussionsState extends State<RecentDiscussions> {
               onTap:(){
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewRegisterHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
+                      return new InvoiceHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },

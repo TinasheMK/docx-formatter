@@ -5,17 +5,16 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
  import 'package:flutter/material.dart';
 
-import '../../profile_home_screen.dart';
-import '../../profiles_home_screen.dart';
+import '../profiles_home_screen.dart';
 
 
-// import '../new/new_invoice_home_screen.dart';
-// import '../new/new_invoice_screen.dart';
+// import '../new/invoice_home_screen.dart';
+// import '../new/invoice_screen.dart';
 
-class MiniInformation extends StatelessWidget {
+class ProfileHeader extends StatelessWidget {
 
 
-  const MiniInformation({
+  const ProfileHeader({
     Key? key,required this.title
   }) : super(key: key);
   final String title;
@@ -68,34 +67,6 @@ class MiniInformation extends StatelessWidget {
         //   ),
         // ),
       ],
-    );
-  }
-}
-
-class InformationCard extends StatelessWidget {
-  const InformationCard({
-    Key? key,
-    this.crossAxisCount = 5,
-    this.childAspectRatio = 1,
-  }) : super(key: key);
-
-  final int crossAxisCount;
-  final double childAspectRatio;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: dailyDatas.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: defaultPadding,
-        mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemBuilder: (context, index) =>
-          MiniInformationWidget(dailyData: dailyDatas[index]),
     );
   }
 }

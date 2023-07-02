@@ -2,14 +2,11 @@ import '../../core/constants/color_constants.dart';
 import '../../core/utils/responsive.dart';
 
 import '../dashboard/components/header.dart';
-import './components/mini_information_card.dart';
+import './components/invoices_header.dart';
 
-import './components/recent_forums.dart';
-import './components/recent_users.dart';
-import './components/user_details_widget.dart';
-import 'package:flutter/material.dart';
+import './components/invoices_list.dart';
+  import 'package:flutter/material.dart';
 
-import 'components/header.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
@@ -23,7 +20,7 @@ class RegisterScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(),
+              InvoicesHeader(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +31,7 @@ class RegisterScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        RecentDiscussions(),
+                        InvoicesList(),
 
                         // RecentUsers(),
                         SizedBox(height: defaultPadding),

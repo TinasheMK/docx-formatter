@@ -6,9 +6,9 @@ import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
 import '../../../core/types/Memo.dart';
 import '../../../core/models/Company.dart';
 import '../../../core/utils/responsive.dart';
-import '../new/new_profile_home_screen.dart';
+ import '../edit/profile_home_screen.dart';
 import 'add_business_profile.dart';
-// import 'memos_widget.dart';
+// import 'clients_selector.dart';
 
 
 class AddBusinessProfileHome extends StatefulWidget {
@@ -87,7 +87,7 @@ class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
                         .addPostFrameCallback((_) {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => NewProfileHome(title: 'New Invoice', code: 'invoice',)),
+                        MaterialPageRoute(builder: (context) => ProfileHome(title: 'New Invoice', code: 'invoice',)),
                       );
                     });
 

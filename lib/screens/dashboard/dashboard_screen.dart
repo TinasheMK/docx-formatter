@@ -7,7 +7,7 @@ import 'package:smart_admin_dashboard/screens/dashboard/components/recent_users.
 import 'package:smart_admin_dashboard/screens/dashboard/components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../invoice/components/recent_forums.dart';
+import '../invoice/components/invoices_list.dart';
 import 'components/header.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -44,7 +44,7 @@ class DashboardScreen extends StatelessWidget {
                         //
                         // ),
                         SizedBox(height: defaultPadding),
-                        RecentDiscussions(),
+                        InvoicesList(),
                         if (Responsive.isMobile(context))
                           SizedBox(height: defaultPadding),
                       ],

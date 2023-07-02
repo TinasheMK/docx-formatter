@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 import '../clients_home_screen.dart';
 
-// import '../new/new_invoice_home_screen.dart';
-// import '../new/new_invoice_screen.dart';
+// import '../new/invoice_home_screen.dart';
+// import '../new/invoice_screen.dart';
 
 class ClientHeader extends StatelessWidget {
 

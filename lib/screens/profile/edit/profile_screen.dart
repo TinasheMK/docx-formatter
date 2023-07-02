@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/models/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
-import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
+import 'package:smart_admin_dashboard/screens/profile/profiles_home_screen.dart';
 import '../../../core/utils/UserPreference.dart';
 
 import '../../../core/constants/color_constants.dart';
@@ -19,7 +19,7 @@ import '../../../core/models/Company.dart';
 import '../../../core/utils/responsive.dart';
 
  import '../../dashboard/components/header.dart';
-import 'components/mini_information_card.dart';
+import '../components/profile_header.dart';
 import 'package:flutter/material.dart';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -28,21 +28,21 @@ Random _rnd = Random();
 String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-class NewProfileScreen extends StatefulWidget {
-  NewProfileScreen({required this.title, required this.code, this.profileId});
+class ProfileScreen extends StatefulWidget {
+  ProfileScreen({required this.title, required this.code, this.profileId});
   final String title;
   final String code;
   int? profileId;
 
   @override
-  _NewProfileScreenState createState() => _NewProfileScreenState(profileId);
+  _ProfileScreenState createState() => _ProfileScreenState(profileId);
 }
 
-// class NewProfileScreen extends StatefulWidget {
-class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerProviderStateMixin {
+// class ProfileScreen extends StatefulWidget {
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
 
 
-  _NewProfileScreenState(int? this.profileId);
+  _ProfileScreenState(int? this.profileId);
   int? profileId;
 
   final _formKey = GlobalKey<FormState>();
@@ -137,7 +137,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> with SingleTickerPr
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              MiniInformation(title: client.companyName?? 'Add Profile',),
+              ProfileHeader(title: client.companyName?? 'Add Profile',),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

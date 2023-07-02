@@ -5,7 +5,8 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
  import 'package:flutter/material.dart';
 
-import '../../invoice/new/new_invoice_home_screen.dart';
+import '../../invoice/edit/invoice_home_screen.dart';
+
 
 class MiniInformation extends StatelessWidget {
   const MiniInformation({
@@ -35,7 +36,7 @@ class MiniInformation extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewRegisterHome(title: 'New Invoice', code: 'invoice',)),
+                  MaterialPageRoute(builder: (context) => InvoiceHome(title: 'New Invoice', code: 'invoice',)),
                 );
               },
               icon: Icon(Icons.add),

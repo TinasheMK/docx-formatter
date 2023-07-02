@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/types/Memo.dart';
 import '../../../core/models/Company.dart';
-import '../new/new_profile_home_screen.dart';
+import '../edit/profile_home_screen.dart';
 
 class AddBusinessProfile extends StatelessWidget {
   const AddBusinessProfile({
@@ -241,7 +241,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 print(widget.memo.toJson());
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewProfileHome(title: 'New Invoice', code: 'invoice', profileId: widget.memo.id)),
+                  MaterialPageRoute(builder: (context) => ProfileHome(title: 'New Invoice', code: 'invoice', profileId: widget.memo.id)),
                 );
 
 

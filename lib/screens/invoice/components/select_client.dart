@@ -1,24 +1,25 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
- import 'package:flutter/material.dart';
+import 'clients_selector.dart';
+import 'package:flutter/material.dart';
 
-import '../../../core/types/daily_info_model.dart';
+import '../../../core/types/Memo.dart';
 
+class MemoListMaterial extends StatefulWidget {
+  @override
+  _MemoListMaterialState createState() => _MemoListMaterialState();
 
-class NewTask extends StatefulWidget {
-  const NewTask({
+  const MemoListMaterial({
     Key? key,
-    required this.dailyData,
+    required this.callback
+
   }) : super(key: key);
 
-  final DailyInfoModel dailyData;
-
-  @override
-  _NewTaskState createState() => _NewTaskState();
+  final Function(String, String) callback;
 
 
 }
 
-class _NewTaskState extends State<NewTask> {
+class _MemoListMaterialState extends State<MemoListMaterial> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,18 +28,19 @@ class _NewTaskState extends State<NewTask> {
         child: Card(
           color: bgColor,
           elevation: 5,
-          margin: EdgeInsets.fromLTRB(32, 32, 64, 32),
+          margin: EdgeInsets.all(10),
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
+            padding: const EdgeInsets.all(10.0),
             child: Container(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16.0, horizontal: 16.0),
                 child: Column(
                   children: [
+
                     Center(
-                      child: Text("What do you want to add? Select from below."),
+                      child: Text("Select a client."),
                     ),
-                    // SelectionSection(tasks: billings),
+                    ClientsSelector(memos: memos,callback: widget.callback),
                   ],
                 )),
           ),
