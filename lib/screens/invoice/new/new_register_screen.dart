@@ -3,53 +3,35 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../../../common/UserPreference.dart';
-import '../../../core/utils/colorful_tag.dart';
+import '../../../core/providers/registration/InvoiceItem.dart';
+import '../../../core/providers/registration/Payment.dart';
 import '../../../pdf/app.dart';
 import '../../../providers/Memo.dart';
+import '../../../providers/registration/Client.dart';
+import '../../../providers/registration/Company.dart';
+import '../../../providers/registration/Currency.dart';
+import '../../../providers/registration/Invoice.dart';
+import '../../../providers/registration/Wallet.dart';
+import '../../../responsive.dart';
 
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../../core/constants/color_constants.dart';
-import '../../../core/widgets/app_button_widget.dart';
-import '../../../core/widgets/input_widget.dart';
-import '../../../providers/recent_user_model.dart';
-import '../../../providers/registration/Client.dart';
-import '../../../providers/registration/Company.dart';
-import '../../../providers/registration/Currency.dart';
-import '../../../providers/registration/Invoice.dart';
-import '../../../providers/registration/InvoiceItem.dart';
-import '../../../providers/registration/Payment.dart';
-import '../../../providers/registration/Wallet.dart';
-import '../../../responsive.dart';
 
 import '../../../services/permissions.dart';
 import '../../dashboard/components/header.dart';
-import '../../generator/CR6_form_generator.dart';
-import '../../generator/invoicegenerator.dart';
-import '../../generator/pdf_invoice.dart';
-import '../../generator/register_download_screen.dart';
 import '../../generator/save_file_mobile.dart';
-import '../../home/home_screen.dart';
 import '../../memos/memo_list_material.dart';
 import '../register_home_screen.dart';
 import './components/mini_information_card.dart';
-
-import '../components/recent_forums.dart';
-import '../components/recent_users.dart';
-import '../components/user_details_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as _Size;
-
-import '../components/header.dart';
-import 'components/dropdown_search.dart';
 
 String? logoPath;
 String? invoicePath;
@@ -184,10 +166,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
     if(invoiceId!=null) {
-      invoice = await getInvoice(invoiceId);
-      invoice.client = await getClient(invoice.clientId);
-      invoice.invoiceItems = await getInvoiceItems(invoiceId);
-      invoice.payments = await getInvoicePayments(invoiceId);
+      invoice = await getInvoice(invoiceId!);
+      if(invoice.clientId!=null) invoice.client = await getClient(invoice.clientId!);
+      invoice.invoiceItems = await getInvoiceItems(invoiceId!);
+      invoice.payments = await getInvoicePayments(invoiceId!);
       invoice.company = await getCompany(invoice.companyId);
 
     }else{
@@ -397,7 +379,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
 
-      if(invoiceId != null) invoice.payments = await getInvoicePayments(invoiceId);
+      if(invoiceId != null) invoice.payments = await getInvoicePayments(invoiceId!);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
 

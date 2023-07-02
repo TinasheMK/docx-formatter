@@ -1,37 +1,19 @@
-import 'dart:convert';
 
-import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smart_admin_dashboard/providers/registration/Employee.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import '../../../common/UserPreference.dart';
-import '../../../core/utils/colorful_tag.dart';
-import '../../../providers/Memo.dart';
 
 import '../../../core/constants/color_constants.dart';
-import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../providers/recent_user_model.dart';
+
 import '../../../providers/registration/Client.dart';
-import '../../../providers/registration/Company.dart';
+import '../../../providers/registration/Employee.dart';
 import '../../../providers/registration/Wallet.dart';
 import '../../../responsive.dart';
-
 import '../../dashboard/components/header.dart';
-import '../../generator/CR6_form_generator.dart';
-import '../../generator/register_download_screen.dart';
-import '../../home/home_screen.dart';
-import '../../invoice/components/header.dart';
-import '../../memos/memo_list_material.dart';
 import '../clients_home_screen.dart';
 import 'components/mini_information_card.dart';
-
-import '../components/recent_users.dart';
-import '../components/user_details_widget.dart';
 import 'package:flutter/material.dart';
-
-import 'components/dropdown_search.dart';
 
 
 class NewClientScreen extends StatefulWidget {
@@ -89,7 +71,7 @@ class _NewClientScreenState extends State<NewClientScreen> with SingleTickerProv
     var prefs = await SharedPreferences.getInstance();
 
     if(clientId!=null) {
-      client = await getClient(clientId);
+      client = await getClient(clientId!);
 
       con1.text = client.companyName?? "";
       con2.text = client.email ?? "";

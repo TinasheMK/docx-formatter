@@ -57,7 +57,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
             
           )
@@ -86,7 +86,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
 
           )
@@ -120,7 +120,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
             
             
@@ -160,7 +160,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
           )
           ''');
@@ -188,7 +188,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
           )
           ''');
@@ -213,7 +213,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
             
    
@@ -236,7 +236,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
           )
           ''');
@@ -258,7 +258,7 @@ class DatabaseHelper {
             is_optimised INTEGER,
             is_synced INTEGER,
             origin_id INTEGER,
-            universal_id INTEGER,
+            universal_id INTEGER UNIQUE,
             is_confirmed   INTEGER   
           )
           ''');

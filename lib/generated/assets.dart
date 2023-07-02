@@ -205,14 +205,15 @@ class Assets {
   static const String providersMemo = 'lib/providers/Memo.dart';
   static const String providersRecentFile = 'lib/providers/RecentFile.dart';
   static const String providersRecentUserModel = 'lib/providers/recent_user_model.dart';
+  static const String providersRegistrationInvoiceItem = 'lib/providers/registration/InvoiceItem.dart';
   static const String providersSliderModel = 'lib/providers/slider_model.dart';
   static const String registrationClient = 'lib/providers/registration/Client.dart';
   static const String registrationCompany = 'lib/providers/registration/Company.dart';
   static const String registrationCurrency = 'lib/providers/registration/Currency.dart';
   static const String registrationEmployee = 'lib/providers/registration/Employee.dart';
   static const String registrationInvoice = 'lib/providers/registration/Invoice.dart';
-  static const String registrationInvoiceItem = 'lib/providers/registration/InvoiceItem.dart';
-  static const String registrationPayment = 'lib/providers/registration/Payment.dart';
+  static const String registrationInvoiceItem = 'lib/core/providers/registration/InvoiceItem.dart';
+  static const String registrationPayment = 'lib/core/providers/registration/Payment.dart';
   static const String registrationWallet = 'lib/providers/registration/Wallet.dart';
   static const String robotoLICENSE = 'assets/fonts/Roboto/LICENSE.txt';
   static const String robotoRobotoBold = 'assets/fonts/Roboto/Roboto-Bold.ttf';

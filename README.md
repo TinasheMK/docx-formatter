@@ -1,3 +1,5 @@
+Known issues ... if post sync fails in progress , invoice may have wrong version and get sync cant 
+solve as server will not return failed invoice
 # 🔥 🔥 Smart Admin Panel & Dashboard 
 
 Flutter Web Smart Admin & Panel Dashboard with flutter UI kit.
