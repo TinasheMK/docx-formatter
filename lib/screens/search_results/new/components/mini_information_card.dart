@@ -7,8 +7,8 @@
 //
 // import '../../clients_home_screen.dart';
 //
-// // import '../new/new_register_home_screen.dart';
-// // import '../new/new_register_screen.dart';
+// // import '../new/new_invoice_home_screen.dart';
+// // import '../new/new_invoice_screen.dart';
 //
 // class MiniInformation extends StatelessWidget {
 //

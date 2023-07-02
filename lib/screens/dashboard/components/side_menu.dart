@@ -14,9 +14,9 @@ import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
 import '../../../core/providers/invoice/provider/invoice_provider.dart';
 import '../../../core/providers/services/shared_pref_service.dart';
-import '../../clients/clients_home_screen.dart';
-import '../../invoice/register_home_screen.dart';
-import '../../invoice/register_screen.dart';
+ import '../../client/clients_home_screen.dart';
+import '../../invoice/invoices_home_screen.dart';
+import '../../invoice/invoices_screen.dart';
 import '../home_screen.dart';
 import 'ConflictSelectionSection.dart';
 

@@ -5,10 +5,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive.dart';
-import '../../clients/clients_home_screen.dart';
-import '../../clients/new/new_client_home_screen.dart';
-import '../../invoice/new/new_register_home_screen.dart';
-import '../../invoice/register_home_screen.dart';
+import '../../client/clients_home_screen.dart';
+import '../../client/new/new_client_home_screen.dart';
+import '../../invoice/new/new_invoice_home_screen.dart';
+import '../../invoice/invoices_home_screen.dart';
 
 class MiniInformationWidget extends StatefulWidget {
   const MiniInformationWidget({

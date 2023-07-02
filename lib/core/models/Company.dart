@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import '../../main.dart';
 import '../db/databaseHelper.dart';
-import '../providers/enums/status_enum.dart';
+import '../enums/status_enum.dart';
 import 'Employee.dart';
 
 class Company {

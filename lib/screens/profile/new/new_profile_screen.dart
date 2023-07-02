@@ -12,30 +12,15 @@ import 'package:smart_admin_dashboard/core/models/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/profile/profile_home_screen.dart';
 import '../../../core/utils/UserPreference.dart';
-import '../../../core/utils/colorful_tag.dart';
-import '../../../core/types/Memo.dart';
 
 import '../../../core/constants/color_constants.dart';
-import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../core/types/recent_user_model.dart';
-import '../../../core/models/Company.dart';
 import '../../../core/models/Company.dart';
 import '../../../core/utils/responsive.dart';
 
-import '../../clients/clients_home_screen.dart';
-import '../../dashboard/components/header.dart';
-import '../../home/home_screen.dart';
-import '../../invoice/components/header.dart';
-import '../../memos/memo_list_material.dart';
-import '../../profile/profiles_home_screen.dart';
+ import '../../dashboard/components/header.dart';
 import 'components/mini_information_card.dart';
-
-import '../components/recent_users.dart';
-import '../components/user_details_widget.dart';
 import 'package:flutter/material.dart';
-
-import 'components/dropdown_search.dart';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 Random _rnd = Random();

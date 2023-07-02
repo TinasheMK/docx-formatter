@@ -1,29 +1,25 @@
-
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
-import '../../../screens/home/home_screen.dart';
-import '../../home/components/side_menu.dart';
+import '../../dashboard/home_screen.dart';
+import '../../dashboard/components/side_menu.dart';
 import './components/slider_widget.dart';
 
 import 'package:flutter/material.dart';
 
-import 'new_client_screen.dart';
+import 'new_invoice_screen.dart';
 
-class NewClientHome extends StatefulWidget {
-  NewClientHome({required this.title, required this.code, this.clientId});
+class NewRegisterHome extends StatefulWidget {
+  NewRegisterHome({required this.title, required this.code, this.invoiceId});
   final String title;
+  final int? invoiceId;
   final String code;
-  int? clientId;
   @override
-  _NewClientHomeState createState() => _NewClientHomeState();
+  _NewRegisterHomeState createState() => _NewRegisterHomeState();
 }
 
-class _NewClientHomeState extends State<NewClientHome> with SingleTickerProviderStateMixin {
-
-
+class _NewRegisterHomeState extends State<NewRegisterHome> with SingleTickerProviderStateMixin {
   var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
       .chain(CurveTween(curve: Curves.ease));
   var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
@@ -34,19 +30,15 @@ class _NewClientHomeState extends State<NewClientHome> with SingleTickerProvider
   var _isMoved = false;
 
   bool isChecked = false;
-
-
-
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 750),
     );
   }
-
-
 
   @override
   void dispose() {
@@ -56,10 +48,6 @@ class _NewClientHomeState extends State<NewClientHome> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
 
     return Scaffold(
       //key: context.read<MenuController>().scaffoldKey,
@@ -78,7 +66,7 @@ class _NewClientHomeState extends State<NewClientHome> with SingleTickerProvider
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewClientScreen(title: widget.title, code: widget.code, clientId: widget.clientId,),
+              child: NewRegisterScreen(title: widget.title, code: widget.code, invoiceId: widget.invoiceId),
             ),
           ],
         ),

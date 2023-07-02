@@ -2,8 +2,8 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
 import 'package:smart_admin_dashboard/core/types/recent_user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_admin_dashboard/screens/invoice/new/new_register_home_screen.dart';
-import 'package:smart_admin_dashboard/screens/invoice/register_home_screen.dart';
+import 'package:smart_admin_dashboard/screens/invoice/new/new_invoice_home_screen.dart';
+import 'package:smart_admin_dashboard/screens/invoice/invoices_home_screen.dart';
 
 import '../../../core/models/Client.dart';
 import '../../../core/models/Invoice.dart';

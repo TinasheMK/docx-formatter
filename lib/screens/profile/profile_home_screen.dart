@@ -1,9 +1,9 @@
 import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_admin_dashboard/screens/invoice/register_screen.dart';
+import 'package:smart_admin_dashboard/screens/invoice/invoices_screen.dart';
 
-import '../home/components/side_menu.dart';
+import '../dashboard/components/side_menu.dart';
 import 'profile_screen.dart';
 
 class ProfileHomeScreen extends StatelessWidget {

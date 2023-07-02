@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
-import 'package:smart_admin_dashboard/screens/home/home_screen.dart';
+import 'package:smart_admin_dashboard/screens/dashboard/home_screen.dart';
 
 class Routes {
   Routes._();

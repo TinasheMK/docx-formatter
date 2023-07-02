@@ -2,8 +2,8 @@ import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
 import '../../../core/utils/responsive.dart';
-import '../../../screens/home/home_screen.dart';
-import '../../home/components/side_menu.dart';
+import '../../dashboard/home_screen.dart';
+import '../../dashboard/components/side_menu.dart';
 import './components/slider_widget.dart';
 
 import 'package:flutter/material.dart';

@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import '../../../main.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
-import '../../clients/clients_home_screen.dart';
-import '../../clients/new/new_client_home_screen.dart';
+import '../../client/clients_home_screen.dart';
+import '../../client/new/new_client_home_screen.dart';
 
 
 

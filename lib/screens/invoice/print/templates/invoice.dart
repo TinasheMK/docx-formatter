@@ -14,49 +14,39 @@
  * limitations under the License.
  */
 
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-import '../../../core/models/Invoice.dart';
+import '../../../../core/providers/registration/InvoiceItem.dart';
+import '../../../../core/models/Invoice.dart';
+import '../../../../core/models/InvoiceItem.dart';
 import '../data.dart';
 
-Future<Uint8List> generateInvoice3(
+Future<Uint8List> generateInvoice(
     PdfPageFormat pageFormat, Invoice data) async {
   final lorem = pw.LoremText();
 
-  final products = <Product>[
-    Product('19874', lorem.sentence(4), 3.99, 2),
-    Product('98452', lorem.sentence(6), 15, 2),
-    Product('28375', lorem.sentence(4), 6.95, 3),
-    Product('95673', lorem.sentence(3), 49.99, 4),
-    Product('23763', lorem.sentence(2), 560.03, 1),
-    Product('55209', lorem.sentence(5), 26, 1),
-    Product('09853', lorem.sentence(5), 26, 1),
-    Product('23463', lorem.sentence(5), 34, 1),
-    Product('56783', lorem.sentence(5), 7, 4),
-    Product('78256', lorem.sentence(5), 23, 1),
-    Product('23745', lorem.sentence(5), 94, 1),
-    Product('07834', lorem.sentence(5), 12, 1),
-    Product('23547', lorem.sentence(5), 34, 1),
-    Product('98387', lorem.sentence(5), 7.99, 2),
-  ];
+
 
   final invoice = LocalInvoice(
-    invoiceNumber: '982347',
-    products: products,
-    customerName: 'Abraham Swearegin',
-    customerAddress: '54 rue de Rivoli\n75001 Paris, France',
+    invoiceNumber: data.invoiceNumber.toString(),
+    products: data.invoiceItems!,
+    logo: data.company?.logo ?? '',
+    customerName: data.client?.companyName??'',
+    customerAddress: data.client?.street??'',
     paymentInfo:
-        '4509 Wiseman Street\nKnoxville, Tennessee(TN), 37929\n865-372-0425',
-    tax: .15,
-    baseColor: PdfColors.purple,
-    accentColor: PdfColors.pink,
+        "${data.company?.street??''}\n${data.company?.city??''}, ${data.company?.country??''}, \n${data.company?.telephone??''}",
+    tax: .0,
+    baseColor: PdfColors.teal,
+    accentColor: PdfColors.blueGrey900,
   );
 
   return await invoice.buildPdf(pageFormat);
@@ -65,6 +55,7 @@ Future<Uint8List> generateInvoice3(
 class LocalInvoice {
   LocalInvoice({
     required this.products,
+    required this.logo,
     required this.customerName,
     required this.customerAddress,
     required this.invoiceNumber,
@@ -74,7 +65,8 @@ class LocalInvoice {
     required this.accentColor,
   });
 
-  final List<Product> products;
+  final List<InvoiceItem> products;
+  final String logo;
   final String customerName;
   final String customerAddress;
   final String invoiceNumber;
@@ -91,11 +83,11 @@ class LocalInvoice {
   PdfColor get _accentTextColor => baseColor.isLight ? _lightColor : _darkColor;
 
   double get _total =>
-      products.map<double>((p) => p.total).reduce((a, b) => a + b);
+      products.map<double>((p) => p.total!).reduce((a, b) => a + b);
 
   double get _grandTotal => _total * (1 + tax);
 
-  String? _logo;
+  ImageProvider? _logo;
 
   String? _bgShape;
 
@@ -103,7 +95,13 @@ class LocalInvoice {
     // Create a PDF document.
     final doc = pw.Document();
 
-    _logo = await rootBundle.loadString('assets/logo/logo.svg');
+    // _logo = await rootBundle.loadString('assets/logo/logo.svg');
+    // logoPath ==null ? Image.asset("assets/logo/logo_icon.png", scale:1)
+    //     : Image.file(File(logoPath!), scale:1),
+
+    final directory = await getDownloadPath2();
+
+    if(logo!='')_logo = MemoryImage(File("${directory}${logo!}"!).readAsBytesSync());
     _bgShape = await rootBundle.loadString('assets/logo/invoice.svg');
 
     var robotoRegularFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Regular.ttf");
@@ -180,7 +178,7 @@ class LocalInvoice {
                       child: pw.GridView(
                         crossAxisCount: 2,
                         children: [
-                          pw.Text('Invoice #'),
+                          pw.Text('Invoice '),
                           pw.Text(invoiceNumber),
                           pw.Text('Date:'),
                           pw.Text(_formatDate(DateTime.now())),
@@ -197,10 +195,10 @@ class LocalInvoice {
                 children: [
                   pw.Container(
                     alignment: pw.Alignment.topRight,
-                    padding: const pw.EdgeInsets.only(bottom: 8, left: 30),
-                    height: 72,
+                    padding: const pw.EdgeInsets.only(bottom: 8, left: 10),
+                    height: 90,
                     child:
-                        _logo != null ? pw.SvgImage(svg: _logo!) : pw.PdfLogo(),
+                        _logo != null ? pw.Image(_logo!) : pw.Text(""),
                   ),
                   // pw.Container(
                   //   color: baseColor,
@@ -226,7 +224,7 @@ class LocalInvoice {
           width: 100,
           child: pw.BarcodeWidget(
             barcode: pw.Barcode.pdf417(),
-            data: 'Invoice# $invoiceNumber',
+            data: 'Invoice $invoiceNumber',
             drawText: false,
           ),
         ),
@@ -434,7 +432,7 @@ class LocalInvoice {
                 ),
               ),
               pw.Text(
-                pw.LoremText().paragraph(40),
+                'Please make payment before the due date',
                 textAlign: pw.TextAlign.justify,
                 style: const pw.TextStyle(
                   fontSize: 6,
@@ -502,7 +500,7 @@ class LocalInvoice {
         products.length,
         (row) => List<String>.generate(
           tableHeaders.length,
-          (col) => products[row].getIndex(col),
+          (col) => products[row].getIndex(col) ?? '',
         ),
       ),
     );
@@ -518,33 +516,57 @@ String _formatDate(DateTime date) {
   return format.format(date);
 }
 
-class Product {
-  const Product(
-    this.sku,
-    this.productName,
-    this.price,
-    this.quantity,
-  );
+// class Product {
+//   const Product(
+//     this.sku,
+//     this.productName,
+//     this.price,
+//     this.quantity,
+//   );
+//
+//   final String sku;
+//   final String productName;
+//   final double price;
+//   final int quantity;
+//   double get total => price * quantity;
+//
+//   String getIndex(int index) {
+//     switch (index) {
+//       case 0:
+//         return sku;
+//       case 1:
+//         return productName;
+//       case 2:
+//         return _formatCurrency(price);
+//       case 3:
+//         return quantity.toString();
+//       case 4:
+//         return _formatCurrency(total);
+//     }
+//     return '';
+//   }
+// }
 
-  final String sku;
-  final String productName;
-  final double price;
-  final int quantity;
-  double get total => price * quantity;
+Future<String?> getDownloadPath2() async {
+  Directory? directory;
+  String directoryStr;
+  try {
+    if (Platform.isIOS ) {
+      directory = await getApplicationDocumentsDirectory();
+    } else if (Platform.isWindows) {
+      directory = await getApplicationDocumentsDirectory();
+      directoryStr =  "${directory.path}\\Invoices\\";
+      directory = Directory(directoryStr);
 
-  String getIndex(int index) {
-    switch (index) {
-      case 0:
-        return sku;
-      case 1:
-        return productName;
-      case 2:
-        return _formatCurrency(price);
-      case 3:
-        return quantity.toString();
-      case 4:
-        return _formatCurrency(total);
+    } else {
+      // directory = Directory('/storage/emulated/0/Download/Invoices/');
+      // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+      // ignore: avoid_slow_async_io
+
+      directory = await getExternalStorageDirectory();
     }
-    return '';
+  } catch (err, stack) {
+    print("Cannot get download folder path");
   }
+  return directory?.path;
 }

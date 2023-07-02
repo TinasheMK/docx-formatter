@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:pdf/pdf.dart';
 
-import '../../core/models/Invoice.dart';
+import '../../../core/models/Invoice.dart';
 import 'data.dart';
 import 'templates/invoice.dart';
 import 'templates/invoice2.dart';

@@ -5,8 +5,8 @@ import 'package:smart_admin_dashboard/core/utils/responsive.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
  import 'package:flutter/material.dart';
 
-import '../new/new_register_home_screen.dart';
-import '../new/new_register_screen.dart';
+import '../new/new_invoice_home_screen.dart';
+import '../new/new_invoice_screen.dart';
 
 class MiniInformation extends StatelessWidget {
   const MiniInformation({

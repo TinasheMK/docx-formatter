@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../utils/app_providers.dart';
+import '../../../init/app_providers.dart';
 import '../../../utils/UserPreference.dart';
 import '../../../constants/constants.dart';
 import '../../services/exception_handler.dart';

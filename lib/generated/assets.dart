@@ -107,8 +107,8 @@ class Assets {
   static const String invoiceComponentsRecentUsers copy = 'lib/screens/invoice/components/recent_users copy.dart';
   static const String invoiceComponentsUserDetailsMiniCard = 'lib/screens/invoice/components/user_details_mini_card.dart';
   static const String invoiceComponentsUserDetailsWidget = 'lib/screens/invoice/components/user_details_widget.dart';
-  static const String invoiceRegisterHomeScreen = 'lib/screens/invoice/register_home_screen.dart';
-  static const String invoiceRegisterScreen = 'lib/screens/invoice/register_screen.dart';
+  static const String invoiceRegisterHomeScreen = 'lib/screens/invoice/invoices_home_screen.dart';
+  static const String invoiceRegisterScreen = 'lib/screens/invoice/invoices_screen.dart';
   static const String invoiceTemplatesApp = 'lib/screens/invoice_templates/app.dart';
   static const String invoiceTemplatesData = 'lib/screens/invoice_templates/data.dart';
   static const String invoiceTemplatesExamples = 'lib/screens/invoice_templates/examples.dart';
@@ -116,7 +116,7 @@ class Assets {
   static const String libAppProviders = 'lib/app_providers.dart';
   static const String libMain = 'lib/main.dart';
   static const String loginLoginScreen = 'lib/screens/login/login_screen.dart';
-  static const String loginRegisterScreen = 'lib/screens/login/register_screen.dart';
+  static const String loginRegisterScreen = 'lib/screens/login/invoices_screen.dart';
   static const String logoInvoice = 'assets/logo/invoice.svg';
   static const String logoLogo = 'assets/logo/logo.png';
   static const String logoLogoIcon = 'assets/logo/logo_icon.png';
@@ -151,8 +151,8 @@ class Assets {
   static const String newNewClientScreen = 'lib/screens/clients/new/new_client_screen.dart';
   static const String newNewProfileHomeScreen = 'lib/screens/profile/new/new_profile_home_screen.dart';
   static const String newNewProfileScreen = 'lib/screens/profile/new/new_profile_screen.dart';
-  static const String newNewRegisterHomeScreen = 'lib/screens/invoice/new/new_register_home_screen.dart';
-  static const String newNewRegisterScreen = 'lib/screens/invoice/new/new_register_screen.dart';
+  static const String newNewRegisterHomeScreen = 'lib/screens/invoice/new/new_invoice_home_screen.dart';
+  static const String newNewRegisterScreen = 'lib/screens/invoice/new/new_invoice_screen.dart';
   static const String profileComponentsCalendarDataSection = 'lib/screens/profile/components/calendar_data_section.dart';
   static const String profileComponentsCalendarListWidget = 'lib/screens/profile/components/calendar_list_widget.dart';
   static const String profileComponentsCalendartWidget = 'lib/screens/profile/components/calendart_widget.dart';

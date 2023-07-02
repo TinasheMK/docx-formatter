@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/core/widgets/input_widget.dart';
-import 'package:smart_admin_dashboard/screens/home/home_screen.dart';
+import 'package:smart_admin_dashboard/screens/dashboard/home_screen.dart';
 import 'package:smart_admin_dashboard/screens/login/components/slider_widget.dart';
 
 import 'package:flutter/material.dart';
