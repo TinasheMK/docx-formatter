@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:work_link/src/models/custom_exception.dart';
 // import 'package:work_link/src/models/profile/worker_profile.dart';
 
-import '../../custom_exception.dart';
+import '../../../../providers/custom_exception.dart';
 import '../../profile/worker_profile.dart';
 import '../data/auth_repository.dart';
 import 'auth_state.dart';

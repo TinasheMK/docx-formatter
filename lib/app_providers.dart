@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
 import 'core/constants/constants.dart';
-import 'providers/auth/model/login_response.dart';
+import 'core/providers/auth/model/login_response.dart';
 import 'providers/custom_exception.dart';
-import 'providers/profile/worker_profile.dart';
+import 'core/providers/profile/worker_profile.dart';
 
 
 final requestStateProvider = StateProvider((_) => RequestState.None);

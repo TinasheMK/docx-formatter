@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import '../../main.dart';
 import '../../screens/generator/databaseHelper.dart';
-import '../enums/status_enum.dart';
+import '../../core/providers/enums/status_enum.dart';
 import 'Employee.dart';
 
 class Wallet {

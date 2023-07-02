@@ -3,14 +3,14 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smart_admin_dashboard/providers/invoice/model/syncresult.dart';
+import 'package:smart_admin_dashboard/core/providers/invoice/model/syncresult.dart';
 // import 'package:work_link/src/features/invoice/data/invoice_repository.dart';
 // import 'package:work_link/src/models/custom_exception.dart';
 // import 'package:work_link/src/models/profile/worker_profile.dart';
 
-import '../../custom_exception.dart';
+import '../../../../providers/custom_exception.dart';
 import '../../profile/worker_profile.dart';
-import '../../registration/Invoice.dart';
+import '../../../../providers/registration/Invoice.dart';
 import '../data/invoice_repository.dart';
 import 'invoice_state.dart';
 
