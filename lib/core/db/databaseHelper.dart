@@ -38,7 +38,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE client (
             id INTEGER PRIMARY KEY,
-            company_name TEXT NOT NULL,
+            business_name TEXT NOT NULL,
             street TEXT ,
             city TEXT ,
             country TEXT ,
@@ -52,7 +52,8 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            
+            is_deleted INTEGER,
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -64,9 +65,9 @@ class DatabaseHelper {
           ''');
 
     await db.execute('''
-          CREATE TABLE company (
+          CREATE TABLE business (
             id INTEGER PRIMARY KEY,
-            company_name TEXT NOT NULL,
+            business_name TEXT NOT NULL,
             street TEXT ,
             city TEXT ,
             logo TEXT ,
@@ -81,7 +82,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -108,14 +109,14 @@ class DatabaseHelper {
             particulars TEXT,
             incDate TEXT,
             email TEXT,
-            company_id INTEGER NOT NULL,
+            business_id INTEGER NOT NULL,
             
             created_date TEXT,
             created_by TEXT,            
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -143,7 +144,7 @@ class DatabaseHelper {
             currency TEXT ,
             invoice_date TEXT ,
             due_date TEXT,
-            company_id INTEGER NOT NULL,
+            business_id INTEGER NOT NULL,
             invoice_status TEXT,
             invoice_number TEXT,
             
@@ -153,7 +154,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
 
             
@@ -181,7 +182,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
       
             
@@ -208,7 +209,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -231,7 +232,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -253,7 +254,7 @@ class DatabaseHelper {
             version INTEGER,
             last_modified_by TEXT,
             last_modified_date TEXT,
-            deleted_at TEXT DEFAULT "0",
+            is_deleted INTEGER,
             
             is_optimised INTEGER,
             is_synced INTEGER,
@@ -299,7 +300,7 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> softQueryAllRows(String table) async {
-    return await _db.rawQuery("select * from '$table' where deleted_at = '0'" );
+    return await _db.rawQuery("select * from '$table' where (is_deleted = 0 or is_deleted is null)" );
   }
 
 
@@ -358,7 +359,7 @@ class DatabaseHelper {
 
 
   Future<List<Map<String, dynamic>>> searchClients(String query) async {
-    List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM client WHERE company_name LIKE '%$query%' OR email LIKE '%$query%'");
+    List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM client WHERE business_name LIKE '%$query%' OR email LIKE '%$query%'");
     return results;
   }
 
@@ -383,7 +384,7 @@ class DatabaseHelper {
   Future<int> softDelete(String table, int id) async {
 
     Map<String, dynamic> row = {
-      "deleted_at":  DateTime.now().toString(),
+      "is_deleted":  0,
     };
 
     return await _db.update(

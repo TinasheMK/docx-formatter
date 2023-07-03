@@ -71,9 +71,9 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
     var prefs = await SharedPreferences.getInstance();
 
     if(clientId!=null) {
-      client = await getClient(clientId!);
+      client = await getClient(clientId!)??Client.fromJson({});
 
-      con1.text = client.companyName?? "";
+      con1.text = client.businessName?? "";
       con2.text = client.email ?? "";
       con3.text = client.street ?? "";
       con4.text = client.city ?? "";
@@ -117,7 +117,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ClientHeader(title: client.companyName?? 'New Client',),
+              ClientHeader(title: client.businessName?? 'New Client',),
               SizedBox(height: defaultPadding),
               Text("Balance: \$"+balance.toString(), style: TextStyle(fontSize: 20, color: Colors.white) ),
 
@@ -155,7 +155,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                             Padding(
                                               padding: EdgeInsets.only(left: 5, right:5),
                                               child: InputWidget(
-                                                topLabel: "Company Name",
+                                                topLabel: "Business Name",
                                                 keyboardType: TextInputType.text,
                                                 kController: con1,
                                                 onSaved: (String? value) {
@@ -164,15 +164,15 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                                 },
                                                 onChanged: (String? value) {
                                                   print(client!.toJson());
-                                                  client!.companyName = value;
+                                                  client!.businessName = value;
                                                 },
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
-                                                    return 'Please enter company name.';
+                                                    return 'Please enter business name.';
                                                   }
                                                   return null;
                                                 },
-                                                // kInitialValue: client.companyName ?? "",
+                                                // kInitialValue: client.businessName ?? "",
 
 
                                                 // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -359,7 +359,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                               Padding(
                                                 padding: EdgeInsets.only(left: 5, right:5),
                                                 child: InputWidget(
-                                                  topLabel: "Company Name",
+                                                  topLabel: "Business Name",
                                                   keyboardType: TextInputType.text,
                                                   kController: con1,
                                                   onSaved: (String? value) {
@@ -368,15 +368,15 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                                   },
                                                   onChanged: (String? value) {
                                                     print(client!.toJson());
-                                                    client!.companyName = value;
+                                                    client!.businessName = value;
                                                   },
                                                   validator: (value) {
                                                     if (value == null || value.isEmpty) {
-                                                      return 'Please enter company name.';
+                                                      return 'Please enter business name.';
                                                     }
                                                     return null;
                                                   },
-                                                  // kInitialValue: client.companyName ?? '',
+                                                  // kInitialValue: client.businessName ?? '',
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,

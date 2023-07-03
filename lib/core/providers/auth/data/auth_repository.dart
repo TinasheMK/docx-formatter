@@ -9,15 +9,9 @@ import '../../../init/app_providers.dart';
 import '../../../utils/UserPreference.dart';
 import '../../../constants/constants.dart';
 import '../../../exceptions/exception_handler.dart';
-import '../../services/shared_pref_service.dart';
+ import '../../../utils/shared_pref_service.dart';
 import '../../profile/worker_profile.dart';
 import '../model/login_response.dart';
-// import 'package:work_link/src/app_providers.dart';
-// import 'package:work_link/src/constants.dart';
-// import 'package:work_link/src/models/auth/login_response.dart';
-// import 'package:work_link/src/models/profile/worker_profile.dart';
-// import 'package:work_link/src/services/index.dart';
-// import 'package:work_link/src/common/UserPreference.dart';
 
 abstract class IAuthRepository {
   Future login(Map<String, dynamic>? credentials, {bool rememberMe: false});

@@ -15,7 +15,7 @@ import '../../../core/utils/UserPreference.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../core/models/Company.dart';
+import '../../../core/models/Business.dart';
 import '../../../core/utils/responsive.dart';
 
  import '../../dashboard/components/header.dart';
@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   // late List<Memo> memosSet = [];
   Color currentColor = Colors.green;
 
-  Company client = Company.fromJson({});
+  Business business = Business.fromJson({});
   String? logoPath;
 
   TextEditingController con1 = TextEditingController();
@@ -75,22 +75,22 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   TextEditingController con5 = TextEditingController();
   TextEditingController con6 = TextEditingController();
 
-  Future<void> _initclient() async {
+  Future<void> _initbusiness() async {
     if(profileId!=null) {
-      client = await getCompany(profileId);
-      if(client.color != null)currentColor = Color(client.color!);
-      con1.text = client.companyName?? "";
-      con2.text = client.email ?? "";
-      con3.text = client.street ?? "";
-      con4.text = client.city ?? "";
-      con5.text = client.country ?? "";
-      con6.text = client.telephone ?? "";
+      business = await getBusiness(profileId!)??Business.fromJson({});
+      if(business.color != null)currentColor = Color(business.color!);
+      con1.text = business.businessName?? "";
+      con2.text = business.email ?? "";
+      con3.text = business.street ?? "";
+      con4.text = business.city ?? "";
+      con5.text = business.country ?? "";
+      con6.text = business.telephone ?? "";
     }else{
-      client= Company.fromJson({});
+      business= Business.fromJson({});
     }
 
     final directory = await getDownloadPath2();
-    if(client.logo!=null)logoPath = "${directory}${client.logo}";
+    if(business.logo!=null)logoPath = "${directory}${business.logo}";
     setState(() {});
   }
 
@@ -98,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _initclient();
+    _initbusiness();
 
   }
 
@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    print(client?.toJson().toString());
+    print(business?.toJson().toString());
     print(profileId);
     print(profileId);
     print(profileId);
@@ -137,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ProfileHeader(title: client.companyName?? 'Add Profile',),
+              ProfileHeader(title: business.businessName?? 'Add Profile',),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,18 +193,18 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                           if (image != null) await file.writeAsBytes(await image!.readAsBytes());
                                         });
 
-                                        client.logo = logo;
-                                        if(client.companyName==null) client.companyName = "N/A";
-                                        client.save();
+                                        business.logo = logo;
+                                        if(business.businessName==null) business.businessName = "N/A";
+                                        business.save();
 
-                                        if(client.logo!=null)logoPath = "${directory}${client.logo}";
+                                        if(business.logo!=null)logoPath = "${directory}${business.logo}";
 
                                         setState(() {
                                         });
 
                                       },
                                       child: Text(
-                                        "Pick Company Logo",
+                                        "Pick Business Logo",
                                       ),
                                     ),
                                     ElevatedButton(
@@ -229,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                   onColorChanged: (color){
                                                     currentColor = color;
                                                     // print(color.value);
-                                                    client.color = color.value;
+                                                    business.color = color.value;
                                                     setState(() {
 
                                                     });
@@ -270,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                               Padding(
                                                 padding: EdgeInsets.only(left: 5, right:5),
                                                 child: InputWidget(
-                                                  topLabel: "Company Profile Name",
+                                                  topLabel: "Business Profile Name",
                                                   keyboardType: TextInputType.text,
                                                   kController: con1,
                                                   onSaved: (String? value) {
@@ -278,12 +278,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    print(client!.toJson());
-                                                    client!.companyName = value;
+                                                    print(business!.toJson());
+                                                    business!.businessName = value;
                                                   },
                                                   validator: (value) {
                                                     if (value == null || value.isEmpty) {
-                                                      return 'Please enter company name.';
+                                                      return 'Please enter business name.';
                                                     }
                                                     return null;
                                                   },
@@ -311,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    client!.email = value;
+                                                    business!.email = value;
                                                   }
 
 
@@ -342,7 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // directorStreet = value!;
                                                     //
                                                     //
-                                                    client!.street = value;
+                                                    business!.street = value;
                                                   },
 
 
@@ -374,7 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                   },
                                                   onChanged: (String? value) {
 
-                                                    client!.city = value;
+                                                    business!.city = value;
                                                   },
                                                   validator: (String? value) {
                                                     return (value != null && value.contains('@'))
@@ -405,7 +405,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    client!.country = value;
+                                                    business!.country = value;
                                                   },
                                                   validator: (String? value) {
                                                     return (value != null && value.contains('@'))
@@ -436,7 +436,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    client!.telephone = value;
+                                                    business!.telephone = value;
                                                   },
                                                   validator: (String? value) {
                                                     return (value != null && value.contains('@'))
@@ -467,7 +467,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                               Padding(
                                                 padding: EdgeInsets.only(left: 5, right:5),
                                                 child: InputWidget(
-                                                  topLabel: "Company Name",
+                                                  topLabel: "Business Name",
                                                   keyboardType: TextInputType.text,
 
                                                   onSaved: (String? value) {
@@ -475,12 +475,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    print(client!.toJson());
-                                                    client!.companyName = value;
+                                                    print(business!.toJson());
+                                                    business!.businessName = value;
                                                   },
                                                   validator: (value) {
                                                     if (value == null || value.isEmpty) {
-                                                      return 'Please enter company name.';
+                                                      return 'Please enter business name.';
                                                     }
                                                     return null;
                                                   },
@@ -508,7 +508,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    client!.email = value;
+                                                    business!.email = value;
                                                   },
                                                   kController: con2,
 
@@ -539,7 +539,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // directorStreet = value!;
                                                     //
                                                     //
-                                                    client!.street = value;
+                                                    business!.street = value;
                                                   },
                                                   kController: con3,
 
@@ -572,7 +572,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                   },
                                                   onChanged: (String? value) {
 
-                                                    client!.city = value;
+                                                    business!.city = value;
                                                   },
                                                   validator: (String? value) {
                                                     return (value != null && value.contains('@'))
@@ -602,7 +602,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    client!.country = value;
+                                                    business!.country = value;
                                                   },
                                                   validator: (String? value) {
                                                     return (value != null && value.contains('@'))
@@ -634,7 +634,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                     // code when the user saves the form.
                                                   },
                                                   onChanged: (String? value) {
-                                                    client!.telephone = value;
+                                                    business!.telephone = value;
                                                   },
                                                   validator: (String? value) {
                                                     return (value != null && value.contains('@'))
@@ -669,25 +669,25 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                       ),
                                       onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          print(client!.toJson());
+                                          print(business!.toJson());
                                           print(widget.code);
                                           try {
                                             if(widget.code == "edit"){
-                                              client!.update();
+                                              business!.update();
                                             }else{
-                                              var clientId = await client!.save();
+                                              var businessId = await business!.save();
 
-                                              print('Client id is $clientId');
+                                              print('Client id is $businessId');
 
                                               SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                                              prefs.setInt(UserPreference.activeCompany, clientId);
+                                              prefs.setInt(UserPreference.activeBusiness, businessId);
                                             }
 
 
 
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("Company saved successfully"),
+                                              content: Text("Business saved successfully"),
                                             ));
 
                                             SchedulerBinding.instance!
@@ -710,7 +710,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                       },
                                       icon: Icon(Icons.save),
                                       label: Text(
-                                        "Save Company",
+                                        "Save Business",
                                       ),
                                     ),
                                   ],
@@ -731,13 +731,13 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                       ),
                                       onPressed: () {
                                         if (true) {
-                                          print(client!.toJson());
+                                          print(business!.toJson());
                                           print(widget.code);
                                           try {
-                                            client.delete();
+                                            business.delete();
 
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("Company deleted"),
+                                              content: Text("Business deleted"),
                                             ));
 
 
@@ -762,7 +762,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                       },
                                       icon: Icon(Icons.cancel),
                                       label: Text(
-                                        "Delete Company",
+                                        "Delete Business",
                                       ),
                                     ),
                                   ],

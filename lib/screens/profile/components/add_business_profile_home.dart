@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
 
 import '../../../core/types/Memo.dart';
-import '../../../core/models/Company.dart';
+import '../../../core/models/Business.dart';
 import '../../../core/utils/responsive.dart';
  import '../edit/profile_home_screen.dart';
 import 'add_business_profile.dart';
@@ -30,10 +30,10 @@ class AddBusinessProfileHome extends StatefulWidget {
 
 class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
 
-  List<Company> clients = [];
+  List<Business> clients = [];
 
-  Future<void> _initCompanys() async {
-    clients = await getCompanys();
+  Future<void> _initBusinesss() async {
+    clients = await getBusinesss();
     setState(() {});
 
   }
@@ -41,7 +41,7 @@ class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
   @override
   void initState() {
 
-    _initCompanys();
+    _initBusinesss();
   }
 
 
@@ -76,7 +76,7 @@ class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
                     ),
                   ),
                   onPressed: () {
-                    clients = [Company.fromJson({})];
+                    clients = [Business.fromJson({})];
                     setState(() {
 
                     });

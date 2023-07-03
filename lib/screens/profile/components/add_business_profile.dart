@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/types/Memo.dart';
-import '../../../core/models/Company.dart';
+import '../../../core/models/Business.dart';
 import '../edit/profile_home_screen.dart';
 
 class AddBusinessProfile extends StatelessWidget {
@@ -75,10 +75,10 @@ class InformationCard extends StatefulWidget {
 class _InformationCardState extends State<InformationCard> {
 
 
-  List<Company> clients = [Company.fromJson({})];
+  List<Business> clients = [Business.fromJson({})];
 
-  Future<void> _initCompanys() async {
-    clients = await getCompanys();
+  Future<void> _initBusinesss() async {
+    clients = await getBusinesss();
     setState(() {});
   }
 
@@ -86,7 +86,7 @@ class _InformationCardState extends State<InformationCard> {
   void initState() {
     super.initState();
 
-    _initCompanys();
+    _initBusinesss();
   }
 
 
@@ -114,7 +114,7 @@ class MiniInformationWidget extends StatefulWidget {
     required this.memo,
     required this.callback
   }) : super(key: key);
-  final Company memo;
+  final Business memo;
   final Function(String, String) callback;
 
   @override
@@ -138,12 +138,12 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
   bool _closeIcon = true;
 
   SharedPreferences? prefs;
-  int? activeCompany;
+  int? activeBusiness;
 
   init() async {
     prefs = await SharedPreferences.getInstance();
-    activeCompany = await prefs!.getInt(UserPreference.activeCompany);
-    setState(() {  activeCompany; });
+    activeBusiness = await prefs!.getInt(UserPreference.activeBusiness);
+    setState(() {  activeBusiness; });
   }
 
   @override
@@ -159,14 +159,14 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
 
     var variaId = widget.memo.id;
 
-    print('This is the active company: $activeCompany');
+    print('This is the active business: $activeBusiness');
     print('Business id is: $variaId');
 
 
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: activeCompany==widget.memo.id?darkgreenColor:Colors.black38,
+        color: activeBusiness==widget.memo.id?darkgreenColor:Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Row(
@@ -198,7 +198,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     SizedBox(width: 6,),
                     Text(
-                      "${widget.memo.companyName??''}",
+                      "${widget.memo.businessName??''}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -207,7 +207,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     Visibility(
                       visible: !_visible,
-                      child: activeCompany==widget.memo.id?Text("Active",   style: Theme.of(context)
+                      child: activeBusiness==widget.memo.id?Text("Active",   style: Theme.of(context)
                           .textTheme
                           .caption!
                           .copyWith(color: Colors.blue),):SizedBox(),

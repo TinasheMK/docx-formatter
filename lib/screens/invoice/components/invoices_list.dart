@@ -130,7 +130,7 @@ class _InvoicesListState extends State<InvoicesList> {
                                                     border: Border.all(color: Colors.white10),
                                                   ),
                                                   child: TextButton(
-                                                    child: Text(clients[index].companyName!, style: TextStyle(color: Colors.white)),
+                                                    child: Text(clients[index].businessName!, style: TextStyle(color: Colors.white)),
                                                     onPressed: () {
                                                       filter2 = clients[index]!.id.toString()!;
                                                       _initInvoices();
@@ -445,7 +445,7 @@ class _InvoicesListState extends State<InvoicesList> {
               borderRadius: BorderRadius.all(Radius.circular(5.0) //
               ),
             ),
-            child: Text(userInfo.client != null ? userInfo.client!.companyName! : ""))),
+            child: Text(userInfo.client != null ? userInfo.client!.businessName??"" : ""))),
         DataCell(Text(userInfo.invoiceDate.toString().split(" ")[0])),
         DataCell(Text(userInfo.totalAmount.toString())),
         DataCell(Row(

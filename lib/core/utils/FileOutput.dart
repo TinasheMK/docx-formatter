@@ -4,7 +4,7 @@
 // import 'package:path_provider/path_provider.dart';
 //
 // import '../../models/Memo.dart';
-// import '../../models/registration/Company.dart';
+// import '../../models/registration/Business.dart';
 //
 // class FileOutput extends LogOutput {
 //   FileOutput();

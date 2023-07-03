@@ -32,7 +32,7 @@ class UserDetailsWidget extends StatelessWidget {
           Chart(),
           UserDetailsMiniCard(
             color: Color(0xff0293ee),
-            title: "Company Registration",
+            title: "Business Registration",
             amountOfFiles: "%28.3",
             numberOfIncrease: 1328,
           ),

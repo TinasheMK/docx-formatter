@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../types/Memo.dart';
-import '../models/Company.dart';
+import '../models/Business.dart';
 import '../models/Invoice.dart';
 
 ///
@@ -24,7 +24,7 @@ Future <String> invoiceGenerator(Invoice invoice) async {
     String? logoPath;
 
     final directory2 = await getDownloadPath2();
-    if(invoice.company!.logo!=null) logoPath = "${directory2}${invoice.company!.logo}";
+    if(invoice.business!.logo!=null) logoPath = "${directory2}${invoice.business!.logo}";
 
     var testFileContent;
     var img;
@@ -79,13 +79,13 @@ Future <String> invoiceGenerator(Invoice invoice) async {
 
 
     content
-      ..add(TextContent("fromcompany", invoice.company?.companyName))
-      ..add(TextContent("fromaddress", invoice.company?.street ?? "N/A"))
-      ..add(TextContent("fromcity", invoice.company?.city ?? "N/A"))
-      ..add(TextContent("fromcountry", invoice.company?.country ?? "N/A"))
-      ..add(TextContent("fromphone", invoice.company?.telephone ?? "N/A"))
+      ..add(TextContent("frombusiness", invoice.business?.businessName))
+      ..add(TextContent("fromaddress", invoice.business?.street ?? "N/A"))
+      ..add(TextContent("fromcity", invoice.business?.city ?? "N/A"))
+      ..add(TextContent("fromcountry", invoice.business?.country ?? "N/A"))
+      ..add(TextContent("fromphone", invoice.business?.telephone ?? "N/A"))
 
-      ..add(TextContent("tocompany", invoice.client?.companyName))
+      ..add(TextContent("tobusiness", invoice.client?.businessName))
       ..add(TextContent("toaddress", invoice.client?.street ?? "N/A"))
       ..add(TextContent("tocity", invoice.client?.city ?? "N/A"))
       ..add(TextContent("tocountry", invoice.client?.country ?? "N/A"))

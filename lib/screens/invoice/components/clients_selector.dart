@@ -193,7 +193,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     SizedBox(width: 6,),
                     Text(
-                      "${widget.memo.companyName?? 'Name'}",
+                      "${widget.memo.businessName?? 'Name'}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

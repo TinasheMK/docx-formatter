@@ -14,7 +14,7 @@
 // import '../../../core/widgets/input_widget.dart';
 // import '../../../providers/recent_user_model.dart';
 // import '../../../providers/registration/Client.dart';
-// import '../../../providers/registration/Company.dart';
+// import '../../../providers/registration/Business.dart';
 // import '../../../providers/registration/Wallet.dart';
 // import '../../../responsive.dart';
 //
@@ -91,7 +91,7 @@
 //     if(clientId!=null) {
 //       client = await getClient(clientId);
 //
-//       con1.text = client.companyName?? "";
+//       con1.text = client.businessName?? "";
 //       con2.text = client.email ?? "";
 //       con3.text = client.street ?? "";
 //       con4.text = client.city ?? "";
@@ -135,7 +135,7 @@
 //             children: [
 //               Header(),
 //               SizedBox(height: defaultPadding),
-//               MiniInformation(title: client.companyName?? 'New Client',),
+//               MiniInformation(title: client.businessName?? 'New Client',),
 //               SizedBox(height: defaultPadding),
 //               Text("Balance: \$"+balance.toString(), style: TextStyle(fontSize: 20, color: Colors.white) ),
 //
@@ -173,7 +173,7 @@
 //                                             Padding(
 //                                               padding: EdgeInsets.only(left: 5, right:5),
 //                                               child: InputWidget(
-//                                                 topLabel: "Company Name",
+//                                                 topLabel: "Business Name",
 //                                                 keyboardType: TextInputType.text,
 //                                                 kController: con1,
 //                                                 onSaved: (String? value) {
@@ -182,15 +182,15 @@
 //                                                 },
 //                                                 onChanged: (String? value) {
 //                                                   print(client!.toJson());
-//                                                   client!.companyName = value;
+//                                                   client!.businessName = value;
 //                                                 },
 //                                                 validator: (value) {
 //                                                   if (value == null || value.isEmpty) {
-//                                                     return 'Please enter company name.';
+//                                                     return 'Please enter business name.';
 //                                                   }
 //                                                   return null;
 //                                                 },
-//                                                 // kInitialValue: client.companyName ?? "",
+//                                                 // kInitialValue: client.businessName ?? "",
 //
 //
 //                                                 // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -377,7 +377,7 @@
 //                                               Padding(
 //                                                 padding: EdgeInsets.only(left: 5, right:5),
 //                                                 child: InputWidget(
-//                                                   topLabel: "Company Name",
+//                                                   topLabel: "Business Name",
 //                                                   keyboardType: TextInputType.text,
 //                                                   kController: con1,
 //                                                   onSaved: (String? value) {
@@ -386,15 +386,15 @@
 //                                                   },
 //                                                   onChanged: (String? value) {
 //                                                     print(client!.toJson());
-//                                                     client!.companyName = value;
+//                                                     client!.businessName = value;
 //                                                   },
 //                                                   validator: (value) {
 //                                                     if (value == null || value.isEmpty) {
-//                                                       return 'Please enter company name.';
+//                                                       return 'Please enter business name.';
 //                                                     }
 //                                                     return null;
 //                                                   },
-//                                                   // kInitialValue: client.companyName ?? '',
+//                                                   // kInitialValue: client.businessName ?? '',
 //
 //
 //                                                   // prefixIcon: FlutterIcons.chevron_left_fea,

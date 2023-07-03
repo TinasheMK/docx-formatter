@@ -9,7 +9,7 @@ import 'InvoiceItem.dart';
 import 'Payment.dart';
 import '../types/compare_res.dart';
 import 'Client.dart';
-import 'Company.dart';
+import 'Business.dart';
 import 'Currency.dart';
 import 'InvoiceItem.dart';
 
@@ -30,9 +30,9 @@ class Invoice {
   Currency? currencyFull;
   int?      clientId;
   Client?   client;
-  int?   companyId;
+  int?   businessId;
 
-  Company?   company;
+  Business?   business;
   List<Payment>?     payments;
   List<InvoiceItem>? invoiceItems;
 
@@ -57,11 +57,11 @@ class Invoice {
     this.invoiceDate,
     this.dueDate,
     this.invoiceNumber,
-    this.companyId,
+    this.businessId,
     this.invoiceStatus,
     this.clientId,
     this.client,
-    this.company,
+    this.business,
     this.payments,
     this.invoiceItems,
 
@@ -85,7 +85,7 @@ class Invoice {
     invoiceDate = json['invoiceDate'];
     dueDate = json['dueDate'];
     invoiceNumber = json['invoiceNumber'];
-    companyId = json['companyId'];
+    businessId = json['businessId'];
     originId = json['originId'];
     invoiceStatus = json['invoiceStatus'];
     clientId = json['clientId'];
@@ -96,7 +96,10 @@ class Invoice {
   }
   Invoice.fromPostSyncJson(Map<String, dynamic> json) {
     id = json['originId'];
+    version = json['version'];
+    isConfirmed = json['isConfirmed'];
     universalId = json['id'];
+
     totalAmount = json['totalAmount'];
     vatPercent = json['vatPercent'];
     vatAmount = json['vatAmount'];
@@ -108,7 +111,7 @@ class Invoice {
     invoiceDate = json['invoiceDate'];
     dueDate = json['dueDate'];
     invoiceNumber = json['invoiceNumber'];
-    companyId = 1;
+    businessId = 1;
     originId = json['originId'];
     invoiceStatus = json['invoiceStatus'];
     clientId = 1;
@@ -118,8 +121,7 @@ class Invoice {
     invoiceItems = List<InvoiceItem>.from(json["invoiceItems"].map((x) => InvoiceItem.fromSycJson(x)));
     payments = List<Payment>.from(json["payments"].map((x) => Payment.fromSyncJson(x)));
 
-    version = json['version'];
-    isConfirmed = json['isConfirmed'];
+
 
   }
 
@@ -141,7 +143,7 @@ class Invoice {
     data['published'] = this.published;
     data['notes'] = this.notes;
     data['currency'] = this.currency;
-    data['companyId'] = this.companyId;
+    data['businessId'] = this.businessId;
     data['discount'] = this.discount;
     data['invoiceDate'] = this.invoiceDate;
     data['dueDate'] = this.dueDate;
@@ -162,7 +164,7 @@ class Invoice {
     final Map<String, dynamic> client = new Map<String, dynamic>();
     final Map<String, dynamic> business = new Map<String, dynamic>();
     client['id'] = this.client?.universalId??1;
-    business['id'] = this.company?.universalId??1;
+    business['id'] = this.business?.universalId??1;
 
     data['id'] = (this.isConfirmed??false)? (this.universalId??null): null;
     data['originId'] = this.id;
@@ -177,7 +179,7 @@ class Invoice {
     data['published'] = this.published;
     data['notes'] = this.notes;
     data['currency'] = this.currency;
-    data['companyId'] = this.companyId;
+    data['businessId'] = this.businessId;
     data['discount'] = this.discount;
     data['invoiceDate'] = this.invoiceDate;
     data['dueDate'] = this.dueDate;
@@ -214,7 +216,7 @@ class Invoice {
       "published": (this.published??false)?1:0,
       "notes": this.notes,
       "currency": this.currencyFull?.id,
-      "company_id": this.companyId,
+      "business_id": this.businessId,
       "discount": this.discount,
       "invoice_date": this.invoiceDate,
       "due_date": this.dueDate,
@@ -294,7 +296,7 @@ class Invoice {
       "published": (this.published??false)?1:0,
       "notes": this.notes,
       "currency": this.currencyFull?.id,
-      "company_id": this.companyId,
+      "business_id": this.businessId,
       "discount": this.discount,
       "invoice_date": this.invoiceDate,
       "due_date": this.dueDate,
@@ -377,7 +379,7 @@ class Invoice {
       "published": (this.published??false)?1:0,
       "notes": this.notes,
       "currency": this.currencyFull?.id,
-      "company_id": this.companyId,
+      "business_id": this.businessId,
       "discount": this.discount,
       "invoice_date": this.invoiceDate,
       "due_date": this.dueDate,
@@ -469,7 +471,7 @@ class Invoice {
   //     "published": this.published,
   //     "notes": this.notes,
   //     "currency": this.currency,
-  //     "company_id": this.companyId,
+  //     "business_id": this.businessId,
   //     "discount": this.discount,
   //     "invoiceDate": this.invoiceDate,
   //     "dueDate": this.dueDate,
@@ -550,7 +552,7 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
   List<Invoice> invoices = [];
   for( int i =0; i  <maps?.length; i++)   {
 
-    Client client = await getClient(maps?[i]['client_id']);
+    Client? client = await getClient(maps?[i]['client_id']);
 
     invoices.add(
         Invoice(
@@ -563,7 +565,7 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
           published : maps?[i]['published']==1?true:false,
           notes : maps?[i]['notes'],
           currency : maps?[i]['currency'],
-          companyId : maps?[i]['company_id'],
+          businessId : maps?[i]['business_id'],
           discount : maps?[i]['discount'],
           invoiceDate : maps?[i]['invoice_date'],
           dueDate : maps?[i]['due_date'],
@@ -598,10 +600,10 @@ Future<List<Invoice>> getInvoicesForSync() async {
   List<Invoice> invoices = [];
   for( int i =0; i  <maps?.length; i++)   {
 
-    Client client = await getClient(maps?[i]['client_id']);
+    Client? client = await getClient(maps?[i]['client_id']);
     List<InvoiceItem>invoiceItems = await getInvoiceItems(maps?[i]['id']);
     List<Payment>payments = await getInvoicePayments(maps?[i]['id']);
-    Company company = await getCompany(maps?[i]['company_id']);
+    Business? business = await getBusiness(maps?[i]['business_id']);
 
     invoices.add(
         Invoice(
@@ -614,7 +616,7 @@ Future<List<Invoice>> getInvoicesForSync() async {
           published : maps?[i]['published']==1?true:false,
           notes : maps?[i]['notes'],
           currency : maps?[i]['currency'],
-          companyId : maps?[i]['company_id'],
+          businessId : maps?[i]['business_id'],
           discount : maps?[i]['discount'],
           invoiceDate : maps?[i]['invoice_date'],
           dueDate : maps?[i]['due_date'],
@@ -622,12 +624,11 @@ Future<List<Invoice>> getInvoicesForSync() async {
           invoiceStatus : maps?[i]['invoice_status'],
           clientId : maps?[i]['client_id'],
           client: client,
-          company: company,
+          business: business,
           payments :payments,
           invoiceItems : invoiceItems,
 
           universalId : maps?[i]["universal_id"],
-          // isOptimised : maps?[i]["is_optimised"],
           isSynced : maps?[i]["is_synced"]==1?true:false,
           originId : maps?[i]["origin_id"],
           version : maps?[i]["version"],
@@ -643,7 +644,7 @@ Future<List<Invoice>> getInvoicesForSync() async {
 
 Future<Invoice> getInvoice(int id) async {
   final maps = await dbHelper.findById("invoice", id);
-  Client client = await getClient(maps?['client_id']);
+  Client? client = await getClient(maps?['client_id']);
   List<InvoiceItem> invoiceItems = await getInvoiceItems(maps?['id']);
 
   return Invoice(
@@ -663,7 +664,7 @@ Future<Invoice> getInvoice(int id) async {
     clientId : maps?['client_id'],
     client: client,
     payments : maps?['payments'],
-    companyId : maps?['company_id'],
+    businessId : maps?['business_id'],
     universalId : maps?["universal_id"],
     // isOptimised : maps?["is_optimised"],
     isSynced :  maps?["is_synced"]==1?true:false,
@@ -676,47 +677,9 @@ Future<Invoice> getInvoice(int id) async {
 
 }
 
-// Future<Invoice?> getInvoiceByUniversalId(int id) async {
-//   final maps = await dbHelper.findByIdUni("invoice", id);
-//   if(maps==null){
-//     return null;
-//   }
-//   Client client = await getClient(maps?['client_id']);
-//   List<InvoiceItem> invoiceItems = await getInvoiceItems(maps?['id']);
-//
-//   return Invoice(
-//     id : maps?['id'],
-//     totalAmount : maps?['total_amount'],
-//     vatPercent : maps?['vat_percent'],
-//     vatAmount : maps?['vat_amount'],
-//     subTotalAmount : maps?['sub_total_amount'],
-//     published : maps?['published']==1?true:false,
-//     notes : maps?['notes'],
-//     currency : maps?['currency'],
-//     discount : maps?['discount'],
-//     invoiceDate : maps?['invoice_date'],
-//     dueDate : maps?['due_date'],
-//     invoiceNumber : maps?['invoice_number'],
-//     invoiceStatus : maps?['invoice_status'],
-//     clientId : maps?['client_id'],
-//     client: client,
-//     payments : maps?['payments'],
-//     companyId : maps?['company_id'],
-//     universalId : maps?["universal_id"],
-//     // isOptimised : maps?["is_optimised"],
-//     isSynced :  maps?["is_synced"]==1?true:false,
-//     originId : maps?["origin_id"],
-//     version : maps?["version"],
-//     isConfirmed : maps?["is_confirmed"]==1?true:false,
-//     invoiceItems : invoiceItems,
-//
-//   );
-//
-// }
-
 Future<Invoice?> getInvoiceByUni(int id, {bool? copy}) async {
   var maps;
-  Client client;
+  Client? client;
   List<InvoiceItem> invoiceItems;
 
   if(copy != null && copy==true){
@@ -753,7 +716,7 @@ Future<Invoice?> getInvoiceByUni(int id, {bool? copy}) async {
     clientId : maps?['client_id'],
     client: client,
     payments : maps?['payments'],
-    companyId : maps?['company_id'],
+    businessId : maps?['business_id'],
     universalId : maps?["universal_id"],
     isSynced : maps?["is_synced"]==1?true:false,
     originId : maps?["origin_id"],

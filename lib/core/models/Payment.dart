@@ -84,7 +84,7 @@ class Payment {
   }
 
 
-  Future<int> saveAndAttach(int companyId) async {
+  Future<int> saveAndAttach(int businessId) async {
     debugPrint('adding   payment');
     if(this.id==null && this.universalId!=null ) {
       Payment existing = await getPaymentByUni(this.universalId!);
@@ -118,7 +118,7 @@ class Payment {
     debugPrint('inserted payment row id: $id');
     return id;
   }
-  Future<int> saveSyncedAndAttach(int companyId) async {
+  Future<int> saveSyncedAndAttach(int businessId) async {
     if(this.universalId==null){
       print("Universal id is required");
       throw Error();
@@ -156,7 +156,7 @@ class Payment {
     debugPrint('inserted payment row id: $id');
     return id;
   }
-  Future<int> updateSyncedAndAttach(int companyId) async {
+  Future<int> updateSyncedAndAttach(int businessId) async {
     if(this.universalId==null){
       print("Universal id is required");
       throw Error();
@@ -223,7 +223,7 @@ class Payment {
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
-    // final id = await dbHelper.queryRowCount('company');
+    // final id = await dbHelper.queryRowCount('business');
     final rowsDeleted = await dbHelper.delete('payment',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }

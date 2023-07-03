@@ -6,7 +6,7 @@ class UserPreference {
   static const String clientId = "clientId";
   static const String firstName = "firstName";
   static const String lastName = "lastName";
-  static const String activeCompany = "activeCompany";
+  static const String activeBusiness = "activeBusiness";
   static const String activeCurrency = "activeCurrency";
   static const String activeClient = "activeClient";
   static const String accessToken = "accessToken";

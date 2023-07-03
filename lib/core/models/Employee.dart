@@ -15,7 +15,7 @@ class Employee {
   String? telephone;
   String? incDate;
   String? email;
-  int?    companyId;
+  int?    businessId;
 
 
   Employee(
@@ -31,7 +31,7 @@ class Employee {
     this.telephone,
     this.incDate,
     this.email,
-    this.companyId,
+    this.businessId,
       );
 
   Employee.fromJson(Map<String, dynamic> json) {
@@ -48,7 +48,7 @@ class Employee {
     telephone = json['telephone'];
     incDate = json['incDate'];
     email = json['email'];
-    companyId = json['companyId'];
+    businessId = json['businessId'];
 
   }
 
@@ -67,7 +67,7 @@ class Employee {
     data['telephone'] = this.telephone;
     data['incDate'] = this.incDate;
     data['email'] = this.email;
-    data['companyId'] = this.companyId;
+    data['businessId'] = this.businessId;
 
     return data;
   }
@@ -86,7 +86,7 @@ class Employee {
       'telephone': this.telephone,
       'incDate': this.incDate,
       'email': this.email,
-      'companyId': this.companyId,
+      'businessId': this.businessId,
 
 
     };
@@ -95,7 +95,7 @@ class Employee {
     debugPrint('inserted employee row id: $id');
   }
 
-  Future<void> saveAndAttach(int companyId) async {
+  Future<void> saveAndAttach(int businessId) async {
     debugPrint('adding   director');
 
     Map<String, dynamic> row = {
@@ -111,7 +111,7 @@ class Employee {
       'telephone': this.telephone,
       'incDate': this.incDate,
       'email': this.email,
-      'companyId': companyId,
+      'businessId': businessId,
 
     };
     final id = await dbHelper.insert("employee", row);
@@ -142,7 +142,7 @@ class Employee {
       'telephone': this.telephone,
       'incDate': this.incDate,
       'email': this.email,
-      'companyId': this.companyId,
+      'businessId': this.businessId,
 
     };
     final rowsAffected = await dbHelper.update('employee',row);
@@ -151,7 +151,7 @@ class Employee {
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
-    // final id = await dbHelper.queryRowCount('company');
+    // final id = await dbHelper.queryRowCount('business');
     final rowsDeleted = await dbHelper.delete('employee',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }

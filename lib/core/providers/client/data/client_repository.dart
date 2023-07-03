@@ -12,26 +12,26 @@ import '../../../utils/UserPreference.dart';
 import '../../../constants/constants.dart';
 import '../../../exceptions/exception_handler.dart';
 import '../../../types/compare_res.dart';
-import '../../../models/Invoice.dart';
+import '../../../models/Client.dart';
 import '../../../types/syncresult.dart';
 
-abstract class IInvoiceRepository {
-  Future<SyncResult> postSyncInvoices();
-  Future<SyncResult> getSyncInvoices();
+abstract class IClientRepository {
+  Future<SyncResult> postSyncClients();
+  Future<SyncResult> getSyncClients();
 }
 
-class InvoiceRepository implements IInvoiceRepository {
+class ClientRepository implements IClientRepository {
   Dio _dioClient;
 
   final url = '';
 
   final Reader _reader;
 
-  InvoiceRepository(this._reader) : _dioClient = _reader(dioProvider);
+  ClientRepository(this._reader) : _dioClient = _reader(dioProvider);
 
 
   @override
-  Future<SyncResult> getSyncInvoices() async {
+  Future<SyncResult> getSyncClients() async {
     SyncResult syncres = new SyncResult();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     var prefs = await SharedPreferences.getInstance();
@@ -46,51 +46,51 @@ class InvoiceRepository implements IInvoiceRepository {
       return syncres;
     }
 
-    var url = '$invoicerService/api/v1/invoices/1/${lastSyncDate}';
+    var url = '$invoicerService/api/v1/clients/1/${lastSyncDate}';
 
     Response result = await _dioClient.get(
         url
     );
 
     if (result.statusCode == 200) {
-      print("Received get sync invoices: "+result.data.toString());
+      print("Received get sync clients: "+result.data.toString());
       var res = result.data as List;
 
       if (res.isEmpty) {
         syncres.success = true;
-        syncres.message = 'No invoice updates from server';
+        syncres.message = 'No client updates from server';
         return syncres;
       }
 
-      final List<Map<String, dynamic>> invoicesr = List.from(res);
+      final List<Map<String, dynamic>> clientsr = List.from(res);
 
-      List<Invoice> invoices = invoicesr.map((e) => Invoice.fromPostSyncJson(e)).toList();
+      List<Client> clients = clientsr.map((e) => Client.fromSyncJson(e)).toList();
 
-      for(int i =0; i<invoices.length; i++){
-        Invoice? localInvoice = await getInvoiceByUni(invoices[i].universalId!);
+      for(int i =0; i<clients.length; i++){
+        Client? localClient = await getByUni(clients[i].universalId!);
 
-        if(localInvoice != null) {
+        if(localClient != null) {
 
           // Skip if both local and server objects have no changes (on same version)
-          if(invoices[i].version == localInvoice.version) continue;
+          if(clients[i].version == localClient.version) continue;
 
           //Save incoming if local has no changes (isSync still true)
-          if (localInvoice!.isSynced == true) {
-            invoices[i].isSynced = true;
-            invoices[i].id = localInvoice.id;
-            invoices[i].updateSynced();
+          if (localClient!.isSynced == true) {
+            clients[i].isSynced = true;
+            clients[i].id = localClient.id;
+            clients[i].updateSynced();
           }
 
           //
-          else if (localInvoice!.isSynced == false) {
-            List<CompareRes> comps = await invoices[i].compare();
-            if (comps.isEmpty) {invoices[i].isSynced = true;
-            invoices[i].id = localInvoice.id;
-            invoices[i].updateSynced();
+          else if (localClient!.isSynced == false) {
+            List<CompareRes> comps = await clients[i].compare();
+            if (comps.isEmpty) {clients[i].isSynced = true;
+            clients[i].id = localClient.id;
+            clients[i].updateSynced();
             } else {
               syncres.success = false;
               syncres.message = "There are some conflicts";
-              syncres.invoice = invoices[i];
+              syncres.object = clients[i];
               return syncres;
             }
           }
@@ -98,9 +98,9 @@ class InvoiceRepository implements IInvoiceRepository {
 
         }
         else{
-          invoices[i].isSynced = true;
-          invoices[i].id = null;
-          invoices[i].saveSynced();
+          clients[i].isSynced = true;
+          clients[i].id = null;
+          clients[i].saveSynced();
         }
 
       }
@@ -109,39 +109,39 @@ class InvoiceRepository implements IInvoiceRepository {
       return syncres;
     }else {
       throw Exception(
-          'There was a problem syncing invoices. Please try again later');
+          'There was a problem syncing clients. Please try again later');
     }
   }
 
   @override
-  Future<SyncResult> postSyncInvoices() async {
+  Future<SyncResult> postSyncClients() async {
 
     try {
       SyncResult syncresp = new SyncResult();
-      List<Invoice> syncInvoicesp = await getInvoicesForSync();
-      List syncReadyInvsp = syncInvoicesp.map((item) => item.toSyncJson()).toList();
-      print(syncReadyInvsp);
+      List<Client> syncClientsp = await getClientsForSync();
+      List syncReadyCliesp = syncClientsp.map((item) => item.toSyncJson()).toList();
+      print(syncReadyCliesp);
 
-      if (syncReadyInvsp.isEmpty) {
-        print("No invoices to post sync");
+      if (syncReadyCliesp.isEmpty) {
+        print("No clients to post sync");
         syncresp.success = true;
         syncresp.message = "Nothing to sync";
         return syncresp;
       }
 
       final syncRes = await _dioClient.post(
-        '$invoicerService/api/v1/invoices',
-        data: syncReadyInvsp,
+        '$invoicerService/api/v1/clients',
+        data: syncReadyCliesp,
       );
 
       if (syncRes.statusCode == 200) {
         var res = syncRes.data as List;
-        final List<Map<String, dynamic>> incomingInvsJsonp = List.from(res);
-        List<Invoice> incomingInvsp = incomingInvsJsonp.map((e) =>
-            Invoice.fromPostSyncJson(e)).toList();
+        final List<Map<String, dynamic>> incomingCliesJsonp = List.from(res);
+        List<Client> incomingCliesp = incomingCliesJsonp.map((e) =>
+            Client.fromSyncJson(e)).toList();
 
-        //Save incoming invoices first stage of sync
-        incomingInvsp.forEach((i) {
+        //Save incoming clients first stage of sync
+        incomingCliesp.forEach((i) {
           i.updateSynced();
           i.isConfirmed = true;
           i.isSynced = true;
@@ -149,24 +149,24 @@ class InvoiceRepository implements IInvoiceRepository {
 
 
         //Confirm changes to server
-        List confirmReadyInvs = incomingInvsp.map((item) => item.toSyncJson())
+        List confirmReadyClies = incomingCliesp.map((item) => item.toSyncJson())
             .toList();
-        print(confirmReadyInvs.toString());
+        print(confirmReadyClies.toString());
         final confirmRes = await _dioClient.post(
-          '$invoicerService/api/v1/invoices',
-          data: confirmReadyInvs,
+          '$invoicerService/api/v1/clients',
+          data: confirmReadyClies,
         );
 
         //Save objects with confirm true
         if (confirmRes.statusCode == 200) {
           var res = confirmRes.data as List;
-          final List<Map<String, dynamic>> incomingInvsJson = List.from(res);
+          final List<Map<String, dynamic>> incomingCliesJson = List.from(res);
 
-          List<Invoice> incomingInvs = incomingInvsJson.map((e) =>
-              Invoice.fromPostSyncJson(e)).toList();
+          List<Client> incomingClies = incomingCliesJson.map((e) =>
+              Client.fromSyncJson(e)).toList();
 
           //Save incoming data
-          incomingInvs.forEach((i) {
+          incomingClies.forEach((i) {
             i.isSynced = true;
             i.updateSynced();
           });
@@ -174,11 +174,11 @@ class InvoiceRepository implements IInvoiceRepository {
 
         //Successfull sync response
         syncresp.success = true;
-        syncresp.message = "Invoices synced";
+        syncresp.message = "Clients synced";
         return syncresp;
       } else {
         throw Exception(
-            'There was a problem syncing invoices. Please try again later');
+            'There was a problem syncing clients. Please try again later');
       }
     }
     catch (e) {

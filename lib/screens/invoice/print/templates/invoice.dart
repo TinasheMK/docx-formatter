@@ -39,11 +39,11 @@ Future<Uint8List> generateInvoice(
   final invoice = LocalInvoice(
     invoiceNumber: data.invoiceNumber.toString(),
     products: data.invoiceItems!,
-    logo: data.company?.logo ?? '',
-    customerName: data.client?.companyName??'',
+    logo: data.business?.logo ?? '',
+    customerName: data.client?.businessName??'',
     customerAddress: data.client?.street??'',
     paymentInfo:
-        "${data.company?.street??''}\n${data.company?.city??''}, ${data.company?.country??''}, \n${data.company?.telephone??''}",
+        "${data.business?.street??''}\n${data.business?.city??''}, ${data.business?.country??''}, \n${data.business?.telephone??''}",
     tax: .0,
     baseColor: PdfColors.teal,
     accentColor: PdfColors.blueGrey900,

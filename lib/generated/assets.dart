@@ -138,7 +138,7 @@ class Assets {
   static const String modelRole.g = 'lib/core/providers/auth/model/role.g.dart';
   static const String modelSyncresult = 'lib/core/providers/invoice/model/syncresult.dart';
   static const String modelsClient = 'lib/core/models/Client.dart';
-  static const String modelsCompany = 'lib/core/models/Company.dart';
+  static const String modelsBusiness = 'lib/core/models/Business.dart';
   static const String modelsCurrency = 'lib/core/models/Currency.dart';
   static const String modelsEmployee = 'lib/core/models/Employee.dart';
   static const String modelsInvoice = 'lib/core/models/Invoice.dart';

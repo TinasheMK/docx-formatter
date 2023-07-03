@@ -4,17 +4,11 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart' as pdf;
-import 'package:smart_admin_dashboard/core/models/Company.dart';
-import 'package:smart_admin_dashboard/core/models/Currency.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart' ;
 import 'package:intl/intl.dart';
-import '../../../../core/providers/services/permissions.dart';
-import 'package:flutter/material.dart';
-
-import '../../../../core/models/Client.dart';
+ import 'package:flutter/material.dart';
 import '../../../../core/models/Invoice.dart';
-import '../../../../core/utils/save_file_mobile.dart';
-import '../data.dart';
+import '../../../../core/utils/permisions.dart';
 
 
 
@@ -29,14 +23,14 @@ Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, Invoice data) a
   // invoice.invoiceNumber = 'fetr';
   // invoice.currencyFull!.symbol = '\$';
   // invoice.client = Client();
-  // invoice.client!.companyName = 'fgh';
-  // invoice.company = Company();
-  // invoice.company!.companyName = 'kl;';
+  // invoice.client!.businessName = 'fgh';
+  // invoice.business = Business();
+  // invoice.business!.businessName = 'kl;';
 
   var _model = ImageModel();
 
   final directory = await getDownloadPath2();
-  if(invoice.company?.logo!=null) logoPath = "${directory}${invoice.company!.logo!}";
+  if(invoice.business?.logo!=null) logoPath = "${directory}${invoice.business!.logo!}";
 
 
   _model.requestFilePermission();
@@ -139,7 +133,7 @@ Future<PdfLayoutResult> _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) a
   String city = invoice.client!.city ?? '';
   String country = invoice.client!.country ?? '';
   String address =
-      'Bill To: \r\n\r\n'+invoice.client!.companyName!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
+      'Bill To: \r\n\r\n'+invoice.client!.businessName!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
   PdfTextElement(text: invoiceNumber, font: contentFont).draw(
       page: page,
       bounds: Rect.fromLTWH(400, 100 + height,
@@ -207,12 +201,12 @@ void _drawFooter(PdfPage page, Size pageSize) {
   page.graphics.drawLine(linePen, Offset(0, pageSize.height - 100),
       Offset(pageSize.width, pageSize.height - 100));
 
-  String addr = invoice.company!.street??"";
-  String city = invoice.company!.city??"";
-  String country = invoice.company!.country??"";
-  String email = invoice.company!.email??"";
+  String addr = invoice.business!.street??"";
+  String city = invoice.business!.city??"";
+  String country = invoice.business!.country??"";
+  String email = invoice.business!.email??"";
   String footerContent =
-      invoice.company!.companyName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
+      invoice.business!.businessName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
   //Added 30 as a margin for the layout
   page.graphics.drawString(
       footerContent, PdfStandardFont(PdfFontFamily.helvetica, 9),
