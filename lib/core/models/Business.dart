@@ -7,13 +7,14 @@ import 'Employee.dart';
 
 class Business {
   int?    id;
-  String? businessName;
+  String? name;
   String? street;
   String? city;
   String? logo;
   int? color;
   String? country;
   String? telephone;
+  String? paymentInfo;
   String? email;
   String? set;
   Status? status;
@@ -33,7 +34,7 @@ class Business {
 
   Business({
     this.id,
-    this.businessName,
+    this.name,
     this.street,
     this.city,
     this.logo,
@@ -41,9 +42,11 @@ class Business {
     this.set,
     this.country,
     this.telephone,
+    this.paymentInfo,
     this.email,
     this.status,
     this.employees,
+
     this.universalId,
     this.isSynced,
     this.originId,
@@ -59,13 +62,14 @@ class Business {
 
   Business.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    businessName = json['businessName'];
+    name = json['name'];
     street = json['street'];
     city = json['city'];
     logo = json['logo'];
     color = json['color'];
     country = json['country'];
     telephone = json['telephone'];
+    paymentInfo = json['paymentInfo'];
     email = json['email'];
     status = json['status'];
     employees = json['employees'];
@@ -76,28 +80,29 @@ class Business {
     isConfirmed = json['isConfirmed'];
     universalId = json['id'];
 
-    businessName = json['businessName'];
+    name = json['name'];
     street = json['street'];
     city = json['city'];
     logo = json['logo'];
     color = json['color'];
     country = json['country'];
-    telephone = json['telephone'];
+    paymentInfo = json['paymentInfo'];
     email = json['email'];
     status = json['status'];
-    employees = json['employees'];
+    employees = List<Employee>.from(json["employees"]?.map((x) => Employee.fromSyncJson(x)));
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['businessName'] = this.businessName;
+    data['name'] = this.name;
     data['street'] = this.street;
     data['city'] = this.city;
     data['logo'] = this.logo;
     data['color'] = this.color;
     data['country'] = this.country;
     data['telephone'] = this.telephone;
+    data['paymentInfo'] = this.paymentInfo;
     data['email'] = this.email;
     data['status'] = this.status;
     data['employees'] = this.employees?.map((item) => item.toJson());
@@ -112,23 +117,25 @@ class Business {
     data['isConfirmed'] = this.isConfirmed??null;
 
 
-    data['businessName'] = this.businessName;
+    data['name'] = this.name;
     data['street'] = this.street;
     data['city'] = this.city;
     data['logo'] = this.logo;
     data['color'] = this.color;
     data['country'] = this.country;
     data['telephone'] = this.telephone;
+    data['paymentInfo'] = this.paymentInfo;
     data['email'] = this.email;
     data['status'] = this.status;
-    data['employees'] = this.employees?.map((item) => item.toJson());
+    // Employees are not posted this way
+    // if(this.employees!=null&&this.employees!.isEmpty)data['employees'] = this.employees?.map((item) => item.toJson());
     return data;
   }
 
 
   Future<int> save() async {
     Map<String, dynamic> row = {
-      "business_name": this.businessName,
+      "name": this.name,
       "street": this.street,
       "id": this.id,
       "city": this.city,
@@ -136,6 +143,7 @@ class Business {
       "color": this.color,
       "country": this.country,
       "telephone": this.telephone,
+      "payment_info": this.paymentInfo,
       "email": this.email,
       "status": this.status,
 
@@ -186,7 +194,7 @@ class Business {
       throw Error();
     }
     Map<String, dynamic> row = {
-      "business_name": this.businessName,
+      "name": this.name,
       "street": this.street,
       "id": this.id,
       "city": this.city,
@@ -194,6 +202,7 @@ class Business {
       "color": this.color,
       "country": this.country,
       "telephone": this.telephone,
+      "payment_info": this.paymentInfo,
       "email": this.email,
       "status": this.status,
 
@@ -248,14 +257,14 @@ class Business {
       throw Error();
     }
     Map<String, dynamic> row = {
-      "business_name": this.businessName,
+      "name": this.name,
       "street": this.street,
       "id": this.id,
       "city": this.city,
       "logo": this.logo,
       "color": this.color,
       "country": this.country,
-      "telephone": this.telephone,
+      "payment_info": this.paymentInfo,
       "email": this.email,
       "status": this.status,
 
@@ -301,22 +310,6 @@ class Business {
 
   }
 
-  Future<void> saveAndAttach(int businessId) async {
-    debugPrint('adding   director');
-
-    Map<String, dynamic> row = {
-      'city': this.city,
-      'logo': this.logo,
-      'color': this.color,
-      'country': this.country,
-      'street': this.street,
-      'email': this.email,
-      'business_id': businessId
-    };
-    final id = await dbHelper.insert("director", row);
-    this.id = id;
-    debugPrint('inserted director row id: $id');
-  }
 
 
   Future<void> query() async {
@@ -325,23 +318,6 @@ class Business {
     for (final row in allRows) {
       debugPrint(row.toString());
     }
-  }
-
-  void update() async {
-    // row to update
-    Map<String, dynamic> row = {
-      "business_name": this.businessName,
-      "street": this.street,
-      "city": this.city,
-      "logo": this.logo,
-      "color": this.color,
-      "country": this.country,
-      "telephone": this.telephone,
-      "email": this.email,
-      "id" : this.id
-    };
-    final rowsAffected = await dbHelper.update('business',row);
-    debugPrint('updated $rowsAffected row(s)');
   }
 
   void delete() async {
@@ -382,13 +358,14 @@ Future<List<Business>> getBusinesss() async {
   return List.generate(maps.length, (i) {
     return Business(
       id : maps?[i]['id'],
-      businessName : maps?[i]['business_name'],
+      name : maps?[i]['name'],
       street : maps?[i]['street'],
       city : maps?[i]['city'],
       logo : maps?[i]['logo'],
       color : maps?[i]['color'],
       country : maps?[i]['country'],
       telephone : maps?[i]['telephone'],
+      paymentInfo : maps?[i]['payment_info'],
       email : maps?[i]['email'],
       status : maps?[i]['status'],
       employees : maps?[i]['employees'],
@@ -408,13 +385,13 @@ Future<List<Business>> getBusinessesForSync() async {
   return List.generate(maps.length, (i) {
     return Business(
       id : maps?[i]['id'],
-      businessName : maps?[i]['business_name'],
+      name : maps?[i]['name'],
       street : maps?[i]['street'],
       city : maps?[i]['city'],
       logo : maps?[i]['logo'],
       color : maps?[i]['color'],
       country : maps?[i]['country'],
-      telephone : maps?[i]['telephone'],
+      paymentInfo : maps?[i]['payment_info'],
       email : maps?[i]['email'],
       status : maps?[i]['status'],
       employees : maps?[i]['employees'],
@@ -434,13 +411,14 @@ Future<Business?> getBusiness(int id) async {
 
   return Business(
     id : maps?['id'],
-    businessName : maps?['business_name'],
+    name : maps?['name'],
     street : maps?['street'],
     city : maps?['city'],
     logo : maps?['logo'],
     color : maps?['color'],
     country : maps?['country'],
     telephone : maps?['telephone'],
+    paymentInfo : maps?['payment_info'],
     email : maps?['email'],
     status : maps?['status'],
     employees : maps?['employees'],
@@ -452,12 +430,12 @@ Future<Business?> getBusinessByUni(int id, {bool? copy}) async {
   final maps ;
 
   if(copy != null && copy==true){
-    maps = await dbHelper.findByIdUni("client", id);
+    maps = await dbHelper.findByIdUni("business", id);
     if(maps == null){
       return null;
     }
   }else{
-    maps = await dbHelper.findByIdUni("client", id);
+    maps = await dbHelper.findByIdUni("business", id);
 
     if(maps == null){
       return null;
@@ -466,13 +444,14 @@ Future<Business?> getBusinessByUni(int id, {bool? copy}) async {
 
   return Business(
     id : maps?['id'],
-    businessName : maps?['business_name'],
+    name : maps?['name'],
     street : maps?['street'],
     city : maps?['city'],
     logo : maps?['logo'],
     color : maps?['color'],
     country : maps?['country'],
     telephone : maps?['telephone'],
+    paymentInfo : maps?['payment_info'],
     email : maps?['email'],
     status : maps?['status'],
     employees : maps?['employees'],

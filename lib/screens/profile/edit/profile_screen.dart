@@ -74,17 +74,19 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   TextEditingController con4 = TextEditingController();
   TextEditingController con5 = TextEditingController();
   TextEditingController con6 = TextEditingController();
+  TextEditingController con7 = TextEditingController();
 
   Future<void> _initbusiness() async {
     if(profileId!=null) {
       business = await getBusiness(profileId!)??Business.fromJson({});
       if(business.color != null)currentColor = Color(business.color!);
-      con1.text = business.businessName?? "";
+      con1.text = business.name?? "";
       con2.text = business.email ?? "";
       con3.text = business.street ?? "";
       con4.text = business.city ?? "";
       con5.text = business.country ?? "";
       con6.text = business.telephone ?? "";
+      con7.text = business.paymentInfo ?? "";
     }else{
       business= Business.fromJson({});
     }
@@ -137,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ProfileHeader(title: business.businessName?? 'Add Profile',),
+              ProfileHeader(title: business.name?? 'Add Profile',),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                         });
 
                                         business.logo = logo;
-                                        if(business.businessName==null) business.businessName = "N/A";
+                                        if(business.name==null) business.name = "N/A";
                                         business.save();
 
                                         if(business.logo!=null)logoPath = "${directory}${business.logo}";
@@ -257,7 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                 SizedBox(height: 16.0),
 
                                 Responsive.isMobile(context)
-                                    ? SizedBox( height: 480,child: Column(
+                                    ? SizedBox( height: 585,child: Column(
                                   children: [
                                     Expanded(
                                       child: Column(children: [
@@ -279,7 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                   },
                                                   onChanged: (String? value) {
                                                     print(business!.toJson());
-                                                    business!.businessName = value;
+                                                    business!.name = value;
                                                   },
                                                   validator: (value) {
                                                     if (value == null || value.isEmpty) {
@@ -451,6 +453,36 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                             ),
                                             SizedBox(height: 3),
                                           ],),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Expanded(
+                                              child:
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 5, right:5),
+                                                child: InputWidget(
+                                                  topLabel: "Payment Info",
+                                                  keyboardType: TextInputType.text,
+                                                  onSaved: (String? value) {
+                                                    // This optional block of code can be used to run
+                                                    // code when the user saves the form.
+                                                  },
+                                                  onChanged: (String? value) {
+                                                    business!.paymentInfo = value;
+                                                  },
+                                                  validator: (String? value) {
+                                                    return (value != null && value.contains('@'))
+                                                        ? 'Do not use the @ char.'
+                                                        : null;
+                                                  },
+                                                  kController: con7,
+
+                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 3),
+                                          ],),
                                       ],),
 
                                     ),
@@ -476,7 +508,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                   },
                                                   onChanged: (String? value) {
                                                     print(business!.toJson());
-                                                    business!.businessName = value;
+                                                    business!.name = value;
                                                   },
                                                   validator: (value) {
                                                     if (value == null || value.isEmpty) {
@@ -649,6 +681,37 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                             ),
                                             SizedBox(height: 3),
                                           ],),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Expanded(
+                                              child:
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 5, right:5),
+                                                child: InputWidget(
+                                                  topLabel: "Payment Info",
+                                                  keyboardType: TextInputType.text,
+                                                  kController: con7,
+                                                  onSaved: (String? value) {
+                                                    // This optional block of code can be used to run
+                                                    // code when the user saves the form.
+                                                  },
+                                                  onChanged: (String? value) {
+                                                    business!.paymentInfo = value;
+                                                  },
+                                                  validator: (String? value) {
+                                                    return (value != null && value.contains('@'))
+                                                        ? 'Do not use the @ char.'
+                                                        : null;
+                                                  },
+
+
+                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 3),
+                                          ],),
                                       ],),
 
                                     ),
@@ -673,7 +736,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                           print(widget.code);
                                           try {
                                             if(widget.code == "edit"){
-                                              business!.update();
+                                              business!.save();
                                             }else{
                                               var businessId = await business!.save();
 

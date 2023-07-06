@@ -38,7 +38,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE client (
             id INTEGER PRIMARY KEY,
-            business_name TEXT NOT NULL,
+            name TEXT NOT NULL,
             street TEXT ,
             city TEXT ,
             country TEXT ,
@@ -67,13 +67,14 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE business (
             id INTEGER PRIMARY KEY,
-            business_name TEXT NOT NULL,
+            name TEXT NOT NULL,
             street TEXT ,
             city TEXT ,
             logo TEXT ,
             color INTEGER ,
             country TEXT, 
             telephone TEXT,   
+            payment_info TEXT,   
             email TEXT ,
             status TEXT,
             
@@ -359,7 +360,7 @@ class DatabaseHelper {
 
 
   Future<List<Map<String, dynamic>>> searchClients(String query) async {
-    List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM client WHERE business_name LIKE '%$query%' OR email LIKE '%$query%'");
+    List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM client WHERE name LIKE '%$query%' OR email LIKE '%$query%'");
     return results;
   }
 

@@ -23,9 +23,9 @@ Future<Uint8List> generateInvoice2(pdf.PdfPageFormat pageFormat, Invoice data) a
   // invoice.invoiceNumber = 'fetr';
   // invoice.currencyFull!.symbol = '\$';
   // invoice.client = Client();
-  // invoice.client!.businessName = 'fgh';
+  // invoice.client!.name = 'fgh';
   // invoice.business = Business();
-  // invoice.business!.businessName = 'kl;';
+  // invoice.business!.name = 'kl;';
 
   var _model = ImageModel();
 
@@ -133,7 +133,7 @@ Future<PdfLayoutResult> _drawHeader(PdfPage page, Size pageSize, PdfGrid grid) a
   String city = invoice.client!.city ?? '';
   String country = invoice.client!.country ?? '';
   String address =
-      'Bill To: \r\n\r\n'+invoice.client!.businessName!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
+      'Bill To: \r\n\r\n'+invoice.client!.name!+', \r\n\r\n'+addr +', \r\n\r\n'+city +', \r\n\r\n'+country ;
   PdfTextElement(text: invoiceNumber, font: contentFont).draw(
       page: page,
       bounds: Rect.fromLTWH(400, 100 + height,
@@ -206,7 +206,7 @@ void _drawFooter(PdfPage page, Size pageSize) {
   String country = invoice.business!.country??"";
   String email = invoice.business!.email??"";
   String footerContent =
-      invoice.business!.businessName!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
+      invoice.business!.name!+'.\r\n\r\n'+ addr+', '+ city+', '+ country +'\r\n\r\nAny Questions? '+ email;
   //Added 30 as a margin for the layout
   page.graphics.drawString(
       footerContent, PdfStandardFont(PdfFontFamily.helvetica, 9),

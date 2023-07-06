@@ -91,7 +91,7 @@
 //     if(clientId!=null) {
 //       client = await getClient(clientId);
 //
-//       con1.text = client.businessName?? "";
+//       con1.text = client.name?? "";
 //       con2.text = client.email ?? "";
 //       con3.text = client.street ?? "";
 //       con4.text = client.city ?? "";
@@ -135,7 +135,7 @@
 //             children: [
 //               Header(),
 //               SizedBox(height: defaultPadding),
-//               MiniInformation(title: client.businessName?? 'New Client',),
+//               MiniInformation(title: client.name?? 'New Client',),
 //               SizedBox(height: defaultPadding),
 //               Text("Balance: \$"+balance.toString(), style: TextStyle(fontSize: 20, color: Colors.white) ),
 //
@@ -182,7 +182,7 @@
 //                                                 },
 //                                                 onChanged: (String? value) {
 //                                                   print(client!.toJson());
-//                                                   client!.businessName = value;
+//                                                   client!.name = value;
 //                                                 },
 //                                                 validator: (value) {
 //                                                   if (value == null || value.isEmpty) {
@@ -190,7 +190,7 @@
 //                                                   }
 //                                                   return null;
 //                                                 },
-//                                                 // kInitialValue: client.businessName ?? "",
+//                                                 // kInitialValue: client.name ?? "",
 //
 //
 //                                                 // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -386,7 +386,7 @@
 //                                                   },
 //                                                   onChanged: (String? value) {
 //                                                     print(client!.toJson());
-//                                                     client!.businessName = value;
+//                                                     client!.name = value;
 //                                                   },
 //                                                   validator: (value) {
 //                                                     if (value == null || value.isEmpty) {
@@ -394,7 +394,7 @@
 //                                                     }
 //                                                     return null;
 //                                                   },
-//                                                   // kInitialValue: client.businessName ?? '',
+//                                                   // kInitialValue: client.name ?? '',
 //
 //
 //                                                   // prefixIcon: FlutterIcons.chevron_left_fea,

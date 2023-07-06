@@ -79,13 +79,13 @@ Future <String> invoiceGenerator(Invoice invoice) async {
 
 
     content
-      ..add(TextContent("frombusiness", invoice.business?.businessName))
+      ..add(TextContent("frombusiness", invoice.business?.name))
       ..add(TextContent("fromaddress", invoice.business?.street ?? "N/A"))
       ..add(TextContent("fromcity", invoice.business?.city ?? "N/A"))
       ..add(TextContent("fromcountry", invoice.business?.country ?? "N/A"))
       ..add(TextContent("fromphone", invoice.business?.telephone ?? "N/A"))
 
-      ..add(TextContent("tobusiness", invoice.client?.businessName))
+      ..add(TextContent("tobusiness", invoice.client?.name))
       ..add(TextContent("toaddress", invoice.client?.street ?? "N/A"))
       ..add(TextContent("tocity", invoice.client?.city ?? "N/A"))
       ..add(TextContent("tocountry", invoice.client?.country ?? "N/A"))

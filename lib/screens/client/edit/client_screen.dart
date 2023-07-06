@@ -73,7 +73,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
     if(clientId!=null) {
       client = await getClient(clientId!)??Client.fromJson({});
 
-      con1.text = client.businessName?? "";
+      con1.text = client.name?? "";
       con2.text = client.email ?? "";
       con3.text = client.street ?? "";
       con4.text = client.city ?? "";
@@ -117,7 +117,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ClientHeader(title: client.businessName?? 'New Client',),
+              ClientHeader(title: client.name?? 'New Client',),
               SizedBox(height: defaultPadding),
               Text("Balance: \$"+balance.toString(), style: TextStyle(fontSize: 20, color: Colors.white) ),
 
@@ -164,7 +164,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                                 },
                                                 onChanged: (String? value) {
                                                   print(client!.toJson());
-                                                  client!.businessName = value;
+                                                  client!.name = value;
                                                 },
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -172,7 +172,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                                   }
                                                   return null;
                                                 },
-                                                // kInitialValue: client.businessName ?? "",
+                                                // kInitialValue: client.name ?? "",
 
 
                                                 // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -368,7 +368,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                                   },
                                                   onChanged: (String? value) {
                                                     print(client!.toJson());
-                                                    client!.businessName = value;
+                                                    client!.name = value;
                                                   },
                                                   validator: (value) {
                                                     if (value == null || value.isEmpty) {
@@ -376,7 +376,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                                     }
                                                     return null;
                                                   },
-                                                  // kInitialValue: client.businessName ?? '',
+                                                  // kInitialValue: client.name ?? '',
 
 
                                                   // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -571,7 +571,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                           print(widget.code);
                                           try {
                                             if(widget.code == "edit"){
-                                              client!.update();
+                                              client!.save();
                                             }else{
                                               client!.save();
                                             }

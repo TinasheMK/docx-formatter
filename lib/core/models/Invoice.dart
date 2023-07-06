@@ -168,6 +168,7 @@ class Invoice {
 
     data['id'] = (this.isConfirmed??false)? (this.universalId??null): null;
     data['originId'] = this.id;
+
     data['isSynced'] = this.isSynced??false;
     data['version'] = (this.isConfirmed??false)?this.version:null;
     data['isConfirmed'] = this.isConfirmed??null;

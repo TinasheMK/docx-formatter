@@ -197,7 +197,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                         "Due Date",
                         style:
                         const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14),
-                        // "${widget.memo.businessName?? 'Name'}",
+                        // "${widget.memo.name?? 'Name'}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -244,7 +244,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               "Tinashe Makarudze",
                               style:
                               const TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 12),
-                              // "${widget.memo.businessName?? 'Name'}",
+                              // "${widget.memo.name?? 'Name'}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -293,7 +293,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               "11/02/23 ",
                               style:
                               const TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 12),
-                              // "${widget.memo.businessName?? 'Name'}",
+                              // "${widget.memo.name?? 'Name'}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -306,7 +306,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               "12/03/23 ",
                               style:
                               const TextStyle(color: Colors.greenAccent, fontStyle: FontStyle.italic, fontSize: 12),
-                              // "${widget.memo.businessName?? 'Name'}",
+                              // "${widget.memo.name?? 'Name'}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -373,7 +373,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               "Tinashe Makarudze",
                               style:
                               const TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 12),
-                              // "${widget.memo.businessName?? 'Name'}",
+                              // "${widget.memo.name?? 'Name'}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -422,7 +422,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               "11/02/23 ",
                               style:
                               const TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 12),
-                              // "${widget.memo.businessName?? 'Name'}",
+                              // "${widget.memo.name?? 'Name'}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -435,7 +435,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               "12/03/23 ",
                               style:
                               const TextStyle(color: Colors.greenAccent, fontStyle: FontStyle.italic, fontSize: 12),
-                              // "${widget.memo.businessName?? 'Name'}",
+                              // "${widget.memo.name?? 'Name'}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),

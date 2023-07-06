@@ -1,6 +1,6 @@
 
 class SyncResult {
-  bool?    success;
+  bool   success = false;
   String? message;
   int? code;
   Object? object;

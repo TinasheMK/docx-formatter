@@ -46,7 +46,7 @@ class BusinessRepository implements IBusinessRepository {
       return syncres;
     }
 
-    var url = '$invoicerService/api/v1/businesss/1/${lastSyncDate}';
+    var url = '$invoicerService/api/v1/businesses/1/${lastSyncDate}';
 
     Response result = await _dioBusiness.get(
         url
@@ -130,7 +130,7 @@ class BusinessRepository implements IBusinessRepository {
       }
 
       final syncRes = await _dioBusiness.post(
-        '$invoicerService/api/v1/businesss',
+        '$invoicerService/api/v1/businesses',
         data: syncReadyCliesp,
       );
 
@@ -153,7 +153,7 @@ class BusinessRepository implements IBusinessRepository {
             .toList();
         print(confirmReadyClies.toString());
         final confirmRes = await _dioBusiness.post(
-          '$invoicerService/api/v1/businesss',
+          '$invoicerService/api/v1/businesses',
           data: confirmReadyClies,
         );
 

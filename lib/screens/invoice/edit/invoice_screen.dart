@@ -82,7 +82,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
   // String generatorResp = "";
   // late String city;
   // String street = "";
-  // String businessName = "";
+  // String name = "";
   String memoItems = '';
 
 
@@ -417,7 +417,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(invoice.business?.businessName ?? "Select" , style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.business?.name ?? "Select" , style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -522,7 +522,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                             children:[
                               Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
-                              invoice.client?.businessName != null ? Container(
+                              invoice.client?.name != null ? Container(
                                   // margin: EdgeInsets.only(left: defaultPadding),
                                   // padding: EdgeInsets.symmetric(
                                   //   horizontal: defaultPadding /100,
@@ -534,7 +534,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                     border: Border.all(color: Colors.white10),
                                   ),
                                   child: TextButton(
-                                    child: Text(invoice.client?.businessName ?? "Select Client", style: TextStyle(color: Colors.white)),
+                                    child: Text(invoice.client?.name ?? "Select Client", style: TextStyle(color: Colors.white)),
                                     onPressed: () {
                                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                                           builder: (BuildContext context) {
@@ -1540,7 +1540,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
 
   Widget businessProfile(Business c) {
     return GestureDetector(
-      child: Text(c.businessName!) ,
+      child: Text(c.name!) ,
       onTap: (){
         invoice.business = c;
         Navigator.of(context).pop();

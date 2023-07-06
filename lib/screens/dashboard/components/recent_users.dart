@@ -38,7 +38,7 @@ class _RecentUsersState extends State<RecentUsers> {
 
   @override
   Widget build(BuildContext context) {
-      clients.removeWhere((element) => element.businessName == null);
+      clients.removeWhere((element) => element.name == null);
 
     return Container(
       padding: EdgeInsets.all(defaultPadding),
@@ -107,19 +107,19 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
           upperCase: true,
           numberLetters: 1,
           shape: Shape.Rectangle,
-          text: userInfo.businessName != null  ?  RegExp(r'^[A-Za-z_.]+$').hasMatch(userInfo.businessName![0]) ? userInfo.businessName!: 'a' : "a",
+          text: userInfo.name != null  ?  RegExp(r'^[A-Za-z_.]+$').hasMatch(userInfo.name![0]) ? userInfo.name!: 'a' : "a",
         ),
       ),
       DataCell(Container(
           padding: EdgeInsets.all(5),
 
-          child: Text(userInfo.businessName != null ? userInfo.businessName! : ""))),
+          child: Text(userInfo.name != null ? userInfo.name! : ""))),
       !Responsive.isMobile(context)
           ? DataCell(Container(
           padding: EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: getRoleColor(userInfo.telephone).withOpacity(.2),
-            border: Border.all(color: getRoleColor(userInfo.businessName)),
+            border: Border.all(color: getRoleColor(userInfo.name)),
             borderRadius: BorderRadius.all(Radius.circular(5.0) //
                 ),
           ),
@@ -197,7 +197,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
                             child: Column(
                               children: [
                                 Text(
-                                    "Are you sure want to delete '${userInfo.businessName}'?"),
+                                    "Are you sure want to delete '${userInfo.name}'?"),
                                 SizedBox(
                                   height: 16,
                                 ),
@@ -268,7 +268,7 @@ DataRow recentUserDataRow(Client userInfo, BuildContext context) {
                                child: Column(
                                  children: [
                                    Text(
-                                       "Are you sure want to delete '${userInfo.businessName}'?"),
+                                       "Are you sure want to delete '${userInfo.name}'?"),
                                    SizedBox(
                                      height: 16,
                                    ),

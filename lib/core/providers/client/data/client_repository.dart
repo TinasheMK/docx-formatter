@@ -67,7 +67,7 @@ class ClientRepository implements IClientRepository {
       List<Client> clients = clientsr.map((e) => Client.fromSyncJson(e)).toList();
 
       for(int i =0; i<clients.length; i++){
-        Client? localClient = await getByUni(clients[i].universalId!);
+        Client? localClient = await getClientByUni(clients[i].universalId!);
 
         if(localClient != null) {
 

@@ -9,7 +9,7 @@ import 'Wallet.dart';
 
 class Client {
   int?    id;
-  String? businessName;
+  String? name;
   String? street;
   String? city;
   String? country;
@@ -36,7 +36,7 @@ class Client {
 
   Client({
     this.id,
-    this.businessName,
+    this.name,
     this.street,
     this.city,
     this.set,
@@ -62,7 +62,7 @@ class Client {
 
  Client.fromJson(Map<String, dynamic> json) {
    id = json['id'];
-   businessName = json['businessName'];
+   name = json['name'];
    street = json['street'];
    city = json['city'];
    country = json['country'];
@@ -87,7 +87,7 @@ class Client {
    universalId = json['id'];
 
 
-   businessName = json['businessName'];
+   name = json['name'];
    street = json['street'];
    city = json['city'];
    country = json['country'];
@@ -109,7 +109,7 @@ class Client {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['businessName'] = this.businessName;
+    data['name'] = this.name;
     data['street'] = this.street;
     data['city'] = this.city;
     data['country'] = this.country;
@@ -129,7 +129,7 @@ class Client {
     data['version'] = (this.isConfirmed??false)?this.version:null;
     data['isConfirmed'] = this.isConfirmed??null;
 
-    data['businessName'] = this.businessName;
+    data['name'] = this.name;
     data['street'] = this.street;
     data['city'] = this.city;
     data['country'] = this.country;
@@ -145,7 +145,7 @@ class Client {
 
   Future<void> save() async {
     Map<String, dynamic> row = {
-      "business_name": this.businessName,
+      "name": this.name,
       "street": this.street,
       "city": this.city,
       "country": this.country,
@@ -161,15 +161,12 @@ class Client {
       "last_modified_date": this.lastModifiedBate,
       // "deleted_at": this.deletedAt,
     };
-    final id = await dbHelper.insert("client", row);
-    this.id = id;
-    var emps = this.employees;
-    for(int i=0; i<30; i++){{
-      try {
-        emps?[i]?.saveAndAttach(id);
-      }catch(err) {}
-
-      }
+    var id;
+    if(this.id==null) {
+      id = await dbHelper.insert("client", row);
+    }else{
+      dbHelper.update('client',row);
+      id = this.id;
     }
 
 
@@ -181,7 +178,7 @@ class Client {
       throw Error();
     }
     Map<String, dynamic> row = {
-      "business_name": this.businessName,
+      "name": this.name,
       "street": this.street,
       "city": this.city,
       "country": this.country,
@@ -190,22 +187,27 @@ class Client {
       "status": this.status,
       "currency": this.currency,
 
+
       "created_date": this.createdDate,
       "created_by": this.createdBy,
       "version": this.version,
       "last_modified_by": this.lastModifiedBy,
       "last_modified_date": this.lastModifiedBate,
-      // "deleted_at": this.deletedAt,
-    };
-    final id = await dbHelper.insert("client", row);
-    this.id = id;
-    var emps = this.employees;
-    for(int i=0; i<30; i++){{
-      try {
-        emps?[i]?.saveAndAttach(id);
-      }catch(err) {}
 
-      }
+      "universal_id" : this.universalId,
+      "is_synced" : (this.isSynced??false)?1:0,
+      "origin_id" : this.originId,
+      "version" : this.version,
+      "is_confirmed" : (this.isConfirmed??false)?1:0,
+    };
+
+
+    var id;
+    if(this.id==null) {
+      id = await dbHelper.insert("client", row);
+    }else{
+      dbHelper.update('client',row);
+      id = this.id;
     }
 
 
@@ -222,7 +224,8 @@ class Client {
     }
 
     Map<String, dynamic> row = {
-      "business_name": this.businessName,
+      "name": this.name,
+      "id": this.id,
       "street": this.street,
       "city": this.city,
       "country": this.country,
@@ -244,17 +247,14 @@ class Client {
       "version" : this.version,
       "is_confirmed" : (this.isConfirmed??false)?1:0,
     };
-    final id = await dbHelper.insert("client", row);
-    this.id = id;
-    var emps = this.employees;
-    for(int i=0; i<30; i++){{
-      try {
-        emps?[i]?.saveAndAttach(id);
-      }catch(err) {}
 
-      }
+    var id;
+    if(this.id==null) {
+      id = await dbHelper.insert("client", row);
+    }else{
+      dbHelper.update('client',row);
+      id = this.id;
     }
-
 
     debugPrint('inserted client row id: $id');
   }
@@ -268,21 +268,6 @@ class Client {
     }
   }
 
-  void update() async {
-    // row to update
-    Map<String, dynamic> row = {
-      "business_name": this.businessName,
-      "street": this.street,
-      "city": this.city,
-      "country": this.country,
-      "telephone": this.telephone,
-      "email": this.email,
-      "currency": this.currency,
-      "id" : this.id
-    };
-    final rowsAffected = await dbHelper.update('client',row);
-    debugPrint('updated $rowsAffected row(s)');
-  }
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
@@ -306,8 +291,8 @@ class Client {
     }
 
     return Wallet(
-      id : maps!['id'],
-      balance : maps!['balance'],
+      id : maps?['id'],
+      balance : maps?['balance'],
       currency : maps?['currency'],
       clientId : maps?['client_id'],
 
@@ -344,7 +329,7 @@ Future<List<Client>> getClients() async {
   return List.generate(maps.length, (i) {
     return Client(
       id : maps[i]['id'],
-      businessName : maps[i]['business_name'],
+      name : maps[i]['name'],
       street : maps[i]['street'],
       city : maps[i]['city'],
       country : maps[i]['country'],
@@ -369,7 +354,7 @@ Future<List<Client>> getClientsForSync() async {
   return List.generate(maps.length, (i) {
     return Client(
       id : maps[i]['id'],
-      businessName : maps[i]['business_name'],
+      name : maps[i]['name'],
       street : maps[i]['street'],
       city : maps[i]['city'],
       country : maps[i]['country'],
@@ -394,7 +379,7 @@ Future<List<Client>> searchClients(String query) async {
   return List.generate(maps.length, (i) {
     return Client(
       id : maps[i]['id'],
-      businessName : maps[i]['business_name'],
+      name : maps[i]['name'],
       street : maps[i]['street'],
       city : maps[i]['city'],
       country : maps[i]['country'],
@@ -413,7 +398,7 @@ Future<Client?> getClient(int id) async {
 
     return Client(
       id : maps?['id'],
-      businessName : maps?['business_name'],
+      name : maps?['name'],
       street : maps?['street'],
       city : maps?['city'],
       country : maps?['country'],
@@ -444,7 +429,7 @@ Future<Client?> getClientByUni(int id, {bool? copy}) async {
 
     return Client(
       id : maps?['id'],
-      businessName : maps?['business_name'],
+      name : maps?['name'],
       street : maps?['street'],
       city : maps?['city'],
       country : maps?['country'],

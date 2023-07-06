@@ -96,7 +96,7 @@ class InvoiceItem {
   Future<int> saveAndAttach(int invoiceId) async {
     debugPrint('adding   invoice_item');
     if(this.id==null && this.universalId!=null ) {
-      InvoiceItem existing = await getInvoiceByUni(this.universalId!);
+      InvoiceItem existing = await getInvoiceItemByUni(this.universalId!);
       this.id = existing.id;
     }
 
@@ -140,7 +140,7 @@ class InvoiceItem {
     }
     debugPrint('adding   invoice_item');
     if(this.id==null && this.universalId!=null ) {
-      InvoiceItem existing = await getInvoiceByUni(this.universalId!);
+      InvoiceItem existing = await getInvoiceItemByUni(this.universalId!);
       this.id = existing.id;
     }
 
@@ -189,7 +189,7 @@ class InvoiceItem {
     }
     debugPrint('adding   invoice_item');
     if(this.id==null && this.universalId!=null ) {
-      InvoiceItem existing = await getInvoiceByUni(this.universalId!);
+      InvoiceItem existing = await getInvoiceItemByUni(this.universalId!);
       this.id = existing.id;
     }
 
@@ -300,7 +300,7 @@ Future<List<InvoiceItem>> getInvoiceItems(int id) async {
 }
 
 
-Future<InvoiceItem> getInvoiceByUni(int id, {bool? copy}) async {
+Future<InvoiceItem> getInvoiceItemByUni(int id, {bool? copy}) async {
   final maps = await dbHelper.findByIdUni("invoice_item", id);
   return InvoiceItem(
     id : maps?['id'],
