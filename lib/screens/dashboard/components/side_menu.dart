@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_admin_dashboard/core/types/Conflict.dart';
 import 'package:smart_admin_dashboard/screens/login/login_screen.dart';
+import 'package:smart_admin_dashboard/screens/receipt/receipts_home_screen.dart';
 
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/utils/shared_pref_service.dart';
@@ -17,6 +18,8 @@ import '../../../core/providers/invoice/provider/invoice_provider.dart';
   import '../../client/clients_home_screen.dart';
 import '../../invoice/invoices_home_screen.dart';
 import '../../invoice/invoices_screen.dart';
+import '../../product/products_home_screen.dart';
+import '../../quote/quotes_home_screen.dart';
 import '../home_screen.dart';
 import 'ConflictSelectionSection.dart';
 
@@ -185,6 +188,36 @@ class SideMenu extends ConsumerWidget {
                 );
               },
             ),
+            DrawerListTile(
+              title: "Quotations",
+              svgSrc: "assets/icons/menu_profile.svg",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QuoteHomeScreen()),
+                );
+              },
+            ),
+            DrawerListTile(
+              title: "Receipts",
+              svgSrc: "assets/icons/menu_notification.svg",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReceiptsHomeScreen()),
+                );
+              },
+            ),
+            DrawerListTile(
+              title: "Products",
+              svgSrc: "assets/icons/menu_store.svg",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductsHomeScreen()),
+                );
+              },
+            ),
             // DrawerListTile(
             //   title: "Quotes",
             //   svgSrc: "assets/icons/menu_task.svg",
@@ -205,21 +238,6 @@ class SideMenu extends ConsumerWidget {
                 );
               },
             ),
-            // DrawerListTile(
-            //   title: "Appearance",
-            //   svgSrc: "assets/icons/menu_store.svg",
-            //   press: () {},
-            // ),
-            // DrawerListTile(
-            //   title: "Users",
-            //   svgSrc: "assets/icons/menu_notification.svg",
-            //   press: () {},
-            // ),
-            // DrawerListTile(
-            //   title: "Tools",
-            //   svgSrc: "assets/icons/menu_profile.svg",
-            //   press: () {},
-            // ),
             DrawerListTile(
               title: "Logout",
               svgSrc: "assets/icons/menu_setting.svg",

@@ -27,12 +27,13 @@ import 'package:pdf/widgets.dart';
 import '../../../../core/models/InvoiceItem.dart';
 import '../../../../core/models/Invoice.dart';
 
-Future<Uint8List> generateInvoice(
+Future<Uint8List> generateInvoice5(
     PdfPageFormat pageFormat, Invoice data) async {
   final lorem = LoremText();
   PdfColor mainColor;
   PdfColor accent;
   PdfColor lightAccent;
+  PdfColor complimentAccent;
   if(data.business!=null && data.business!.color!=null) {
     var colo = Color(data.business!.color!);
     double red = colo.red.toDouble()>=0?colo.red.toDouble()/255 : 0.0;
@@ -46,11 +47,14 @@ Future<Uint8List> generateInvoice(
     double blue1 = blue*1.7>=1?1 : blue*1;
 
     accent = PdfColor(red*0.3, green*0.3, blue*0.3);
+    accent = PdfColor(red*0.3, green*0.3, blue*0.3);
     lightAccent = PdfColor(red1, green1, blue1);
+    complimentAccent = PdfColor((red*red*red), (green*green*green), (blue*blue*blue));
   }else{
     mainColor = PdfColors.teal;
     accent = PdfColors.blueGrey900;
     lightAccent = PdfColors.red;
+    complimentAccent = PdfColors.green;
 
   }
 
@@ -69,6 +73,7 @@ Future<Uint8List> generateInvoice(
     baseColor: mainColor,
     accentColor: accent,
     lightAccent: lightAccent,
+    complimentAccent: complimentAccent,
   );
 
   return await invoice.buildPdf(pageFormat);
@@ -86,6 +91,7 @@ class LocalInvoice {
     required this.baseColor,
     required this.accentColor,
     required this.lightAccent,
+    required this.complimentAccent,
   });
 
   final List<InvoiceItem> products;
@@ -98,6 +104,7 @@ class LocalInvoice {
   final PdfColor baseColor;
   final PdfColor accentColor;
   final PdfColor lightAccent;
+  final PdfColor complimentAccent;
 
   static const _darkColor = PdfColors.black;
   static const _lightColor = PdfColors.white;
@@ -114,6 +121,7 @@ class LocalInvoice {
   ImageProvider? _logo;
 
   String? _bgShape;
+  String? _bgShape2;
 
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
     // Create a PDF document.
@@ -126,7 +134,8 @@ class LocalInvoice {
     final directory = await getDownloadPath2();
 
     if(logo!='')_logo = MemoryImage(File("${directory}${logo!}"!).readAsBytesSync());
-    _bgShape = await rootBundle.loadString('assets/logo/invoice.svg');
+    _bgShape = await rootBundle.loadString('assets/logo/invoice4.svg');
+    _bgShape2 = await rootBundle.loadString('assets/logo/invoice5.svg');
 
     var robotoRegularFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Regular.ttf");
     var robotoBoldFont = await rootBundle.load("assets/fonts/Roboto/Roboto-Bold.ttf");
@@ -170,67 +179,38 @@ class LocalInvoice {
           children: [
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    height: 50,
-                    padding: const EdgeInsets.only(left: 20),
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      'INVOICE',
-                      style: TextStyle(
-                        color: baseColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(2)),
-                      color: accentColor,
-                    ),
-                    padding: const EdgeInsets.only(
-                        left: 40, top: 10, bottom: 10, right: 20),
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: DefaultTextStyle(
-                      style: TextStyle(
-                        color: _accentTextColor,
-                        fontSize: 12,
-                      ),
-                      child: GridView(
-                        crossAxisCount: 2,
-                        children: [
-                          Text('Invoice '),
-                          Text(invoiceNumber),
-                          Text('Date:'),
-                          Text(_formatDate(DateTime.now())),
-                        ],
-                      ),
-                    ),
+                    padding: const EdgeInsets.only(bottom: 18,  top: 10, right: 10),
+                    height: 90,
+                    child:
+                    _logo != null ? Image(_logo!) : Text(""),
                   ),
                 ],
               ),
             ),
             Expanded(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(bottom: 18, left: 20, right: 10, top: 10),
-                    height: 90,
-                    child:
-                        _logo != null ? Image(_logo!) : Text(""),
+                    // height: 50,
+                    padding: const EdgeInsets.only(left: 20, top: 18),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'PAID',
+                      style: TextStyle(
+                        color: PdfColors.grey700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                      ),
+                    ),
                   ),
-                  // Container(
-                  //   color: baseColor,
-                  //   padding: EdgeInsets.only(top: 3),
-                  // ),
                 ],
               ),
             ),
+
           ],
         ),
         if (context.pageNumber > 1) SizedBox(height: 20)
@@ -272,10 +252,6 @@ class LocalInvoice {
         bold: bold,
         italic: italic,
       ),
-      buildBackground: (context) => FullPage(
-        ignoreMargins: true,
-        child: SvgImage(svg: _bgShape!, colorFilter:lightAccent),
-      ),
     );
   }
 
@@ -285,65 +261,51 @@ class LocalInvoice {
       children: [
         Expanded(
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            height: 70,
-            child: FittedBox(
-              child: Text(
-                'Total: ${_formatCurrency(_grandTotal)}',
-                style: TextStyle(
-                  color: baseColor,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: 50),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 10, right: 10),
-                height: 70,
-                child: Text(
-                  'Invoice to:',
+            // margin: const EdgeInsets.symmetric(horizontal: 20),
+            height: 130,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Invoice: ${invoiceNumber}',
                   style: TextStyle(
-                    color: _darkColor,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 70,
-                  child: RichText(
-                      text: TextSpan(
-                          text: '$customerName\n',
-                          style: TextStyle(
-                            color: _darkColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                          children: [
-                         TextSpan(
-                          text: '\n',
-                          style: TextStyle(
-                            fontSize: 5,
-                          ),
-                        ),
-                        TextSpan(
-                          text: customerAddress,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ])),
-                ),
-              ),
-            ],
+                    color: PdfColors.black,
+                  ),),
+                Text(
+                  'Invoice Date: 3 July 2023',
+                  style: TextStyle(
+                    color: PdfColors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+                Text(
+                  'Due Date: 17 July 2023',
+                  style: TextStyle(
+                    color: PdfColors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+                SizedBox(height: 10),
+                Text(
+                  'Invoiced To:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: PdfColors.black,
+                  ),),
+                Text(customerName,
+                  style: TextStyle(
+                    color: PdfColors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+                Text(customerAddress,
+                  style: TextStyle(
+                    color: PdfColors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+              ]
+            ),
           ),
         ),
       ],
