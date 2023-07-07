@@ -28,7 +28,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(defaultPadding),
+      // padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
         color: secondaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -37,7 +37,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
         child:
         GestureDetector(
             child: Container(
-              padding: EdgeInsets.all(defaultPadding * 0.75),
+              // padding: EdgeInsets.all(defaultPadding * 0.75),
               alignment: Alignment.center,
               // height: 40,
               // width: 175,

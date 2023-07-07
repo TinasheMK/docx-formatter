@@ -21,7 +21,7 @@ class QuotesScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ReceiptsHeader(),
+              QuotesHeader(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -488,7 +488,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                   },
                   icon: Icon(Icons.send),
                   label: Text(
-                    "Publish",
+                    "Publishf",
                   ),
                 ),
               ],

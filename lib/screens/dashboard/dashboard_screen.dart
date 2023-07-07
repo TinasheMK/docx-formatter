@@ -31,18 +31,6 @@ class DashboardScreen extends StatelessWidget {
                     flex: 5,
                     child: Column(
                       children: [
-                        //MyFiels(),
-                        //SizedBox(height: defaultPadding),
-                        // RecentUsers(),
-                        // SingleChildScrollView(
-                        //   scrollDirection: Axis.horizontal,
-                        //
-                        //     child: SizedBox(
-                        //       width: 1000,
-                        //       child:RecentDiscussions() ,
-                        //     )
-                        //
-                        // ),
                         SizedBox(height: defaultPadding),
                         InvoicesList(),
                         if (Responsive.isMobile(context))

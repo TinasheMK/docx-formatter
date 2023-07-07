@@ -7,6 +7,8 @@ import '../../core/utils/responsive.dart';
 import '../dashboard/components/header.dart';
   import 'package:flutter/material.dart';
 
+import 'components/receipts_header.dart';
+
 
 class ReceiptsScreen extends StatelessWidget {
   @override
@@ -20,7 +22,7 @@ class ReceiptsScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              QuotesHeader(),
+              ReceiptsHeader(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

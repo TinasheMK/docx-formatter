@@ -168,6 +168,52 @@ class DatabaseHelper {
           ''');
 
     await db.execute('''
+          CREATE TABLE product (
+            id INTEGER PRIMARY KEY,
+            
+            name TEXT ,
+            sku TEXT ,
+            price FLOAT NOT NULL,
+            stock INTEGER NOT NULL,
+            category_id INTEGER NOT NULL,
+            business_id INTEGER NOT NULL,
+                           
+            created_date TEXT,
+            created_by TEXT,
+            version INTEGER,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            is_deleted INTEGER,
+                        
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER UNIQUE,
+            is_confirmed   INTEGER   
+          )
+          ''');
+    await db.execute('''
+          CREATE TABLE category (
+            id INTEGER PRIMARY KEY,
+            name TEXT ,
+            description TEXT ,
+                           
+            created_date TEXT,
+            created_by TEXT,
+            version INTEGER,
+            last_modified_by TEXT,
+            last_modified_date TEXT,
+            is_deleted INTEGER,
+                        
+            is_optimised INTEGER,
+            is_synced INTEGER,
+            origin_id INTEGER,
+            universal_id INTEGER UNIQUE,
+            is_confirmed   INTEGER   
+          )
+          ''');
+
+    await db.execute('''
           CREATE TABLE invoice_item (
             id INTEGER PRIMARY KEY,
             unit_price FLOAT ,
@@ -361,6 +407,11 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> searchClients(String query) async {
     List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM client WHERE name LIKE '%$query%' OR email LIKE '%$query%'");
+    return results;
+  }
+
+  Future<List<Map<String, dynamic>>> searchProducts(String query) async {
+    List<Map<String, Object?>> results = await _db.rawQuery("SELECT * FROM product WHERE name LIKE '%$query%' OR sku LIKE '%$query%'");
     return results;
   }
 

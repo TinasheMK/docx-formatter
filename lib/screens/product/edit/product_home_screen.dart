@@ -65,7 +65,7 @@ class _ProductHomeState extends State<ProductHome> with SingleTickerProviderStat
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: ProductScreen(title: widget.title, code: widget.code, invoiceId: widget.invoiceId),
+              child: ProductScreen(title: widget.title, code: widget.code, profileId: widget.invoiceId),
             ),
           ],
         ),

@@ -12,6 +12,8 @@ import '../../dashboard/components/side_menu.dart';
 
 import 'package:flutter/material.dart';
 
+import '../editCollect/receipt_screen.dart';
+
 
 
 class ReceiptHomeScreen extends StatefulWidget {
@@ -70,7 +72,7 @@ class _ReceiptHomeScreenState extends State<ReceiptHomeScreen> with SingleTicker
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: QuoteScreen(title: widget.title, code: widget.code, invoiceId: widget.invoiceId),
+              child: ReceiptScreen(title: widget.title, code: widget.code, invoiceId: widget.invoiceId),
             ),
           ],
         ),

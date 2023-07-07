@@ -3,6 +3,7 @@ import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_admin_dashboard/screens/invoice/invoices_screen.dart';
 import 'package:smart_admin_dashboard/screens/quote/quotes_screen.dart';
+import 'package:smart_admin_dashboard/screens/receipt/receipts_screen.dart';
 
 import '../dashboard/components/side_menu.dart';
 
@@ -26,7 +27,7 @@ class ReceiptsHomeScreen extends StatelessWidget {
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: QuotesScreen(),
+              child: ReceiptsScreen(),
             ),
           ],
         ),
