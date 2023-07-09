@@ -171,7 +171,7 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
 
                                     ElevatedButton(
                                       style: TextButton.styleFrom(
-                                        backgroundColor: Colors.black38,
+                                        backgroundColor: defaultColor,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: defaultPadding * 1.5,
                                           vertical:
@@ -209,51 +209,6 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                         "Pick Product Image",
                                       ),
                                     ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              titlePadding: const EdgeInsets.all(0),
-                                              contentPadding: const EdgeInsets.all(0),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: MediaQuery.of(context).orientation == Orientation.portrait
-                                                    ? const BorderRadius.vertical(
-                                                  top: Radius.circular(500),
-                                                  bottom: Radius.circular(100),
-                                                )
-                                                    : const BorderRadius.horizontal(right: Radius.circular(500)),
-                                              ),
-                                              content: SingleChildScrollView(
-                                                child: HueRingPicker(
-                                                  pickerColor: currentColor,
-                                                  onColorChanged: (color){
-                                                    currentColor = color;
-                                                    // print(color.value);
-                                                    business.color = color.value;
-                                                    setState(() {
-
-                                                    });
-                                                  },
-                                                  enableAlpha: true,
-                                                  displayThumbColor: true,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: Text(
-                                        'Brand Color',
-                                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        primary: currentColor,
-                                        shadowColor: currentColor.withOpacity(1),
-                                        elevation: 10,
-                                      ),
-                                    )
                                   ],
                                 ),
                                 SizedBox(height: 16.0),

@@ -62,9 +62,6 @@ class _RecentUsersState extends State<RecentUsers> {
                 columnSpacing: defaultPadding,
                 columns: [
                   DataColumn(
-                    label: Text(""),
-                  ),
-                  DataColumn(
                     label: Text("Name"),
                   ),
                   !Responsive.isMobile(context)?DataColumn(
@@ -98,22 +95,28 @@ class _RecentUsersState extends State<RecentUsers> {
 DataRow recentUserDataRow(Client userInfo, BuildContext context) {
   return DataRow(
     cells: [
-      DataCell(
-        TextAvatar(
-          size: 35,
-          backgroundColor: Colors.white,
-          textColor: Colors.white,
-          fontSize: 14,
-          upperCase: true,
-          numberLetters: 1,
-          shape: Shape.Rectangle,
-          text: userInfo.name != null  ?  RegExp(r'^[A-Za-z_.]+$').hasMatch(userInfo.name![0]) ? userInfo.name!: 'a' : "a",
-        ),
-      ),
-      DataCell(Container(
-          padding: EdgeInsets.all(5),
 
-          child: Text(userInfo.name != null ? userInfo.name! : ""))),
+      DataCell(
+          Row(
+            children: [
+            TextAvatar(
+              size: 35,
+              backgroundColor: Colors.white,
+              textColor: Colors.white,
+              fontSize: 14,
+              upperCase: true,
+              numberLetters: 1,
+              shape: Shape.Rectangle,
+              text: userInfo.name != null  ?  RegExp(r'^[A-Za-z_.]+$').hasMatch(userInfo.name![0]) ? userInfo.name!: 'a' : "a",
+            ),
+            SizedBox(width: 4,),
+            Container(
+                padding: EdgeInsets.all(5),
+
+                child: Text(userInfo.name != null ? userInfo.name! : ""))
+          ],)
+
+      ),
       !Responsive.isMobile(context)
           ? DataCell(Container(
           padding: EdgeInsets.all(2),

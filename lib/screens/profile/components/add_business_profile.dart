@@ -166,7 +166,8 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: activeBusiness==widget.memo.id?darkgreenColor:Colors.black38,
+        color: activeBusiness==widget.memo.id?Color(0xFFD0D0D0)
+            :Colors.black38,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Row(

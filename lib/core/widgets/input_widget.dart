@@ -44,7 +44,7 @@ class InputWidget extends StatelessWidget {
         Container(
           height: this.height!= null? this.height: 50,
           decoration: BoxDecoration(
-            color: secondaryColor,
+            // color: ligh,
             //color: Theme.of(context).buttonColor,
             borderRadius: BorderRadius.circular(4.0),
           ),

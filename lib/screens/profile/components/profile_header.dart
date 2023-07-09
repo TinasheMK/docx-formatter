@@ -33,7 +33,7 @@ class ProfileHeader extends StatelessWidget {
             Text(title, style: TextStyle(fontSize: 20, color: Colors.white) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: dangerColor,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:

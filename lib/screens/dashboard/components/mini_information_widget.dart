@@ -30,7 +30,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
     return Container(
       // padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: secondaryColor,
+        // color: secondaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: SizedBox(
@@ -47,7 +47,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
               ),
               child: Text(widget.dailyData.title!, style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w500
               ),
               ),
             ),

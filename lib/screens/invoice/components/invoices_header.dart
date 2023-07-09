@@ -21,7 +21,7 @@ class InvoicesHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text( "Invoices", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
+            Text( "Invoices", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, ),),
             SizedBox(
               width: 10,
             ),

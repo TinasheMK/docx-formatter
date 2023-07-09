@@ -26,7 +26,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
       appBar: new AppBar(),
       body: SingleChildScrollView(
         child: Card(
-          color: bgColor,
+          // color: bgColor,
           elevation: 5,
           margin: EdgeInsets.all(10),
           child: Padding(

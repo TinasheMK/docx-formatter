@@ -21,13 +21,13 @@ class ClientsHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text( "Clients", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
+            Text( "Clients", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
             SizedBox(
               width: 10,
             ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: defaultColor,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:
@@ -43,7 +43,7 @@ class ClientsHeader extends StatelessWidget {
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Add New Client",
+                "Client",
               ),
             ),
           ],

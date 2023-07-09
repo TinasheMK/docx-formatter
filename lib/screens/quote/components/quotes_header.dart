@@ -22,13 +22,13 @@ class QuotesHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text( "Quotes", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
+            Text( "Quotations", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, ),),
             SizedBox(
               width: 10,
             ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: defaultColor,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:

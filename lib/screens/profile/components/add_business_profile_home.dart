@@ -49,7 +49,7 @@ class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
   Widget build(BuildContext context) {
     print("This is add business profile home.");
     return Card(
-      color: bgColor,
+      // color: bgColor,
       elevation: 5,
       margin: EdgeInsets.all(10),
       child: Padding(
@@ -68,7 +68,7 @@ class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
                 ),
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: darkgreenColor,
+                    backgroundColor: defaultColor,
                     padding: EdgeInsets.symmetric(
                       horizontal: defaultPadding * 1.5,
                       vertical:

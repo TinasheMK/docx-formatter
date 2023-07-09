@@ -413,11 +413,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                   ),
                   decoration: BoxDecoration(
                     color: secondaryColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    borderRadius: const BorderRadius.all(Radius.circular(buttonBorderRadius)),
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(invoice.business?.name ?? "Select" , style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.business?.name ?? "Select" ),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -431,15 +431,18 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                               //   ),
                               // ),
                                 content: Container(
-                                  color: secondaryColor,
-                                  height: 410,
-                                  child: companies.isEmpty? Text("Please go to profile and add your business details."):Column(
-                                    children: List.generate(
-                                      companies.length,
-                                          (index) => businessProfile(companies[index]),
+                                  // color: secondaryColor,
+                                  // height: 410,
+                                  child: SingleChildScrollView(
+                                    child: companies.isEmpty? Text("Please go to profile and add your business details."):Column(
+                                      children: List.generate(
+                                        companies.length,
+                                            (index) => businessProfile(companies[index]),
+                                      ),
                                     ),
                                   ),
-                                ));
+                                )
+                            );
                           });
                     },
                     // Delete
@@ -448,7 +451,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                 ),
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: defaultColor,
                     padding: EdgeInsets.symmetric(
                       horizontal: defaultPadding * 1.5,
                       vertical:
@@ -488,7 +491,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                   },
                   icon: Icon(Icons.send),
                   label: Text(
-                    "Publishf",
+                    "Publish",
                   ),
                 ),
               ],
@@ -520,7 +523,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         child:
                         Row(
                             children:[
-                              Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              Text( "Client:            ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
                               invoice.client?.name != null ? Container(
                                   // margin: EdgeInsets.only(left: defaultPadding),
@@ -530,11 +533,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                   // ),
                                   decoration: BoxDecoration(
                                     color: secondaryColor,
-                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                    borderRadius: const BorderRadius.all(Radius.circular(buttonBorderRadius)),
                                     border: Border.all(color: Colors.white10),
                                   ),
                                   child: TextButton(
-                                    child: Text(invoice.client?.name ?? "Select Client", style: TextStyle(color: Colors.white)),
+                                    child: Text(invoice.client?.name ?? "Select Client"),
                                     onPressed: () {
                                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                                           builder: (BuildContext context) {
@@ -575,7 +578,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         child:
                         Row(
                             children:[
-                              Text( "Invoice Date:   ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Invoice Date:   ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
                               // Text( "10/12/2023", style: TextStyle( color: Colors.white),
                               // ),
@@ -597,7 +600,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                                 ),
                                               ),
                                               content: Container(
-                                                color: secondaryColor,
+                                                // color: secondaryColor,
                                                 height: 350,
                                                 width: 350,
                                                 child: SizedBox(
@@ -636,7 +639,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         child:
                         Row(
                             children:[
-                              Text( "Due Date:        ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Due Date:        ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
                               // Text( "10/12/2023", style: TextStyle( color: Colors.white),
                               // ),
@@ -655,7 +658,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                               ),
                                             ),
                                             content: Container(
-                                              color: secondaryColor,
+                                              // color: secondaryColor,
                                               height: 350,
                                               width: 350,
                                               child: SizedBox(
@@ -694,11 +697,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         child:
                         Row(
                             children:[
-                              Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Total Due:          ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
-                              Text( invoice.currencyFull!.symbol!+" "+ invoice.subTotalAmount.toString() != null
+                              Text( (invoice.currencyFull?.symbol??"")+" "+ invoice.subTotalAmount.toString() != null
                                   ?   invoice.subTotalAmount.toString()
-                                  : '0', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                                  : '0', style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
 
                             ]
@@ -714,9 +717,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         child:
                         Row(
                             children:[
-                              // Text( "Balance:             ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              // Text( "Balance:             ", style: TextStyle(fontWeight: FontWeight.bold ),
                               // ),
-                              // Text( "\$12", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              // Text( "\$12", style: TextStyle(fontWeight: FontWeight.bold ),
                               // ),
                             ]
                         ),
@@ -732,7 +735,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         child:
                         Row(
                             children:[
-                              Text( "Currency:            ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              Text( "Currency:            ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
                               invoice.currency != null ? Container(
                                 // margin: EdgeInsets.only(left: defaultPadding),
@@ -746,7 +749,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                   border: Border.all(color: Colors.white10),
                                 ),
                                 child: TextButton(
-                                  child: Text(invoice.currency!, style: TextStyle(color: Colors.white)),
+                                  child: Text(invoice.currency!),
                                   onPressed: ()  {
 
                                     if(invoice.id!=null){
@@ -781,7 +784,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                                                 border: Border.all(color: Colors.white10),
                                                               ),
                                                               child: TextButton(
-                                                                child: Text(currencies[index].id??'', style: TextStyle(color: Colors.white)),
+                                                                child: Text(currencies[index].id??''),
                                                                 onPressed: () {
                                                                   invoice.currency = currencies[index].id;
                                                                   invoice.currencyFull = currencies[index];
@@ -827,43 +830,45 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                                       builder: (_) {
                                         return AlertDialog(
                                             content: Container(
-                                              color: secondaryColor,
-                                              height: 410,
-                                              child: Column(
-                                                children:
-                                                List.generate(
-                                                  currencies.length,
-                                                      (index) =>
+                                              // color: secondaryColor,
+                                              // height: (60*currencies.length).toDouble(),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children:
+                                                  List.generate(
+                                                      currencies.length,
+                                                          (index) =>
 
 
-                                                  Container(
-                                                    margin: EdgeInsets.only(bottom: defaultPadding),
-                                                    // padding: EdgeInsets.symmetric(
-                                                    //   horizontal: defaultPadding,
-                                                    //   vertical: defaultPadding / 2,
-                                                    // ),
-                                                    decoration: BoxDecoration(
-                                                      color: secondaryColor,
-                                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                      border: Border.all(color: Colors.white10),
-                                                    ),
-                                                    child: TextButton(
-                                                      child: Text(currencies[index].id??'', style: TextStyle(color: Colors.white)),
-                                                      onPressed: () {
-                                                        invoice.currency = currencies[index].id;
-                                                        invoice.currencyFull = currencies[index];
-                                                        invoice.client?.currency = currencies[index].id;
-                                                        invoice.client?.save();
-                                                        setState(() {});
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      // Delete
-                                                    ),
+                                                          Container(
+                                                            margin: EdgeInsets.only(bottom: 5),
+                                                            // padding: EdgeInsets.symmetric(
+                                                            //   horizontal: defaultPadding,
+                                                            //   vertical: defaultPadding / 2,
+                                                            // ),
+                                                            decoration: BoxDecoration(
+                                                              // color: secondaryColor,
+                                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                              border: Border.all(),
+                                                            ),
+                                                            child: TextButton(
+                                                              child: Text(currencies[index].id??''),
+                                                              onPressed: () {
+                                                                invoice.currency = currencies[index].id;
+                                                                invoice.currencyFull = currencies[index];
+                                                                invoice.client?.currency = currencies[index].id;
+                                                                invoice.client?.save();
+                                                                setState(() {});
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                              // Delete
+                                                            ),
 
-                                                  )
+                                                          )
+                                                  ),
+
+
                                                 ),
-
-
                                               ),
                                             ));
                                       });
@@ -883,16 +888,16 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
 
             //First Director
             Center(
-              child: Text( invoice.invoiceStatus != null ? invoice.invoiceStatus! : 'DRAFT', style: TextStyle(fontSize: 30, color: Colors.white),
+              child: Text( invoice.invoiceStatus != null ? invoice.invoiceStatus! : 'DRAFT', style: TextStyle(fontSize: 30 ),
               ),
             ),
             SizedBox(height: 16.0),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:[
-                  Text( "Payment Method: ", style: TextStyle(color: Colors.white),
+                  Text( "Payment Method: ",
                   ),
-                  Text( "Mail in Payment", style: TextStyle( fontWeight: FontWeight.bold, color: Colors.white),
+                  Text( "Mail in Payment", style: TextStyle( fontWeight: FontWeight.bold ),
                   ),
                 ]
             ),
@@ -904,7 +909,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
               children: [
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: dangerColor,
                     padding: EdgeInsets.symmetric(
                       horizontal: defaultPadding * 1.5,
                       vertical:
@@ -957,7 +962,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                 ),
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.orange,
+                    backgroundColor: warningColor,
                     padding: EdgeInsets.symmetric(
                       horizontal: defaultPadding * 1.5,
                       vertical:
@@ -1046,6 +1051,16 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     ),
                 ),
               ),
+                  SizedBox(height: 10,),
+                  GestureDetector(
+                    child:Icon(Icons.add, color: Colors.blueAccent,),
+                    onTap: () {
+                      setState ((){
+                        invoice!.invoiceItems!.add(InvoiceItem.fromJson({}));
+                        myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
+                      });
+                    },
+                  )
             ],
           ),),
 
@@ -1068,7 +1083,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(invoice.currencyFull!.symbol!+" " + invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.currencyFull!.symbol!+" " + invoice.subTotalAmount.toString()!),
                     onPressed: () {
                     },
                     // Delete
@@ -1098,7 +1113,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(invoice.currencyFull!.symbol!+" 0", style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.currencyFull!.symbol!+" 0"),
                     onPressed: () {
                     },
                     // Delete
@@ -1128,7 +1143,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text(invoice.currencyFull!.symbol!+" "+invoice.subTotalAmount.toString()!, style: TextStyle(color: Colors.white)),
+                    child: Text(invoice.currencyFull!.symbol!+" "+invoice.subTotalAmount.toString()!),
                     onPressed: () {
                     },
                     // Delete
@@ -1146,7 +1161,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
               children: [
                 ElevatedButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: defaultColor,
                     padding: EdgeInsets.symmetric(
                       horizontal: defaultPadding * 1.5,
                       vertical:
@@ -1187,7 +1202,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     border: Border.all(color: Colors.white10),
                   ),
                   child: TextButton(
-                    child: Text("Add Payment" , style: TextStyle(color: Colors.white)),
+                    child: Text("Add Payment" ),
                     onPressed: () {
                       if(invoice.invoiceStatus == 'PAID'){
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1232,7 +1247,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children:[
-                              Text( "Payment Date:   ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Payment Date:   ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
                               // Text( "10/12/2023", style: TextStyle( color: Colors.white),
                               // ),
@@ -1297,7 +1312,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children:[
-                              Text( "Total Paid:          ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                              Text( "Total Paid:          ", style: TextStyle(fontWeight: FontWeight.bold ),
                               ),
                               SizedBox(
                                 width: 80,
@@ -1398,6 +1413,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
               ),
             ): SizedBox(),
 
+            SizedBox(height: 5,),
+
             Container(
               padding: EdgeInsets.all(defaultPadding),
               decoration: BoxDecoration(
@@ -1497,7 +1514,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     if(invoicePath!=null&&invoiceName!=null)
                     ElevatedButton.icon(
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: defaultColor,
                         // padding: EdgeInsets.symmetric(
                         //   horizontal: defaultPadding ,
                         //   vertical:
@@ -1540,7 +1557,21 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
 
   Widget businessProfile(Business c) {
     return GestureDetector(
-      child: Text(c.name!) ,
+      child: Container(
+        margin: EdgeInsets.only(top: 5),
+        decoration: BoxDecoration(
+          // color: secondaryColor,
+
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(),
+        ),
+        child: TextButton(
+          child: Text(c.name!, style: TextStyle(color: Theme.of(context).primaryColor)),
+          onPressed: () {},
+          // Delete
+        ),
+
+      ),
       onTap: (){
         invoice.business = c;
         Navigator.of(context).pop();
@@ -1681,15 +1712,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                 onTap: () {
                   deleteRow(index);
                   item.delete();
-                },
-              ) : SizedBox(width: 0,),
-              invoice.invoiceItems?.length == (index+1) ? GestureDetector(
-                child:Icon(Icons.add, color: Colors.blueAccent,),
-                onTap: () {
-                  setState ((){
-                    invoice!.invoiceItems!.add(InvoiceItem.fromJson({}));
-                    myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
-                  });
                 },
               ) : SizedBox(width: 0,),
             ],

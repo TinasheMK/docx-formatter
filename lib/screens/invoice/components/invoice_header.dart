@@ -29,10 +29,10 @@ class InvoiceHeader extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text(title, style: TextStyle(fontSize: 20, color: Colors.white) ),
+            Text(title, style: TextStyle(fontSize: 20) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: dangerColor,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:

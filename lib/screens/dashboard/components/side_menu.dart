@@ -172,7 +172,7 @@ class SideMenu extends ConsumerWidget {
               title: "Dashboard",
               svgSrc: "assets/icons/menu_dashbord.svg",
               press: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomeScreen(source: 'side menu',)),
                 );
@@ -182,7 +182,7 @@ class SideMenu extends ConsumerWidget {
               title: "Invoices",
               svgSrc: "assets/icons/menu_tran.svg",
               press: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
                 );
@@ -192,7 +192,7 @@ class SideMenu extends ConsumerWidget {
               title: "Quotations",
               svgSrc: "assets/icons/menu_profile.svg",
               press: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => QuoteHomeScreen()),
                 );
@@ -202,7 +202,7 @@ class SideMenu extends ConsumerWidget {
               title: "Receipts",
               svgSrc: "assets/icons/menu_notification.svg",
               press: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => ReceiptsHomeScreen()),
                 );
@@ -212,7 +212,7 @@ class SideMenu extends ConsumerWidget {
               title: "Products",
               svgSrc: "assets/icons/menu_store.svg",
               press: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => ProductsHomeScreen()),
                 );
@@ -222,7 +222,7 @@ class SideMenu extends ConsumerWidget {
             //   title: "Quotes",
             //   svgSrc: "assets/icons/menu_task.svg",
             //   press: () {
-            //     Navigator.push(
+            //     Navigator.pushReplacement(context, newRoute)(
             //       context,
             //       MaterialPageRoute(builder: (context) => TaxHomeScreen()),
             //     );
@@ -230,9 +230,9 @@ class SideMenu extends ConsumerWidget {
             // ),
             DrawerListTile(
               title: "Clients",
-              svgSrc: "assets/icons/menu_doc.svg",
+              svgSrc: "assets/icons/menu_task.svg",
               press: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
                 );
@@ -253,7 +253,7 @@ class SideMenu extends ConsumerWidget {
 
 
                 Navigator.pop(context, true);
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Login(title: "You logged out.")),
                 );
@@ -285,12 +285,12 @@ class DrawerListTile extends StatelessWidget {
       horizontalTitleGap: 0.0,
       leading: SvgPicture.asset(
         svgSrc,
-        color: Colors.white54,
+        // color: Colors.white54,
         height: 16,
       ),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white54),
+        // style: TextStyle(color: Colors.white54),
       ),
     );
   }

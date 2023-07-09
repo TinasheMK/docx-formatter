@@ -187,19 +187,19 @@ class _CurrencySelectorState extends State<CurrencySelector> {
     print(currencies);
     print("clients");
     return Card(
-      color: bgColor,
+      // color: bgColor,
       elevation: 5,
-      margin: EdgeInsets.all(10),
+      // margin: EdgeInsets.all(10),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(0),
         child: Container(
             padding: const EdgeInsets.symmetric(
-                vertical: 16.0, horizontal: 16.0),
+                vertical: 0, horizontal: 0),
             child: Column(
               children: [
 
 
-                SizedBox(height: 10,),
+                // SizedBox(height: 10,),
 
 
 
@@ -210,7 +210,7 @@ class _CurrencySelectorState extends State<CurrencySelector> {
                     size: 14,
                   ),
                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
-                      primary: Colors.blueAccent),
+                      primary: defaultColor),
                   label: Text(activeCurrency ?? "Select Currency"),
 
                   onPressed: () {
@@ -220,8 +220,8 @@ class _CurrencySelectorState extends State<CurrencySelector> {
                         builder: (_) {
                           return AlertDialog(
                               content: Container(
-                                color: secondaryColor,
-                                height: 410,
+                                // color: secondaryColor,
+                                // height: 410,
                                 child: Column(
                                   children:
                                   List.generate(
@@ -230,15 +230,15 @@ class _CurrencySelectorState extends State<CurrencySelector> {
 
 
                                           Container(
-                                            margin: EdgeInsets.only(bottom: defaultPadding),
+                                            // margin: EdgeInsets.only(bottom: defaultPadding),
                                             // padding: EdgeInsets.symmetric(
                                             //   horizontal: defaultPadding,
                                             //   vertical: defaultPadding / 2,
                                             // ),
                                             decoration: BoxDecoration(
-                                              color: secondaryColor,
+                                              // color: secondaryColor,
                                               borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                              border: Border.all(color: Colors.white10),
+                                              // border: Border.all(color: Colors.white10),
                                             ),
                                             child: TextButton(
                                               child: Text(currencies[index].id!, style: TextStyle(color: Colors.white)),

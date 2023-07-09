@@ -26,7 +26,7 @@ class MiniInformation extends StatelessWidget {
             ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: defaultColor,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:

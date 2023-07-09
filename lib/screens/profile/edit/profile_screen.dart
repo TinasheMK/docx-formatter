@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   // late int crossAxisCount;
   // late double childAspectRatio;
   // late List<Memo> memosSet = [];
-  Color currentColor = Colors.green;
+  Color currentColor = defaultColor;
 
   Business business = Business.fromJson({});
   String? logoPath;
@@ -171,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
                                     ElevatedButton(
                                       style: TextButton.styleFrom(
-                                        backgroundColor: Colors.black38,
+                                        backgroundColor: defaultColor,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: defaultPadding * 1.5,
                                           vertical:
@@ -723,7 +723,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
                                     ElevatedButton.icon(
                                       style: TextButton.styleFrom(
-                                        backgroundColor: Colors.green,
+                                        backgroundColor: defaultColor,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: defaultPadding * 1.5,
                                           vertical:
@@ -785,7 +785,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
                                     ElevatedButton.icon(
                                       style: TextButton.styleFrom(
-                                        backgroundColor: Colors.redAccent,
+                                        backgroundColor: dangerColor,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: defaultPadding * 1.5,
                                           vertical:
