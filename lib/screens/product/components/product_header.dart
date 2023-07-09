@@ -25,7 +25,7 @@ class ProductHeader extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text(title, style: TextStyle(fontSize: 20, color: Colors.white) ),
+            Text(title, style: TextStyle(fontSize: 20) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,

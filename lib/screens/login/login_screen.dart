@@ -82,17 +82,17 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width / 2,
-                color: Colors.white,
+                // color: Colors.white,
                 child: SliderWidget(),
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
                 width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width /2 ,
-                color: bgColor,
+                // color: bgColor,
                 child: Center(
                   child: Card(
                     //elevation: 5,
-                    color: bgColor,
+                    // color: bgColor,
                     child: Container(
                       padding: EdgeInsets.all(42),
                       width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width / 2.5 ,
@@ -349,6 +349,7 @@ class _loginScreen extends ConsumerWidget {
                         .copyWith(color: greenColor),
                   ),
                 ),
+                // SizedBox(width: 10,)
               ],
             ),
             SizedBox(height: 20.0),

@@ -3,6 +3,7 @@ import '../../main.dart';
 import '../db/databaseHelper.dart';
 import '../enums/status_enum.dart';
 import '../types/compare_res.dart';
+import 'Category.dart';
 import 'Currency.dart';
 import 'Employee.dart';
 import 'Wallet.dart';
@@ -10,12 +11,12 @@ import 'Wallet.dart';
 class Product {
   int?    id;
   String? name;
-  String? price;
+  double? price;
   String? sku;
-  String? stock;
-  String? categoryId;
-  String? businessId;
-  String? category;
+  int? stock;
+  int? categoryId;
+  int? businessId;
+  Category? category;
 
 
   String? createdDate;
@@ -121,14 +122,15 @@ class Product {
   }
 
 
-  Future<void> save() async {
+  Future<int> save() async {
     Map<String, dynamic> row = {
+      "id": this.id,
       "name": this.name,
       "price": this.price,
       "sku": this.sku,
       "stock": this.stock,
-      "categoryId": this.categoryId,
-      "businessId": this.businessId,
+      "category_id": this.categoryId,
+      "business_id": this.businessId,
 
       "created_date": this.createdDate,
       "created_by": this.createdBy,
@@ -147,6 +149,7 @@ class Product {
 
 
     debugPrint('inserted product row id: $id');
+    return id;
   }
   Future<void> saveSynced() async {
     if(this.universalId==null){
@@ -158,8 +161,8 @@ class Product {
       "price": this.price,
       "sku": this.sku,
       "stock": this.stock,
-      "categoryId": this.categoryId,
-      "businessId": this.businessId,
+      "category_id": this.categoryId,
+      "business_id": this.businessId,
 
 
       "created_date": this.createdDate,
@@ -203,8 +206,8 @@ class Product {
       "price": this.price,
       "sku": this.sku,
       "stock": this.stock,
-      "categoryId": this.categoryId,
-      "businessId": this.businessId,
+      "category_id": this.categoryId,
+      "business_id": this.businessId,
 
       "created_date": this.createdDate,
       "created_by": this.createdBy,
@@ -282,8 +285,8 @@ Future<List<Product>> getProducts() async {
       price : maps[i]['price'],
       sku : maps[i]['sku'],
       stock : maps[i]['stock'],
-      categoryId : maps[i]['categoryId'],
-      businessId : maps[i]['businessId'],
+      categoryId : maps[i]['category_id'],
+      businessId : maps[i]['business_id'],
 
       universalId : maps?[i]["universal_id"],
       isSynced : maps?[i]["is_synced"]==1?true:false,
@@ -304,8 +307,8 @@ Future<List<Product>> getProductsForSync() async {
       price : maps[i]['price'],
       sku : maps[i]['sku'],
       stock : maps[i]['stock'],
-      categoryId : maps[i]['categoryId'],
-      businessId : maps[i]['businessId'],
+      categoryId : maps[i]['category_id'],
+      businessId : maps[i]['business_id'],
 
       universalId : maps?[i]["universal_id"],
       isSynced : maps?[i]["is_synced"]==1?true:false,
@@ -326,8 +329,8 @@ Future<List<Product>> searchProducts(String query) async {
       price : maps[i]['price'],
       sku : maps[i]['sku'],
       stock : maps[i]['stock'],
-      categoryId : maps[i]['categoryId'],
-      businessId : maps[i]['businessId'],
+      categoryId : maps[i]['category_id'],
+      businessId : maps[i]['business_id'],
     );
   });
 }

@@ -99,20 +99,26 @@ class _SliderWidgetState extends State<SliderWidget> {
                           alignment: Alignment.center,
                           child: Text(slides[index].text!,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  !.copyWith(color: Colors.white)
+                          ),
                         ),
                         Container(
                           padding: EdgeInsets.all(42),
                           alignment: Alignment.center,
                           child: Text(slides[index].altText!,
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headlineSmall
+                              !.copyWith(color: Colors.white)
+                          ),
                         ),
                         SizedBox(height: 12),
                         Container(
                           // padding: EdgeInsets.all(42),
                           alignment: Alignment.center,
                           child: Text(slides[index].bAltText!,
-                              style: Theme.of(context).textTheme.bodyText1),
+                              style: Theme.of(context).textTheme.bodyLarge
+                              !.copyWith(color: Colors.white)
+                              ),
                         ),
                       ],
                     ),

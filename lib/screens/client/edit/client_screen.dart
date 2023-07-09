@@ -155,7 +155,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                             Padding(
                                               padding: EdgeInsets.only(left: 5, right:5),
                                               child: InputWidget(
-                                                topLabel: "Business Name",
+                                                topLabel: "Client Name",
                                                 keyboardType: TextInputType.text,
                                                 kController: con1,
                                                 onSaved: (String? value) {
@@ -580,7 +580,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
                                               content: Text("Client saved successfully"),
                                             ));
 
-                                            Navigator.push(
+                                            Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
                                             );

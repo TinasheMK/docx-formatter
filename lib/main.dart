@@ -60,7 +60,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Invoicer',
-      theme: ThemeData.light().copyWith(
+      theme:
+
+      ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(backgroundColor: Colors.white, foregroundColor: Colors.black, elevation: 0),
         textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Colors.black),),
         tabBarTheme: TabBarTheme(labelColor: Colors.black, indicatorColor: defaultColor, dividerColor: defaultColor),
@@ -69,14 +71,20 @@ class MyApp extends StatelessWidget {
         dialogBackgroundColor: secondaryColor,
         canvasColor: secondaryColor,
       ),
-      // theme: ThemeData.dark().copyWith(
-      //   appBarTheme: AppBarTheme(backgroundColor: bgColor, elevation: 0),
+
+      // ThemeData.dark().copyWith(
+      //   appBarTheme: AppBarTheme(backgroundColor: bgColor, foregroundColor: Colors.white, elevation: 0),
+      //   textButtonTheme: TextButtonThemeData
+      //     (style: TextButton.styleFrom(
+      //       foregroundColor: Colors.white,
+      //       backgroundColor: bgColor),
+      //   ),
+      //   tabBarTheme: TabBarTheme(labelColor: Colors.white, indicatorColor: defaultColor, dividerColor: defaultColor),
       //   scaffoldBackgroundColor: bgColor,
-      //   primaryColor: greenColor,
+      //   primaryColor: Colors.white,
+      //   // primaryColorDark: Colors.black,
+      //
       //   dialogBackgroundColor: secondaryColor,
-      //   // buttonColor: greenColor,
-      //   // textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme)
-      //   //     .apply(bodyColor: Colors.white),
       //   canvasColor: secondaryColor,
       // ),
       home: Login(title: "Welcome to the Admin & Dashboard Panel"),

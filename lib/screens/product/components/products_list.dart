@@ -2,10 +2,9 @@ import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
 import 'package:flutter/material.dart';
 import '../../../core/models/Client.dart';
-import '../../../core/models/Invoice.dart';
+import '../../../core/models/Product.dart';
 import '../../../core/utils/responsive.dart';
 import '../edit/product_home_screen.dart';
-
 
 class ProductsList extends StatefulWidget {
   const ProductsList({
@@ -20,15 +19,15 @@ class ProductsList extends StatefulWidget {
 class _ProductsListState extends State<ProductsList> {
 
 
-  List<Invoice> invoices = [Invoice.fromJson({})];
+  List<Product> products = [Product.fromJson({})];
   List<Client> clients = [Client.fromJson({})];
 
   String filter = 'ALL';
   String filter2 = 'CLIENTS';
   String dateSort = 'asc';
 
-  Future<void> _initInvoices() async {
-    invoices = await getInvoices(dateSort, filter: filter, clientId: filter2);
+  Future<void> _initProducts() async {
+    products = await getProducts();
     clients = await getClients();
     setState(() {});
   }
@@ -37,7 +36,7 @@ class _ProductsListState extends State<ProductsList> {
   void initState() {
     super.initState();
 
-    _initInvoices();
+    _initProducts();
   }
 
 
@@ -58,327 +57,326 @@ class _ProductsListState extends State<ProductsList> {
 
             children: [
               Text(
-                "Invoice List",
+                "Product List",
                 style: Theme.of(context).textTheme.subtitle1,
               ),
 
-              Container(
-                // margin: EdgeInsets.only(left: defaultPadding/4),
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: defaultPadding/ 4,
-                //   vertical: defaultPadding / 100,
-                // ),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: TextButton(
-                  child: Text(filter2, style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                              content: Container(
-                                color: secondaryColor,
-                                height: 450,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("All CLIENTS", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter2 = 'CLIENTS';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
+              // Row(children: [
+              //   Container(
+              //     decoration: BoxDecoration(
+              //       color: getRoleColor("R").withOpacity(.2),
+              //       borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //       // border: Border.all(color: Colors.white),
+              //     ),
+              //     child: TextButton(
+              //       child: SizedBox(child: Text(filter2, style: Theme.of(context).textTheme.titleMedium,),),
+              //       onPressed: () {
+              //         showDialog(
+              //             context: context,
+              //             builder: (_) {
+              //               return AlertDialog(
+              //                   content: Container(
+              //                     // color: secondaryColor,
+              //                     // height: 450,
+              //                     child: SingleChildScrollView(
+              //                       child: Column(
+              //                         children: [
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("All CLIENTS", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter2 = 'CLIENTS';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //                           SizedBox(height: 7,),
+              //
+              //
+              //                           Column(
+              //                             children:
+              //                             List.generate(
+              //                                 clients.length,
+              //                                     (index) =>
+              //
+              //
+              //                                     Container(
+              //                                       margin: EdgeInsets.only(bottom: 7),
+              //                                       // padding: EdgeInsets.symmetric(
+              //                                       //   horizontal: defaultPadding,
+              //                                       //   vertical: defaultPadding / 2,
+              //
+              //                                       // ),
+              //                                       decoration: BoxDecoration(
+              //                                         // color: secondaryColor,
+              //                                         borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                                         border: Border.all(),
+              //                                       ),
+              //                                       child: TextButton(
+              //                                         child: Text(clients[index].name!, style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                                         onPressed: () {
+              //                                           filter2 = clients[index]!.id.toString()!;
+              //                                           _initProducts();
+              //                                           setState(() {
+              //                                           });
+              //                                           Navigator.of(context).pop();
+              //                                         },
+              //                                         // Delete
+              //                                       ),
+              //
+              //                                     )
+              //                             ),
+              //
+              //
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   ));
+              //             });
+              //       },
+              //       // Delete
+              //     ),
+              //
+              //   ),
+              //   SizedBox(width: 10,),
+              //   Container(
+              //     // margin: EdgeInsets.only(left: defaultPadding/4),
+              //     // padding: EdgeInsets.symmetric(
+              //     //   horizontal: defaultPadding/4,
+              //     //   vertical: defaultPadding / 100,
+              //     // ),
+              //     decoration: BoxDecoration(
+              //       color: getRoleColor("R").withOpacity(.2),
+              //
+              //       borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //       // border: Border.all(),
+              //     ),
+              //     child: TextButton(
+              //       child: Text(filter + ' INVOICES', style: Theme.of(context).textTheme.titleMedium,),
+              //       onPressed: () {
+              //         showDialog(
+              //             context: context,
+              //             builder: (_) {
+              //               return AlertDialog(
+              //                   content: Container(
+              //                     color: secondaryColor,
+              //                     // height: 350,
+              //                     child: SingleChildScrollView(
+              //                       child: Column(
+              //                         children: [
+              //
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("All Products",style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'ALL';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //                           SizedBox(height: 7,),
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("UNPAID Products", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'UNPAID';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //                           SizedBox(height: 7,),
+              //
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("Draft Products", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'DRAFT';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //
+              //                           SizedBox(height: 7,),
+              //
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("Paid Products", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'PAID';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //
+              //                           SizedBox(height: 7,),
+              //
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("Overdue Products", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'OVERDUE';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //
+              //                           SizedBox(height: 7,),
+              //
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("Cancelled Products", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'CANCELLED';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //                           SizedBox(height: 7,),
+              //
+              //                           Container(
+              //                             // margin: EdgeInsets.only(left: defaultPadding),
+              //                             // padding: EdgeInsets.symmetric(
+              //                             //   horizontal: defaultPadding,
+              //                             //   vertical: defaultPadding / 2,
+              //                             // ),
+              //                             decoration: BoxDecoration(
+              //                               // color: secondaryColor,
+              //                               borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //                               border: Border.all(),
+              //                             ),
+              //                             child: TextButton(
+              //                               child: Text("Refunded Products", style: TextStyle(color: Theme.of(context).primaryColor)),
+              //                               onPressed: () {
+              //                                 filter = 'REFUNDED';
+              //                                 _initProducts();
+              //                                 Navigator.of(context).pop();
+              //                               },
+              //                               // Delete
+              //                             ),
+              //
+              //                           ),
+              //
+              //                           SizedBox(
+              //                             height: 16,
+              //                           ),
+              //                           Row(
+              //                             mainAxisAlignment: MainAxisAlignment.center,
+              //                             children: [
+              //                               ElevatedButton.icon(
+              //                                   icon: Icon(
+              //                                     Icons.close,
+              //                                     size: 14,
+              //                                   ),
+              //                                   onPressed: () {
+              //                                     Navigator.of(context).pop();
+              //                                   },
+              //                                   label: Text("Cancel")),
+              //                             ],
+              //                           )
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   ));
+              //             });
+              //       },
+              //       // Delete
+              //     ),
+              //
+              //   ),
+              // ],)
 
-                                      ),
-                                      SizedBox(height: 7,),
-
-
-                                      Column(
-                                        children:
-                                        List.generate(
-                                            clients.length,
-                                                (index) =>
-
-
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 7),
-                                                  // padding: EdgeInsets.symmetric(
-                                                  //   horizontal: defaultPadding,
-                                                  //   vertical: defaultPadding / 2,
-                                                  // ),
-                                                  decoration: BoxDecoration(
-                                                    color: secondaryColor,
-                                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                    border: Border.all(color: Colors.white10),
-                                                  ),
-                                                  child: TextButton(
-                                                    child: Text(clients[index].name!, style: TextStyle(color: Colors.white)),
-                                                    onPressed: () {
-                                                      filter2 = clients[index]!.id.toString()!;
-                                                      _initInvoices();
-                                                      setState(() {
-                                                      });
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    // Delete
-                                                  ),
-
-                                                )
-                                        ),
-
-
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ));
-                        });
-                  },
-                  // Delete
-                ),
-
-              ),
-              Container(
-                // margin: EdgeInsets.only(left: defaultPadding/4),
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: defaultPadding/4,
-                //   vertical: defaultPadding / 100,
-                // ),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: TextButton(
-                  child: Text(filter + ' INVOICES', style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                              content: Container(
-                                color: secondaryColor,
-                                height: 450,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("All Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'ALL';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("UNPAID Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'UNPAID';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Draft Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'DRAFT';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Paid Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'PAID';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Overdue Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'OVERDUE';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Cancelled Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'CANCELLED';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Refunded Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'REFUNDED';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(
-                                        height: 16,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ElevatedButton.icon(
-                                              icon: Icon(
-                                                Icons.close,
-                                                size: 14,
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              label: Text("Cancel")),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ));
-                        });
-                  },
-                  // Delete
-                ),
-
-              ),
 
             ],
           ),
@@ -391,40 +389,40 @@ class _ProductsListState extends State<ProductsList> {
                 DataColumn(
                   label: Text("Id"),
                 ),DataColumn(
-                  label: Text("Client"),
+                  label: Text("Name"),
                 ),
                 DataColumn(
-                  label: GestureDetector(
-                    child: Container(
-                      // margin: EdgeInsets.only(left: defaultPadding/4),
-                        padding: EdgeInsets.all(defaultPadding/3 ),
-                        decoration: BoxDecoration(
-                          color: secondaryColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(color: Colors.blue),
-                        ),
-                        child:Text("Date")),
-                    onTap: (){
-                      if(dateSort=='desc') {
-                        dateSort = 'asc';
-                      }else if (dateSort=='asc') {
-                        dateSort = 'desc';
-                      }
-                      _initInvoices();
-                      setState(() { });
-                    },
-                  )
+                    label: GestureDetector(
+                      child: Container(
+                        // margin: EdgeInsets.only(left: defaultPadding/4),
+                          padding: EdgeInsets.all(defaultPadding/3 ),
+                          decoration: BoxDecoration(
+                            // color: secondaryColor,
+                            // borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            // border: Border.all(),
+                          ),
+                          child:Text("SKU")),
+                      onTap: (){
+                        // if(dateSort=='desc') {
+                        //   dateSort = 'asc';
+                        // }else if (dateSort=='asc') {
+                        //   dateSort = 'desc';
+                        // }
+                        // _initProducts();
+                        setState(() { });
+                      },
+                    )
                 ),
                 DataColumn(
-                  label: Text("Amount"),
+                  label: Text("Price"),
                 ),
                 DataColumn(
                   label: Text("Actions"),
                 ),
               ],
               rows: List.generate(
-                invoices.length,
-                (index) => recentUserDataRow(invoices[index]),
+                products.length,
+                    (index) => recentUserDataRow(products[index]),
               ),
             ),
           ),
@@ -433,21 +431,21 @@ class _ProductsListState extends State<ProductsList> {
     );
   }
 
-  DataRow recentUserDataRow(Invoice userInfo) {
+  DataRow recentUserDataRow(Product userInfo) {
     return DataRow(
       cells: [
         DataCell(Text(userInfo.id.toString()!)),
         DataCell(Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: getRoleColor(userInfo.client.toString()).withOpacity(.2),
-              border: Border.all(color: Colors.green),
+              color: getRoleColor(userInfo.name.toString()).withOpacity(.2),
+              // border: Border.all(color: Colors.lightBlueAccent),
               borderRadius: BorderRadius.all(Radius.circular(5.0) //
               ),
             ),
-            child: Text(userInfo.client != null ? userInfo.client!.name??"" : ""))),
-        DataCell(Text(userInfo.invoiceDate.toString().split(" ")[0])),
-        DataCell(Text(userInfo.totalAmount.toString())),
+            child: Text(userInfo.name != null ? userInfo.name??"" : ""))),
+        DataCell(Text(userInfo.sku.toString())),
+        DataCell(Text(userInfo.price.toString().split(" ")[0])),
         DataCell(Row(
           children: [
             Responsive.isDesktop(context) ? ElevatedButton.icon(
@@ -461,7 +459,7 @@ class _ProductsListState extends State<ProductsList> {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new ProductHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
+                      return new ProductHome(title: "Edit Product: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -473,7 +471,7 @@ class _ProductsListState extends State<ProductsList> {
               onTap:(){
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new ProductHome(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
+                      return new ProductHome(title: "Edit Product: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -537,7 +535,7 @@ class _ProductsListState extends State<ProductsList> {
             //                               try{
             //                                 userInfo.delete();
             //                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //                                   content: Text("Invoice deleted successfully"),
+            //                                   content: Text("Product deleted successfully"),
             //                                 ));
             //                               }catch(e){
             //                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -608,7 +606,7 @@ class _ProductsListState extends State<ProductsList> {
             //                                 try{
             //                                   userInfo.delete();
             //                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //                                     content: Text("Invoice deleted successfully"),
+            //                                     content: Text("Product deleted successfully"),
             //                                   ));
             //                                 }catch(e){
             //                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

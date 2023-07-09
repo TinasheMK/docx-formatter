@@ -145,6 +145,7 @@ class Client {
 
   Future<void> save() async {
     Map<String, dynamic> row = {
+      "id": this.id,
       "name": this.name,
       "street": this.street,
       "city": this.city,

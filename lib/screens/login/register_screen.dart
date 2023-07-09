@@ -83,11 +83,11 @@ class _LoginState extends State<Register> with SingleTickerProviderStateMixin {
               Container(
                 height: MediaQuery.of(context).size.height,
                 width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width /2 ,
-                color: bgColor,
+                // color: bgColor,
                 child: Center(
                   child: Card(
                     //elevation: 5,
-                    color: bgColor,
+                    // color: bgColor,
                     child: Container(
                       padding: EdgeInsets.all(42),
                       width: Responsive.isMobile(context) ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width / 2.5 ,

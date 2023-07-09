@@ -174,8 +174,8 @@ class DatabaseHelper {
             name TEXT ,
             sku TEXT ,
             price FLOAT NOT NULL,
-            stock INTEGER NOT NULL,
-            category_id INTEGER NOT NULL,
+            stock INTEGER ,
+            category_id INTEGER,
             business_id INTEGER NOT NULL,
                            
             created_date TEXT,

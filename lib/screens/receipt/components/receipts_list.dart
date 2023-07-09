@@ -1,23 +1,22 @@
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_admin_dashboard/screens/receipt/edit/receipt_home_screen.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/models/Invoice.dart';
 import '../../../core/utils/responsive.dart';
-import '../edit/receipt_home_screen.dart';
 
-
-class ReceiptsList extends StatefulWidget {
-  const ReceiptsList({
+class ReceiptList extends StatefulWidget {
+  const ReceiptList({
     Key? key,
   }) : super(key: key);
 
   @override
-  _ReceiptsListState createState() => _ReceiptsListState();
+  _ReceiptListState createState() => _ReceiptListState();
 }
 
 
-class _ReceiptsListState extends State<ReceiptsList> {
+class _ReceiptListState extends State<ReceiptList> {
 
 
   List<Invoice> invoices = [Invoice.fromJson({})];
@@ -58,327 +57,103 @@ class _ReceiptsListState extends State<ReceiptsList> {
 
             children: [
               Text(
-                "Invoice List",
+                "Receipt List",
                 style: Theme.of(context).textTheme.subtitle1,
               ),
 
-              Container(
-                // margin: EdgeInsets.only(left: defaultPadding/4),
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: defaultPadding/ 4,
-                //   vertical: defaultPadding / 100,
-                // ),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: TextButton(
-                  child: Text(filter2, style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                              content: Container(
-                                color: secondaryColor,
-                                height: 450,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
+              Row(children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: getRoleColor("R").withOpacity(.2),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    // border: Border.all(color: Colors.white),
+                  ),
+                  child: TextButton(
+                    child: SizedBox(child: Text(filter2, style: Theme.of(context).textTheme.titleMedium,),),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                                content: Container(
+                                  // color: secondaryColor,
+                                  // height: 450,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          // margin: EdgeInsets.only(left: defaultPadding),
+                                          // padding: EdgeInsets.symmetric(
+                                          //   horizontal: defaultPadding,
+                                          //   vertical: defaultPadding / 2,
+                                          // ),
+                                          decoration: BoxDecoration(
+                                            // color: secondaryColor,
+                                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                            border: Border.all(),
+                                          ),
+                                          child: TextButton(
+                                            child: Text("All CLIENTS", style: TextStyle(color: Theme.of(context).primaryColor)),
+                                            onPressed: () {
+                                              filter2 = 'CLIENTS';
+                                              _initInvoices();
+                                              Navigator.of(context).pop();
+                                            },
+                                            // Delete
+                                          ),
+
                                         ),
-                                        child: TextButton(
-                                          child: Text("All CLIENTS", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter2 = 'CLIENTS';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
+                                        SizedBox(height: 7,),
+
+
+                                        Column(
+                                          children:
+                                          List.generate(
+                                              clients.length,
+                                                  (index) =>
+
+
+                                                  Container(
+                                                    margin: EdgeInsets.only(bottom: 7),
+                                                    // padding: EdgeInsets.symmetric(
+                                                    //   horizontal: defaultPadding,
+                                                    //   vertical: defaultPadding / 2,
+
+                                                    // ),
+                                                    decoration: BoxDecoration(
+                                                      // color: secondaryColor,
+                                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                      border: Border.all(),
+                                                    ),
+                                                    child: TextButton(
+                                                      child: Text(clients[index].name!, style: TextStyle(color: Theme.of(context).primaryColor)),
+                                                      onPressed: () {
+                                                        filter2 = clients[index]!.id.toString()!;
+                                                        _initInvoices();
+                                                        setState(() {
+                                                        });
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      // Delete
+                                                    ),
+
+                                                  )
+                                          ),
+
+
                                         ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-
-
-                                      Column(
-                                        children:
-                                        List.generate(
-                                            clients.length,
-                                                (index) =>
-
-
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 7),
-                                                  // padding: EdgeInsets.symmetric(
-                                                  //   horizontal: defaultPadding,
-                                                  //   vertical: defaultPadding / 2,
-                                                  // ),
-                                                  decoration: BoxDecoration(
-                                                    color: secondaryColor,
-                                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                    border: Border.all(color: Colors.white10),
-                                                  ),
-                                                  child: TextButton(
-                                                    child: Text(clients[index].name!, style: TextStyle(color: Colors.white)),
-                                                    onPressed: () {
-                                                      filter2 = clients[index]!.id.toString()!;
-                                                      _initInvoices();
-                                                      setState(() {
-                                                      });
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    // Delete
-                                                  ),
-
-                                                )
-                                        ),
-
-
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ));
-                        });
-                  },
-                  // Delete
+                                ));
+                          });
+                    },
+                    // Delete
+                  ),
+
                 ),
+              ],)
 
-              ),
-              Container(
-                // margin: EdgeInsets.only(left: defaultPadding/4),
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: defaultPadding/4,
-                //   vertical: defaultPadding / 100,
-                // ),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: TextButton(
-                  child: Text(filter + ' INVOICES', style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                              content: Container(
-                                color: secondaryColor,
-                                height: 450,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("All Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'ALL';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("UNPAID Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'UNPAID';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Draft Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'DRAFT';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Paid Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'PAID';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Overdue Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'OVERDUE';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Cancelled Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'CANCELLED';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-                                      SizedBox(height: 7,),
-
-                                      Container(
-                                        // margin: EdgeInsets.only(left: defaultPadding),
-                                        // padding: EdgeInsets.symmetric(
-                                        //   horizontal: defaultPadding,
-                                        //   vertical: defaultPadding / 2,
-                                        // ),
-                                        decoration: BoxDecoration(
-                                          color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          border: Border.all(color: Colors.white10),
-                                        ),
-                                        child: TextButton(
-                                          child: Text("Refunded Invoices", style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            filter = 'REFUNDED';
-                                            _initInvoices();
-                                            Navigator.of(context).pop();
-                                          },
-                                          // Delete
-                                        ),
-
-                                      ),
-
-                                      SizedBox(
-                                        height: 16,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ElevatedButton.icon(
-                                              icon: Icon(
-                                                Icons.close,
-                                                size: 14,
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              label: Text("Cancel")),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ));
-                        });
-                  },
-                  // Delete
-                ),
-
-              ),
 
             ],
           ),
@@ -394,26 +169,26 @@ class _ReceiptsListState extends State<ReceiptsList> {
                   label: Text("Client"),
                 ),
                 DataColumn(
-                  label: GestureDetector(
-                    child: Container(
-                      // margin: EdgeInsets.only(left: defaultPadding/4),
-                        padding: EdgeInsets.all(defaultPadding/3 ),
-                        decoration: BoxDecoration(
-                          color: secondaryColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(color: Colors.blue),
-                        ),
-                        child:Text("Date")),
-                    onTap: (){
-                      if(dateSort=='desc') {
-                        dateSort = 'asc';
-                      }else if (dateSort=='asc') {
-                        dateSort = 'desc';
-                      }
-                      _initInvoices();
-                      setState(() { });
-                    },
-                  )
+                    label: GestureDetector(
+                      child: Container(
+                        // margin: EdgeInsets.only(left: defaultPadding/4),
+                          padding: EdgeInsets.all(defaultPadding/3 ),
+                          decoration: BoxDecoration(
+                            // color: secondaryColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(),
+                          ),
+                          child:Text("Date")),
+                      onTap: (){
+                        if(dateSort=='desc') {
+                          dateSort = 'asc';
+                        }else if (dateSort=='asc') {
+                          dateSort = 'desc';
+                        }
+                        _initInvoices();
+                        setState(() { });
+                      },
+                    )
                 ),
                 DataColumn(
                   label: Text("Amount"),
@@ -424,7 +199,7 @@ class _ReceiptsListState extends State<ReceiptsList> {
               ],
               rows: List.generate(
                 invoices.length,
-                (index) => recentUserDataRow(invoices[index]),
+                    (index) => recentUserDataRow(invoices[index]),
               ),
             ),
           ),
@@ -441,7 +216,7 @@ class _ReceiptsListState extends State<ReceiptsList> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: getRoleColor(userInfo.client.toString()).withOpacity(.2),
-              border: Border.all(color: Colors.green),
+              // border: Border.all(color: Colors.lightBlueAccent),
               borderRadius: BorderRadius.all(Radius.circular(5.0) //
               ),
             ),
@@ -461,7 +236,7 @@ class _ReceiptsListState extends State<ReceiptsList> {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new ReceiptHomeScreen(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
+                      return new ReceiptHomeScreen(title: "Edit Receipt: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -473,7 +248,7 @@ class _ReceiptsListState extends State<ReceiptsList> {
               onTap:(){
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new ReceiptHomeScreen(title: "Edit Invoice: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
+                      return new ReceiptHomeScreen(title: "Edit Receipt: ${userInfo.id}", code: "edit", invoiceId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },

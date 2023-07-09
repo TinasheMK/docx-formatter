@@ -27,50 +27,55 @@ class ReceiptsHeader extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            ElevatedButton.icon(
-              style: TextButton.styleFrom(
-                backgroundColor: defaultColor,
-                padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding * 1.5,
-                  vertical:
-                  defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+              ElevatedButton.icon(
+                style: TextButton.styleFrom(
+                  backgroundColor: defaultColor,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultPadding * 1.5,
+                    vertical:
+                    defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReceiptHomeScreen(title: 'New To Collect', code: 'invoice',)),
+                  );
+
+
+                },
+                icon: Icon(Icons.add),
+                label: Text(
+                  "To Collect",
                 ),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReceiptHomeScreen(title: 'New To Collect', code: 'invoice',)),
-                );
+              SizedBox(width: 5,),
+              ElevatedButton.icon(
+                style: TextButton.styleFrom(
+                  backgroundColor: defaultColor,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultPadding * 1.5,
+                    vertical:
+                    defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReceiptHomeScreen(title: 'New Receipt', code: 'invoice',)),
+                  );
 
 
-              },
-              icon: Icon(Icons.add),
-              label: Text(
-                "To Collect",
-              ),
-            ),
-            ElevatedButton.icon(
-              style: TextButton.styleFrom(
-                backgroundColor: defaultColor,
-                padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding * 1.5,
-                  vertical:
-                  defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                },
+                icon: Icon(Icons.add),
+                label: Text(
+                  "Receipt",
                 ),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReceiptHomeScreen(title: 'New Receipt', code: 'invoice',)),
-                );
-
-
-              },
-              icon: Icon(Icons.add),
-              label: Text(
-                "Receipt",
-              ),
-            ),
+            ],)
           ],
         ),
         SizedBox(height: defaultPadding),

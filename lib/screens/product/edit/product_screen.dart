@@ -10,12 +10,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/models/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
+import 'package:smart_admin_dashboard/screens/product/products_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/profile/profiles_home_screen.dart';
 import '../../../core/utils/UserPreference.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/widgets/input_widget.dart';
-import '../../../core/models/Business.dart';
+import '../../../core/models/Product.dart';
 import '../../../core/utils/responsive.dart';
 
 import '../../dashboard/components/header.dart';
@@ -65,8 +66,8 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   // late List<Memo> memosSet = [];
   Color currentColor = Colors.green;
 
-  Business business = Business.fromJson({});
-  String? logoPath;
+  Product product = Product.fromJson({});
+  String? imagePath;
 
   TextEditingController con1 = TextEditingController();
   TextEditingController con2 = TextEditingController();
@@ -76,23 +77,20 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   TextEditingController con6 = TextEditingController();
   TextEditingController con7 = TextEditingController();
 
-  Future<void> _initbusiness() async {
+  Future<void> _initproduct() async {
     if(profileId!=null) {
-      business = await getBusiness(profileId!)??Business.fromJson({});
-      if(business.color != null)currentColor = Color(business.color!);
-      con1.text = business.name?? "";
-      con2.text = business.email ?? "";
-      con3.text = business.street ?? "";
-      con4.text = business.city ?? "";
-      con5.text = business.country ?? "";
-      con6.text = business.telephone ?? "";
-      con7.text = business.paymentInfo ?? "";
+      product = await getProduct(profileId!)??Product.fromJson({});
+      con1.text = product.name??"";
+      con2.text = product.price?.toString() ?? "";
+      con3.text = product.sku ?? "";
+      con4.text = product.stock?.toString()?? "";
+      // con4.text = product.category ?? "";
     }else{
-      business= Business.fromJson({});
+      product= Product.fromJson({});
     }
 
     final directory = await getDownloadPath2();
-    if(business.logo!=null)logoPath = "${directory}${business.logo}";
+    // if(product.image!=null)imagePath = "${directory}${product.image}";
     setState(() {});
   }
 
@@ -100,7 +98,7 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _initbusiness();
+    _initproduct();
 
   }
 
@@ -109,7 +107,7 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    print(business?.toJson().toString());
+    print(product?.toJson().toString());
     print(profileId);
     print(profileId);
     print(profileId);
@@ -130,6 +128,186 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
     //   }
     // }
 
+    List<Widget> _formFields(){
+      return [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child:
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, right:5),
+                    child: InputWidget(
+                      topLabel: "Product Name",
+                      keyboardType: TextInputType.text,
+                      kController: con1,
+                      onSaved: (String? value) {
+                        // This optional block of code can be used to run
+                        // code when the user saves the form.
+                      },
+                      onChanged: (String? value) {
+                        print(product!.toJson());
+                        product!.name = value;
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter product name.';
+                        }
+                        return null;
+                      },
+
+
+                      // prefixIcon: FlutterIcons.chevron_left_fea,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 3),
+              ],),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child:
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, right:5),
+                    child: InputWidget(
+                        topLabel: "Price",
+                        keyboardType: TextInputType.text,
+                        kController: con2,
+                        onSaved: (String? value) {
+                          // This optional block of code can be used to run
+                          // code when the user saves the form.
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter price.';
+                          }
+                          return null;
+                        },
+
+                        onChanged: (String? value) {
+                          product!.price = double.parse(value??"0");
+                        }
+
+
+                      // prefixIcon: FlutterIcons.chevron_left_fea,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 3),
+              ],),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child:
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, right:5),
+                    child: InputWidget(
+                      topLabel: "SKU",
+                      keyboardType: TextInputType.text,
+                      kController: con3,
+                      onSaved: (String? value) {
+                        // This optional block of code can be used to run
+                        // code when the user saves the form.
+                      },
+                      onChanged: (String? value) {
+                        product!.sku = value;
+                      },
+
+
+                      // prefixIcon: FlutterIcons.chevron_left_fea,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 3),
+              ],),
+          ],),
+
+        ),
+        Expanded(
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child:
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, right:5),
+                    child: InputWidget(
+                      topLabel: "Stock",
+                      keyboardType: TextInputType.text,
+                      onSaved: (String? value) {
+                        // This optional block of code can be used to run
+                        // code when the user saves the form.
+                      },
+                      onChanged: (String? value) {
+
+                        product!.stock = int.parse(value??"0");
+                      },
+                      validator: (String? value) {
+                        return (value != null && value.contains('@'))
+                            ? 'Do not use the @ char.'
+                            : null;
+                      },
+                      kController: con4,
+
+
+                      // prefixIcon: FlutterIcons.chevron_left_fea,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 3),
+              ],),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child:
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, right:5),
+                    child: InputWidget(
+                      topLabel: "Category",
+                      keyboardType: TextInputType.text,
+                      onSaved: (String? value) {
+                        // This optional block of code can be used to run
+                        // code when the user saves the form.
+                      },
+                      onChanged: (String? value) {
+                        // product!.category.name = value;
+                      },
+                      validator: (String? value) {
+                        return (value != null && value.contains('@'))
+                            ? 'Do not use the @ char.'
+                            : null;
+                      },
+                      kController: con5,
+
+
+                      // prefixIcon: FlutterIcons.chevron_left_fea,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 3),
+              ],),
+          ],),
+
+        ),
+      ];
+    }
+
     return SafeArea(
       child: SingleChildScrollView(
         //padding: EdgeInsets.all(defaultPadding),
@@ -139,7 +317,7 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ProductHeader(title: business.name?? 'Add Product',),
+              ProductHeader(title: product.name?? 'Add Product',),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,518 +337,83 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
 
-                                SizedBox(
-                                  height: 200,
-                                  child: logoPath ==null ? Image.asset("assets/logo/logo_icon.png", scale:1)
-                                      : Image.file(File(logoPath!), scale:1),
-                                ),
+                                // SizedBox(
+                                //   height: 200,
+                                //   child: imagePath ==null ? Image.asset("assets/image/image_icon.png", scale:1)
+                                //       : Image.file(File(imagePath!), scale:1),
+                                // ),
+                                // SizedBox(height: 16.0),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                //   children: [
+                                //
+                                //     ElevatedButton(
+                                //       style: TextButton.styleFrom(
+                                //         backgroundColor: defaultColor,
+                                //         padding: EdgeInsets.symmetric(
+                                //           horizontal: defaultPadding * 1.5,
+                                //           vertical:
+                                //           defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                //         ),
+                                //       ),
+                                //       onPressed: () async {
+                                //         final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                                //
+                                //
+                                //         // var path = await getExternalStorageDirectory();
+                                //         //
+                                //         // String p = path.toString();
+                                //         // p = p.replaceAll("'", '');
+                                //         String image = "${getRandomString(5)}_image.png";
+                                //
+                                //         final directory = await getDownloadPath2();
+                                //         print(directory);
+                                //         new File("${directory}${image}").create(recursive: true)
+                                //             .then((File file) async {
+                                //           if (image != null) await file.writeAsBytes(await image!.readAsBytes());
+                                //         });
+                                //
+                                //         product.image = image;
+                                //         if(product.name==null) product.name = "N/A";
+                                //         product.save();
+                                //
+                                //         if(product.image!=null)imagePath = "${directory}${product.image}";
+                                //
+                                //         setState(() {
+                                //         });
+                                //
+                                //       },
+                                //       child: Text(
+                                //         "Pick Product Image",
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                                 SizedBox(height: 16.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
 
-                                    ElevatedButton(
-                                      style: TextButton.styleFrom(
-                                        backgroundColor: defaultColor,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: defaultPadding * 1.5,
-                                          vertical:
-                                          defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                SingleChildScrollView(
+                                  child: SizedBox( height: 450,
+                                      child: Responsive(
+                                        mobile: Column(
+
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: _formFields(),
                                         ),
-                                      ),
-                                      onPressed: () async {
-                                        final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                                        tablet: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: _formFields(),
+                                        ),
+                                        desktop: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: _formFields(),
+                                        ),
 
-
-                                        // var path = await getExternalStorageDirectory();
-                                        //
-                                        // String p = path.toString();
-                                        // p = p.replaceAll("'", '');
-                                        String logo = "${getRandomString(5)}_logo.png";
-
-                                        final directory = await getDownloadPath2();
-                                        print(directory);
-                                        new File("${directory}${logo}").create(recursive: true)
-                                            .then((File file) async {
-                                          if (image != null) await file.writeAsBytes(await image!.readAsBytes());
-                                        });
-
-                                        business.logo = logo;
-                                        if(business.name==null) business.name = "N/A";
-                                        business.save();
-
-                                        if(business.logo!=null)logoPath = "${directory}${business.logo}";
-
-                                        setState(() {
-                                        });
-
-                                      },
-                                      child: Text(
-                                        "Pick Product Image",
-                                      ),
-                                    ),
-                                  ],
+                                      )
+                                  ),
                                 ),
-                                SizedBox(height: 16.0),
-
-                                Responsive.isMobile(context)
-                                    ? SizedBox( height: 585,child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: Column(children: [
-
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Product Name",
-                                                  keyboardType: TextInputType.text,
-                                                  kController: con1,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    print(business!.toJson());
-                                                    business!.name = value;
-                                                  },
-                                                  validator: (value) {
-                                                    if (value == null || value.isEmpty) {
-                                                      return 'Please enter product name.';
-                                                    }
-                                                    return null;
-                                                  },
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                    topLabel: "Email",
-                                                    keyboardType: TextInputType.text,
-                                                    kController: con2,
-                                                    onSaved: (String? value) {
-                                                      // This optional block of code can be used to run
-                                                      // code when the user saves the form.
-                                                    },
-                                                    onChanged: (String? value) {
-                                                      business!.email = value;
-                                                    }
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Address",
-                                                  keyboardType: TextInputType.text,
-                                                  kController: con3,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                    // directorStreet = value!;
-                                                    //
-                                                    //
-                                                    business!.street = value;
-                                                  },
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
-
-                                    ),
-                                    Expanded(
-                                      child: Column(children: [
-
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "City",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-
-                                                    business!.city = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kController: con4,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Country",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.country = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kController: con5,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Phone Number",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.telephone = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kController: con6,
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Payment Info",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.paymentInfo = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kController: con7,
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
-
-                                    ),
-                                  ],))
-                                    :  Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Product Name",
-                                                  keyboardType: TextInputType.text,
-
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    print(business!.toJson());
-                                                    business!.name = value;
-                                                  },
-                                                  validator: (value) {
-                                                    if (value == null || value.isEmpty) {
-                                                      return 'Please enter product name.';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  kController: con1,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Email",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.email = value;
-                                                  },
-                                                  kController: con2,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Address",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                    // directorStreet = value!;
-                                                    //
-                                                    //
-                                                    business!.street = value;
-                                                  },
-                                                  kController: con3,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
-
-                                    ),
-                                    Expanded(
-                                      child: Column(children: [
-
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "City",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-
-                                                    business!.city = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kController: con4,
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Country",
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.country = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-                                                  kController: con5,
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Phone Number",
-                                                  keyboardType: TextInputType.text,
-                                                  kController: con6,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.telephone = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Payment Info",
-                                                  keyboardType: TextInputType.text,
-                                                  kController: con7,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    business!.paymentInfo = value;
-                                                  },
-                                                  validator: (String? value) {
-                                                    return (value != null && value.contains('@'))
-                                                        ? 'Do not use the @ char.'
-                                                        : null;
-                                                  },
-
-
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
-
-                                    ),
-                                  ],),
                                 SizedBox(height: 25,),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -687,19 +430,25 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                       ),
                                       onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          print(business!.toJson());
+                                          print(product!.toJson());
                                           print(widget.code);
                                           try {
                                             if(widget.code == "edit"){
-                                              business!.save();
-                                            }else{
-                                              var businessId = await business!.save();
+                                              product.categoryId = 1;
+                                              product.businessId = 1;
+                                              var productId = product!.save();
+                                              print('Product id is $productId');
 
-                                              print('Client id is $businessId');
+                                            }else{
+                                              product.categoryId = 1;
+                                              product.businessId = 1;
+                                              var productId = await product!.save();
+
+                                              print('Product id is $productId');
 
                                               SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                                              prefs.setInt(UserPreference.activeBusiness, businessId);
+                                              // prefs.setInt(UserPreference.activeProduct, productId);
                                             }
 
 
@@ -712,13 +461,14 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                                 .addPostFrameCallback((_) {
                                               Navigator.pushReplacement(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => ProfileHomeScreen()),
+                                                MaterialPageRoute(builder: (context) => ProductsHomeScreen()),
                                               );
                                             });
 
                                           }catch(e){
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("An error occured. Check all fields"),
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text("An error occured. Check all fields"),
                                             ));
                                           };
 
@@ -733,6 +483,8 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                     ),
                                   ],
                                 ),
+
+
                                 SizedBox(height: 15,),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -749,10 +501,10 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                       ),
                                       onPressed: () {
                                         if (true) {
-                                          print(business!.toJson());
+                                          print(product!.toJson());
                                           print(widget.code);
                                           try {
-                                            business.delete();
+                                            product.delete();
 
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                               content: Text("Product deleted"),

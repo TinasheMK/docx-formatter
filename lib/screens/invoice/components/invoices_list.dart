@@ -70,7 +70,7 @@ class _InvoicesListState extends State<InvoicesList> {
                     // border: Border.all(color: Colors.white),
                   ),
                   child: TextButton(
-                    child: SizedBox(child: Text(filter2, style: TextStyle(color: Theme.of(context).primaryColor),),),
+                    child: SizedBox(child: Text(filter2, style: Theme.of(context).textTheme.titleMedium,),),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -167,7 +167,7 @@ class _InvoicesListState extends State<InvoicesList> {
                     // border: Border.all(),
                   ),
                   child: TextButton(
-                    child: Text(filter + ' INVOICES', style: TextStyle(color: Theme.of(context).primaryColor)),
+                    child: Text(filter + ' INVOICES', style: Theme.of(context).textTheme.titleMedium,),
                     onPressed: () {
                       showDialog(
                           context: context,

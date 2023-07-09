@@ -8,6 +8,7 @@ import '../dashboard/components/header.dart';
   import 'package:flutter/material.dart';
 
 import 'components/receipts_header.dart';
+import 'components/receipts_list.dart';
 
 
 class ReceiptsScreen extends StatelessWidget {
@@ -33,7 +34,7 @@ class ReceiptsScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        QuotesList(),
+                        ReceiptList(),
 
                         // RecentUsers(),
                         SizedBox(height: defaultPadding),

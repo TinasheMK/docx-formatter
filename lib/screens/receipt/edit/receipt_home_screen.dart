@@ -12,7 +12,7 @@ import '../../dashboard/components/side_menu.dart';
 
 import 'package:flutter/material.dart';
 
-import '../editCollect/receipt_screen.dart';
+import 'receipt_screen.dart';
 
 
 
@@ -57,21 +57,21 @@ class _ReceiptHomeScreenState extends State<ReceiptHomeScreen> with SingleTicker
 
     return Scaffold(
       //key: context.read<MenuController>().scaffoldKey,
-      drawer: SideMenu(),
+      // drawer: SideMenu(),
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // We want this side menu only for large screen
-            if (Responsive.isDesktop(context))
-              Expanded(
-                // default flex = 1
-                // and it takes 1/6 part of the screen
-                child: SideMenu(),
-              ),
+            // if (Responsive.isDesktop(context))
+            //   Expanded(
+            //     // default flex = 1
+            //     // and it takes 1/6 part of the screen
+            //     child: SideMenu(),
+            //   ),
             Expanded(
               // It takes 5/6 part of the screen
-              flex: 5,
+              // flex: 5,
               child: ReceiptScreen(title: widget.title, code: widget.code, invoiceId: widget.invoiceId),
             ),
           ],
