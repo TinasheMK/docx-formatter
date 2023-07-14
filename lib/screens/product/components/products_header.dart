@@ -38,6 +38,29 @@ class ProductsHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
+                  MaterialPageRoute(builder: (context) => ProductHome(title: 'Categories', code: 'invoice',)),
+                );
+
+
+              },
+              icon: Icon(Icons.add),
+              label: Text(
+                "Product",
+              ),
+            ),
+
+            ElevatedButton.icon(
+              style: TextButton.styleFrom(
+                backgroundColor: defaultColor,
+                padding: EdgeInsets.symmetric(
+                  horizontal: defaultPadding * 1.5,
+                  vertical:
+                  defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
                   MaterialPageRoute(builder: (context) => ProductHome(title: 'New Invoice', code: 'invoice',)),
                 );
 

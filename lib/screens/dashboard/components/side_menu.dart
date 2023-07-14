@@ -209,6 +209,16 @@ class SideMenu extends ConsumerWidget {
               },
             ),
             DrawerListTile(
+              title: "Orders",
+              svgSrc: "assets/icons/menu_task.svg",
+              press: () {
+                // Navigator.pushReplacement(context, newRoute)(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => TaxHomeScreen()),
+                // );
+              },
+            ),
+            DrawerListTile(
               title: "Products",
               svgSrc: "assets/icons/menu_store.svg",
               press: () {
@@ -253,7 +263,7 @@ class SideMenu extends ConsumerWidget {
 
 
                 Navigator.pop(context, true);
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Login(title: "You logged out.")),
                 );

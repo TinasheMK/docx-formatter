@@ -14,6 +14,7 @@ import '../../../core/models/InvoiceItem.dart';
 import '../../../core/models/Payment.dart';
 import '../../dashboard/components/mini_information_widget.dart';
 import '../components/receipt_header.dart';
+import '../components/tile.dart';
 import '../print/app.dart';
 import '../../../core/types/Memo.dart';
 import '../../../core/models/Client.dart';
@@ -513,11 +514,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            
             children: [
 
               Expanded(child: SearchField()),
-              SizedBox(width: 5,),
-              Expanded(child: SearchField()),
+
             ],
           ),
           SizedBox(height: 10,),
@@ -1087,7 +1088,13 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
               childAspectRatio: childAspectRatio,
             ),
             itemBuilder: (context, index) =>
-                MiniInformationWidget(dailyData: categories[index]),
+
+                GestureDetector(
+                  child: TileWidget(dailyData: categories[index]),
+                  onTap: (){
+                    print("I select category and refresh products to category with id :"+ index.toString());
+                  },
+                ),
           ),
           SizedBox(height: defaultPadding,),
           GridView.builder(
@@ -1101,7 +1108,12 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
               childAspectRatio: childAspectRatio,
             ),
             itemBuilder: (context, index) =>
-                MiniInformationWidget(dailyData: products[index]),
+                GestureDetector(
+                  child: TileWidget(dailyData: categories[index]),
+                  onTap: (){
+                    print("I add products to the receipt with id :"+ index.toString());
+                  },
+                ),
           ),
           SizedBox(height: defaultPadding,),
           GridView.builder(
@@ -1115,7 +1127,12 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
               childAspectRatio: childAspectRatio,
             ),
             itemBuilder: (context, index) =>
-                MiniInformationWidget(dailyData: posmenu[index]),
+                GestureDetector(
+                  child: TileWidget(dailyData: categories[index]),
+                  onTap: (){
+                    print("I await your command :"+ index.toString());
+                  },
+                ),
           ),
         ],
       ),

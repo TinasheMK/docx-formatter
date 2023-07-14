@@ -8,7 +8,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_admin_dashboard/core/models/Category.dart';
 import 'package:smart_admin_dashboard/core/models/Employee.dart';
+import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:smart_admin_dashboard/screens/product/products_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/profile/profiles_home_screen.dart';
@@ -41,6 +43,11 @@ class ProductScreen extends StatefulWidget {
 
 // class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> with SingleTickerProviderStateMixin {
+  var addCategory = true;
+
+  String name = "";
+  String desc = "";
+
 
 
   _ProductScreenState(int? this.profileId);
@@ -67,6 +74,8 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   Color currentColor = Colors.green;
 
   Product product = Product.fromJson({});
+  List<Category> categories = [Category.fromJson({})];
+
   String? imagePath;
 
   TextEditingController con1 = TextEditingController();
@@ -79,7 +88,9 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
 
   Future<void> _initproduct() async {
     if(profileId!=null) {
+      categories.clear();
       product = await getProduct(profileId!)??Product.fromJson({});
+      categories = await getCategorys();
       con1.text = product.name??"";
       con2.text = product.price?.toString() ?? "";
       con3.text = product.sku ?? "";
@@ -277,26 +288,280 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                 Expanded(
                   child:
                   Padding(
-                    padding: EdgeInsets.only(left: 5, right:5),
-                    child: InputWidget(
-                      topLabel: "Category",
-                      keyboardType: TextInputType.text,
-                      onSaved: (String? value) {
-                        // This optional block of code can be used to run
-                        // code when the user saves the form.
-                      },
-                      onChanged: (String? value) {
-                        // product!.category.name = value;
-                      },
-                      validator: (String? value) {
-                        return (value != null && value.contains('@'))
-                            ? 'Do not use the @ char.'
-                            : null;
-                      },
-                      kController: con5,
+                    padding: EdgeInsets.only(left: 5, right:5, top: 20),
+                    child:                         Row(
+                        children:[
+                          Text( "Category:            ", style: TextStyle(fontWeight: FontWeight.bold ),
+                          ),
+                          product.category != null ? Container(
+                            // margin: EdgeInsets.only(left: defaultPadding),
+                            // padding: EdgeInsets.symmetric(
+                            //   horizontal: defaultPadding /4,
+                            //   vertical: defaultPadding / 5,
+                            // ),
+                            decoration: BoxDecoration(
+                              color: secondaryColor,
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              border: Border.all(color: Colors.white10),
+                            ),
+                            child: TextButton(
+                              child: Text(product.category!.name!),
+                              onPressed: ()  {
 
 
-                      // prefixIcon: FlutterIcons.chevron_left_fea,
+                                if(true){
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) {
+                                        return AlertDialog(
+                                            content: Container(
+                                              color: secondaryColor,
+                                              height: 410,
+                                              child: Column(
+                                                children:
+                                                List.generate(
+                                                    categories.length,
+                                                        (index) =>
+
+
+                                                        Container(
+                                                          margin: EdgeInsets.only(bottom: defaultPadding),
+                                                          // padding: EdgeInsets.symmetric(
+                                                          //   horizontal: defaultPadding,
+                                                          //   vertical: defaultPadding / 2,
+                                                          // ),
+                                                          decoration: BoxDecoration(
+                                                            color: secondaryColor,
+                                                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                            border: Border.all(color: Colors.white10),
+                                                          ),
+                                                          child: TextButton(
+                                                            child: Text(categories[index].id.toString()??''),
+                                                            onPressed: () {
+                                                              product.categoryId = categories[index].id;
+                                                              product.category = categories[index];
+                                                              setState(() {});
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            // Delete
+                                                          ),
+
+                                                        )
+                                                ),
+
+
+                                              ),
+                                            ));
+                                      });
+                                }
+
+
+
+
+
+
+                              },
+                              // Delete
+                            ),
+
+                          ):ElevatedButton.icon(
+                            icon: Icon(
+                              Icons.flag,
+                              size: 14,
+                            ),
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
+                                primary: Colors.blueAccent),
+                            label: Text(product.category?.id.toString()! ?? "Select Category"),
+
+                            onPressed: () {
+
+                              showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                    return AlertDialog(
+                                        content: Container(
+                                          // color: secondaryColor,
+                                          // height: (60*currencies.length).toDouble(),
+                                          child: Column(
+                                            children: [
+                                              SingleChildScrollView(
+                                                child: Column(
+                                                  children:
+                                                  List.generate(
+                                                      categories.length,
+                                                          (index) =>
+
+
+                                                          Container(
+                                                            margin: EdgeInsets.only(bottom: 5),
+                                                            // padding: EdgeInsets.symmetric(
+                                                            //   horizontal: defaultPadding,
+                                                            //   vertical: defaultPadding / 2,
+                                                            // ),
+                                                            decoration: BoxDecoration(
+                                                              // color: secondaryColor,
+                                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                              border: Border.all(),
+                                                            ),
+                                                            child: TextButton(
+                                                              child: Text(categories[index].name??''),
+                                                              onPressed: () {
+                                                                product.categoryId = categories[index].id;
+                                                                product.category = categories[index];
+                                                                setState(() {});
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                              // Delete
+                                                            ),
+
+                                                          )
+                                                  ),
+
+
+                                                ),
+                                              ),
+                                              addCategory ? Container(
+                                                padding: EdgeInsets.all(defaultPadding),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: darkgreenColor,
+                                                  ),
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10)),),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(height: 3),
+                                                    SizedBox(width: 300,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+
+                                                        children: [
+                                                          Expanded(
+                                                            child:
+                                                            Row(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children:[
+                                                                  Text( "Category Name:          ",
+                                                                    style: TextStyle(fontWeight: FontWeight.bold ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80,
+                                                                    child: TextFormField(
+                                                                      onChanged: (String value){
+                                                                        name = value;
+                                                                      },
+
+
+                                                                    ),
+                                                                  )
+                                                                ]
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),),
+
+
+                                                    SizedBox(height: 3),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+
+                                                      children: [
+                                                        Expanded(
+                                                          child:
+                                                          Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children:[
+                                                                Text( "Description:          ", style: TextStyle(fontWeight: FontWeight.bold ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 80,
+                                                                  child: TextFormField(
+                                                                    onChanged: (String value){
+                                                                      desc = value;
+                                                                    },
+
+
+                                                                  ),
+                                                                )
+                                                              ]
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 15),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(width: 15),
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                            style: TextButton.styleFrom(
+                                                              backgroundColor: Colors.redAccent,
+                                                              padding: EdgeInsets.symmetric(
+                                                                horizontal: defaultPadding * 1.5,
+                                                                vertical:
+                                                                defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                                              ),
+                                                            ),
+                                                            onPressed: () async {
+                                                              addCategory = false;
+                                                              categories = await getCategorys();
+
+                                                              setState(() {
+                                                              });
+
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            // icon: Icon(Icons.cancel),
+                                                            child: Text(
+                                                              "Cancel",
+                                                            ),
+                                                          ),),
+                                                        SizedBox(width: 15),
+                                                        Expanded(child: ElevatedButton.icon(
+                                                          style: TextButton.styleFrom(
+                                                            backgroundColor: Colors.green,
+                                                            padding: EdgeInsets.symmetric(
+                                                              horizontal: defaultPadding * 1.5,
+                                                              vertical:
+                                                              defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                                            ),
+                                                          ),
+                                                          onPressed: () async {
+                                                            Category newCategory = Category(name: name, description: desc);
+                                                            newCategory.save();
+
+                                                            addCategory = false;
+                                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                              content: Text("Category Added"),
+                                                            ));
+                                                            categories = await getCategorys();
+                                                            setState(() { });
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          icon: Icon(Icons.add),
+                                                          label: Text(
+                                                            "Add",
+                                                          ),
+                                                        ),),
+                                                        SizedBox(width: 15),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 15),
+                                                  ],
+                                                ),
+                                              ): SizedBox(),
+                                            ],
+                                          ),
+                                        ));
+                                  });
+                            },),
+
+
+                        ]
                     ),
                   ),
                 ),

@@ -70,7 +70,7 @@ class Category {
   }
 
 
-  Future<int> saveAndAttach() async {
+  Future<int> save() async {
     debugPrint('adding   category');
     if(this.id==null && this.universalId!=null ) {
       Category existing = await getCategoryByUni(this.universalId!);
@@ -220,7 +220,7 @@ class Category {
 }
 
 //Get invoice items for invoice
-Future<List<Category>> getCategorys(int id) async {
+Future<List<Category>> getCategorys() async {
   final maps = await dbHelper.softQueryAllRows("category");
 
   return List.generate(maps.length, (i) {
@@ -241,6 +241,21 @@ Future<List<Category>> getCategorys(int id) async {
 }
 
 
+Future<Category> getCategory(int id, {bool? copy}) async {
+  final maps = await dbHelper.findById("category", id);
+  return Category(
+    id : maps?['id'],
+    name : maps?['name'],
+    description : maps?['description'],
+    universalId : maps?["universal_id"],
+    isSynced : maps?["is_synced"]==1?true:false,
+    originId : maps?["origin_id"],
+    version : maps?["version"],
+    isConfirmed : maps?["is_confirmed"]==1?true:false,
+
+  );
+
+}
 Future<Category> getCategoryByUni(int id, {bool? copy}) async {
   final maps = await dbHelper.findByIdUni("category", id);
   return Category(

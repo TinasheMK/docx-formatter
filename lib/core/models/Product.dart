@@ -337,6 +337,7 @@ Future<List<Product>> searchProducts(String query) async {
 
 Future<Product?> getProduct(int id) async {
   var maps = await dbHelper.findById("product", id);
+  Category cat = await getCategory(maps?['category_id']);
 
     return Product(
       id : maps?['id'],
@@ -344,8 +345,9 @@ Future<Product?> getProduct(int id) async {
       price : maps?['price'],
       sku : maps?['sku'],
       stock : maps?['stock'],
-      categoryId : maps?['categoryId'],
-      businessId : maps?['businessId'],
+      categoryId : maps?['category_id'],
+      businessId : maps?['business_id'],
+      category: cat
 
     );
 

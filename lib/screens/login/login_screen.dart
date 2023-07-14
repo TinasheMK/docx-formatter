@@ -114,7 +114,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       fit: StackFit.loose,
                                       clipBehavior: Clip.none,
                                       children: [
-                                        LoginListener(),
+                                        Padding(padding: EdgeInsets.all(10),
+                                        child: LoginListener(),),
                                       ]),
                                 )
                               ],
@@ -309,7 +310,8 @@ class _loginScreen extends ConsumerWidget {
               ),
             ),),
             SizedBox(height: 24.0),
-            Row(
+            Padding(padding: EdgeInsets.all(10),
+            child:Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Row(
@@ -351,7 +353,7 @@ class _loginScreen extends ConsumerWidget {
                 ),
                 // SizedBox(width: 10,)
               ],
-            ),
+            ),),
             SizedBox(height: 20.0),
             Center(
               child: Wrap(

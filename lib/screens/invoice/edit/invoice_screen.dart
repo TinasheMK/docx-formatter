@@ -1583,10 +1583,10 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
   }
 
   DataRow _recentUserDataRow( InvoiceItem item, int index, BuildContext context) {
-    myController[index][0].text = item.units?.toString() ?? "";
-    myController[index][1].text = item.description?.toString() ?? "";
-    myController[index][2].text = item.unitPrice?.toString() ?? "";
-    myController[index][3].text = item.total?.toString() ?? "";
+    if(item.units!=null)myController[index][0].text = item.units.toString();
+    if(item.description!=null)myController[index][1].text = item.description!  ;
+    if(item.unitPrice!=null && item.unitPrice!=0.0)myController[index][2].text = item.unitPrice.toString();
+    if(item.total!=null)myController[index][3].text = item.total.toString() ;
     return DataRow(
       cells: [
         DataCell(
@@ -1653,21 +1653,32 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
 
                 controller: myController[index][2],
                 onChanged: (String value){
-                  invoice!.invoiceItems![index].unitPrice =  double.parse(value) ;
-                  invoice!.invoiceItems![index].total =  double.parse(value) * (invoice!.invoiceItems![index].units!=null ? invoice!.invoiceItems![index].units!:1);
-                  // print(invoice!.invoiceItems![index].toJson());
+                  if(value!="." || value!="" || value!=null) {
+                    print("This is the value: "+value);
+                    invoice!.invoiceItems![index].unitPrice =
+                        double.parse(value);
+                    if(invoice!.invoiceItems![index].units == null) {
+                      myController[index][0].text = "1";
+                    }
 
-                  var total = 0.0;
-                  invoice!.invoiceItems!.forEach((e) {
-                    if(e.total==null){e.total = 0;}
-                    total+=e.total!;
-                  });
+                    invoice!.invoiceItems![index].total = double.parse(value) *
+                        (invoice!.invoiceItems![index].units != null ? invoice!
+                            .invoiceItems![index].units! : 1);
+                    // print(invoice!.invoiceItems![index].toJson());
 
-                  invoice.subTotalAmount = total;
+                    var total = 0.0;
+                    invoice!.invoiceItems!.forEach((e) {
+                      if (e.total == null) {
+                        e.total = 0;
+                      }
+                      total += e.total!;
+                    });
 
-                  myController[index][3].text = invoice!.invoiceItems![index].total.toString();
+                    invoice.subTotalAmount = total;
 
-
+                    myController[index][3].text =
+                        invoice!.invoiceItems![index].total.toString();
+                  }
 
                 },
 

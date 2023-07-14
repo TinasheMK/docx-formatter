@@ -436,7 +436,8 @@ class _InvoicesListState extends State<InvoicesList> {
     return DataRow(
       cells: [
         DataCell(Text(userInfo.id.toString()!)),
-        DataCell(Container(
+        DataCell(
+            Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: getRoleColor(userInfo.client.toString()).withOpacity(.2),
@@ -444,7 +445,8 @@ class _InvoicesListState extends State<InvoicesList> {
               borderRadius: BorderRadius.all(Radius.circular(5.0) //
               ),
             ),
-            child: Text(userInfo.client != null ? userInfo.client!.name??"" : ""))),
+            child: Text(userInfo.client != null ? userInfo.client!.name??"" : ""))
+        ),
         DataCell(Text(userInfo.invoiceDate.toString().split(" ")[0])),
         DataCell(Text(userInfo.totalAmount.toString())),
         DataCell(Row(
