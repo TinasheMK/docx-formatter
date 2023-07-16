@@ -3,6 +3,9 @@ import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_admin_dashboard/screens/quote/quotes_home_screen.dart';
+import 'package:smart_admin_dashboard/screens/quote/quotes_screen.dart';
+import 'package:smart_admin_dashboard/screens/receipt/receipts_home_screen.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../../client/clients_home_screen.dart';
@@ -57,14 +60,13 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     if(widget.dailyData.code == 'newin') {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => InvoiceHome(title: 'New Invoice', code: 'invoice',)),
+                        MaterialPageRoute(builder: (context) => QuotesHomeScreen()),
                       );
                     }else if(widget.dailyData.code == 'newclie'){
-                      Navigator.of(context).push(new MaterialPageRoute<Null>(
-                          builder: (BuildContext context) {
-                            return new ClientHome(title: "New Client", code: "client");
-                          },
-                          fullscreenDialog: true));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ReceiptsHomeScreen()),
+                      );
                     }else if(widget.dailyData.code == 'clients'){
                       Navigator.push(
                         context,

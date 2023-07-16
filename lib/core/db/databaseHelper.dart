@@ -143,7 +143,8 @@ class DatabaseHelper {
             published BIT ,
             notes TEXT ,
             currency TEXT ,
-            invoice_date TEXT ,
+            invoice_date TEXT,
+            invoice_type TEXT NOT NULL,
             due_date TEXT,
             business_id INTEGER NOT NULL,
             invoice_status TEXT,
@@ -362,14 +363,14 @@ class DatabaseHelper {
   }
 
 
-  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table, String dateSort, {String? invoiceStatus, String? clientId}) async {
+  Future<List<Map<String, dynamic>>> queryFilteredInvoices(String table,String type, String dateSort, {String? invoiceStatus, String? clientId}) async {
     return invoiceStatus != null && clientId != null
-        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "invoice_status = '${invoiceStatus}' and client_id = '${clientId}'"  )
+        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "invoice_status = '${invoiceStatus}' and client_id = '${clientId}' and invoice_type = '${type}'"  )
         :  invoiceStatus != null
-        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "invoice_status = '${invoiceStatus}'"  )
+        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "invoice_status = '${invoiceStatus}' and invoice_type = '${type}'"  )
         :  clientId != null
-        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "client_id = '${clientId}'"  )
-        : await _db.query(table,orderBy: 'invoice_date ${dateSort}');
+        ?  await _db.query(table,orderBy: 'invoice_date ${dateSort}' , where: "client_id = '${clientId}' and invoice_type = '${type}'"  )
+        : await _db.query(table,orderBy: 'invoice_date ${dateSort}', where: "invoice_type = '${type}'");
   }
 
   Future<List<Map<String, dynamic>>>  getReadyForSyc(table) async {

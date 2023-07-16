@@ -6,7 +6,7 @@ import 'package:smart_admin_dashboard/screens/quote/quotes_screen.dart';
 
 import '../dashboard/components/side_menu.dart';
 
-class QuoteHomeScreen extends StatelessWidget {
+class QuotesHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

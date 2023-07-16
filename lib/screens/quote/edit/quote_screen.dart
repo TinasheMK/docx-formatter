@@ -12,6 +12,7 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/models/InvoiceItem.dart';
 import '../../../core/models/Payment.dart';
+import '../../invoice/edit/invoice_home_screen.dart';
 import '../print/app.dart';
 import '../../../core/types/Memo.dart';
 import '../../../core/models/Client.dart';
@@ -187,7 +188,7 @@ class _QuoteScreenState extends State<QuoteScreen> with SingleTickerProviderStat
       invoice.dueDate = dateFormat.format(DateTime.now().add(const Duration(days: 7))) ;
     }
     if(invoice.invoiceItems == null) {
-      invoice.invoiceItems = [InvoiceItem.fromJson({})];
+      invoice.invoiceItems = [];
     }
     if(invoice.payments == null) {
       invoice.payments= [Payment.fromJson({})];
@@ -333,7 +334,6 @@ class _QuoteScreenState extends State<QuoteScreen> with SingleTickerProviderStat
 
     Future<Invoice?> saveInvoice() async {
 
-      var state = 0;
       if(invoice.client?.id == null){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Please select or add a client."),
@@ -346,7 +346,14 @@ class _QuoteScreenState extends State<QuoteScreen> with SingleTickerProviderStat
         ));
         return null;
       }
+      if(invoice.invoiceItems!.isEmpty ){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Please add billable items"),
+        ));
+        return null;
+      }
 
+      if(invoice.invoiceType==null)invoice.invoiceType = 'QUOTATION';
       invoice.totalAmount = invoice.subTotalAmount;
       invoice.clientId = invoice.client?.id;
       invoice.businessId = invoice.business?.id;
@@ -1001,41 +1008,30 @@ class _QuoteScreenState extends State<QuoteScreen> with SingleTickerProviderStat
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  // type: ButtonType.PRIMARY,
-                  child: Text("Print Quote"),
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
                   onPressed: () async {
 
                     var inv =  await saveInvoice();
+                    if(inv!=null){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PdfInvoice(invoice: inv ?? invoice,)),
+                      );
+                    }
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PdfInvoice(invoice: inv ?? invoice,)),
-                    );
-                    //
-                    // if(invoice.id == null){
-                    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //     content: Text("Please save the invoice first"),
-                    //   ));
-                    //   return;
-                    // }
-                    // // var response = await invoiceGenerator(invoice);
-                    //
-                    // _generatePDF();
-                    // var _model = ImageModel();
-                    // _model.requestFilePermission();
-                    // // OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
-                    // invoicePath = "/storage/emulated/0/Documents/Invoices/";
-                    // invoiceName = 'Invoice_'+invoice.id.toString()+'.pdf';
-                    // var res = await OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice_'+invoice.id.toString()+'.pdf');
-                    // print(res.message);
-                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //   content: Text("Invoice printed. Check documents/invoices folder."),
-                    // ));
-                    // setState(() {
-                    //
-                    // });
                   },
+                  icon: Icon(Icons.document_scanner),
+                  label: Text(
+                    "Print Quote",
+                  ),
                 ),
                 SizedBox(width: 10,),
                 ElevatedButton.icon(
@@ -1053,7 +1049,7 @@ class _QuoteScreenState extends State<QuoteScreen> with SingleTickerProviderStat
 
 
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Invoice saved"),
+                      content: Text("Quotation saved"),
                     ));
 
                     setState(() {
@@ -1069,8 +1065,43 @@ class _QuoteScreenState extends State<QuoteScreen> with SingleTickerProviderStat
 
               ],
             ),
-            SizedBox(height: 15.0),
+            SizedBox(height: 75.0),
+            ElevatedButton.icon(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.orange,
+                padding: EdgeInsets.symmetric(
+                  horizontal: defaultPadding * 1.5,
+                  vertical:
+                  defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                ),
+              ),
+              onPressed: () async {
+                invoice.invoiceType = 'INVOICE';
+                var inv = await saveInvoice();
+                if(inv !=null){
 
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Quotation converted"),
+                  ));
+
+                  Navigator.of(context).push(new MaterialPageRoute<Null>(
+                      builder: (BuildContext context) {
+                        return new InvoiceHome(title: "Edit Invoice: ${inv.id}", code: "edit", invoiceId: inv.id );
+                      },
+                      fullscreenDialog: true));
+                }
+
+
+                setState(() {
+
+                });
+
+              },
+              icon: Icon(Icons.change_circle),
+              label: Text(
+                "Convert to invoice",
+              ),
+            ),
 
             SizedBox(height: 5,),
 

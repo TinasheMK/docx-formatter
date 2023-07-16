@@ -281,18 +281,18 @@ class LocalInvoice {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: baseColor,
+                    // color: baseColor,
                   ),),
                 Text(
                   'Invoice Date: 3 July 2023',
                   style: TextStyle(
-                    color: baseColor,
+                    // color: baseColor,
                     fontStyle: FontStyle.italic,
                   ),),
                 Text(
                   'Due Date: 17 July 2023',
                   style: TextStyle(
-                    color: baseColor,
+                    // color: baseColor,
                     fontStyle: FontStyle.italic,
                   ),),
                 SizedBox(height: 10),
@@ -301,16 +301,16 @@ class LocalInvoice {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: baseColor,
+                    // color: baseColor,
                   ),),
                 Text(customerName,
                   style: TextStyle(
-                    color: baseColor,
+                    // color: baseColor,
                     fontStyle: FontStyle.italic,
                   ),),
                 Text(customerAddress,
                   style: TextStyle(
-                    color: baseColor,
+                    // color: baseColor,
                     fontStyle: FontStyle.italic,
                   ),),
               ]

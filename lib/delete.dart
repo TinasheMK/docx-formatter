@@ -37,6 +37,7 @@ class _CountryFormFieldState extends State<CountryFormField>
   OverlayEntry _createOverlay() {
     RenderBox renderBox = context.findRenderObject() as RenderBox;
 
+    print("I was called");
     var size = renderBox.size;
     return OverlayEntry(
         builder: (context) => Positioned(

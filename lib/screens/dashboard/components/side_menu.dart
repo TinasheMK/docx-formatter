@@ -194,7 +194,7 @@ class SideMenu extends ConsumerWidget {
               press: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => QuoteHomeScreen()),
+                  MaterialPageRoute(builder: (context) => QuotesHomeScreen()),
                 );
               },
             ),

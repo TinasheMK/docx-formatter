@@ -187,7 +187,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
       invoice.dueDate = dateFormat.format(DateTime.now().add(const Duration(days: 7))) ;
     }
     if(invoice.invoiceItems == null) {
-      invoice.invoiceItems = [InvoiceItem.fromJson({})];
+      invoice.invoiceItems = [];
     }
     if(invoice.payments == null) {
       invoice.payments= [Payment.fromJson({})];
@@ -346,7 +346,14 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
         ));
         return null;
       }
+      if(invoice.invoiceItems!.isEmpty ){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Please add billable items"),
+        ));
+        return null;
+      }
 
+      invoice.invoiceType = 'INVOICE';
       invoice.totalAmount = invoice.subTotalAmount;
       invoice.clientId = invoice.client?.id;
       invoice.businessId = invoice.business?.id;
@@ -449,51 +456,51 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                   ),
 
                 ),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: defaultColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
-                  ),
-                  onPressed: () {
-
-                    if(invoice.client?.id == null){
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Please select or add a client."),
-                      ));
-                      return;
-                    }
-                    if(invoice.business == null){
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Please select or add your business details in profile."),
-                      ));
-                      return;
-                    }
-
-                    invoice.invoiceStatus = 'UNPAID';
-                    invoice.isSynced = false;
-                    invoice.save();
-
-
-
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Invoice Published'),
-                    ));
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
-                    );
-
-                  },
-                  icon: Icon(Icons.send),
-                  label: Text(
-                    "Publish",
-                  ),
-                ),
+                // ElevatedButton.icon(
+                //   style: TextButton.styleFrom(
+                //     backgroundColor: defaultColor,
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: defaultPadding * 1.5,
+                //       vertical:
+                //       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                //     ),
+                //   ),
+                //   onPressed: () {
+                //
+                //     if(invoice.client?.id == null){
+                //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //         content: Text("Please select or add a client."),
+                //       ));
+                //       return;
+                //     }
+                //     if(invoice.business == null){
+                //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //         content: Text("Please select or add your business details in profile."),
+                //       ));
+                //       return;
+                //     }
+                //
+                //     invoice.invoiceStatus = 'UNPAID';
+                //     invoice.isSynced = false;
+                //     invoice.save();
+                //
+                //
+                //
+                //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //       content: Text('Invoice Published'),
+                //     ));
+                //
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                //     );
+                //
+                //   },
+                //   icon: Icon(Icons.send),
+                //   label: Text(
+                //     "Publish",
+                //   ),
+                // ),
               ],
             ),
 
@@ -1180,6 +1187,45 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     setState(() {
 
                     });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    );
+
+                  },
+                  icon: Icon(Icons.save),
+                  label: Text(
+                    "Save Draft",
+                  ),
+                ),
+                SizedBox(width: 15,),
+
+                ElevatedButton.icon(
+                  style: TextButton.styleFrom(
+                    backgroundColor: defaultColor,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: defaultPadding * 1.5,
+                      vertical:
+                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    ),
+                  ),
+                  onPressed: () async {
+
+                    invoice.invoiceStatus = "UNPAID";
+                    await saveInvoice();
+
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Invoice saved"),
+                    ));
+
+                    setState(() {
+
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterHomeScreen()),
+                    );
 
                   },
                   icon: Icon(Icons.save),
@@ -1187,44 +1233,41 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                     "Save",
                   ),
                 ),
-                SizedBox(width: 15,),
-
-
-                Container(
-                  // margin: EdgeInsets.only(left: defaultPadding),
-                  // padding: EdgeInsets.symmetric(
-                  //   horizontal: defaultPadding,
-                  //   vertical: defaultPadding / 16,
-                  // ),
-                  decoration: BoxDecoration(
-                    color: secondaryColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    border: Border.all(color: Colors.white10),
-                  ),
-                  child: TextButton(
-                    child: Text("Add Payment" ),
-                    onPressed: () {
-                      if(invoice.invoiceStatus == 'PAID'){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Invoice already paid."),
-                        ));
-                      }else {
-                        addPayment = true;
-                      }
-                      setState(() {
-
-                      });
-
-                    },
-                    // Delete
-                  ),
-
-                ),
-
 
               ],
             ),
             SizedBox(height: 15.0),
+            Container(
+              // margin: EdgeInsets.only(left: defaultPadding),
+              // padding: EdgeInsets.symmetric(
+              //   horizontal: defaultPadding,
+              //   vertical: defaultPadding / 16,
+              // ),
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: TextButton(
+                child: Text("Add Payment" ),
+                onPressed: () {
+                  if(invoice.invoiceStatus == 'PAID'){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Invoice already paid."),
+                    ));
+                  }else {
+                    addPayment = true;
+                  }
+                  setState(() {
+
+                  });
+
+                },
+                // Delete
+              ),
+
+            ),
+            SizedBox(height: 10.0),
 
             addPayment ? Container(
               padding: EdgeInsets.all(defaultPadding),
@@ -1474,41 +1517,30 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
               child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children:[
-                    ElevatedButton(
-                      // type: ButtonType.PRIMARY,
-                      child: Text("Print Invoice"),
+                    ElevatedButton.icon(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: defaultPadding * 1.5,
+                          vertical:
+                          defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                        ),
+                      ),
                       onPressed: () async {
 
                         var inv =  await saveInvoice();
+                        if(inv!=null){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PdfInvoice(invoice: inv ?? invoice,)),
+                          );
+                        }
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PdfInvoice(invoice: inv ?? invoice,)),
-                        );
-                        //
-                        // if(invoice.id == null){
-                        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        //     content: Text("Please save the invoice first"),
-                        //   ));
-                        //   return;
-                        // }
-                        // // var response = await invoiceGenerator(invoice);
-                        //
-                        // _generatePDF();
-                        // var _model = ImageModel();
-                        // _model.requestFilePermission();
-                        // // OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice.pdf');
-                        // invoicePath = "/storage/emulated/0/Documents/Invoices/";
-                        // invoiceName = 'Invoice_'+invoice.id.toString()+'.pdf';
-                        // var res = await OpenFile.open('/storage/emulated/0/Documents/Invoices/Invoice_'+invoice.id.toString()+'.pdf');
-                        // print(res.message);
-                        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        //   content: Text("Invoice printed. Check documents/invoices folder."),
-                        // ));
-                        // setState(() {
-                        //
-                        // });
                       },
+                      icon: Icon(Icons.document_scanner),
+                      label: Text(
+                        "Save & Print Invoice",
+                      ),
                     ),
 
                     if(invoicePath!=null&&invoiceName!=null)

@@ -45,7 +45,7 @@ Future<Uint8List> generateInvoice(
     double green1 = green*1.7>=1?1 : green*1;
     double blue1 = blue*1.7>=1?1 : blue*1;
 
-    accent = PdfColor(red*0.3, green*0.3, blue*0.3);
+    accent = PdfColor(red*0.5, green*0.5, blue*0.5);
     lightAccent = PdfColor(red1, green1, blue1);
   }else{
     mainColor = PdfColors.teal;
@@ -178,7 +178,7 @@ class LocalInvoice {
                     child: Text(
                       'INVOICE',
                       style: TextStyle(
-                        color: baseColor,
+                        // color: accentColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 40,
                       ),
@@ -188,7 +188,7 @@ class LocalInvoice {
                     decoration: BoxDecoration(
                       borderRadius:
                           const BorderRadius.all(Radius.circular(2)),
-                      color: accentColor,
+                      color: baseColor,
                     ),
                     padding: const EdgeInsets.only(
                         left: 40, top: 10, bottom: 10, right: 20),
@@ -196,7 +196,7 @@ class LocalInvoice {
                     height: 50,
                     child: DefaultTextStyle(
                       style: TextStyle(
-                        color: _accentTextColor,
+                        color: PdfColors.white,
                         fontSize: 12,
                       ),
                       child: GridView(
@@ -291,7 +291,7 @@ class LocalInvoice {
               child: Text(
                 'Total: ${_formatCurrency(_grandTotal)}',
                 style: TextStyle(
-                  color: baseColor,
+                  // color: baseColor,
                   fontStyle: FontStyle.italic,
                 ),
               ),
@@ -502,7 +502,7 @@ class LocalInvoice {
         4: Alignment.centerRight,
       },
       headerStyle: TextStyle(
-        color: _baseTextColor,
+        color: PdfColors.white,
         fontSize: 10,
         fontWeight: FontWeight.bold,
       ),

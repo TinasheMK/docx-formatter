@@ -53,113 +53,38 @@ class ReceiptScreen extends StatefulWidget {
 }
 
 // class ReceiptScreen extends StatefulWidget {
-class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProviderStateMixin {
+class _ReceiptScreenState extends State<ReceiptScreen> with  TickerProviderStateMixin {
   DateTime payDate = DateTime.now();
   var paymentAmount;
-
-
   bool addPayment = false;
-
-
-
   _ReceiptScreenState(int? this.invoiceId);
   int? invoiceId;
-
-
-  var _isMoved = false;
-
-
   bool isChecked = false;
-
-  int _value = 1;
-
-  int _directors = 2;
-
   List persons = [];
   List original = [];
   DateFormat dateTimeFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
   List<Client> directors = [];
-
-
   TextEditingController txtQuery = new TextEditingController();
-
-
-  // late String country;
-  // String generatorResp = "";
-  // late String city;
-  // String street = "";
-  // String name = "";
   String memoItems = '';
-
-
-  void search(String query) {
-    if (query.isEmpty) {
-      persons = original;
-      setState(() {});
-      return;
-    }
-
-    query = query.toLowerCase();
-    // print(query);
-    List result = [];
-    persons.forEach((p) {
-      var name = p["name"].toString().toLowerCase();
-      if (name.contains(query)) {
-        result.add(p);
-      }
-    });
-
-    persons = result;
-    setState(() {});
-  }
-
-
-  void deleteRow(int index) {
-      invoice!.invoiceItems!.removeAt(index);
-      myController.removeAt(index);
-      print("Deleting at index:");
-      print(index);
-      setState(() {
-
-      });
-  }
-
-  void deletePayRow(int index) {
-    invoice!.payments!.removeAt(index);
-    print("Deleting at index:");
-    setState(() {
-
-    });
-  }
-
-
-  List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
-
-    int crossAxisCount = 2;
-
-    double childAspectRatio =2;
-  late String _dateCount;
-  late String _range;
-
-
-  @override
-  void dispose() {
-    myController.forEach((e) {
-      e.forEach((a) {
-        a.dispose();
-      });
-
-    });
-    super.dispose();
-  }
-
+  List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]];
+  int crossAxisCount = 2;
+  double childAspectRatio =2;
   List<Business> companies = [Business.fromJson({})];
+  List<Client> clients = [Client.fromJson({})];
   List<Currency> currencies = [Currency.fromJson({})];
-
   Invoice invoice = Invoice.fromJson({});
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   List<Category> categories = [Category.fromJson({})];
   List<Product> products = [Product.fromJson({})];
+  List<Product> productsSearch = [];
+
+  final FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  OverlayEntry? _overlayEntry;
+  GlobalKey globalKey = GlobalKey();
+  final LayerLink _layerLink = LayerLink();
+  final LayerLink _layerLink2 = LayerLink();
+  OverlayState? overlayState;
 
   Future<void> _initInvoice() async {
     categories = await getCategorys();
@@ -184,13 +109,6 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
     }else{
       invoice = Invoice.fromJson({});
 
-      var activeClient = await prefs!.getInt(UserPreference.activeClient);
-      if(activeClient !=null) {
-        invoice.client = await getClient(activeClient);
-      }else{
-        invoice.client = Client.fromJson({});
-      }
-
       invoice.invoiceStatus = 'DRAFT';
 
       invoice.invoiceDate = dateFormat.format(DateTime.now());
@@ -210,6 +128,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
 
 
     companies = await getBusinesss();
+    clients = await getClients();
     currencies = await getCurrencys();
 
     var activeCurrency = await prefs!.getString(UserPreference.activeCurrency);
@@ -223,34 +142,222 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
       invoice;
     });
   }
+  void deleteRow(int index) {
+      invoice!.invoiceItems!.removeAt(index);
+      myController.removeAt(index);
+      print("Deleting at index:");
+      print(index);
+      setState(() {
+
+      });
+  }
+  void deletePayRow(int index) {
+    invoice!.payments!.removeAt(index);
+    print("Deleting at index:");
+    setState(() {
+
+    });
+  }
+  void _printLatestValue() {
+    myController.forEach((e) {
+      e.forEach((a) {
+      });
+    });
+  }
+  OverlayEntry _createOverlay() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+
+    var size = renderBox.size;
+    return OverlayEntry(
+        builder: (context) => Positioned(
+          width: Responsive.isMobile(context) ? ((MediaQuery.of(context).size.width )-26) : ((MediaQuery.of(context).size.width /2)-26),
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: Offset(0.0,  55.0),
+            child: Material(
+              elevation: 5.0,
+              child:
+                  Column(
+                    children: [
+                      SizedBox(height: 15,),
+                      ElevatedButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: defaultPadding * 1.5,
+                            vertical:
+                            defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                          ),
+                        ),
+                        onPressed: () {
+                          _overlayEntry?.remove();
+                          _overlayEntry=null;
 
 
+                        },
+                        icon: Icon(Icons.cancel),
+                        label: Text(
+                          "Cancel",
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: clients.isEmpty? Text("No client with these details was found."):Column(
+                          children: List.generate(
+                              clients.length,
+                                  (index) => GestureDetector(
+                                child:  ListTile(
+                                  title: Text(clients[index].name!),
+                                ),
+                                onTap: (){
+                                  invoice.client = clients[index];
+                                  print("Tapping has occured");
+                                  _overlayEntry?.remove();
+                                  _overlayEntry=null;
+                                  setState(() {
+                                  });
+                                },
+                              )),
+                        ),
+                      ),
+                    ],
+                  )
+                  ),
+
+            ),
+          ),
+        );
+  }
+  OverlayEntry _createOverlay2() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    print('i have  been  summoned ');
+    var size = renderBox.size;
+    return OverlayEntry(
+        builder: (context) => Positioned(
+          width: Responsive.isMobile(context) ? ((MediaQuery.of(context).size.width )-26) : ((MediaQuery.of(context).size.width /2)-26),
+          child: CompositedTransformFollower(
+            link: _layerLink2,
+            showWhenUnlinked: false,
+            offset: Offset(0.0,  55.0),
+            child: Material(
+              elevation: 5.0,
+              child:
+                  Column(
+                    children: [
+                      SizedBox(height: 15,),
+                      ElevatedButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: defaultPadding * 1.5,
+                            vertical:
+                            defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                          ),
+                        ),
+                        onPressed: () {
+                          _overlayEntry?.remove();
+                          _overlayEntry=null;
 
 
+                        },
+                        icon: Icon(Icons.cancel),
+                        label: Text(
+                          "Cancel",
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: productsSearch.isEmpty? Text("No product found."):Column(
+                          children: List.generate(
+                              productsSearch!.length,
+                                  (index) => GestureDetector(
+                                child:  ListTile(
+                                  title: Text(productsSearch[index].name!),
+                                ),
+                                onTap: (){
+                                  InvoiceItem invoiceItem = new InvoiceItem(units: 1 ,unitPrice:products[index].price , description:products[index].name??"", total: products[index].price );
+                                  if(invoice!.invoiceItems == null) {
+                                    invoice!.invoiceItems = [invoiceItem];
+                                  }else{
+                                    invoice!.invoiceItems!.add(invoiceItem);
+                                  }
+                                  myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
 
+                                  print("Tapping has occured");
+                                  _overlayEntry?.remove();
+                                  _overlayEntry=null;
+                                  setState(() {
+                                  });
+                                },
+                              )),
+                        ),
+                      ),
+                    ],
+                  )
+                  ),
+
+            ),
+          ),
+        );
+  }
+  resetOverlay(asycClients){
+    if (_focusNode.hasFocus) {
+      _overlayEntry?.remove();
+      _overlayEntry=null;
+      _overlayEntry = _createOverlay();
+      overlayState!.insert(_overlayEntry!);
+    } else {
+      _overlayEntry?.remove();
+      _overlayEntry=null;
+    }
+  }
+
+  resetOverlay2(asycClients){
+    if (_focusNode2.hasFocus) {
+      _overlayEntry?.remove();
+      _overlayEntry=null;
+      _overlayEntry = _createOverlay2();
+      overlayState!.insert(_overlayEntry!);
+    } else {
+      _overlayEntry?.remove();
+      _overlayEntry=null;
+    }
+  }
 
   @override
+  void dispose() {
+    myController.forEach((e) {
+      e.forEach((a) {
+        a.dispose();
+      });
+    });
+    super.dispose();
+  }
+  @override
   void initState() {
-
-    _initInvoice();
     super.initState();
+    _initInvoice();
     myController.forEach((e) {
       e.forEach((a) {
         a.addListener(_printLatestValue);
       });
     });
-  }
 
-  void _printLatestValue() {
-
-    myController.forEach((e) {
-      e.forEach((a) {
-        // print('Second text field: ${a.text}');
-      });
-
+    overlayState = Overlay.of(context);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      globalKey;
     });
 
+    // _focusNode.addListener(() {
+    //   if (_focusNode.hasFocus) {
+    //     _overlayEntry = _createOverlay();
+    //     overlayState!.insert(_overlayEntry!);
+    //   } else {
+    //     _overlayEntry?.remove();
+    // _overlayEntry=null;
+    //   }
+    // });
   }
+
 
 
   @override
@@ -315,24 +422,6 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
     });
 
 
-
-    callback(mem, action) async {
-      if(action=="set"){
-        memoItems = mem;
-        print("Selected client with id" + memoItems);
-        invoice.client = await getClient(int.parse(mem));
-
-        setState(()  {
-
-        });
-      }else{
-        setState(() {
-          // allClients.removeWhere((element) => element.code == mem);
-
-          // print(memoItems);
-        });
-      }
-    }
 
     double total = 0;
 
@@ -516,15 +605,25 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            
-            children: [
+          CompositedTransformTarget(
+            link: _layerLink,
+            child:
+                 TextFormField(
+                  focusNode: _focusNode,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  onChanged: (v) async {
+                    clients = await searchClients(v);
+                    resetOverlay(clients);
+                    setState(() {
+                    });
+                  },
+                  // decoration: kTextInputDecoration.copyWith(labelText: 'Country Name'),
 
-              Expanded(child: SearchField()),
+                )
 
-            ],
+
           ),
           SizedBox(height: 10,),
           Row(
@@ -541,7 +640,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("John Doe", style: TextStyle(fontSize: 20 ) ),
+                  Text((invoice?.client?.name??"Customer"), style: TextStyle(fontSize: 20 ) ),
                   Text("Loyalty Program", style: TextStyle(fontSize: 16 ) ),
 
                 ],),
@@ -651,6 +750,27 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
                 ),
               ),
             ],
+          ),
+          SizedBox(height:20),
+          CompositedTransformTarget(
+              link: _layerLink2,
+              child:
+              TextFormField(
+                focusNode: _focusNode2,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                onChanged: (v) async {
+                  productsSearch = await searchProducts(v);
+                  resetOverlay2(productsSearch);
+                  setState(() {
+                  });
+                },
+                // decoration: kTextInputDecoration.copyWith(labelText: 'Country Name'),
+
+              )
+
+
           ),
           SizedBox(height:20),
           Container(

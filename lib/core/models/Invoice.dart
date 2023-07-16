@@ -26,6 +26,7 @@ class Invoice {
   String? dueDate;
   String? invoiceNumber;
   String? invoiceStatus;
+  String? invoiceType;
   String? currency;
   Currency? currencyFull;
   int?      clientId;
@@ -59,6 +60,7 @@ class Invoice {
     this.invoiceNumber,
     this.businessId,
     this.invoiceStatus,
+    this.invoiceType,
     this.clientId,
     this.client,
     this.business,
@@ -88,6 +90,7 @@ class Invoice {
     businessId = json['businessId'];
     originId = json['originId'];
     invoiceStatus = json['invoiceStatus'];
+    invoiceType = json['invoiceType'];
     clientId = json['clientId'];
     payments = json['payments'];
     invoiceItems = json['invoiceItems'];
@@ -114,6 +117,7 @@ class Invoice {
     businessId = 1;
     originId = json['originId'];
     invoiceStatus = json['invoiceStatus'];
+    invoiceType = json['invoiceType'];
     clientId = 1;
     // payments = json['payments'];
     // isOptimised = json['isOptimised'];
@@ -149,6 +153,7 @@ class Invoice {
     data['dueDate'] = this.dueDate;
     data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
+    data['invoiceType'] = this.invoiceType;
     data['clientId'] = this.clientId;
     data['invoiceItems'] = this.invoiceItems?.map((item) => item.toJson())??[];
     data['payments'] = this.payments?.map((item) => item.toJson())??[];
@@ -186,6 +191,7 @@ class Invoice {
     data['dueDate'] = this.dueDate;
     data['invoiceNumber'] = this.invoiceNumber.toString();
     data['invoiceStatus'] = this.invoiceStatus;
+    data['invoiceType'] = this.invoiceType;
     // data['clientId'] = this.clientId;
     if(this.invoiceItems!=null&&!this.invoiceItems!.isEmpty)data['invoiceItems'] = this.invoiceItems?.map((item) => item.toSyncJson()).toList();
     if(this.payments!=null&&!this.payments!.isEmpty)data['payments'] = this.payments?.map((item) => item.toSyncJson()).toList();
@@ -223,6 +229,7 @@ class Invoice {
       "due_date": this.dueDate,
       "invoice_number": this.invoiceNumber,
       "invoice_status": this.invoiceStatus,
+      "invoice_type": this.invoiceType,
       "client_id": this.clientId,
 
       "universal_id" : this.universalId,
@@ -303,6 +310,7 @@ class Invoice {
       "due_date": this.dueDate,
       "invoice_number": this.invoiceNumber,
       "invoice_status": this.invoiceStatus,
+      "invoice_type": this.invoiceType,
       "client_id": this.clientId,
 
       "universal_id" : this.universalId,
@@ -386,6 +394,7 @@ class Invoice {
       "due_date": this.dueDate,
       "invoice_number": this.invoiceNumber,
       "invoice_status": this.invoiceStatus,
+      "invoice_type": this.invoiceType,
       "client_id": this.clientId,
 
       "universal_id" : this.universalId,
@@ -461,32 +470,6 @@ class Invoice {
     }
   }
 
-  // void update() async {
-  //   // row to update
-  //   Map<String, dynamic> row = {
-  //
-  //     "totalAmount": this.totalAmount,
-  //     "vatPercent": this.vatPercent,
-  //     "vatAmount": this.vatAmount,
-  //     "subTotalAmount": this.subTotalAmount,
-  //     "published": this.published,
-  //     "notes": this.notes,
-  //     "currency": this.currency,
-  //     "business_id": this.businessId,
-  //     "discount": this.discount,
-  //     "invoiceDate": this.invoiceDate,
-  //     "dueDate": this.dueDate,
-  //     "invoiceNumber": this.invoiceNumber,
-  //     "invoiceStatus": this.invoiceStatus,
-  //     "client_id": this.clientId,
-  //     "payments": this.payments,
-  //     "isConfirmed": this.isConfirmed,
-  //
-  //
-  //   };
-  //   final rowsAffected = await dbHelper.update('invoice',row);
-  //   debugPrint('updated $rowsAffected row(s)');
-  // }
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
@@ -529,9 +512,15 @@ enum InvoiceStatus {
   OVERDUE,
 }
 
+enum InvoiceTypes {
+  RECEIPT,
+  INVOICE,
+  QUOTATION,
+}
 
 
-Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clientId}) async {
+
+Future<List<Invoice>> getInvoices(String type,String dateSort,  {String? filter, String? clientId}) async {
   var maps;
   print(filter );
   print(clientId);
@@ -541,7 +530,7 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
   // if(order == 'id') order = null;
   // if(asc == null) asc = true;
 
-  maps = await dbHelper.queryFilteredInvoices("invoice",dateSort, invoiceStatus: filter, clientId: clientId);
+  maps = await dbHelper.queryFilteredInvoices("invoice",type, dateSort, invoiceStatus: filter, clientId: clientId);
 
 
   // filter!=null && filter != 'ALL'
@@ -572,6 +561,7 @@ Future<List<Invoice>> getInvoices(String dateSort, {String? filter, String? clie
           dueDate : maps?[i]['due_date'],
           invoiceNumber : maps?[i]['invoice_number'],
           invoiceStatus : maps?[i]['invoice_status'],
+          invoiceType : maps?[i]['invoice_type'],
           clientId : maps?[i]['client_id'],
           client: client,
           payments : maps?[i]['payments'],
@@ -623,6 +613,7 @@ Future<List<Invoice>> getInvoicesForSync() async {
           dueDate : maps?[i]['due_date'],
           invoiceNumber : maps?[i]['invoice_number'],
           invoiceStatus : maps?[i]['invoice_status'],
+          invoiceType : maps?[i]['invoice_type'],
           clientId : maps?[i]['client_id'],
           client: client,
           business: business,
@@ -662,6 +653,7 @@ Future<Invoice> getInvoice(int id) async {
     dueDate : maps?['due_date'],
     invoiceNumber : maps?['invoice_number'],
     invoiceStatus : maps?['invoice_status'],
+    invoiceType : maps?['invoice_type'],
     clientId : maps?['client_id'],
     client: client,
     payments : maps?['payments'],
@@ -675,7 +667,6 @@ Future<Invoice> getInvoice(int id) async {
     invoiceItems : invoiceItems,
 
   );
-
 }
 
 Future<Invoice?> getInvoiceByUni(int id, {bool? copy}) async {
@@ -714,6 +705,7 @@ Future<Invoice?> getInvoiceByUni(int id, {bool? copy}) async {
     dueDate : maps?['due_date'],
     invoiceNumber : maps?['invoice_number'],
     invoiceStatus : maps?['invoice_status'],
+    invoiceType : maps?['invoice_type'],
     clientId : maps?['client_id'],
     client: client,
     payments : maps?['payments'],

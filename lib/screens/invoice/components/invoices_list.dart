@@ -28,7 +28,7 @@ class _InvoicesListState extends State<InvoicesList> {
   String dateSort = 'asc';
 
   Future<void> _initInvoices() async {
-    invoices = await getInvoices(dateSort, filter: filter, clientId: filter2);
+    invoices = await getInvoices('INVOICE',dateSort, filter: filter, clientId: filter2);
     clients = await getClients();
     setState(() {});
   }

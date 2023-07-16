@@ -250,10 +250,11 @@ class InvoiceItem {
   }
 
   void delete() async {
-    // Assuming that the number of rows is the id for the last row.
-    // final id = await dbHelper.queryRowCount('business');
-    final rowsDeleted = await dbHelper.delete('invoice_item',this.id!);
-    debugPrint('deleted $rowsDeleted row(s): row $id');
+    if(this.id!=null) {
+      final rowsDeleted = await dbHelper.delete('invoice_item', this.id!);
+      debugPrint('deleted $rowsDeleted row(s): row $id');
+
+    }
   }
 
   String? getIndex(int index) {

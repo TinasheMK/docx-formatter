@@ -37,7 +37,7 @@ class QuoteHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => QuoteHomeScreen()),
+                  MaterialPageRoute(builder: (context) => QuotesHomeScreen()),
                 );
 
 

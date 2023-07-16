@@ -65,8 +65,8 @@ praz.map((item) => DailyInfoModel.fromJson(item)).toList();
 List<DailyInfoModel> posmenu =
 zimra.map((item) => DailyInfoModel.fromJson(item)).toList();
 
-List<DailyInfoModel> clients =
-client.map((item) => DailyInfoModel.fromJson(item)).toList();
+// List<DailyInfoModel> clients =
+// client.map((item) => DailyInfoModel.fromJson(item)).toList();
 
 //List<FlSpot> spots = yValues.asMap().entries.map((e) {
 //  return FlSpot(e.key.toDouble(), e.value);
@@ -163,7 +163,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "NEW INVOICE",
+    "title": "QUOTATIONS",
     "code": "newin",
     "volumeData": 1328,
     "icon": FlutterIcons.heart_faw5s,
@@ -207,7 +207,7 @@ var dailyData = [
     ]
   },
   {
-    "title": "NEW CLIENT",
+    "title": "RECEIPTS",
     "code": "newclie",
     "volumeData": 1328,
     "icon": FlutterIcons.user_alt_faw5s,
