@@ -277,79 +277,34 @@ class Product {
 
 Future<List<Product>> getProducts() async {
   final maps = await dbHelper.softQueryAllRows("product");
+  return convert(maps);
+}
+Future<List<Product>> getFeaturedProducts({int? categoryId}) async {
+  final maps;
 
-  return List.generate(maps.length, (i) {
-    return Product(
-      id : maps[i]['id'],
-      name : maps[i]['name'],
-      price : maps[i]['price'],
-      sku : maps[i]['sku'],
-      stock : maps[i]['stock'],
-      categoryId : maps[i]['category_id'],
-      businessId : maps[i]['business_id'],
+  if(categoryId==null) {
+      maps =  await dbHelper.featuredProducts("product");
+  }else{
+    maps =  await dbHelper.featuredProducts("product", categoryId: categoryId);
+   }
 
-      universalId : maps?[i]["universal_id"],
-      isSynced : maps?[i]["is_synced"]==1?true:false,
-      originId : maps?[i]["origin_id"],
-      version : maps?[i]["version"],
-      isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
-
-    );
-  });
+  return convert(maps);
 }
 Future<List<Product>> getProductsForSync() async {
   final maps = await dbHelper.getReadyForSyc("product");
-
-  return List.generate(maps.length, (i) {
-    return Product(
-      id : maps[i]['id'],
-      name : maps[i]['name'],
-      price : maps[i]['price'],
-      sku : maps[i]['sku'],
-      stock : maps[i]['stock'],
-      categoryId : maps[i]['category_id'],
-      businessId : maps[i]['business_id'],
-
-      universalId : maps?[i]["universal_id"],
-      isSynced : maps?[i]["is_synced"]==1?true:false,
-      originId : maps?[i]["origin_id"],
-      version : maps?[i]["version"],
-      isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
-
-    );
-  });
+  return convert(maps);
 }
+
 Future<List<Product>> searchProducts(String query) async {
   final maps = await dbHelper.searchProducts(query);
-
-  return List.generate(maps.length, (i) {
-    return Product(
-      id : maps[i]['id'],
-      name : maps[i]['name'],
-      price : maps[i]['price'],
-      sku : maps[i]['sku'],
-      stock : maps[i]['stock'],
-      categoryId : maps[i]['category_id'],
-      businessId : maps[i]['business_id'],
-    );
-  });
+  return convert(maps);
 }
 
 Future<Product?> getProduct(int id) async {
   var maps = await dbHelper.findById("product", id);
   Category cat = await getCategory(maps?['category_id']);
 
-    return Product(
-      id : maps?['id'],
-      name : maps?['name'],
-      price : maps?['price'],
-      sku : maps?['sku'],
-      stock : maps?['stock'],
-      categoryId : maps?['category_id'],
-      businessId : maps?['business_id'],
-      category: cat
-
-    );
+    return convertSingle(maps);
 
 }
 Future<Product?> getProductByUni(int id, {bool? copy}) async {
@@ -388,4 +343,27 @@ Future<Product?> getProductByUni(int id, {bool? copy}) async {
 }
 
 
+List<Product> convert(maps){
+  return List.generate(maps.length, (i) {
+    return convertSingle(maps[i]);
+  });
+}
 
+Product convertSingle(maps){
+  return Product(
+      id : maps ['id'],
+      name : maps ['name'],
+      price : maps['price'],
+      sku : maps ['sku'],
+      stock : maps ['stock'],
+      categoryId : maps ['category_id'],
+      businessId : maps ['business_id'],
+
+      universalId : maps? ["universal_id"],
+      isSynced : maps? ["is_synced"]==1?true:false,
+      originId : maps? ["origin_id"],
+      version : maps? ["version"],
+      isConfirmed : maps? ["is_confirmed"]==1?true:false,
+
+    );
+}

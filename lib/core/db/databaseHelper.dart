@@ -173,6 +173,7 @@ class DatabaseHelper {
             
             name TEXT ,
             sku TEXT ,
+            featured INTEGER ,
             price FLOAT NOT NULL,
             stock INTEGER ,
             category_id INTEGER,
@@ -348,6 +349,16 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> softQueryAllRows(String table) async {
     return await _db.rawQuery("select * from '$table' where (is_deleted = 0 or is_deleted is null)" );
+  }
+
+  Future<List<Map<String, dynamic>>> featuredProducts(String table, {int? categoryId}) async {
+    if(categoryId==null) {
+      return await _db.rawQuery(
+          "select * from '$table' where (is_deleted = 0 or is_deleted is null) order by featured desc");
+    }else{
+      return await _db.rawQuery(
+          "select * from '$table' where (is_deleted = 0 or is_deleted is null) and category_id = $categoryId  order by featured desc");
+    }
   }
 
 

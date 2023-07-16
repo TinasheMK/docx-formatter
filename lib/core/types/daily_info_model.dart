@@ -56,8 +56,8 @@ class DailyInfoModel {
 List<DailyInfoModel> dailyDatas =
     dailyData.map((item) => DailyInfoModel.fromJson(item)).toList();
 
-List<DailyInfoModel> categories =
-billing.map((item) => DailyInfoModel.fromJson(item)).toList();
+// List<DailyInfoModel> categories =
+// billing.map((item) => DailyInfoModel.fromJson(item)).toList();
 
 List<DailyInfoModel> products =
 praz.map((item) => DailyInfoModel.fromJson(item)).toList();

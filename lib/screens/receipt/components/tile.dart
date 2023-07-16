@@ -14,9 +14,11 @@ class TileWidget extends StatefulWidget {
   const TileWidget({
     Key? key,
     required this.dailyData,
+    required this.color,
   }) : super(key: key);
 
-  final DailyInfoModel dailyData;
+  final String dailyData;
+  final Color color;
 
   @override
   _TileWidgetState createState() => _TileWidgetState();
@@ -40,12 +42,14 @@ class _TileWidgetState extends State<TileWidget> {
           // height: 40,
           // width: 175,
           decoration: BoxDecoration(
-            color: widget.dailyData.color!.withOpacity(0.1),
+            color: widget.color,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-          child: Text(widget.dailyData.title!, style: const TextStyle(
+          child: Text(widget.dailyData!, style: const TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w500
+              fontWeight: FontWeight.w500,
+            color: Colors.white
+
           ),
           ),
         ),

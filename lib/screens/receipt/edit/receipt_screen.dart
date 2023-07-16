@@ -8,6 +8,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:smart_admin_dashboard/screens/quote/components/quote_header.dart';
 import 'package:smart_admin_dashboard/screens/receipt/edit/receipt_home_screen.dart';
+import '../../../core/models/Category.dart';
+import '../../../core/models/Product.dart';
 import '../../../core/types/daily_info_model.dart';
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/models/InvoiceItem.dart';
@@ -156,9 +158,12 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
 
   Invoice invoice = Invoice.fromJson({});
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-
+  List<Category> categories = [Category.fromJson({})];
+  List<Product> products = [Product.fromJson({})];
 
   Future<void> _initInvoice() async {
+    categories = await getCategorys();
+    products = await getFeaturedProducts();
     invoice.currencyFull =   Currency(
       id: 'USD',
       symbol: '\$',
@@ -192,7 +197,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
       invoice.dueDate = dateFormat.format(DateTime.now().add(const Duration(days: 7))) ;
     }
     if(invoice.invoiceItems == null) {
-      invoice.invoiceItems = [InvoiceItem.fromJson({})];
+      // invoice.invoiceItems = [InvoiceItem.fromJson({})];
     }
     if(invoice.payments == null) {
       invoice.payments= [Payment.fromJson({})];
@@ -688,15 +693,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
                     ),
                   ),
                 ),
-                GestureDetector(
-                  child:Icon(Icons.add, color: Colors.blueAccent,),
-                  onTap: () {
-                    setState ((){
-                      invoice!.invoiceItems!.add(InvoiceItem.fromJson({}));
-                      myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
-                    });
-                  },
-                )
+
               ],
             ),),
           SizedBox(height: 20.0),
@@ -719,7 +716,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
                   border: Border.all(color: Colors.white10),
                 ),
                 child: TextButton(
-                  child: Text(invoice.currencyFull!.symbol!+" " + invoice.subTotalAmount.toString()! ),
+                  child: Text((invoice.currencyFull?.symbol??'')+" " + invoice.subTotalAmount.toString()! ),
                   onPressed: () {
                   },
                   // Delete
@@ -750,7 +747,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
                   border: Border.all(color: Colors.white10),
                 ),
                 child: TextButton(
-                  child: Text(invoice.currencyFull!.symbol!+" 0" ),
+                  child: Text((invoice.currencyFull?.symbol??'')+" 0" ),
                   onPressed: () {
                   },
                   // Delete
@@ -780,7 +777,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
                   border: Border.all(color: Colors.white10),
                 ),
                 child: TextButton(
-                  child: Text(invoice.currencyFull!.symbol!+" "+invoice.subTotalAmount.toString()! ),
+                  child: Text((invoice.currencyFull?.symbol??'')+" "+invoice.subTotalAmount.toString()! ),
                   onPressed: () {
                   },
                   // Delete
@@ -1090,8 +1087,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
             itemBuilder: (context, index) =>
 
                 GestureDetector(
-                  child: TileWidget(dailyData: categories[index]),
-                  onTap: (){
+                  child: TileWidget(dailyData: categories[index].name??"", color: Colors.lightBlueAccent,),
+                  onTap: () async {
+                    products = await getFeaturedProducts(categoryId:categories[index].id );
+                    setState(() {
+                    });
                     print("I select category and refresh products to category with id :"+ index.toString());
                   },
                 ),
@@ -1109,31 +1109,41 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
             ),
             itemBuilder: (context, index) =>
                 GestureDetector(
-                  child: TileWidget(dailyData: categories[index]),
+                  child: TileWidget(dailyData: products[index].name??"", color: Colors.lightGreen,),
                   onTap: (){
+                    setState ((){
+                      InvoiceItem invoiceItem = new InvoiceItem(units: 1 ,unitPrice:products[index].price , description:products[index].name??"", total: products[index].price );
+                      if(invoice!.invoiceItems == null) {
+                        invoice!.invoiceItems = [invoiceItem];
+                      }else{
+                        invoice!.invoiceItems!.add(invoiceItem);
+                      }
+
+                  myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
+                    });
                     print("I add products to the receipt with id :"+ index.toString());
                   },
                 ),
           ),
           SizedBox(height: defaultPadding,),
-          GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: posmenu.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: defaultPadding,
-              mainAxisSpacing: defaultPadding,
-              childAspectRatio: childAspectRatio,
-            ),
-            itemBuilder: (context, index) =>
-                GestureDetector(
-                  child: TileWidget(dailyData: categories[index]),
-                  onTap: (){
-                    print("I await your command :"+ index.toString());
-                  },
-                ),
-          ),
+          // GridView.builder(
+          //   physics: NeverScrollableScrollPhysics(),
+          //   shrinkWrap: true,
+          //   itemCount: posmenu.length,
+          //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //     crossAxisCount: crossAxisCount,
+          //     crossAxisSpacing: defaultPadding,
+          //     mainAxisSpacing: defaultPadding,
+          //     childAspectRatio: childAspectRatio,
+          //   ),
+          //   itemBuilder: (context, index) =>
+          //       GestureDetector(
+          //         child: TileWidget(dailyData: categories[index]),
+          //         onTap: (){
+          //           print("I await your command :"+ index.toString());
+          //         },
+          //       ),
+          // ),
         ],
       ),
     );
@@ -1182,86 +1192,27 @@ class _ReceiptScreenState extends State<ReceiptScreen> with SingleTickerProvider
         ),
         DataCell(
             Padding(padding: EdgeInsets.all(3),
-              child: TextFormField(
-                controller: myController[index][1],
+              child: Text(
+                  myController[index][1].text
 
-                decoration: InputDecoration(
-
-                  focusedBorder: OutlineInputBorder(
-                    //gapPadding: 16,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                ),
-                onChanged: (String value){
-                  invoice!.invoiceItems![index].description =  value;
-                  // print(invoice!.invoiceItems![index].toJson());
-                },
-
-              ),)
+              )
+              ,)
 
         ),
         DataCell(
             Padding(padding: EdgeInsets.all(3),
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
-                ],
-                keyboardType: TextInputType.number,
-                // onTapOutside: (value){
-                //   setState(() {});
-                // },
-                controller: myController[index][2],
-                onChanged: (String value){
-                  invoice!.invoiceItems![index].unitPrice =  double.parse(value) ;
-                  invoice!.invoiceItems![index].total =  double.parse(value) * (invoice!.invoiceItems![index].units!=null ? invoice!.invoiceItems![index].units!:1);
-                  // print(invoice!.invoiceItems![index].toJson());
+              child: Text(
+                  myController[index][2].text
 
-                  var total = 0.0;
-                  invoice!.invoiceItems!.forEach((e) {
-                    if(e.total==null){e.total = 0;}
-                    total+=e.total!;
-                  });
-
-                  invoice.subTotalAmount = total;
-
-                  myController[index][3].text = invoice!.invoiceItems![index].total.toString();
-
-
-
-                },
-
-
-              ),)
+              ),
+            )
 
         ),
         DataCell(
             Padding(padding: EdgeInsets.all(3),
 
-              child: TextField(
-                enabled: false,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
-                ],
-                controller: myController[index][3],
-                decoration: InputDecoration(
-
-                  focusedBorder: OutlineInputBorder(
-                    //gapPadding: 16,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-
-                ),
-
-                onChanged: (String value){
-                  invoice!.invoiceItems![index].total =  double.parse(value);
-                  // print(invoice!.invoiceItems![index].toJson());
-                },
-
+              child: Text(
+                  myController[index][3].text
 
               ),)
 

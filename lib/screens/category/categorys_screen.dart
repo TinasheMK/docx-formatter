@@ -1,14 +1,14 @@
 
-import 'package:smart_admin_dashboard/screens/client/components/client_list.dart';
+import 'package:smart_admin_dashboard/screens/category/components/category_list.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/utils/responsive.dart';
 import '../dashboard/components/header.dart';
-import './components/clients_header.dart';
+import './components/categorys_header.dart';
  import 'package:flutter/material.dart';
 
 
-class ClientsScreen extends StatelessWidget {
+class CategorysScreen extends StatelessWidget {
 
 
 
@@ -25,7 +25,7 @@ class ClientsScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ClientsHeader(),
+              CategorysHeader(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +36,7 @@ class ClientsScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        ClientList(),
+                        CategoryList(),
                         SizedBox(height: defaultPadding),
                         // RecentDiscussions(),
                         if (Responsive.isMobile(context))

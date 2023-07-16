@@ -333,10 +333,10 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                                           decoration: BoxDecoration(
                                                             color: secondaryColor,
                                                             borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                            border: Border.all(color: Colors.white10),
+                                                            border: Border.all(),
                                                           ),
                                                           child: TextButton(
-                                                            child: Text(categories[index].id.toString()??''),
+                                                            child: Text(categories[index].name??''),
                                                             onPressed: () {
                                                               product.categoryId = categories[index].id;
                                                               product.category = categories[index];

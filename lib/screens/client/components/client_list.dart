@@ -10,17 +10,17 @@ import 'package:flutter/material.dart';
 import '../../../main.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/utils/responsive.dart';
-import '../../client/clients_home_screen.dart';
-import '../../client/edit/client_home_screen.dart';
+import '../clients_home_screen.dart';
+import '../edit/client_home_screen.dart';
  
 
 
-class RecentUsers extends StatefulWidget {
+class ClientList extends StatefulWidget {
   @override
-  _RecentUsersState createState() => _RecentUsersState();
+  _ClientListState createState() => _ClientListState();
 }
 
-class _RecentUsersState extends State<RecentUsers> {
+class _ClientListState extends State<ClientList> {
 
   List<Client> clients = [Client.fromJson({})];
 

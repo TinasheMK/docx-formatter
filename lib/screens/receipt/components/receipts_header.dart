@@ -49,7 +49,7 @@ class ReceiptsHeader extends StatelessWidget {
                 },
                 icon: Icon(Icons.add),
                 label: Text(
-                  "To Collect",
+                  "Order",
                 ),
               ),
               SizedBox(width: 5,),
