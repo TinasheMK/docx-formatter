@@ -40,7 +40,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
                     Center(
                       child: Text("Select a client."),
                     ),
-                    ClientsSelector(memos: memos,callback: widget.callback),
+                    ClientsSelector (callback: widget.callback),
                   ],
                 )),
           ),

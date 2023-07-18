@@ -13,7 +13,7 @@ import '../../../core/utils/UserPreference.dart';
 import '../../../core/models/InvoiceItem.dart';
 import '../../../core/models/Payment.dart';
 import '../../invoice/edit/invoice_home_screen.dart';
-import '../print/app.dart';
+import '../../invoice/print/app.dart';
 import '../../../core/types/Memo.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/models/Business.dart';

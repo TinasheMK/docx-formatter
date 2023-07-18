@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,121 @@ class _InvoicesListState extends State<InvoicesList> {
 
   @override
   Widget build(BuildContext context) {
+    String query = '';
+
+    showClient(){
+      return showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+                content: Container(
+                  // color: secondaryColor,
+                  // height: 450,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: "Search",
+                            // fillColor: secondaryColor,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: const BorderRadius.all(Radius.circular(10)
+                              ),
+                            ),
+                            suffixIcon: InkWell(
+                              onTap: () async {
+                                clients = await searchClients(query);
+                                Navigator.of(context).pop();
+                                showClient();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(defaultPadding * 0.75),
+                                margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+                                decoration: BoxDecoration(
+                                  color: defaultColor,
+                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/icons/Search.svg",
+                                ),
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) async {
+                            query = value;
+                          },
+                        ),
+                        SizedBox(height: 7,),
+
+                        Container(
+                          // margin: EdgeInsets.only(left: defaultPadding),
+                          // padding: EdgeInsets.symmetric(
+                          //   horizontal: defaultPadding,
+                          //   vertical: defaultPadding / 2,
+                          // ),
+                          decoration: BoxDecoration(
+                            // color: secondaryColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(),
+                          ),
+                          child: TextButton(
+                            child: Text("All CLIENTS", style: TextStyle(color: Theme.of(context).primaryColor)),
+                            onPressed: () {
+                              filter2 = 'CLIENTS';
+                              _initInvoices();
+                              Navigator.of(context).pop();
+                            },
+                            // Delete
+                          ),
+
+                        ),
+                        SizedBox(height: 7,),
+
+                        Column(
+                          children:
+                          List.generate(
+                              clients.length,
+                                  (index) =>
+
+
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 7),
+                                    // padding: EdgeInsets.symmetric(
+                                    //   horizontal: defaultPadding,
+                                    //   vertical: defaultPadding / 2,
+
+                                    // ),
+                                    decoration: BoxDecoration(
+                                      // color: secondaryColor,
+                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                      border: Border.all(),
+                                    ),
+                                    child: TextButton(
+                                      child: Text(clients[index].name!, style: TextStyle(color: Theme.of(context).primaryColor)),
+                                      onPressed: () {
+                                        filter2 = clients[index]!.id.toString()!;
+                                        _initInvoices();
+                                        setState(() {
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                      // Delete
+                                    ),
+
+                                  )
+                          ),
+
+
+                        ),
+                      ],
+                    ),
+                  ),
+                ));
+          });
+    }
 
     return Container(
       padding: EdgeInsets.all(defaultPadding),
@@ -70,84 +186,9 @@ class _InvoicesListState extends State<InvoicesList> {
                     // border: Border.all(color: Colors.white),
                   ),
                   child: TextButton(
-                    child: SizedBox(child: Text(filter2, style: Theme.of(context).textTheme.titleMedium,),),
+                    child: SizedBox(child: Text("Client", style: Theme.of(context).textTheme.titleMedium,),),
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                                content: Container(
-                                  // color: secondaryColor,
-                                  // height: 450,
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          // margin: EdgeInsets.only(left: defaultPadding),
-                                          // padding: EdgeInsets.symmetric(
-                                          //   horizontal: defaultPadding,
-                                          //   vertical: defaultPadding / 2,
-                                          // ),
-                                          decoration: BoxDecoration(
-                                            // color: secondaryColor,
-                                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                            border: Border.all(),
-                                          ),
-                                          child: TextButton(
-                                            child: Text("All CLIENTS", style: TextStyle(color: Theme.of(context).primaryColor)),
-                                            onPressed: () {
-                                              filter2 = 'CLIENTS';
-                                              _initInvoices();
-                                              Navigator.of(context).pop();
-                                            },
-                                            // Delete
-                                          ),
-
-                                        ),
-                                        SizedBox(height: 7,),
-
-
-                                        Column(
-                                          children:
-                                          List.generate(
-                                              clients.length,
-                                                  (index) =>
-
-
-                                                  Container(
-                                                    margin: EdgeInsets.only(bottom: 7),
-                                                    // padding: EdgeInsets.symmetric(
-                                                    //   horizontal: defaultPadding,
-                                                    //   vertical: defaultPadding / 2,
-
-                                                    // ),
-                                                    decoration: BoxDecoration(
-                                                      // color: secondaryColor,
-                                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                      border: Border.all(),
-                                                    ),
-                                                    child: TextButton(
-                                                      child: Text(clients[index].name!, style: TextStyle(color: Theme.of(context).primaryColor)),
-                                                      onPressed: () {
-                                                        filter2 = clients[index]!.id.toString()!;
-                                                        _initInvoices();
-                                                        setState(() {
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      // Delete
-                                                    ),
-
-                                                  )
-                                          ),
-
-
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ));
-                          });
+                      showClient();
                     },
                     // Delete
                   ),
@@ -438,7 +479,8 @@ class _InvoicesListState extends State<InvoicesList> {
         DataCell(Text(userInfo.id.toString()!)),
         DataCell(
             Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.all(3),
+            margin: EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: getRoleColor(userInfo.client.toString()).withOpacity(.2),
               // border: Border.all(color: Colors.lightBlueAccent),

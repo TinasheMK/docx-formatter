@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+import '../../../core/models/Product.dart';
 import '../../../core/utils/UserPreference.dart';
 import '../../../core/models/InvoiceItem.dart';
 import '../../../core/models/Payment.dart';
@@ -47,7 +48,7 @@ class InvoiceScreen extends StatefulWidget {
 }
 
 // class InvoiceScreen extends StatefulWidget {
-class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProviderStateMixin {
+class _InvoiceScreenState extends State<InvoiceScreen> with TickerProviderStateMixin {
   DateTime payDate = DateTime.now();
   var paymentAmount;
 
@@ -128,7 +129,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
 
 
   List<List<TextEditingController>> myController = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
-
+  bool addProduct = false;
   late int crossAxisCount;
   late double childAspectRatio;
   late String _dateCount;
@@ -146,6 +147,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
     super.dispose();
   }
 
+  // List<Product> products = [];
+  List<Product> productsSearch = [];
   List<Business> companies = [Business.fromJson({})];
   List<Currency> currencies = [Currency.fromJson({})];
 
@@ -153,6 +156,95 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
 
+  final FocusNode _focusNode2 = FocusNode();
+  OverlayEntry? _overlayEntry;
+  GlobalKey globalKey = GlobalKey();
+  final LayerLink _layerLink2 = LayerLink();
+  OverlayState? overlayState;
+
+  OverlayEntry _createOverlay2() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    print('i have  been  summoned ');
+    var size = renderBox.size;
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: Responsive.isMobile(context) ? ((MediaQuery.of(context).size.width )-26) : ((MediaQuery.of(context).size.width /2)-26),
+        child: CompositedTransformFollower(
+          link: _layerLink2,
+          showWhenUnlinked: false,
+          offset: Offset(0.0,  55.0),
+          child: Material(
+              elevation: 5.0,
+              child:
+              Column(
+                children: [
+                  SizedBox(height: 15,),
+                  ElevatedButton.icon(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: defaultPadding * 1.5,
+                        vertical:
+                        defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                      ),
+                    ),
+                    onPressed: () {
+                      _overlayEntry?.remove();
+                      _overlayEntry=null;
+
+
+                    },
+                    icon: Icon(Icons.cancel),
+                    label: Text(
+                      "Cancel",
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: productsSearch.isEmpty? Text("No product found."):Column(
+                      children: List.generate(
+                          productsSearch!.length,
+                              (index) => GestureDetector(
+                            child:  ListTile(
+                              title: Text(productsSearch[index].name!),
+                            ),
+                            onTap: (){
+                              InvoiceItem invoiceItem = new InvoiceItem(units: 1 ,unitPrice:productsSearch[index].price , description:productsSearch[index].name??"", total: productsSearch[index].price );
+                              if(invoice!.invoiceItems == null) {
+                                invoice!.invoiceItems = [invoiceItem];
+                              }else{
+                                invoice!.invoiceItems!.add(invoiceItem);
+                              }
+                              myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
+
+                              print("Tapping has occured");
+                              _overlayEntry?.remove();
+                              _overlayEntry=null;
+                              setState(() {
+                              });
+                            },
+                          )),
+                    ),
+                  ),
+                ],
+              )
+          ),
+
+        ),
+      ),
+    );
+  }
+  resetOverlay2(asycClients){
+    if (_focusNode2.hasFocus) {
+      _overlayEntry?.remove();
+      _overlayEntry=null;
+      _overlayEntry = _createOverlay2();
+      overlayState!.insert(_overlayEntry!);
+    } else {
+      addProduct = false;
+      _overlayEntry?.remove();
+      _overlayEntry=null;
+    }
+  }
   Future<void> _initInvoice() async {
     invoice.currencyFull =   Currency(
       id: 'USD',
@@ -228,6 +320,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
       e.forEach((a) {
         a.addListener(_printLatestValue);
       });
+    });
+
+    overlayState = Overlay.of(context);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      globalKey;
     });
   }
 
@@ -1059,19 +1156,53 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                 ),
               ),
                   SizedBox(height: 10,),
-                  GestureDetector(
-                    child:Icon(Icons.add, color: Colors.blueAccent,),
-                    onTap: () {
-                      setState ((){
-                        invoice!.invoiceItems!.add(InvoiceItem.fromJson({}));
-                        myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
-                      });
-                    },
+
+                  Row(
+                    children:[
+                      GestureDetector(
+                        child:Icon(Icons.add, color: Colors.blueAccent,),
+                        onTap: () {
+                          setState ((){
+                            invoice!.invoiceItems!.add(InvoiceItem.fromJson({}));
+                            myController.add([TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]);
+                          });
+                        },
+                      ),
+                      SizedBox(width: 20,),
+                      GestureDetector(
+                        child:Icon(Icons.shopping_bag, color: Colors.blueAccent,),
+                        onTap: () {
+                          setState ((){
+                            addProduct = true;
+                          });
+                        },
+                      )
+                    ]
                   )
             ],
           ),),
+            SizedBox(height: 20.0),
+            if(addProduct)CompositedTransformTarget(
+                link: _layerLink2,
+                child:
+                TextFormField(
+                  focusNode: _focusNode2,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  onChanged: (v) async {
+                    productsSearch = await searchProducts(v);
+                    resetOverlay2(productsSearch);
+                    setState(() {
+                    });
+                  },
+                  // decoration: kTextInputDecoration.copyWith(labelText: 'Country Name'),
 
-                SizedBox(height: 20.0),
+                )
+
+
+            ),
+            SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -1166,7 +1297,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
+                if(invoice.invoiceStatus=='DRAFT')ElevatedButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: defaultColor,
                     padding: EdgeInsets.symmetric(
@@ -1211,7 +1342,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                   ),
                   onPressed: () async {
 
-                    invoice.invoiceStatus = "UNPAID";
+                    if(invoice.invoiceStatus=='DRAFT')invoice.invoiceStatus = "UNPAID";
                     await saveInvoice();
 
 
@@ -1527,7 +1658,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
                         ),
                       ),
                       onPressed: () async {
-
+                        if(invoice.invoiceStatus=='DRAFT') invoice.invoiceStatus='UNPAID';
                         var inv =  await saveInvoice();
                         if(inv!=null){
                           Navigator.push(
@@ -1588,29 +1719,26 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
   }
 
   Widget businessProfile(Business c) {
-    return GestureDetector(
-      child: Container(
-        margin: EdgeInsets.only(top: 5),
-        decoration: BoxDecoration(
-          // color: secondaryColor,
+    print("I am a business");
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        // color: secondaryColor,
 
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(),
-        ),
-        child: TextButton(
-          child: Text(c.name!, style: TextStyle(color: Theme.of(context).primaryColor)),
-          onPressed: () {},
-          // Delete
-        ),
-
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(),
       ),
-      onTap: (){
-        invoice.business = c;
-        Navigator.of(context).pop();
-        setState(() {
+      child: TextButton(
+        child: Text(c.name!, style: TextStyle(color: Theme.of(context).primaryColor)),
+        onPressed: () {
+          invoice.business = c;
+          Navigator.of(context).pop();
+          setState(() {
+          });
+        },
+        // Delete
+      ),
 
-        });
-      },
     );
   }
 

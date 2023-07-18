@@ -84,7 +84,7 @@ class _ClientScreenState extends State<ClientScreen> with SingleTickerProviderSt
 
       Wallet wallet = await client.getWallet(client.currency ?? activeCurrency ?? 'USD' );
       print(wallet.toJson());
-      balance = wallet.balance! ?? 0;
+      balance = wallet.balance ?? 0;
     }
     setState(() {});
   }

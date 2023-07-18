@@ -193,7 +193,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                       ),
                       child: Icon(
                         Icons.house,
-                        color: Colors.lightBlue,
+                        color: defaultColor,
                         size: 18,
                       ),
                     ),

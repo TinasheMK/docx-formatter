@@ -10,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_admin_dashboard/core/models/Employee.dart';
 import 'package:smart_admin_dashboard/screens/dashboard/dashboard_screen.dart';
-import 'package:smart_admin_dashboard/screens/profile/components/worker_profile_home_screen.dart';
 import 'package:smart_admin_dashboard/screens/profile/profiles_home_screen.dart';
 import '../../../core/utils/UserPreference.dart';
 
@@ -19,7 +18,7 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../core/models/Business.dart';
 import '../../../core/utils/responsive.dart';
 
- import '../../dashboard/components/header.dart';
+import '../../dashboard/components/header.dart';
 import '../components/profile_header.dart';
 import 'package:flutter/material.dart';
 
@@ -31,21 +30,21 @@ Random _rnd = Random();
 String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-class ProfileScreen extends StatefulWidget {
-  ProfileScreen({required this.title, required this.code, this.profileId});
+class WorkerProfilePage extends StatefulWidget {
+  WorkerProfilePage({required this.title, required this.code, this.profileId});
   final String title;
   final String code;
   int? profileId;
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState(profileId);
+  _WorkerProfilePageState createState() => _WorkerProfilePageState(profileId);
 }
 
-// class ProfileScreen extends StatefulWidget {
-class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+// class WorkerProfilePage extends StatefulWidget {
+class _WorkerProfilePageState extends State<WorkerProfilePage> with SingleTickerProviderStateMixin {
 
 
-  _ProfileScreenState(int? this.profileId);
+  _WorkerProfilePageState(int? this.profileId);
   int? profileId;
 
   final _formKey = GlobalKey<FormState>();
@@ -496,10 +495,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                                   children:[
                                                                     TextButton(
                                                                         onPressed: (){
-                                                                          Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => WorkerProfilePageHome(title: 'Worker', code: '',)),
-                                                                          );
+                                                                          // Navigator.push(
+                                                                          //   context,
+                                                                          //   MaterialPageRoute(builder: (context) => WorkerProfilePage()),
+                                                                          // );
 
                                                                         },
                                                                         child: Text("wii"))]
@@ -541,19 +540,19 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                                             ));
                                                       });
                                                 },
-                                                  child: Text("Users"),),
+                                                child: Text("Users"),),
                                               Tooltip(
                                                 message: "Add user to business",
                                                 child: IconButton(
-                                                  onPressed: (){
-                                                    print("I add user to business");
-                                                    addUser = true;
-                                                    setState(() {
+                                                    onPressed: (){
+                                                      print("I add user to business");
+                                                      addUser = true;
+                                                      setState(() {
 
-                                                    });
-                                                  },
-                                                  icon: Icon(Icons.add)
-                                              ),)
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add)
+                                                ),)
                                             ],
                                           )),
                                     ),
@@ -580,8 +579,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                             Expanded(
                                               child:
                                               Row(
-                                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                                // mainAxisAlignment: MainAxisAlignment.center,
+                                                // crossAxisAlignment: CrossAxisAlignment.center,
                                                   children:[
                                                     Text( "Registered email:          ",
                                                       style: TextStyle(fontWeight: FontWeight.bold ),
@@ -740,16 +739,16 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                   child: Column(
                                     children: [
                                       form1(),
-                                    form2()
+                                      form2()
                                     ],),
                                 )
                                     :  Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children:[
-                                    Expanded(child: form1(),),
-                                    Expanded(child: form2(),),
-                          ]
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children:[
+                                      Expanded(child: form1(),),
+                                      Expanded(child: form2(),),
+                                    ]
                                 ),
                                 SizedBox(height: 25,),
 
@@ -914,7 +913,7 @@ Future<String?> getDownloadPath2() async {
       // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
       // ignore: avoid_slow_async_io
 
-       directory = await getExternalStorageDirectory();
+      directory = await getExternalStorageDirectory();
     }
   } catch (err, stack) {
     print("Cannot get download folder path");

@@ -51,10 +51,11 @@ Future<Uint8List> generateInvoice4(
     lightAccent = PdfColor(red1, green1, blue1);
     complimentAccent = PdfColor((red*red*red), (green*green*green), (blue*blue*blue));
   }else{
-    mainColor = PdfColors.teal;
-    accent = PdfColors.blueGrey900;
-    lightAccent = PdfColors.red;
-    complimentAccent = PdfColors.green;
+    mainColor = PdfColors.blue700;
+    accent = PdfColors.blue900;
+    lightAccent = PdfColors.blue300;
+
+    complimentAccent =  PdfColors.blueGrey;
 
   }
 
@@ -73,7 +74,7 @@ Future<Uint8List> generateInvoice4(
     baseColor: mainColor,
     accentColor: accent,
     lightAccent: lightAccent,
-    complimentAccent: complimentAccent,
+    complimentAccent: complimentAccent, invoice: data,
   );
 
   return await invoice.buildPdf(pageFormat);
@@ -87,6 +88,7 @@ class LocalInvoice {
     required this.customerAddress,
     required this.invoiceNumber,
     required this.tax,
+    required this.invoice,
     required this.paymentInfo,
     required this.baseColor,
     required this.accentColor,
@@ -100,6 +102,7 @@ class LocalInvoice {
   final String customerAddress;
   final String invoiceNumber;
   final double tax;
+  final Invoice invoice;
   final String paymentInfo;
   final PdfColor baseColor;
   final PdfColor accentColor;
@@ -126,10 +129,6 @@ class LocalInvoice {
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
     // Create a PDF document.
     final doc = Document();
-
-    // _logo = await rootBundle.loadString('assets/logo/logo.svg');
-    // logoPath ==null ? Image.asset("assets/logo/logo_icon.png", scale:1)
-    //     : Image.file(File(logoPath!), scale:1),
 
     final directory = await getDownloadPath2();
 
@@ -186,12 +185,17 @@ class LocalInvoice {
                     padding: const EdgeInsets.only(bottom: 18, top: 10, right: 10),
                     height: 90,
                     child:
-                    _logo != null ? Image(_logo!) : Text(""),
+                    _logo != null ? Image(_logo!) : Text("INVOICE",
+                      style: TextStyle(
+                        color: PdfColors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                      ),),
                   ),
                 ],
               ),
             ),
-            Expanded(
+            if(invoice.invoiceType=='INVOICE')Expanded(
               child: Column(
                 children: [
                   Container(
@@ -199,7 +203,26 @@ class LocalInvoice {
                     padding: const EdgeInsets.only(left: 20, top: 18),
                     alignment: Alignment.centerRight,
                     child: Text(
-                      'PAID',
+                      invoice.invoiceStatus!,
+                      style: TextStyle(
+                        color: PdfColors.grey700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if(invoice.invoiceType!='INVOICE')Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    // height: 50,
+                    padding: const EdgeInsets.only(left: 20, top: 18),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'QUOTE',
                       style: TextStyle(
                         color: PdfColors.grey700,
                         fontWeight: FontWeight.bold,
@@ -223,15 +246,7 @@ class LocalInvoice {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // Container(
-        //   height: 20,
-        //   width: 100,
-        //   child: BarcodeWidget(
-        //     barcode: Barcode.pdf417(),
-        //     data: 'Invoice $invoiceNumber',
-        //     drawText: false,
-        //   ),
-        // ),
+
         Text(
           'Page ${context.pageNumber}/${context.pagesCount}',
           style: const TextStyle(
@@ -277,40 +292,46 @@ class LocalInvoice {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Invoice: ${invoiceNumber}',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quotation')+invoiceNumber,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    // color: baseColor,
+                    color: PdfColors.black,
                   ),),
                 Text(
-                  'Invoice Date: 3 July 2023',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quotation')+' From: '+invoice.business!.name!,
                   style: TextStyle(
-                    // color: baseColor,
+                    color: PdfColors.black,
                     fontStyle: FontStyle.italic,
                   ),),
                 Text(
-                  'Due Date: 17 July 2023',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quotation')+' Date: '+_formatDate(DateTime.parse(invoice.invoiceDate!)),
                   style: TextStyle(
-                    // color: baseColor,
+                    color: PdfColors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+                if(invoice.invoiceType=='INVOICE')Text(
+                  'Due Date: '+_formatDate(DateTime.parse(invoice.dueDate!)),
+                  style: TextStyle(
+                    color: PdfColors.black,
                     fontStyle: FontStyle.italic,
                   ),),
                 SizedBox(height: 10),
                 Text(
-                  'Invoiced To:',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quoted')+' To:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    // color: baseColor,
+                    color: PdfColors.black,
                   ),),
                 Text(customerName,
                   style: TextStyle(
-                    // color: baseColor,
+                    color: PdfColors.black,
                     fontStyle: FontStyle.italic,
                   ),),
                 Text(customerAddress,
                   style: TextStyle(
-                    // color: baseColor,
+                    color: PdfColors.black,
                     fontStyle: FontStyle.italic,
                   ),),
               ]

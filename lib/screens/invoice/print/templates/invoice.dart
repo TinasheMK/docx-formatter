@@ -48,9 +48,9 @@ Future<Uint8List> generateInvoice(
     accent = PdfColor(red*0.5, green*0.5, blue*0.5);
     lightAccent = PdfColor(red1, green1, blue1);
   }else{
-    mainColor = PdfColors.teal;
-    accent = PdfColors.blueGrey900;
-    lightAccent = PdfColors.red;
+    mainColor = PdfColors.red900;
+    accent = PdfColors.red900;
+    lightAccent = PdfColors.red300;
 
   }
 
@@ -68,7 +68,7 @@ Future<Uint8List> generateInvoice(
     tax: .0,
     baseColor: mainColor,
     accentColor: accent,
-    lightAccent: lightAccent,
+    lightAccent: lightAccent, invoice: data,
   );
 
   return await invoice.buildPdf(pageFormat);
@@ -82,6 +82,7 @@ class LocalInvoice {
     required this.customerAddress,
     required this.invoiceNumber,
     required this.tax,
+    required this.invoice,
     required this.paymentInfo,
     required this.baseColor,
     required this.accentColor,
@@ -94,6 +95,7 @@ class LocalInvoice {
   final String customerAddress;
   final String invoiceNumber;
   final double tax;
+  final Invoice invoice;
   final String paymentInfo;
   final PdfColor baseColor;
   final PdfColor accentColor;
@@ -119,9 +121,6 @@ class LocalInvoice {
     // Create a PDF document.
     final doc = Document();
 
-    // _logo = await rootBundle.loadString('assets/logo/logo.svg');
-    // logoPath ==null ? Image.asset("assets/logo/logo_icon.png", scale:1)
-    //     : Image.file(File(logoPath!), scale:1),
 
     final directory = await getDownloadPath2();
 
@@ -193,19 +192,28 @@ class LocalInvoice {
                     padding: const EdgeInsets.only(
                         left: 40, top: 10, bottom: 10, right: 20),
                     alignment: Alignment.centerLeft,
-                    height: 50,
+                    height: 80,
                     child: DefaultTextStyle(
                       style: TextStyle(
                         color: PdfColors.white,
                         fontSize: 12,
                       ),
                       child: GridView(
-                        crossAxisCount: 2,
+
+                        crossAxisCount: 1,
                         children: [
-                          Text('Invoice '),
-                          Text(invoiceNumber),
-                          Text('Date:'),
-                          Text(_formatDate(DateTime.now())),
+                          Text(
+                            'Invoice: ${invoiceNumber}',
+                           ),
+                          Text(
+                            'Invoice From: '+invoice.business!.name!,
+                           ),
+                          Text(
+                            'Invoice Date: '+_formatDate(DateTime.parse(invoice.invoiceDate!)),
+                            ),
+                          Text(
+                            'Due Date: '+_formatDate(DateTime.parse(invoice.dueDate!)),
+                            ),
                         ],
                       ),
                     ),
@@ -213,7 +221,7 @@ class LocalInvoice {
                 ],
               ),
             ),
-            Expanded(
+            if(_logo != null)Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -224,10 +232,6 @@ class LocalInvoice {
                     child:
                         _logo != null ? Image(_logo!) : Text(""),
                   ),
-                  // Container(
-                  //   color: baseColor,
-                  //   padding: EdgeInsets.only(top: 3),
-                  // ),
                 ],
               ),
             ),
@@ -304,7 +308,7 @@ class LocalInvoice {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: const EdgeInsets.only(left: 10, right: 10),
+                margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
                 height: 70,
                 child: Text(
                   'Invoice to:',
@@ -317,6 +321,8 @@ class LocalInvoice {
               ),
               Expanded(
                 child: Container(
+                  margin: const EdgeInsets.only(  top: 10),
+
                   height: 70,
                   child: RichText(
                       text: TextSpan(

@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
 import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
 import 'package:smart_admin_dashboard/core/types/daily_info_model.dart';
@@ -10,13 +11,11 @@ import '../../../core/models/Client.dart';
 class ClientsSelector extends StatelessWidget {
   const ClientsSelector({
     Key? key,
-    required this.memos,
     required this.callback
 
   }) : super(key: key);
 
   final Function(String, String) callback;
-  final List<Memo> memos;
 
   @override
   Widget build(BuildContext context) {
@@ -91,18 +90,64 @@ class _InformationCardState extends State<InformationCard> {
 
   @override
   Widget build(BuildContext context) {
-    return clients.isEmpty? Text("You have not added any clients yet."): GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: clients.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.crossAxisCount,
-        crossAxisSpacing: defaultPadding,
-        mainAxisSpacing: defaultPadding,
-        childAspectRatio: widget.childAspectRatio,
+    String query='';
+    return clients.isEmpty? Text("You have not added any clients yet."): SingleChildScrollView(
+      child: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              hintText: "Search",
+              fillColor: secondaryColor,
+              filled: true,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+              suffixIcon: InkWell(
+                onTap: () async {
+                   clients = await searchClients(query);
+                   setState(() {
+
+                   });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(defaultPadding * 0.75),
+                  margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+                  decoration: BoxDecoration(
+                    color: defaultColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: SvgPicture.asset(
+                    "assets/icons/Search.svg",
+                  ),
+                ),
+              ),
+            ),
+            onChanged: (value) async {
+              query = value;
+              clients = await searchClients(query);
+              setState(() {
+
+              });
+
+            },
+          ),
+          SizedBox(height: 10,),
+          GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: clients.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: widget.crossAxisCount,
+              crossAxisSpacing: defaultPadding,
+              mainAxisSpacing: defaultPadding,
+              childAspectRatio: widget.childAspectRatio,
+            ),
+            itemBuilder: (context, index) =>
+                MiniInformationWidget(memo: clients[index], callback:widget.callback),
+          )
+        ],
       ),
-      itemBuilder: (context, index) =>
-          MiniInformationWidget(memo: clients[index], callback:widget.callback),
     );
   }
 }

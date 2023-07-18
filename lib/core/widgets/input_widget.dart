@@ -85,7 +85,7 @@ class InputWidget extends StatelessWidget {
                 hintStyle: Theme.of(context)
                     .textTheme
                     .bodyText1!
-                    .copyWith(color: Colors.white54),
+                    .copyWith(fontWeight: FontWeight.w400),
                 errorText: this.errorText),
             inputFormatters: <TextInputFormatter>[
               this.filteringTextInputFormatter != null ? this.filteringTextInputFormatter!: FilteringTextInputFormatter.singleLineFormatter,

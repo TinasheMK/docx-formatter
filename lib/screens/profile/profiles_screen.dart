@@ -27,8 +27,8 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               Header(),
-              SizedBox(height: 30,),
-              ProfilesHeader(),
+              // SizedBox(height: 30,),
+              // ProfilesHeader(),
               // SizedBox(height: 60,),
               // Image.asset("assets/logo/logo_icon.png", scale:4),
               SizedBox(height: defaultPadding),
@@ -44,18 +44,101 @@ class ProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
 
-                        _registerScreen(context),
-
-
-
-                        SizedBox(
-                          // height: 600,
-                            child: AddBusinessProfileHome(
-                            callback: callback
-                        )
+                        Card(
+                          // color: bgColor,
+                          // elevation: 5,
+                          margin: EdgeInsets.all(3),
+                          child: GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Profile"),
+                                      // Icon(Icons.add)
+                                    ],
+                                  )),
+                            ),
+                            onTap: (){
+                              showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                    return AlertDialog(
+                                        content: SingleChildScrollView(
+                                          child: _registerScreen(context),
+                                        ));
+                                  });
+                            },
+                          ),
                         ),
-                        // RecentUsers(),
+                        Card(
+                          // color: bgColor,
+                          // elevation: 5,
+                          margin: EdgeInsets.all(3),
+                          child: GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Businesses"),
+                                      // Icon(Icons.add)
+                                    ],
+                                  )),
+                            ),
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AddBusinessProfileHome(callback: callback,)),
+                              );
+                            },
+                          ),
+                        ),
                         CurrencySelector(),
+                        // Card(
+                        //   // color: bgColor,
+                        //   // elevation: 5,
+                        //   margin: EdgeInsets.all(3),
+                        //   child: GestureDetector(
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(3.0),
+                        //       child: Container(
+                        //           padding: const EdgeInsets.symmetric(
+                        //               vertical: 10.0, horizontal: 16.0),
+                        //           child: Row(
+                        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //             children: [
+                        //               Text("Theme"),
+                        //               // Icon(Icons.add)
+                        //             ],
+                        //           )),
+                        //     ),
+                        //     onTap: (){
+                        //       // Navigator.pushReplacement(
+                        //       //   context,
+                        //       //   MaterialPageRoute(builder: (context) => ProfileHome(title: 'New Invoice', code: 'invoice',)),
+                        //       // );
+                        //     },
+                        //   ),
+                        // ),
+
+
+                        // _registerScreen(context),
+
+
+
+                        // SizedBox(
+                        //   // height: 600,
+                        //     child: AddBusinessProfileHome(
+                        //     callback: callback
+                        // )
+                        // ),
 
                         SizedBox(height: defaultPadding),
                         if (Responsive.isMobile(context))
@@ -185,90 +268,71 @@ class _CurrencySelectorState extends State<CurrencySelector> {
   @override
   Widget build(BuildContext context) {
     print(currencies);
-    print("clients");
+    print("Currencies");
     return Card(
       // color: bgColor,
-      elevation: 5,
-      // margin: EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.all(0),
-        child: Container(
-            padding: const EdgeInsets.symmetric(
-                vertical: 0, horizontal: 0),
-            child: Column(
-              children: [
+      // elevation: 5,
+      margin: EdgeInsets.all(3),
+      child: GestureDetector(
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Container(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Currencies"),
+                  // Icon(Icons.add)
+                ],
+              )),
+        ),
+        onTap: (){
+          showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children:
+                        List.generate(
+                            currencies.length,
+                                (index) =>
 
 
-                // SizedBox(height: 10,),
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 3),
+                                  // padding: EdgeInsets.symmetric(
+                                  //   horizontal: defaultPadding,
+                                  //   vertical: defaultPadding / 2,
+                                  // ),
+                                  decoration: BoxDecoration(
+                                    // color: secondaryColor,
+                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(),
+                                  ),
+                                  child: TextButton(
+                                    child: Text(currencies[index].id!),
+                                    onPressed: () {
+
+                                      prefs?.setString(UserPreference.activeCurrency, currencies[index].id ?? "");
 
 
-
-
-                ElevatedButton.icon(
-                  icon: Icon(
-                    Icons.flag,
-                    size: 14,
-                  ),
-                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
-                      primary: defaultColor),
-                  label: Text(activeCurrency ?? "Select Currency"),
-
-                  onPressed: () {
-
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                              content: Container(
-                                // color: secondaryColor,
-                                // height: 410,
-                                child: Column(
-                                  children:
-                                  List.generate(
-                                      currencies.length,
-                                          (index) =>
-
-
-                                          Container(
-                                            // margin: EdgeInsets.only(bottom: defaultPadding),
-                                            // padding: EdgeInsets.symmetric(
-                                            //   horizontal: defaultPadding,
-                                            //   vertical: defaultPadding / 2,
-                                            // ),
-                                            decoration: BoxDecoration(
-                                              // color: secondaryColor,
-                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                              // border: Border.all(color: Colors.white10),
-                                            ),
-                                            child: TextButton(
-                                              child: Text(currencies[index].id!, style: TextStyle(color: Colors.white)),
-                                              onPressed: () {
-
-                                                prefs?.setString(UserPreference.activeCurrency, currencies[index].id ?? "");
-
-
-                                                setState(() {
-                                                });
-                                                Navigator.of(context).pop();
-                                              },
-                                              // Delete
-                                            ),
-
-                                          )
+                                      setState(() {
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                    // Delete
                                   ),
 
-
-                                ),
-                              ));
-                        });
-                  },)
+                                )
+                        ),
 
 
-
-
-
-              ],
-            )),
+                      ),
+                    ));
+              });
+        },
       ),
     );
   }

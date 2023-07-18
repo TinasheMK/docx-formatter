@@ -43,7 +43,7 @@ class ProductScreen extends StatefulWidget {
 
 // class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> with SingleTickerProviderStateMixin {
-  var addCategory = true;
+  var addCategory = false;
 
   String name = "";
   String desc = "";
@@ -74,7 +74,7 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   Color currentColor = Colors.green;
 
   Product product = Product.fromJson({});
-  List<Category> categories = [Category.fromJson({})];
+  List<Category> categories = [];
 
   String? imagePath;
 
@@ -87,10 +87,11 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   TextEditingController con7 = TextEditingController();
 
   Future<void> _initproduct() async {
+    categories = await getCategorys();
+
     if(profileId!=null) {
       categories.clear();
       product = await getProduct(profileId!)??Product.fromJson({});
-      categories = await getCategorys();
       con1.text = product.name??"";
       con2.text = product.price?.toString() ?? "";
       con3.text = product.sku ?? "";
@@ -123,454 +124,454 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
     print(profileId);
     print(profileId);
 
-    // print(widget.code);
-    // final Size _size = MediaQuery.of(context).size;
-    // crossAxisCount= _size.width < 650 ? 2 : 4;
-    // childAspectRatio= _size.width < 650 ? 3 : 3;
-    //
-    // memosSet = memoInits;
-    //
-    // for( int i = 0 ; i < memos.length; i++ ) {
-    //   if(memos[i].set!="set"){
-    //     memosSet.removeWhere((element) => element.code == memos[i].code);
-    //     print(i);
-    //   }else if(memos.length==0){
-    //     memosSet.add(memos[1]);
-    //   }
-    // }
+    categoryList(){
+      return       showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+                content: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          children:
+                          List.generate(
+                              categories.length,
+                                  (index) =>
 
-    List<Widget> _formFields(){
-      return [
-        Expanded(
-          child: Column(
+
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 5),
+                                    // padding: EdgeInsets.symmetric(
+                                    //   horizontal: defaultPadding,
+                                    //   vertical: defaultPadding / 2,
+                                    // ),
+                                    decoration: BoxDecoration(
+                                      // color: secondaryColor,
+                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                      border: Border.all(),
+                                    ),
+                                    child: TextButton(
+                                      child: Text(categories[index].name??''),
+                                      onPressed: () {
+                                        product.categoryId = categories[index].id;
+                                        product.category = categories[index];
+                                        setState(() {});
+                                        Navigator.of(context).pop();
+                                      },
+                                      // Delete
+                                    ),
+
+                                  )
+                          ),
+
+
+                        ),
+                      ),
+                      if(!addCategory)ElevatedButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: defaultPadding * 1.5,
+                            vertical:
+                            defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                          ),
+                        ),
+                        onPressed: () async {
+                          addCategory = true;
+                          Navigator.of(context).pop();
+                          categoryList();
+
+
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text(
+                          "Add",
+                        ),
+                      ),
+                      addCategory ? Container(
+                        padding: EdgeInsets.all(defaultPadding),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: darkgreenColor,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 3),
+                            SizedBox(width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+
+                                children: [
+                                  Expanded(
+                                    child:
+                                    Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children:[
+                                          Text( "Category Name:          ",
+                                            style: TextStyle(fontWeight: FontWeight.bold ),
+                                          ),
+                                          SizedBox(
+                                            width: 80,
+                                            child: TextFormField(
+                                              onChanged: (String value){
+                                                name = value;
+                                              },
+
+
+                                            ),
+                                          )
+                                        ]
+                                    ),
+                                  ),
+                                ],
+                              ),),
+
+
+                            SizedBox(height: 3),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+
+                              children: [
+                                Expanded(
+                                  child:
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children:[
+                                        Text( "Description:          ", style: TextStyle(fontWeight: FontWeight.bold ),
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            onChanged: (String value){
+                                              desc = value;
+                                            },
+
+
+                                          ),
+                                        )
+                                      ]
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Row(
+                              children: [
+                                SizedBox(width: 15),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.redAccent,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding * 1.5,
+                                        vertical:
+                                        defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      addCategory = false;
+                                      categories = await getCategorys();
+
+                                      setState(() {
+                                      });
+
+                                      Navigator.of(context).pop();
+                                      categoryList();
+                                    },
+                                    // icon: Icon(Icons.cancel),
+                                    child: Text(
+                                      "Cancel",
+                                    ),
+                                  ),),
+                                SizedBox(width: 15),
+                                Expanded(child: ElevatedButton.icon(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: defaultPadding * 1.5,
+                                      vertical:
+                                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    Category newCategory = Category(name: name, description: desc);
+                                    newCategory.save();
+
+                                    addCategory = false;
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                      content: Text("Category Added"),
+                                    ));
+                                    categories = await getCategorys();
+                                    setState(() { });
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.add),
+                                  label: Text(
+                                    "Add",
+                                  ),
+                                ),),
+                                SizedBox(width: 15),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                          ],
+                        ),
+                      ): SizedBox(),
+                    ],
+                  ),
+                ));
+          });
+    }
+
+    Widget _formFields1(){
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
+              Expanded(
+                child:
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right:5),
+                  child: InputWidget(
+                    topLabel: "Product Name",
+                    keyboardType: TextInputType.text,
+                    kController: con1,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      print(product!.toJson());
+                      product!.name = value;
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter product name.';
+                      }
+                      return null;
+                    },
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child:
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, right:5),
-                    child: InputWidget(
-                      topLabel: "Product Name",
+
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child:
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right:5),
+                  child: InputWidget(
+                      topLabel: "Price",
                       keyboardType: TextInputType.text,
-                      kController: con1,
+                      kController: con2,
                       onSaved: (String? value) {
                         // This optional block of code can be used to run
                         // code when the user saves the form.
                       },
-                      onChanged: (String? value) {
-                        print(product!.toJson());
-                        product!.name = value;
-                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter product name.';
+                          return 'Please enter price.';
                         }
                         return null;
                       },
 
-
-                      // prefixIcon: FlutterIcons.chevron_left_fea,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 3),
-              ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, right:5),
-                    child: InputWidget(
-                        topLabel: "Price",
-                        keyboardType: TextInputType.text,
-                        kController: con2,
-                        onSaved: (String? value) {
-                          // This optional block of code can be used to run
-                          // code when the user saves the form.
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter price.';
-                          }
-                          return null;
-                        },
-
-                        onChanged: (String? value) {
-                          product!.price = double.parse(value??"0");
-                        }
-
-
-                      // prefixIcon: FlutterIcons.chevron_left_fea,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 3),
-              ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, right:5),
-                    child: InputWidget(
-                      topLabel: "SKU",
-                      keyboardType: TextInputType.text,
-                      kController: con3,
-                      onSaved: (String? value) {
-                        // This optional block of code can be used to run
-                        // code when the user saves the form.
-                      },
                       onChanged: (String? value) {
-                        product!.sku = value;
-                      },
+                        product!.price = double.parse(value??"0");
+                      }
 
 
-                      // prefixIcon: FlutterIcons.chevron_left_fea,
-                    ),
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
                   ),
                 ),
-                SizedBox(height: 3),
-              ],),
-          ],),
-
-        ),
-        Expanded(
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child:
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, right:5),
-                    child: InputWidget(
-                      topLabel: "Stock",
-                      keyboardType: TextInputType.text,
-                      onSaved: (String? value) {
-                        // This optional block of code can be used to run
-                        // code when the user saves the form.
-                      },
-                      onChanged: (String? value) {
-
-                        product!.stock = int.parse(value??"0");
-                      },
-                      validator: (String? value) {
-                        return (value != null && value.contains('@'))
-                            ? 'Do not use the @ char.'
-                            : null;
-                      },
-                      kController: con4,
+              Expanded(
+                child:
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right:5),
+                  child: InputWidget(
+                    topLabel: "SKU",
+                    keyboardType: TextInputType.text,
+                    kController: con3,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+                      product!.sku = value;
+                    },
 
 
-                      // prefixIcon: FlutterIcons.chevron_left_fea,
-                    ),
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
                   ),
                 ),
-                SizedBox(height: 3),
-              ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, right:5, top: 20),
-                    child:                         Row(
-                        children:[
-                          Text( "Category:            ", style: TextStyle(fontWeight: FontWeight.bold ),
+              ),
+              SizedBox(height: 3),
+            ],),
+        ],);
+    }
+
+    Widget _formFields2(){
+      return  Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child:
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right:5),
+                  child: InputWidget(
+                    topLabel: "Stock",
+                    keyboardType: TextInputType.text,
+                    onSaved: (String? value) {
+                      // This optional block of code can be used to run
+                      // code when the user saves the form.
+                    },
+                    onChanged: (String? value) {
+
+                      product!.stock = int.parse(value??"0");
+                    },
+                    validator: (String? value) {
+                      return (value != null && value.contains('@'))
+                          ? 'Do not use the @ char.'
+                          : null;
+                    },
+                    kController: con4,
+
+
+                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3),
+            ],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child:
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right:5, top: 20),
+                  child:                         Row(
+                      children:[
+                        Text( "Category:            ", style: TextStyle(fontWeight: FontWeight.bold ),
+                        ),
+                        product.category != null ? Container(
+                          // margin: EdgeInsets.only(left: defaultPadding),
+                          // padding: EdgeInsets.symmetric(
+                          //   horizontal: defaultPadding /4,
+                          //   vertical: defaultPadding / 5,
+                          // ),
+                          decoration: BoxDecoration(
+                            color: secondaryColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(color: Colors.white10),
                           ),
-                          product.category != null ? Container(
-                            // margin: EdgeInsets.only(left: defaultPadding),
-                            // padding: EdgeInsets.symmetric(
-                            //   horizontal: defaultPadding /4,
-                            //   vertical: defaultPadding / 5,
-                            // ),
-                            decoration: BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(color: Colors.white10),
-                            ),
-                            child: TextButton(
-                              child: Text(product.category!.name!),
-                              onPressed: ()  {
+                          child: TextButton(
+                            child: Text(product.category!.name!),
+                            onPressed: ()  {
 
 
-                                if(true){
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) {
-                                        return AlertDialog(
-                                            content: Container(
-                                              color: secondaryColor,
-                                              height: 410,
-                                              child: Column(
-                                                children:
-                                                List.generate(
-                                                    categories.length,
-                                                        (index) =>
+                              if(true){
+                                showDialog(
+                                    context: context,
+                                    builder: (_) {
+                                      return AlertDialog(
+                                          content: SingleChildScrollView(
+                                            child: Column(
+                                              children:
+                                              List.generate(
+                                                  categories.length,
+                                                      (index) =>
 
 
-                                                        Container(
-                                                          margin: EdgeInsets.only(bottom: defaultPadding),
-                                                          // padding: EdgeInsets.symmetric(
-                                                          //   horizontal: defaultPadding,
-                                                          //   vertical: defaultPadding / 2,
-                                                          // ),
-                                                          decoration: BoxDecoration(
-                                                            color: secondaryColor,
-                                                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                            border: Border.all(),
-                                                          ),
-                                                          child: TextButton(
-                                                            child: Text(categories[index].name??''),
-                                                            onPressed: () {
-                                                              product.categoryId = categories[index].id;
-                                                              product.category = categories[index];
-                                                              setState(() {});
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            // Delete
-                                                          ),
-
-                                                        )
-                                                ),
-
-
-                                              ),
-                                            ));
-                                      });
-                                }
-
-
-
-
-
-
-                              },
-                              // Delete
-                            ),
-
-                          ):ElevatedButton.icon(
-                            icon: Icon(
-                              Icons.flag,
-                              size: 14,
-                            ),
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
-                                primary: Colors.blueAccent),
-                            label: Text(product.category?.id.toString()! ?? "Select Category"),
-
-                            onPressed: () {
-
-                              showDialog(
-                                  context: context,
-                                  builder: (_) {
-                                    return AlertDialog(
-                                        content: Container(
-                                          // color: secondaryColor,
-                                          // height: (60*currencies.length).toDouble(),
-                                          child: Column(
-                                            children: [
-                                              SingleChildScrollView(
-                                                child: Column(
-                                                  children:
-                                                  List.generate(
-                                                      categories.length,
-                                                          (index) =>
-
-
-                                                          Container(
-                                                            margin: EdgeInsets.only(bottom: 5),
-                                                            // padding: EdgeInsets.symmetric(
-                                                            //   horizontal: defaultPadding,
-                                                            //   vertical: defaultPadding / 2,
-                                                            // ),
-                                                            decoration: BoxDecoration(
-                                                              // color: secondaryColor,
-                                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                              border: Border.all(),
-                                                            ),
-                                                            child: TextButton(
-                                                              child: Text(categories[index].name??''),
-                                                              onPressed: () {
-                                                                product.categoryId = categories[index].id;
-                                                                product.category = categories[index];
-                                                                setState(() {});
-                                                                Navigator.of(context).pop();
-                                                              },
-                                                              // Delete
-                                                            ),
-
-                                                          )
-                                                  ),
-
-
-                                                ),
-                                              ),
-                                              addCategory ? Container(
-                                                padding: EdgeInsets.all(defaultPadding),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: darkgreenColor,
-                                                  ),
-                                                  borderRadius: const BorderRadius.all(Radius.circular(10)),),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(height: 3),
-                                                    SizedBox(width: 300,
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-
-                                                        children: [
-                                                          Expanded(
-                                                            child:
-                                                            Row(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                children:[
-                                                                  Text( "Category Name:          ",
-                                                                    style: TextStyle(fontWeight: FontWeight.bold ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 80,
-                                                                    child: TextFormField(
-                                                                      onChanged: (String value){
-                                                                        name = value;
-                                                                      },
-
-
-                                                                    ),
-                                                                  )
-                                                                ]
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),),
-
-
-                                                    SizedBox(height: 3),
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                          Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children:[
-                                                                Text( "Description:          ", style: TextStyle(fontWeight: FontWeight.bold ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 80,
-                                                                  child: TextFormField(
-                                                                    onChanged: (String value){
-                                                                      desc = value;
-                                                                    },
-
-
-                                                                  ),
-                                                                )
-                                                              ]
-                                                          ),
+                                                      Container(
+                                                        margin: EdgeInsets.only(bottom: defaultPadding),
+                                                        // padding: EdgeInsets.symmetric(
+                                                        //   horizontal: defaultPadding,
+                                                        //   vertical: defaultPadding / 2,
+                                                        // ),
+                                                        decoration: BoxDecoration(
+                                                          color: secondaryColor,
+                                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                          border: Border.all(),
                                                         ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 15),
-                                                    Row(
-                                                      children: [
-                                                        SizedBox(width: 15),
-                                                        Expanded(
-                                                          child: ElevatedButton(
-                                                            style: TextButton.styleFrom(
-                                                              backgroundColor: Colors.redAccent,
-                                                              padding: EdgeInsets.symmetric(
-                                                                horizontal: defaultPadding * 1.5,
-                                                                vertical:
-                                                                defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                                                              ),
-                                                            ),
-                                                            onPressed: () async {
-                                                              addCategory = false;
-                                                              categories = await getCategorys();
-
-                                                              setState(() {
-                                                              });
-
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            // icon: Icon(Icons.cancel),
-                                                            child: Text(
-                                                              "Cancel",
-                                                            ),
-                                                          ),),
-                                                        SizedBox(width: 15),
-                                                        Expanded(child: ElevatedButton.icon(
-                                                          style: TextButton.styleFrom(
-                                                            backgroundColor: Colors.green,
-                                                            padding: EdgeInsets.symmetric(
-                                                              horizontal: defaultPadding * 1.5,
-                                                              vertical:
-                                                              defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                                                            ),
-                                                          ),
-                                                          onPressed: () async {
-                                                            Category newCategory = Category(name: name, description: desc);
-                                                            newCategory.save();
-
-                                                            addCategory = false;
-                                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                              content: Text("Category Added"),
-                                                            ));
-                                                            categories = await getCategorys();
-                                                            setState(() { });
+                                                        child: TextButton(
+                                                          child: Text(categories[index].name??''),
+                                                          onPressed: () {
+                                                            product.categoryId = categories[index].id;
+                                                            product.category = categories[index];
+                                                            setState(() {});
                                                             Navigator.of(context).pop();
                                                           },
-                                                          icon: Icon(Icons.add),
-                                                          label: Text(
-                                                            "Add",
-                                                          ),
-                                                        ),),
-                                                        SizedBox(width: 15),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 15),
-                                                  ],
-                                                ),
-                                              ): SizedBox(),
-                                            ],
-                                          ),
-                                        ));
-                                  });
-                            },),
+                                                          // Delete
+                                                        ),
+
+                                                      )
+                                              ),
 
 
-                        ]
-                    ),
+                                            ),
+                                          ));
+                                    });
+                              }
+
+
+
+
+
+
+                            },
+                            // Delete
+                          ),
+
+                        ):ElevatedButton.icon(
+                          icon: Icon(
+                            Icons.flag,
+                            size: 14,
+                          ),
+                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(10),
+                              primary: Colors.blueAccent),
+                          label: Text(product.category?.id.toString()! ?? "Select Category"),
+
+                          onPressed: () {
+
+                            categoryList();
+                          },),
+
+
+                      ]
                   ),
                 ),
-                SizedBox(height: 3),
-              ],),
-          ],),
-
-        ),
-      ];
+              ),
+              SizedBox(height: 3),
+            ],),
+        ],);
     }
 
     return SafeArea(
@@ -657,23 +658,33 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                                 SizedBox(height: 16.0),
 
                                 SingleChildScrollView(
-                                  child: SizedBox( height: 450,
+                                  child: SizedBox(
                                       child: Responsive(
-                                        mobile: Column(
-
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: _formFields(),
+                                        mobile: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              _formFields1(),
+                                              _formFields2(),
+                                            ],
+                                          ),
                                         ),
                                         tablet: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: _formFields(),
+                                          children: [
+                                            Expanded(child: _formFields1()),
+                                            Expanded(child: _formFields2()),
+                                          ],
                                         ),
                                         desktop: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: _formFields(),
+                                          children: [
+                                            Expanded(child: _formFields1()),
+                                            Expanded(child: _formFields2()),
+                                          ],
                                         ),
 
                                       )

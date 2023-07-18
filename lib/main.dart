@@ -87,6 +87,7 @@ class MyApp extends StatelessWidget {
       //   dialogBackgroundColor: secondaryColor,
       //   canvasColor: secondaryColor,
       // ),
+      // home: Login(title: "Welcome to the Admin & Dashboard Panel"),
       home: Login(title: "Welcome to the Admin & Dashboard Panel"),
     );
   }

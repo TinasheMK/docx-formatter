@@ -12,7 +12,7 @@ import 'templates/invoice2.dart';
 
 const examples = <Example>[
   Example('Plain', 'invoice5.dart', generateInvoice5),
-  Example('Wave', 'invoice.dart', generateInvoice),
+  // Example('Wave', 'invoice.dart', generateInvoice),
   Example('Circles', 'invoice4.dart', generateInvoice4),
   // Example('Block', 'invoice2.dart', generateInvoice2),
 ];

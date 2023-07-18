@@ -48,61 +48,66 @@ class _AddBusinessProfileHomeState extends State<AddBusinessProfileHome> {
   @override
   Widget build(BuildContext context) {
     print("This is add business profile home.");
-    return Card(
-      // color: bgColor,
-      elevation: 5,
-      margin: EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-            padding: const EdgeInsets.symmetric(
-                vertical: 16.0, horizontal: 16.0),
-            child: Column(
-              children: [
+    return Scaffold(
+      appBar: new AppBar(),
+      body: SingleChildScrollView(
+        child: Card(
+          // color: bgColor,
+          elevation: 5,
+          margin: EdgeInsets.all(10),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16.0, horizontal: 16.0),
+                child: Column(
+                  children: [
 
 
-                SizedBox(height: 10,),
+                    SizedBox(height: 10,),
 
-                Center(
-                  child: Text("Your Business Profiles"),
-                ),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: defaultColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                    Center(
+                      child: Text("Your Business Profiles"),
                     ),
-                  ),
-                  onPressed: () {
-                    clients = [Business.fromJson({})];
-                    setState(() {
+                    ElevatedButton.icon(
+                      style: TextButton.styleFrom(
+                        backgroundColor: defaultColor,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: defaultPadding * 1.5,
+                          vertical:
+                          defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                        ),
+                      ),
+                      onPressed: () {
+                        clients = [Business.fromJson({})];
+                        setState(() {
 
-                    });
+                        });
 
-                    Navigator.pop(context);
+                        Navigator.pop(context);
 
-                    SchedulerBinding.instance!
-                        .addPostFrameCallback((_) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfileHome(title: 'New Invoice', code: 'invoice',)),
-                      );
-                    });
-
-
+                        SchedulerBinding.instance!
+                            .addPostFrameCallback((_) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => ProfileHome(title: 'New Invoice', code: 'invoice',)),
+                          );
+                        });
 
 
-                  },
-                  icon: Icon(Icons.add),
-                  label: Text(
-                    "Add Business Profile",
-                  ),
-                ),
-                AddBusinessProfile(memos: memos,callback: widget.callback),
-              ],
-            )),
+
+
+                      },
+                      icon: Icon(Icons.add),
+                      label: Text(
+                        "Add Business Profile",
+                      ),
+                    ),
+                    AddBusinessProfile(memos: memos,callback: widget.callback),
+                  ],
+                )),
+          ),
+        ),
       ),
     );
   }

@@ -73,7 +73,8 @@ Future<Uint8List> generateInvoice5(
     baseColor: mainColor,
     accentColor: accent,
     lightAccent: lightAccent,
-    complimentAccent: complimentAccent,
+    complimentAccent: complimentAccent, 
+    invoice: data,
   );
 
   return await invoice.buildPdf(pageFormat);
@@ -87,6 +88,7 @@ class LocalInvoice {
     required this.customerAddress,
     required this.invoiceNumber,
     required this.tax,
+    required this.invoice,
     required this.paymentInfo,
     required this.baseColor,
     required this.accentColor,
@@ -96,6 +98,7 @@ class LocalInvoice {
 
   final List<InvoiceItem> products;
   final String logo;
+  final Invoice invoice;
   final String customerName;
   final String customerAddress;
   final String invoiceNumber;
@@ -127,9 +130,6 @@ class LocalInvoice {
     // Create a PDF document.
     final doc = Document();
 
-    // _logo = await rootBundle.loadString('assets/logo/logo.svg');
-    // logoPath ==null ? Image.asset("assets/logo/logo_icon.png", scale:1)
-    //     : Image.file(File(logoPath!), scale:1),
 
     final directory = await getDownloadPath2();
 
@@ -186,12 +186,17 @@ class LocalInvoice {
                     padding: const EdgeInsets.only(bottom: 18,  top: 10, right: 10),
                     height: 90,
                     child:
-                    _logo != null ? Image(_logo!) : Text(""),
+                    _logo != null ? Image(_logo!) : Text("INVOICE",
+                      style: TextStyle(
+                      color: PdfColors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                    ),),
                   ),
                 ],
               ),
             ),
-            Expanded(
+            if(invoice.invoiceType=='INVOICE')Expanded(
               child: Column(
                 children: [
                   Container(
@@ -199,7 +204,26 @@ class LocalInvoice {
                     padding: const EdgeInsets.only(left: 20, top: 18),
                     alignment: Alignment.centerRight,
                     child: Text(
-                      'PAID',
+                      invoice.invoiceStatus!,
+                      style: TextStyle(
+                        color: PdfColors.grey700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if(invoice.invoiceType!='INVOICE')Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    // height: 50,
+                    padding: const EdgeInsets.only(left: 20, top: 18),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'QUOTE',
                       style: TextStyle(
                         color: PdfColors.grey700,
                         fontWeight: FontWeight.bold,
@@ -268,27 +292,33 @@ class LocalInvoice {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Invoice: ${invoiceNumber}',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quotation')+invoiceNumber,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: PdfColors.black,
                   ),),
                 Text(
-                  'Invoice Date: 3 July 2023',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quotation')+' From: '+invoice.business!.name!,
                   style: TextStyle(
                     color: PdfColors.black,
                     fontStyle: FontStyle.italic,
                   ),),
                 Text(
-                  'Due Date: 17 July 2023',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quotation')+' Date: '+_formatDate(DateTime.parse(invoice.invoiceDate!)),
+                  style: TextStyle(
+                    color: PdfColors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+                if(invoice.invoiceType=='INVOICE')Text(
+                  'Due Date: '+_formatDate(DateTime.parse(invoice.dueDate!)),
                   style: TextStyle(
                     color: PdfColors.black,
                     fontStyle: FontStyle.italic,
                   ),),
                 SizedBox(height: 10),
                 Text(
-                  'Invoiced To:',
+                  (invoice.invoiceType=='INVOICE'?'Invoice:':'Quoted')+' To:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
