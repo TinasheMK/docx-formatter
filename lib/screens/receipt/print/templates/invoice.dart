@@ -23,6 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
+import 'package:smart_admin_dashboard/core/models/Currency.dart';
 
 import '../../../../core/models/InvoiceItem.dart';
 import '../../../../core/models/Invoice.dart';
@@ -526,7 +527,7 @@ class LocalInvoice {
         products.length,
         (row) => List<String>.generate(
           tableHeaders.length,
-          (col) => products[row].getIndex(col) ?? '',
+          (col) => products[row].getIndex(col, new Currency()) ?? '',
         ),
       ),
     );

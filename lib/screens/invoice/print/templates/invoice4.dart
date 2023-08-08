@@ -518,7 +518,7 @@ class LocalInvoice {
         products.length,
         (row) => List<String>.generate(
           tableHeaders.length,
-          (col) => products[row].getIndex(col) ?? '',
+          (col) => products[row].getIndex(col, invoice.currencyFull!) ?? '',
         ),
       ),
     );

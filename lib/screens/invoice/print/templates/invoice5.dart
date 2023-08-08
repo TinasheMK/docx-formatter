@@ -162,6 +162,9 @@ class LocalInvoice {
           SizedBox(height: 20),
           _contentFooter(context),
           SizedBox(height: 20),
+          if(invoice.payments!=null)_paymentTable(context),
+          if(invoice.payments!=null)SizedBox(height: 20),
+          SizedBox(height: 20),
           _termsAndConditions(context),
         ],
       ),
@@ -348,36 +351,7 @@ class LocalInvoice {
       children: [
         Expanded(
           flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Thank you for your business',
-                style: TextStyle(
-                  color: _darkColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 20, bottom: 8),
-                child: Text(
-                  'Payment Info:',
-                  style: TextStyle(
-                    color: baseColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Text(
-                paymentInfo,
-                style: const TextStyle(
-                  fontSize: 8,
-                  lineSpacing: 5,
-                  color: _darkColor,
-                ),
-              ),
-            ],
-          ),
+          child: SizedBox(),
         ),
         Expanded(
           flex: 1,
@@ -415,7 +389,7 @@ class LocalInvoice {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total:'),
-                      Text(_formatCurrency(_grandTotal)),
+                      Text(invoice.currencyFull!.symbol!+_formatCurrency(_grandTotal)),
                     ],
                   ),
                 ),
@@ -428,49 +402,79 @@ class LocalInvoice {
   }
 
   Widget _termsAndConditions(Context context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: accentColor)),
-                ),
-                padding: const EdgeInsets.only(top: 10, bottom: 4),
-                child: Text(
-                  'Terms & Conditions',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: baseColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Text(
-                'Please make payment before the due date',
-                textAlign: TextAlign.justify,
-                style: const TextStyle(
-                  fontSize: 6,
-                  lineSpacing: 2,
-                  color: _darkColor,
-                ),
-              ),
-            ],
+        Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Thank you for your business',
+            style: TextStyle(
+              color: _darkColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Expanded(
-          child: SizedBox(),
-        ),
+          Container(
+            margin: const EdgeInsets.only(top: 20, bottom: 8),
+            child: Text(
+              'Payment Info:',
+              style: TextStyle(
+                color: baseColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            paymentInfo,
+            style: const TextStyle(
+              fontSize: 8,
+              lineSpacing: 5,
+              color: _darkColor,
+            ),
+          ),
+        ],
+      ),
+        SizedBox(height: 10),
+
+        Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: accentColor)),
+            ),
+            padding: const EdgeInsets.only(top: 10, bottom: 4),
+            child: Text(
+              'Terms & Conditions',
+              style: TextStyle(
+                fontSize: 12,
+                color: baseColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            'Please make payment before the due date',
+            textAlign: TextAlign.justify,
+            style: const TextStyle(
+              fontSize: 6,
+              lineSpacing: 2,
+              color: _darkColor,
+            ),
+          ),
+        ],
+      ),
+
+
       ],
     );
   }
 
   Widget _contentTable(Context context) {
     const tableHeaders = [
-      'SKU#',
+      // 'SKU#',
       'Item Description',
       'Price',
       'Quantity',
@@ -518,15 +522,83 @@ class LocalInvoice {
         products.length,
         (row) => List<String>.generate(
           tableHeaders.length,
-          (col) => products[row].getIndex(col) ?? '',
+          (col) => products[row].getIndex(col, invoice.currencyFull!) ?? '',
         ),
       ),
+    );
+  }
+  Widget _paymentTable(Context context) {
+    const tableHeaders = [
+      'Ref',
+      'Date',
+      'Amount',
+    ];
+    var totPayments =0.0;
+    invoice.payments!.forEach((e) {
+      totPayments+=e.total!;
+    });
+    var totalDue = invoice.totalAmount! - totPayments;
+
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if(invoice.payments!.length!=0)Text('Related Payments',),
+          if(invoice.payments!.length==0)Text('No Related Payments',),
+          SizedBox(height:3),
+          if(invoice.payments!.length!=0)TableHelper.fromTextArray(
+            border: null,
+            cellAlignment: Alignment.center,
+            headerDecoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(2)),
+              color: lightAccent,
+            ),
+            headerHeight: 25,
+            cellHeight: 40,
+            cellAlignments: {
+              1: Alignment.centerLeft,
+              1: Alignment.centerLeft,
+              1: Alignment.center,
+            },
+            headerStyle: TextStyle(
+              color: _baseTextColor,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+            cellStyle: const TextStyle(
+              color: PdfColors.black,
+              fontSize: 10,
+            ),
+            rowDecoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: accentColor,
+                  width: .5,
+                ),
+              ),
+            ),
+            headers: List<String>.generate(
+              tableHeaders.length,
+                  (col) => tableHeaders[col],
+            ),
+            data: List<List<String>>.generate(
+              invoice.payments!.length,
+                  (row) => List<String>.generate(
+                tableHeaders.length,
+                    (col) => invoice.payments![row].getIndex(col, invoice.currencyFull!) ?? '',
+              ),
+            ),
+          ),
+          SizedBox(height:3),
+          Text('Amount Due: '+invoice.currencyFull!.symbol!+totalDue.toStringAsFixed(2)),
+
+        ]
     );
   }
 }
 
 String _formatCurrency(double amount) {
-  return '\$${amount.toStringAsFixed(2)}';
+  return '${amount.toStringAsFixed(2)}';
 }
 
 String _formatDate(DateTime date) {

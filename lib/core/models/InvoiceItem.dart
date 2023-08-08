@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../main.dart';
+import 'Currency.dart';
 
 class InvoiceItem {
   int?    id;
@@ -257,18 +258,18 @@ class InvoiceItem {
     }
   }
 
-  String? getIndex(int index) {
+  String? getIndex(int index, Currency currency) {
     switch (index) {
+      // case 0:
+      //   return id.toString();
       case 0:
-        return id.toString();
-      case 1:
         return description;
+      case 1:
+        return unitPrice?.toStringAsFixed(2);
       case 2:
-        return unitPrice.toString();
-      case 3:
         return units.toString();
-      case 4:
-        return total.toString();
+      case 3:
+        return currency.symbol!+total!.toStringAsFixed(2);
     }
     return '';
   }

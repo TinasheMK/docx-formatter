@@ -21,7 +21,7 @@ class ReceiptsHeader extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text( "Receipts", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
             SizedBox(

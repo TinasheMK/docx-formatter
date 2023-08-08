@@ -1743,7 +1743,13 @@ class _InvoiceScreenState extends State<InvoiceScreen> with TickerProviderStateM
   }
 
   DataRow _recentUserDataRow( InvoiceItem item, int index, BuildContext context) {
-    if(item.units!=null)myController[index][0].text = item.units.toString();
+    if(item.units!=null) {
+      myController[index][0].text = item.units.toString();
+    }else{
+      item.units =1;
+      myController[index][0].text = item.units.toString();
+
+    }
     if(item.description!=null)myController[index][1].text = item.description!  ;
     if(item.unitPrice!=null && item.unitPrice!=0.0)myController[index][2].text = item.unitPrice.toString();
     if(item.total!=null)myController[index][3].text = item.total.toString() ;

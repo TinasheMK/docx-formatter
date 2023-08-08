@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:smart_admin_dashboard/core/models/Currency.dart';
 
 import '../../main.dart';
 
@@ -31,6 +32,22 @@ class Payment {
     this.version,
     this.isConfirmed
   } );
+
+  String? getIndex(int index, Currency currency) {
+    switch (index) {
+      case 0:
+        return id.toString();
+      case 1:
+        return paymentDate?.split(" ")[0];
+      case 2:
+        return currency.symbol!+total.toString();
+      case 3:
+        return ref;
+      case 4:
+        return invoiceId.toString();
+    }
+    return '';
+  }
 
   Payment.fromJson(Map<String, dynamic> json) {
 
@@ -108,7 +125,7 @@ class Payment {
     var id;
 
     if(this.id==null) {
-      final id = await dbHelper.insert("payment", row);
+      id = await dbHelper.insert("payment", row);
     }else{
       dbHelper.update('payment',row);
       id = this.id;
