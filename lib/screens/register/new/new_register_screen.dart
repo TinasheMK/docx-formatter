@@ -1054,40 +1054,43 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
             SizedBox(height: 40.0),
             generatorResp!=""?Text(generatorResp):SizedBox(),
-            AppButton(
-              type: ButtonType.PRIMARY,
-              text: "Proceed",
-              onPressed: () async {
-
-                // List<DailyInfoModel> dailyDatas =
-                // dailyData.map((item) => DailyInfoModel.fromJson(item)).toList();
-
-
-                var register = {
-                  "companyName":companyName,
-                  "street":street,
-                  "city":city,
-                  "country":country,
-                };
-                Company company =  Company.fromJson(register);
+            ElevatedButton.icon(
+                icon: Icon(
+                  Icons.close,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
+                    primary: Colors.lightGreen),
+                onPressed: () async {
+                  print("Generating docs.");
 
 
-                directors.removeWhere((e) => e.name == null);
-                secretaries.removeWhere((e) => e.name == null);
+                  var register = {
+                    "companyName":companyName,
+                    "street":street,
+                    "city":city,
+                    "country":country,
+                  };
+                  Company company =  Company.fromJson(register);
 
-                company.directors = directors;
-                company.secretaries = secretaries;
-                await company.save();
-                print(company.toJson());
 
-                var response = await cr6FormGenerator(company, widget.code, memosSet);
+                  directors.removeWhere((e) => e.name == null);
+                  secretaries.removeWhere((e) => e.name == null);
 
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(response),
-                ));
+                  company.directors = directors;
+                  company.secretaries = secretaries;
+                  await company.save();
+                  print(company.toJson());
 
-              },
-            ),
+                  var response = await cr6FormGenerator(company, widget.code, memosSet);
+
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(response),
+                  ));
+
+                },
+                label: Text("Generate docs")),
+
             SizedBox(height: 24.0),
             // AppButton(
             //   type: ButtonType.PRIMARY,

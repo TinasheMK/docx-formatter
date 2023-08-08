@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:docx_template/docx_template.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -12,20 +13,27 @@ import '../models/Company.dart';
 ///
 Future <String> cr6FormGenerator(Company company, String code, List<Client> memos) async {
   try {
-    final f = File("./assets/templates/CR6_template.docx");
-    final docx = await DocxTemplate.fromBytes(await f.readAsBytes());
+    final data = await rootBundle.load('assets/templates/CR6_template.docx');
+    final bytes = data.buffer.asUint8List();
+    final docx = await DocxTemplate.fromBytes(bytes);
 
-    final f2 = File("./assets/templates/memocover_template.docx");
-    final memoCover = await DocxTemplate.fromBytes(await f2.readAsBytes());
+    final data2 = await rootBundle.load('assets/templates/memocover_template.docx');
+    final bytes2 = data.buffer.asUint8List();
+    final memoCover = await DocxTemplate.fromBytes(bytes2);
 
-    final f3 = File("./assets/templates/tocollect_template.docx");
-    final toCollect = await DocxTemplate.fromBytes(await f3.readAsBytes());
+    final data3 = await rootBundle.load('assets/templates/tocollect_template.docx');
+    final bytes3 = data.buffer.asUint8List();
+    final toCollect = await DocxTemplate.fromBytes(bytes3);
 
-    final f4 = File("./assets/templates/articles_template.docx");
-    final articles = await DocxTemplate.fromBytes(await f4.readAsBytes());
+    final data4 = await rootBundle.load('assets/templates/articles_template.docx');
+    final bytes4 = data.buffer.asUint8List();
+    final articles = await DocxTemplate.fromBytes(bytes4);
 
-    final f5 = File("./assets/templates/memo_template.docx");
-    final memoDoc = await DocxTemplate.fromBytes(await f5.readAsBytes());
+    final data5 = await rootBundle.load('assets/templates/memo_template.docx');
+    final bytes5 = data.buffer.asUint8List();
+    final memoDoc = await DocxTemplate.fromBytes(bytes5);
+
+
 
 
     // final listNormal = ['Foo', 'Bar', 'Baz'];

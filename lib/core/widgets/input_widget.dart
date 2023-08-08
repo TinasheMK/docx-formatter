@@ -15,6 +15,7 @@ class InputWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final Key? kKey;
   final TextEditingController? kController;
+  final int? multiLines;
   final String? kInitialValue;
   final List<TextInputFormatter>? kinputFormatters;
 
@@ -30,66 +31,65 @@ class InputWidget extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.kKey,
+    this.multiLines,
     this.kController,
     this.kInitialValue,
     this.kinputFormatters,
   });
   @override
   Widget build(BuildContext context) {
+    // if(this.multiLines==1){
+    //   this.multiLines==null;
+    // }else{
+    //   this.multiLines = 1;
+    // }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(this.topLabel!),
         SizedBox(height: 4.0),
-        Container(
-          height: 50,
-          decoration: BoxDecoration(
-            color: secondaryColor,
-            //color: Theme.of(context).buttonColor,
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-          child: TextFormField(
-            inputFormatters: this.kinputFormatters,
-            initialValue: this.kInitialValue,
-            controller: this.kController,
-            key: this.kKey,
-            keyboardType: this.keyboardType,
-            onSaved: this.onSaved,
-            onChanged: this.onChanged,
-            validator: this.validator,
-            obscureText: this.obscureText!,
-            decoration: InputDecoration(
-                prefixIcon: this.prefixIcon,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromRGBO(74, 77, 84, 0.2),
-                  ),
+        TextFormField(
+          inputFormatters: this.kinputFormatters,
+          initialValue: this.kInitialValue,
+          controller: this.kController,
+          maxLines: this.obscureText==true ?1:this.multiLines,
+          key: this.kKey,
+          keyboardType: this.keyboardType,
+          onSaved: this.onSaved,
+          onChanged: this.onChanged,
+          validator: this.validator,
+          obscureText: this.obscureText!,
+          decoration: InputDecoration(
+              prefixIcon: this.prefixIcon,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromRGBO(74, 77, 84, 0.2),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  //gapPadding: 16,
-                  borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                  ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                //gapPadding: 16,
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
                 ),
-                errorStyle: TextStyle(height: 0, color: Colors.transparent),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Theme.of(context).errorColor,
-                  ),
+              ),
+              errorStyle: TextStyle(height: 0, color: Colors.transparent),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).errorColor,
                 ),
-                focusedErrorBorder: OutlineInputBorder(
-                  //gapPaddings: 16,
-                  borderSide: BorderSide(
-                    color: Theme.of(context).errorColor,
-                  ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                //gapPaddings: 16,
+                borderSide: BorderSide(
+                  color: Theme.of(context).errorColor,
                 ),
-                hintText: this.hintText,
-                hintStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: Colors.white54),
-                errorText: this.errorText),
-          ),
+              ),
+              hintText: this.hintText,
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(color: Colors.white54),
+              errorText: this.errorText),
         )
       ],
     );

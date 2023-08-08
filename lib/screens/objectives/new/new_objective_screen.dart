@@ -141,77 +141,52 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
                               children: [
 
                                 SizedBox(height: 16.0),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5, right:5),
+                                  child: InputWidget(
+                                    topLabel: "Objective Title",
+                                    keyboardType: TextInputType.text,
+                                    kController: titleCon,
 
-                                SizedBox( height: 200,child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: Column(children: [
-                                        
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Objective Title",
-                                                  keyboardType: TextInputType.text,
-                                                  kController: titleCon,
-
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    print(client!.toJson());
-                                                    client!.companyName = value;
-                                                  },
-                                                  validator: (value) {
-                                                    if (value == null || value.isEmpty) {
-                                                      return 'Please enter company name.';
-                                                    }
-                                                    return null;
-                                                  },
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      print(client!.toJson());
+                                      client!.companyName = value;
+                                    },
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter company name.';
+                                      }
+                                      return null;
+                                    },
 
 
 
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Expanded(
-                                              child:
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5, right:5),
-                                                child: InputWidget(
-                                                  topLabel: "Description",
-                                                  kController: descCon,
-                                                  keyboardType: TextInputType.text,
-                                                  onSaved: (String? value) {
-                                                    // This optional block of code can be used to run
-                                                    // code when the user saves the form.
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    client!.email = value;
-                                                  },
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5, right:5),
+                                  child: InputWidget(
+                                    topLabel: "Description",
+                                    kController: descCon,
+                                    keyboardType: TextInputType.multiline,
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      client!.email = value;
+                                    },
 
 
-                                                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 3),
-                                          ],),
-                                      ],),
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
 
-                                    ),
-                                  ],)),
                                 SizedBox(height: 25,),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
