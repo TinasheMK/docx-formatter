@@ -27,3 +27,8 @@ Flutter Web Smart Admin & Panel Dashboard with flutter UI kit.
 ### 👨‍💻 Author
 
 Developed by Deniz Çolak
+
+
+flutter create --platforms=windows,macos,linux .
+flutter clean
+flutter pub cache clean

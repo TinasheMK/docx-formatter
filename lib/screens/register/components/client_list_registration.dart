@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
+import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/core/utils/colorful_tag.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/models/Company.dart';
+import '../../../core/models/Client.dart';
 import '../../../main.dart';
 import '../../../core/utils/responsive.dart';
 import '../../clients/clients_home_screen.dart';
@@ -14,17 +14,17 @@ import '../new/new_register_home_screen.dart';
 
 
 
-class RecentUsers extends StatefulWidget {
+class ClientListReg extends StatefulWidget {
   @override
-  _RecentUsersState createState() => _RecentUsersState();
+  _ClientListRegState createState() => _ClientListRegState();
 }
 
-class _RecentUsersState extends State<RecentUsers> {
+class _ClientListRegState extends State<ClientListReg> {
 
-  List<Company> clients = [Company.fromJson({})];
+  List<Client> clients = [Client.fromJson({})];
 
   Future<void> _initclients() async {
-    clients = await getCompanies();
+    clients = await getClients();
     setState(() {});
   }
 
@@ -37,7 +37,7 @@ class _RecentUsersState extends State<RecentUsers> {
 
   @override
   Widget build(BuildContext context) {
-    clients.removeWhere((element) => element.companyName == null);
+    clients.removeWhere((element) => element.name == null);
 
     return Container(
       padding: EdgeInsets.all(defaultPadding),
@@ -49,7 +49,7 @@ class _RecentUsersState extends State<RecentUsers> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Client List (Company Reg Docs)",
+            "Client List (Client Reg Docs)",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SingleChildScrollView(
@@ -67,7 +67,7 @@ class _RecentUsersState extends State<RecentUsers> {
                     label: Text("Name"),
                   ),
                   !Responsive.isMobile(context)?DataColumn(
-                    label: Text("Phone"),):
+                    label: Text("Street"),):
                   DataColumn(label: Text("")),
                   DataColumn(
                     label: Text("City"),
@@ -94,7 +94,7 @@ class _RecentUsersState extends State<RecentUsers> {
 
 }
 
-DataRow recentUserDataRow(Company userInfo, BuildContext context) {
+DataRow recentUserDataRow(Client userInfo, BuildContext context) {
   return DataRow(
     cells: [
       // DataCell(
@@ -114,10 +114,10 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
                 upperCase: true,
                 numberLetters: 1,
                 shape: Shape.Rectangle,
-                text: userInfo.companyName != null ? userInfo.companyName! : "",
+                text: userInfo.name != null ? userInfo.name! : "",
               ),
               SizedBox(width: 15,),
-              Text(userInfo.companyName != null ? userInfo.companyName! : "")
+              Text(userInfo.name != null ? userInfo.name! : "")
 
             ],
           ),
@@ -131,14 +131,14 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
           ? DataCell(Container(
             padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: getRoleColor(userInfo.companyName).withOpacity(.2),
-              border: Border.all(color: getRoleColor(userInfo.companyName)),
+              color: getRoleColor(userInfo.name).withOpacity(.2),
+              border: Border.all(color: getRoleColor(userInfo.name)),
               borderRadius: BorderRadius.all(Radius.circular(5.0) //
               ),
           ),
-          child: Text("" != null ? ""! : "")))
-          // child: Text(userInfo.companyName != null ? userInfo.companyName! : "")))
-          : DataCell(Text("")
+          child: Text(userInfo.street??"")))
+          // child: Text(userInfo.name != null ? userInfo.name! : "")))
+          : DataCell(Text(userInfo.street??"")
 
 
       ),
@@ -160,7 +160,7 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewRegisterHome(title: 'Company Registration', code: 'wiw',);
+                      return new NewRegisterHome(title: 'Client Registration', code: 'wiw', companyId: userInfo.id,);
                     },
                     fullscreenDialog: true));
               },
@@ -219,7 +219,7 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
             //                 child: Column(
             //                   children: [
             //                     Text(
-            //                         "Are you sure want to delete '${userInfo.companyName}'?"),
+            //                         "Are you sure want to delete '${userInfo.name}'?"),
             //                     SizedBox(
             //                       height: 16,
             //                     ),
@@ -290,7 +290,7 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
             //                   child: Column(
             //                     children: [
             //                       Text(
-            //                           "Are you sure want to delete '${userInfo.companyName}'?"),
+            //                           "Are you sure want to delete '${userInfo.name}'?"),
             //                       SizedBox(
             //                         height: 16,
             //                       ),

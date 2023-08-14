@@ -1,5 +1,5 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/utils/responsive.dart';
+import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -25,14 +25,14 @@ class Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Hello, Tapiwa 👋",
+                "Hello 👋",
                 style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(
                 height: 8,
               ),
               Text(
-                "Wellcome to your dashboard",
+                "Wellcome ",
                 style: Theme.of(context).textTheme.subtitle2,
               ),
             ],

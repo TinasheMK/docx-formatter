@@ -71,26 +71,6 @@ class Director {
     return data;
   }
 
-  Future<void> save() async {
-    Map<String, dynamic> row = {
-      'name': this.name,
-      'lastName': this.lastName,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'national_id  ': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
-      'company_id': this.companyId,
-      'email': this.email,
-
-    };
-    final id = await dbHelper.insert("director", row);
-    this.id = id;
-    debugPrint('inserted director row id: $id');
-  }
-
   Future<void> saveAndAttach(int companyId) async {
     debugPrint('adding   director');
 
@@ -106,7 +86,7 @@ class Director {
       'incDate': this.incDate,
       'email': this.email,
       'shares': this.shares,
-      'shareholder': this.shareholder,
+      'shareholder': this.shareholder==true?1:0,
       'company_id': companyId
     };
     final id = await dbHelper.insert("director", row);
@@ -122,28 +102,36 @@ class Director {
     }
   }
 
-  void update() async {
-    // row to update
-    Map<String, dynamic> row = {
-      'name': this.name,
-      'lastName': this.lastName,
-      'id': this.id,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'nationalId': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
-    };
-    final rowsAffected = await dbHelper.update('director',row);
-    debugPrint('updated $rowsAffected row(s)');
-  }
-
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
     // final id = await dbHelper.queryRowCount('company');
     final rowsDeleted = await dbHelper.delete('director',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
+}
+
+//Get invoice items for invoice
+Future<List<Director>> getDirectors(int id) async {
+  final maps = await dbHelper.findInvoiceItems("director", id);
+
+  return List.generate(maps.length, (i) {
+    return Director(
+      id : maps[i]['id'],
+      name : maps[i]['name'],
+      lastName : maps[i]['last_name'],
+      city : maps[i]['city'],
+      country : maps[i]['country'],
+      nationality : maps[i]['nationality'],
+      nationalId : maps[i]['national_id'],
+      street : maps[i]['street'],
+      particulars : maps[i]['particulars'],
+      incDate : maps[i]['incDate'],
+      email : maps?[i]["email"],
+      shares : maps?[i]["shares"],
+      shareholder : maps?[i]["shareholder"]==1?true:false,
+      companyId : maps?[i]["company_id"],
+
+    );
+  });
+
 }

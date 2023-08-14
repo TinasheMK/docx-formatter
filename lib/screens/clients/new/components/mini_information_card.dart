@@ -1,7 +1,7 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
+import 'package:docxform/core/constants/color_constants.dart';
 
-import 'package:smart_admin_dashboard/core/utils/responsive.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/components/mini_information_widget.dart';
+import 'package:docxform/core/utils/responsive.dart';
+import 'package:docxform/screens/dashboard/components/mini_information_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/daily_info_model.dart';

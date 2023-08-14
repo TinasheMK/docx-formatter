@@ -1,7 +1,7 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
-import 'package:smart_admin_dashboard/core/widgets/input_widget.dart';
-import 'package:smart_admin_dashboard/screens/dashboard/home_screen.dart';
+import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/core/widgets/app_button_widget.dart';
+import 'package:docxform/core/widgets/input_widget.dart';
+import 'package:docxform/screens/dashboard/home_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,7 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/utils/databaseHelper.dart';
 import '../register/new/components/slider_widget.dart';
 
-// final dbHelper = DatabaseHelper();
 class Login extends StatefulWidget {
   Login({required this.title});
   final String title;

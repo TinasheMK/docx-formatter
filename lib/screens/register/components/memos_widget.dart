@@ -1,6 +1,6 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/widgets/app_button_widget.dart';
-import 'package:smart_admin_dashboard/core/utils/responsive.dart';
+import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/core/widgets/app_button_widget.dart';
+import 'package:docxform/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/Client.dart';
@@ -190,7 +190,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                     ),
                     SizedBox(width: 6,),
                     Text(
-                      "${widget.memo.companyName??'Objective Null'}",
+                      "${widget.memo.name??'Objective Null'}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

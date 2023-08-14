@@ -1,4 +1,4 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
+import 'package:docxform/core/constants/color_constants.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';

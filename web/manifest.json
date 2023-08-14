@@ -1,6 +1,6 @@
 {
-    "name": "smart_admin_dashboard",
-    "short_name": "smart_admin_dashboard",
+    "name": "docxform",
+    "short_name": "docxform",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import '../../../core/models/Client.dart';
-import '../../../core/models/Company.dart';
+import '../../../core/models/Client.dart';
 import '../../../core/models/Director.dart';
 
 
@@ -30,83 +30,154 @@ class NewRegisterScreen extends StatefulWidget {
   final int? companyId;
 
   @override
-  _NewRegisterScreenState createState() => _NewRegisterScreenState();
+  _NewRegisterScreenState createState() => _NewRegisterScreenState(companyId);
 }
 
 // class NewRegisterScreen extends StatefulWidget {
 class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTickerProviderStateMixin {
-  var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-      .chain(CurveTween(curve: Curves.ease));
-  var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
-      .chain(CurveTween(curve: Curves.ease));
+  _NewRegisterScreenState(this.companyId);
 
-  AnimationController? _animationController;
-
-  var _isMoved = false;
-
+  final int? companyId;
   bool isChecked = false;
-
-  int _value = 1;
-
   bool secEdited = false;
-
   int _directors = 2;
-
   List persons = [];
   List original = [];
-
-  List<Director> directors = [Director.fromJson({}), Director.fromJson({})];
-  List<Director> shareholders = [];
-
-  List<Secretary> secretaries = [Secretary.fromJson({})];
-
-
+  List<Client> clients = [Client.fromJson({})];
   TextEditingController txtQuery = new TextEditingController();
-
-
-  String country = "Zimbabwe";
-  String generatorResp = "";
-  String city =  "Harare";
-  late String street;
-  late String companyName;
+  late int crossAxisCount;
+  late double childAspectRatio;
+  List<Client> memosSet = [];
+  final _formKey = GlobalKey<FormState>();
   List<String> memoItems = [];
-
+  Client client = Client.fromJson({
+    "country": "Zimbabwe",
+    "city": "Harare",
+    "directors": [Director.fromJson({
+      "country": "Zimbabwe",
+      "city": "Harare",
+    }) ],
+    "secretaries": [Secretary.fromJson({
+      "country": "Zimbabwe",
+      "city": "Harare",
+    })]
+  });
   List<List<TextEditingController>> secCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
-
+  List<List<TextEditingController>> dirCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
+  List<TextEditingController> coCntrl = [TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()] ;
 
   void loadData() async {
-    // String jsonStr = await rootBundle.loadString('assets/persons.json');
-    // var json = jsonDecode(jsonStr);
-    // persons = json;
-    // original = json;
-    setState(() {});
-  }
+    clients = await getClients();
+    if(companyId!=null) {
+      client = (await getClient(companyId!))!;
+      dirCntrl = [];
+      secCntrl = [];
 
-  void search(String query) {
-    if (query.isEmpty) {
-      persons = original;
-      setState(() {});
-      return;
+      coCntrl[0].text = client.name??"";
+      coCntrl[1].text = client.street??"";
+      coCntrl[2].text = client.city??"";
+      coCntrl[3].text = client.country??"";
+
+      client!.directors?.forEach((e) {
+        var fnameC = TextEditingController();
+        var lnameC = TextEditingController();
+        var idC = TextEditingController();
+        var streetC = TextEditingController();
+        var cityC = TextEditingController();
+        var countryC = TextEditingController();
+
+        fnameC.text = e.name??"";
+        lnameC.text = e.lastName??"";
+        idC.text = e.nationalId??"";
+        streetC.text = e.street??"";
+        cityC.text = e.city??"";
+        countryC.text = e.country??"";
+
+        dirCntrl?.add([
+          fnameC,
+          lnameC,
+          idC,
+          streetC,
+          cityC,
+          countryC,
+        ]);
+      });
+      client!.secretaries?.forEach((e) {
+        var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+
+        cntrl[0].text = e.name??"";
+        cntrl[1].text = e.lastName??"";
+        cntrl[2].text = e.nationalId??"";
+        cntrl[4].text = e.street??"";
+        cntrl[5].text = e.city??"";
+        cntrl[6].text = e.country??"";
+
+        secCntrl?.add(cntrl);
+      });
+    }else{
+      client = Client.fromJson({
+        "country": "Zimbabwe",
+        "city": "Harare",
+        "directors": [Director.fromJson({
+          "country": "Zimbabwe",
+          "city": "Harare",
+        }),Director.fromJson({
+          "country": "Zimbabwe",
+          "city": "Harare",
+        })],
+        "secretaries": [Secretary.fromJson({
+          "country": "Zimbabwe",
+          "city": "Harare",
+        })]
+      });
+      dirCntrl = [];
+      secCntrl = [];
+
+      client!.directors?.forEach((e) {
+        var fnameC = TextEditingController();
+        var lnameC = TextEditingController();
+        var idC = TextEditingController();
+        var streetC = TextEditingController();
+        var cityC = TextEditingController();
+        var countryC = TextEditingController();
+
+        fnameC.text = e.name??"";
+        lnameC.text = e.lastName??"";
+        idC.text = e.nationalId??"";
+        streetC.text = e.street??"";
+        cityC.text = e.city??"";
+        countryC.text = e.country??"";
+
+        dirCntrl?.add([
+          fnameC,
+          lnameC,
+          idC,
+          streetC,
+          cityC,
+          countryC,
+        ]);
+      });
+      client!.secretaries?.forEach((e) {
+        var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+
+        cntrl[0].text = e.name??"";
+        cntrl[1].text = e.lastName??"";
+        cntrl[2].text = e.nationalId??"";
+        cntrl[4].text = e.street??"";
+        cntrl[5].text = e.city??"";
+        cntrl[6].text = e.country??"";
+
+        secCntrl?.add(cntrl);
+      });
     }
 
-    query = query.toLowerCase();
-    print(query);
-    List result = [];
-    persons.forEach((p) {
-      var name = p["name"].toString().toLowerCase();
-      if (name.contains(query)) {
-        result.add(p);
-      }
-    });
-
-    persons = result;
     setState(() {});
   }
 
   void _addDirector() {
     setState(() {
       _directors += 1;
-        directors.add(Director.fromJson({}));
+        client.directors!.add(Director.fromJson({}));
 
     });
   }
@@ -121,12 +192,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     });
   }
 
-
-
-  late int crossAxisCount;
-  late double childAspectRatio;
-  late List<Client> memosSet = [];
-
   void _printLatestValue() {
 
     secCntrl.forEach((e) {
@@ -138,25 +203,14 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   }
 
-  List<Client> clients = [Client.fromJson({})];
-
-  Future<void> _initClients() async {
-    clients = await getClients();
-    setState(() {});
-  }
-
   @override
   void initState() {
     secCntrl[0][4].text = "Harare";
     secCntrl[0][5].text = "Zimbabwe";
-    _initClients();
     super.initState();
 
     loadData();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 750),
-    );
+
 
     secCntrl.forEach((e) {
       e.forEach((a) {
@@ -168,7 +222,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   @override
   void dispose() {
-    _animationController?.dispose();
     secCntrl.forEach((e) {
       e.forEach((a) {
         a.dispose();
@@ -181,24 +234,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   @override
   Widget build(BuildContext context) {
 
-    directors.add(Director.fromJson({}));
-    directors.add(Director.fromJson({}));
-
-    // print(widget.code);
+    // client!.directors!.add(Director.fromJson({}));
+    // client!.directors!.add(Director.fromJson({}));
     final Size _size = MediaQuery.of(context).size;
     crossAxisCount= _size.width < 650 ? 2 : 4;
     childAspectRatio= _size.width < 650 ? 3 : 3;
 
-    // memosSet = clients;
-
-    // for( int i = 0 ; i < clients.length; i++ ) {
-    //   if(clients[i].set!="set"){
-    //     memosSet.removeWhere((element) => element.id == clients[i].id);
-    //     print(i);
-    //   }else if(clients.length==0){
-    //     memosSet.add(clients[1]);
-    //   }
-    // }
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -253,9 +294,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
           // memoItems.add(mem);
           // print(clients);
           memosSet.removeWhere((e) => e.id ==int.parse(mem));
-          client1.set = "set";
-          client1.update();
-          memosSet.add(client1);
+          // client1.set = "set";
+          // client1.update();
+          // memosSet.add(client1);
           // memosSet.add(clients.where((e) => e.id == mem).first);
 
 
@@ -280,49 +321,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         minHeight: MediaQuery.of(context).size.height - 0.0,
       ),
       child: Form(
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
 
-
-            // Column(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Text( "Search Existing Clients", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20, color: Colors.white),
-            //     ),
-            //     SizedBox(height: 10),
-            //     TextFormField(
-            //       controller: txtQuery,
-            //       onChanged: search,
-            //       decoration: InputDecoration(
-            //         hintText: "Search",
-            //         border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
-            //         focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-            //         prefixIcon: Icon(Icons.search, color: greenColor),
-            //         fillColor: secondaryColor,
-            //         suffixIcon: IconButton(
-            //           icon: Icon(Icons.clear, color: greenColor),
-            //
-            //             onPressed: () {
-            //             txtQuery.text = '';
-            //             search(txtQuery.text);
-            //           },
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-
-
-
-
-
-
-            // SizedBox(height: 8.0),
-            //
-            // Text( "New Client", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-            // ),
             Row(
               children: [
 
@@ -341,10 +344,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: coCntrl[0],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                      companyName = value!;
+                      client.name = value!;
                     },
                     validator: (String? value) {
                       return (value != null && value.contains('@'))
@@ -352,7 +356,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           : null;
                     },
 
-                    topLabel: "Company Name",
+                    topLabel: "Client Name",
 
                     hintText: "Enter Name",
                     // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -366,11 +370,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     onSaved: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                    },
+                    },kController: coCntrl[1],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                      street = value!;
+                      client.street = value!;
 
                     },
                     validator: (String? value) {
@@ -398,14 +402,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     onSaved: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                    },
+                    },kController: coCntrl[2],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                      city = value!;
+                      client.city = value!;
 
                     },
-                    kInitialValue:"Harare",
 
                     validator: (String? value) {
                       return (value != null && value.contains('@'))
@@ -427,11 +430,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     onSaved: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                    },
+                    },kController: coCntrl[3],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
-                      country = value!;
+                      client.country = value!;
 
                     },
                     validator: (String? value) {
@@ -439,7 +442,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           ? 'Do not use the @ char.'
                           : null;
                     },
-                    kInitialValue:"Zimbabwe",
 
                     topLabel: "Country",
 
@@ -459,12 +461,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 Text( "Director 1 Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
                 ),
                 SizedBox(width: 100),
-                !directors[0].shareholder
+                !(client!.directors?[0].shareholder??false)
                     ?
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      directors[0].shareholder = true;
+                      client!.directors![0].shareholder = true;
 
                     });
 
@@ -491,10 +493,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         if(value == ''){
                           setState(() {
 
-                            directors[0].shareholder = false;
+                            client!.directors![0].shareholder = false;
                           });
                         }else{
-                          directors[0].shares = int.parse(value!);
+                          client!.directors![0].shares = int.parse(value!);
 
                         }
 
@@ -555,14 +557,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: dirCntrl[0][0],
                     onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
+                      if(!client!.directors!.asMap().containsKey(0)){
+                        client!.directors!.add(Director.fromJson({}));
                       }
-                      directors[0].name = value;
+                      client!.directors![0].name = value;
 
                       if(!secEdited){
-                        secretaries[0].name = value;
+                        client!.secretaries![0].name = value;
                         setState(() {
                           secCntrl[0][0].text = value.toString();
                         });
@@ -590,14 +593,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: dirCntrl[0][1],
                     onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
+                      if(!client!.directors!.asMap().containsKey(0)){
+                        client!.directors!.add(Director.fromJson({}));
                       }
-                      directors[0].lastName = value;
+                      client!.directors![0].lastName = value;
 
                       if(!secEdited){
-                        secretaries[0].lastName = value;
+                        client!.secretaries![0].lastName = value;
                         setState(() {
                           secCntrl[0][1].text = value.toString();
                         });
@@ -625,14 +629,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: dirCntrl[0][2],
                     onChanged: (String? value) {
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
+                      if(!client!.directors!.asMap().containsKey(0)){
+                        client!.directors!.add(Director.fromJson({}));
                       }
-                      directors[0].nationalId = value;
+                      client!.directors![0].nationalId = value;
 
                       if(!secEdited){
-                        secretaries[0].nationalId = value;
+                        client!.secretaries![0].nationalId = value;
                         setState(() {
                           secCntrl[0][2].text = value.toString();
                         });
@@ -665,16 +670,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: dirCntrl[0][3],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorStreet = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
+                      if(!client!.directors!.asMap().containsKey(0)){
+                        client!.directors!.add(Director.fromJson({}));
                       }
-                      directors[0].street = value;
+                      client!.directors![0].street = value;
                       if(!secEdited){
-                        secretaries[0].street = value;
+                        client!.secretaries![0].street = value;
                         setState(() {
                           secCntrl[0][3].text = value.toString();
                         });
@@ -701,16 +707,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: dirCntrl[0][4],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorCity = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
+                      if(!client!.directors!.asMap().containsKey(0)){
+                        client!.directors!.add(Director.fromJson({}));
                       }
-                      directors[0].city = value;
+                      client!.directors![0].city = value;
                       if(!secEdited){
-                        secretaries[0].city = value;
+                        client!.secretaries![0].city = value;
                         setState(() {
                           secCntrl[0][4].text = value.toString();
                         });
@@ -722,7 +729,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           ? 'Do not use the @ char.'
                           : null;
                     },
-                    kInitialValue:"Harare",
 
                     topLabel: "First Director City",
 
@@ -739,16 +745,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                     },
+                    kController: dirCntrl[0][5],
                     onChanged: (String? value) {
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorCountry = value!;
-                      if(!directors.asMap().containsKey(0)){
-                        directors.add(Director.fromJson({}));
+                      if(!client!.directors!.asMap().containsKey(0)){
+                        client!.directors!.add(Director.fromJson({}));
                       }
-                      directors[0].country = value;
+                      client!.directors![0].country = value;
                       if(!secEdited){
-                        secretaries[0].country = value;
+                        client!.secretaries![0].country = value;
                         setState(() {
                           secCntrl[0][5].text = value.toString();
                         });
@@ -763,7 +770,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     },
 
                     topLabel: "First Director Country",
-                    kInitialValue:"Zimbabwe",
 
                     hintText: "Enter Country",
                     // prefixIcon: FlutterIcons.chevron_left_fea,
@@ -774,18 +780,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             //First Director Ends
 
             SizedBox(height: 50.0),
-            _directors>=2? _SecondDirector(context, 2):SizedBox(height:0),
-            _directors>=3? _SecondDirector(context, 3):SizedBox(height:0),
-            _directors>=4? _SecondDirector(context, 4):SizedBox(height:0),
-            _directors>=5? _SecondDirector(context, 5):SizedBox(height:0),
-            _directors>=6? _SecondDirector(context, 6):SizedBox(height:0),
-            _directors>=7? _SecondDirector(context, 7):SizedBox(height:0),
-            _directors>=8? _SecondDirector(context, 8):SizedBox(height:0),
-            _directors>=9? _SecondDirector(context, 9):SizedBox(height:0),
-            _directors>=10? _SecondDirector(context, 10):SizedBox(height:0),
-            _directors>=11? _SecondDirector(context, 11):SizedBox(height:0),
-            _directors>=12? _SecondDirector(context, 12):SizedBox(height:0),
-            _directors>=13? _SecondDirector(context, 13):SizedBox(height:0),
+            client.directors!.length>=2? _SecondDirector(context, 2):SizedBox(height:0),
+            client.directors!.length>=3? _SecondDirector(context, 3):SizedBox(height:0),
+            client.directors!.length>=4? _SecondDirector(context, 4):SizedBox(height:0),
+            client.directors!.length>=5? _SecondDirector(context, 5):SizedBox(height:0),
+            client.directors!.length>=6? _SecondDirector(context, 6):SizedBox(height:0),
+            client.directors!.length>=7? _SecondDirector(context, 7):SizedBox(height:0),
+            client.directors!.length>=8? _SecondDirector(context, 8):SizedBox(height:0),
+            client.directors!.length>=9? _SecondDirector(context, 9):SizedBox(height:0),
+            client.directors!.length>=10? _SecondDirector(context, 10):SizedBox(height:0),
+            client.directors!.length>=11? _SecondDirector(context, 11):SizedBox(height:0),
+            client.directors!.length>=12? _SecondDirector(context, 12):SizedBox(height:0),
+            client.directors!.length>=13? _SecondDirector(context, 13):SizedBox(height:0),
 
 
             SizedBox(height: 20.0),
@@ -827,7 +833,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorName = value!;
-                      secretaries[0].name = value;
+                      client!.secretaries![0].name = value;
                       secEdited = true;
 
                     },
@@ -857,7 +863,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorLastName = value!;
-                      secretaries[0].lastName = value;
+                      client!.secretaries![0].lastName = value;
                       secEdited = true;
 
 
@@ -888,7 +894,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorLastName = value!;
-                      secretaries[0].nationalId = value;
+                      client!.secretaries![0].nationalId = value;
                       secEdited = true;
 
 
@@ -924,7 +930,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorStreet = value!;
-                      secretaries[0].street = value;
+                      client!.secretaries![0].street = value;
                       secEdited = true;
 
                     },
@@ -954,7 +960,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorCity = value!;
-                      secretaries[0].city = value;
+                      client!.secretaries![0].city = value;
                       secEdited = true;
 
 
@@ -985,7 +991,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // This optional block of code can be used to run
                       // code when the user saves the form.
                       // directorCountry = value!;
-                      secretaries[0].country = value;
+                      client!.secretaries![0].country = value;
                       secEdited = true;
 
 
@@ -1053,7 +1059,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
             SizedBox(height: 40.0),
-            generatorResp!=""?Text(generatorResp):SizedBox(),
+            // generatorResp!=""?Text(generatorResp):SizedBox(),
             ElevatedButton.icon(
                 icon: Icon(
                   Icons.close,
@@ -1062,27 +1068,17 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20),
                     primary: Colors.lightGreen),
                 onPressed: () async {
-                  print("Generating docs.");
+                  // print("Generating docs.");
+                  if (_formKey.currentState!.validate()) {}
 
 
-                  var register = {
-                    "companyName":companyName,
-                    "street":street,
-                    "city":city,
-                    "country":country,
-                  };
-                  Company company =  Company.fromJson(register);
+                  client!.directors!.removeWhere((e) => e.name == null);
+                  client!.secretaries!.removeWhere((e) => e.name == null);
 
+                  await client.save();
+                  print(client.toJson());
 
-                  directors.removeWhere((e) => e.name == null);
-                  secretaries.removeWhere((e) => e.name == null);
-
-                  company.directors = directors;
-                  company.secretaries = secretaries;
-                  await company.save();
-                  print(company.toJson());
-
-                  var response = await cr6FormGenerator(company, widget.code, memosSet);
+                  var response = await cr6FormGenerator(client, widget.code, memosSet);
 
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(response),
@@ -1110,7 +1106,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    "Proceed to register company.",
+                    "Proceed to register client.",
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1!
@@ -1157,19 +1153,19 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
               TextButton(
                 onPressed: () {
                   _removeDirector();
-                  directors.removeAt(number-1);
+                  client!.directors!.removeAt(number-1);
 
                 },
                 child: Text("Remove Director",
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         fontWeight: FontWeight.w400, color: Colors.redAccent)),
               ),
-              !directors[number-1].shareholder
+              !(client!.directors?[number-1].shareholder??false)
                   ?
               TextButton(
                 onPressed: () {
                   setState(() {
-                    directors[number-1].shareholder = true;
+                    client!.directors![number-1].shareholder = true;
 
                   });
 
@@ -1196,10 +1192,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     if(value == ''){
                       setState(() {
 
-                      directors[number-1].shareholder = false;
+                        client!.directors![number-1].shareholder = false;
                       });
                     }else{
-                      directors[number-1].shares = int.parse(value!);
+                      client!.directors![number-1].shares = int.parse(value!);
 
                     }
 
@@ -1260,14 +1256,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                   },
+                  kController: dirCntrl[number-1][0],
                   onChanged: (String? value) {
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorName = value!;value
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!client!.directors!.asMap().containsKey(number-1)){
+                        client!.directors!.add(Director.fromJson({}));
                     }
-                    directors[number-1].name = value;
+                    client!.directors![number-1].name = value;
 
                   },
                   validator: (String? value) {
@@ -1291,14 +1288,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                   },
+                  kController: dirCntrl[number-1][1],
                   onChanged: (String? value) {
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorLastName = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!client!.directors!.asMap().containsKey(number-1)){
+                      client!.directors!.add(Director.fromJson({}));
                     }
-                    directors[number-1].lastName = value;
+                    client!.directors![number-1].lastName = value;
 
 
                   },
@@ -1323,14 +1321,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                   },
+                  kController: dirCntrl[number-1][2],
                   onChanged: (String? value) {
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorLastName = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                      directors.add(Director.fromJson({}));
+                    if(!client!.directors!.asMap().containsKey(number-1)){
+                      client!.directors!.add(Director.fromJson({}));
                     }
-                    directors[number-1].nationalId = value;
+                    client!.directors![number-1].nationalId = value;
 
 
                   },
@@ -1360,14 +1359,15 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                   },
+                  kController: dirCntrl[number-1][3],
                   onChanged: (String? value) {
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorStreet = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!client!.directors!.asMap().containsKey(number-1)){
+                        client!.directors!.add(Director.fromJson({}));
                     }
-                    directors[number-1].street = value;
+                    client!.directors![number-1].street = value;
 
                   },
                   validator: (String? value) {
@@ -1395,10 +1395,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorCity = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!client!.directors!.asMap().containsKey(number-1)){
+                        client!.directors!.add(Director.fromJson({}));
                     }
-                    directors[number-1].city = value;
+                    client!.directors![number-1].city = value;
 
 
                   },
@@ -1407,7 +1407,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ? 'Do not use the @ char.'
                         : null;
                   },
-                  kInitialValue:"Harare",
+                  kController: dirCntrl[number-1][4],
 
                   topLabel: "Director City",
 
@@ -1428,10 +1428,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     // This optional block of code can be used to run
                     // code when the user saves the form.
                     // directorCountry = value!;
-                    if(!directors.asMap().containsKey(number-1)){
-                        directors.add(Director.fromJson({}));
+                    if(!client!.directors!.asMap().containsKey(number-1)){
+                        client!.directors!.add(Director.fromJson({}));
                     }
-                    directors[number-1].country = value;
+                    client!.directors![number-1].country = value;
 
 
                   },
@@ -1440,7 +1440,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ? 'Do not use the @ char.'
                         : null;
                   },
-                  kInitialValue:"Zimbabwe",
+                  kController: dirCntrl[number-1][5],
 
                   topLabel: "Director Country",
 
@@ -1522,7 +1522,7 @@ class _MiniMemoState extends State<MiniMemo> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${widget.memo.companyName??''}",
+                      "${widget.memo.name??''}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

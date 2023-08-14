@@ -1,11 +1,13 @@
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
+import 'package:docxform/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../auth/login_screen.dart';
 import '../../clients/clients_home_screen.dart';
+import '../../praz/prazs_home_screen.dart';
 import '../../register/register_home_screen.dart';
 import '../../register/register_screen.dart';
+import '../../zimra/zimras_home_screen.dart';
 import '../home_screen.dart';
 
 class SideMenu extends StatelessWidget {
@@ -61,18 +63,20 @@ class SideMenu extends StatelessWidget {
               title: "ZIMRA",
               svgSrc: "assets/icons/menu_task.svg",
               press: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Feature not yet available"),
-                ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ZimrasHomeScreen()),
+                );
               },
             ),
             DrawerListTile(
               title: "PRAZ",
               svgSrc: "assets/icons/menu_store.svg",
               press: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Feature not yet available"),
-                ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PrazsHomeScreen()),
+                );
               },
             ),
             // DrawerListTile(

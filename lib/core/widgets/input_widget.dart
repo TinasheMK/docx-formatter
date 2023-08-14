@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
+import 'package:docxform/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 class InputWidget extends StatelessWidget {

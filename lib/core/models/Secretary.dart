@@ -17,7 +17,8 @@ class Secretary {
   int? companyId;
 
 
-  Secretary(this.name,
+  Secretary(
+      {this.name,
       this.lastName,
       this.id,
       this.nationalId,
@@ -28,8 +29,7 @@ class Secretary {
       this.particulars,
       this.incDate,
       this.companyId,
-      this.email
-      );
+      this.email});
 
   Secretary.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -114,29 +114,33 @@ class Secretary {
     }
   }
 
-  void update() async {
-    // row to update
-    Map<String, dynamic> row = {
-      'name': this.name,
-      'lastName': this.lastName,
-      'id': this.id,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'nationalId': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
-      'email': this.email
-    };
-    final rowsAffected = await dbHelper.update('secretary',row);
-    debugPrint('updated $rowsAffected row(s)');
-  }
-
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
     // final id = await dbHelper.queryRowCount('company');
     final rowsDeleted = await dbHelper.delete('secretary',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
+}
+
+Future<List<Secretary>> getSecretaries(int id) async {
+  final maps = await dbHelper.findInvoiceItems("secretary", id);
+
+  return List.generate(maps.length, (i) {
+    return Secretary(
+      id : maps[i]['id'],
+      name : maps[i]['name'],
+      lastName : maps[i]['last_name'],
+      city : maps[i]['city'],
+      country : maps[i]['country'],
+      nationality : maps[i]['nationality'],
+      nationalId : maps[i]['national_id'],
+      street : maps[i]['street'],
+      particulars : maps[i]['particulars'],
+      incDate : maps[i]['incDate'],
+      email : maps?[i]["email"],
+      companyId : maps?[i]["company_id"],
+
+    );
+  });
+
 }

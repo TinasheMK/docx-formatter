@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:smart_admin_dashboard/core/constants/color_constants.dart';
-import 'package:smart_admin_dashboard/core/utils/colorful_tag.dart';
+import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/core/utils/colorful_tag.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/models/Company.dart';
+import '../../../core/models/Client.dart';
 import '../../../main.dart';
 import '../../../core/utils/responsive.dart';
 import '../../clients/clients_home_screen.dart';
@@ -20,10 +20,10 @@ class ClientList extends StatefulWidget {
 
 class _ClientListState extends State<ClientList> {
 
-  List<Company> clients = [Company.fromJson({})];
+  List<Client> clients = [Client.fromJson({})];
 
   Future<void> _initclients() async {
-    clients = await getCompanies();
+    clients = await getClients();
     setState(() {});
   }
 
@@ -36,7 +36,7 @@ class _ClientListState extends State<ClientList> {
 
   @override
   Widget build(BuildContext context) {
-    clients.removeWhere((element) => element.companyName == null);
+    clients.removeWhere((element) => element.name == null);
 
     return Container(
       padding: EdgeInsets.all(defaultPadding),
@@ -66,7 +66,7 @@ class _ClientListState extends State<ClientList> {
                     label: Text("Name"),
                   ),
                   !Responsive.isMobile(context)?DataColumn(
-                    label: Text("Phone"),):
+                    label: Text("Street"),):
                   DataColumn(label: Text("")),
                   DataColumn(
                     label: Text("City"),
@@ -93,7 +93,7 @@ class _ClientListState extends State<ClientList> {
 
 }
 
-DataRow recentUserDataRow(Company userInfo, BuildContext context) {
+DataRow recentUserDataRow(Client userInfo, BuildContext context) {
   return DataRow(
     cells: [
       // DataCell(
@@ -113,10 +113,10 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
                 upperCase: true,
                 numberLetters: 1,
                 shape: Shape.Rectangle,
-                text: userInfo.companyName != null ? userInfo.companyName! : "",
+                text: userInfo.name != null ? userInfo.name! : "",
               ),
               SizedBox(width: 15,),
-              Text(userInfo.companyName != null ? userInfo.companyName! : "")
+              Text(userInfo.name != null ? userInfo.name! : "")
 
             ],
           ),
@@ -130,14 +130,14 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
           Container(
               padding: EdgeInsets.all(2),
               decoration: BoxDecoration(
-                color: getRoleColor(userInfo.companyName).withOpacity(.2),
-                border: Border.all(color: getRoleColor(userInfo.companyName)),
+                color: getRoleColor(userInfo.name).withOpacity(.2),
+                border: Border.all(color: getRoleColor(userInfo.name)),
                 borderRadius: BorderRadius.all(Radius.circular(5.0) //
                 ),
               ),
-              child: Text("" != null ? ""! : "")
+              child: Text(userInfo.street??"")
           )
-          ) : DataCell(Text("")
+          ) : DataCell(Text(userInfo.street??"")
 
 
       ),
@@ -159,7 +159,7 @@ DataRow recentUserDataRow(Company userInfo, BuildContext context) {
       //         onPressed: () {
       //           Navigator.of(context).push(new MaterialPageRoute<Null>(
       //               builder: (BuildContext context) {
-      //                 return new NewClientHome(title: 'Company Registration', code: 'wiw',);
+      //                 return new NewClientHome(title: 'Client Registration', code: 'wiw',);
       //               },
       //               fullscreenDialog: true));
       //         },

@@ -1,5 +1,5 @@
 
-import 'package:smart_admin_dashboard/screens/clients/components/client_list.dart';
+import 'package:docxform/screens/clients/components/client_list.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/utils/responsive.dart';
