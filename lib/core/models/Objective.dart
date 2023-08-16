@@ -11,6 +11,7 @@ class Objective {
   int?    id;
   String? name;
   String? description;
+  String? set;
 
 
   String? createdDate;
@@ -29,6 +30,7 @@ class Objective {
     this.id,
     this.name,
     this.description,
+    this.set,
 
     this.createdDate,
     this.createdBy,

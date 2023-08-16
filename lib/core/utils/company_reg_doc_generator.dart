@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:docx_template/docx_template.dart';
+import 'package:docxform/core/models/Objective.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,7 +11,7 @@ import '../models/Client.dart';
 ///
 /// Read file template.docx, produce it and save
 ///
-Future <String> cr6FormGenerator(Client company, String code, List<Client> memos) async {
+Future <String> cr6FormGenerator(Client company, String code, List<Objective> memos) async {
   try {
     final data = await rootBundle.load('assets/templates/CR6_template.docx');
     final bytes = data.buffer.asUint8List();
@@ -72,7 +73,7 @@ Future <String> cr6FormGenerator(Client company, String code, List<Client> memos
 
     for (var n in memo) {
       final c = PlainContent("memolist")
-        ..add(TextContent("memodesc", n.email));
+        ..add(TextContent("memodesc", n.description));
       memoList.add(c);
     }
 

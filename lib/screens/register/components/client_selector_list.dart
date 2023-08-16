@@ -1,4 +1,5 @@
 import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/core/models/Objective.dart';
 import 'package:docxform/core/widgets/app_button_widget.dart';
 import 'package:docxform/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +7,16 @@ import 'package:flutter/material.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/models/Memo.dart';
 
-class MemoSelectionSection extends StatelessWidget {
-  const MemoSelectionSection({
+class ClientSelectorList extends StatelessWidget {
+  const ClientSelectorList({
     Key? key,
-    required this.memos,
+    // required this.memos,
     required this.callback
 
   }) : super(key: key);
 
   final Function(String, String) callback;
-  final List<Memo> memos;
+  // final List<Memo> memos;
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +74,10 @@ class InformationCard extends StatefulWidget {
 class _InformationCardState extends State<InformationCard> {
 
 
-  List<Client> clients = [Client.fromJson({})];
+  List<Objective> clients = [Objective.fromJson({})];
 
   Future<void> _initClients() async {
-    clients = await getClients();
+    clients = await getObjectives();
     setState(() {});
   }
 
@@ -112,7 +113,7 @@ class MiniInformationWidget extends StatefulWidget {
     required this.memo,
     required this.callback
   }) : super(key: key);
-  final Client memo;
+  final Objective memo;
   final Function(String, String) callback;
 
   @override

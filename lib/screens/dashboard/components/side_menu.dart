@@ -73,10 +73,13 @@ class SideMenu extends StatelessWidget {
               title: "PRAZ",
               svgSrc: "assets/icons/menu_store.svg",
               press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PrazsHomeScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => PrazsHomeScreen()),
+                // );
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Feature not yet available"),
+                ));
               },
             ),
             // DrawerListTile(

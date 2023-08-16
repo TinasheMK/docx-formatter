@@ -440,11 +440,11 @@ class _NewPrazScreenState extends State<NewPrazScreen> with SingleTickerProvider
                   await client.save();
                   print(client.toJson());
 
-                  var response = await cr6FormGenerator(client, widget.code, memosSet);
+                  // var response = await cr6FormGenerator(client, widget.code, memosSet);
 
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(response),
-                  ));
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //   content: Text(response),
+                  // ));
 
                 },
                 label: Text("Save")),

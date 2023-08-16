@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:docxform/core/models/Objective.dart';
 import 'package:flutter/services.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/models/Client.dart';
@@ -15,7 +16,7 @@ import '../../../core/utils/responsive.dart';
 import '../../../core/utils/company_reg_doc_generator.dart';
 import '../../dashboard/components/header.dart';
 import '../../dashboard/home_screen.dart';
-import '../components/memo_list_material.dart';
+import '../components/client_selector.dart';
 import './components/mini_information_card.dart';
 
 import 'package:flutter/material.dart';
@@ -47,21 +48,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   TextEditingController txtQuery = new TextEditingController();
   late int crossAxisCount;
   late double childAspectRatio;
-  List<Client> memosSet = [];
+  List<Objective> objectives = [];
   final _formKey = GlobalKey<FormState>();
   List<String> memoItems = [];
-  Client client = Client.fromJson({
-    "country": "Zimbabwe",
-    "city": "Harare",
-    "directors": [Director.fromJson({
-      "country": "Zimbabwe",
-      "city": "Harare",
-    }) ],
-    "secretaries": [Secretary.fromJson({
-      "country": "Zimbabwe",
-      "city": "Harare",
-    })]
-  });
+  Client client = Client.fromJson({});
   List<List<TextEditingController>> secCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
   List<List<TextEditingController>> dirCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
   List<TextEditingController> coCntrl = [TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()] ;
@@ -85,6 +75,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         "city": "Harare",
       })];
     }
+
     if(client.country==null)client.country="Zimbabwe";
     if(client.city==null)client.city="Harare";
 
@@ -129,7 +120,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   void _addDirector() {
     setState(() {
       _directors += 1;
-        client.directors!.add(Director.fromJson({}));
+        client.directors!.add(Director.fromJson({
+          "country": "Zimbabwe",
+          "city": "Harare",
+        }));
+      var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(text: "Harare"), TextEditingController(text: "Zimbabwe")];
+      dirCntrl?.add(cntrl);
 
     });
   }
@@ -241,25 +237,14 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
     callback(mem, action) async {
       if(action=="set"){
-          var client1 = await getClient(int.parse(mem));
+          var objective = await getObjective(int.parse(mem));
         setState(()  {
-          // memoItems.add(mem);
-          // print(clients);
-          memosSet.removeWhere((e) => e.id ==int.parse(mem));
-          // client1.set = "set";
-          // client1.update();
-          // memosSet.add(client1);
-          // memosSet.add(clients.where((e) => e.id == mem).first);
-
-
-
+          objectives.removeWhere((e) => e.id ==int.parse(mem));
+          if(objective!=null)objectives.add(objective);
         });
       }else{
         setState(() {
-          // memoItems.removeWhere((element) => element == mem);
-          memosSet.removeWhere((element) => element.id == int.parse(mem));
-
-          // print(memoItems);
+          objectives.removeWhere((element) => element.id == int.parse(mem));
         });
       }
 
@@ -969,18 +954,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
             SizedBox(height: 40.0),
 
 
-            memosSet.length >= 1 ?
+            objectives.length >= 1 ?
             GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: memosSet.length,
+                  itemCount: objectives.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: defaultPadding,
                     mainAxisSpacing: defaultPadding,
                     childAspectRatio: childAspectRatio,
                   ),
-                  itemBuilder: (context, index) => MiniMemo(memo: memosSet[index], callback: callback),
+                  itemBuilder: (context, index) => MiniMemo(memo: objectives[index], callback: callback),
               )
             :SizedBox(
                 height: 20.0,
@@ -1002,7 +987,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     onPressed: () {
                       Navigator.of(context).push(new MaterialPageRoute<Null>(
                           builder: (BuildContext context) {
-                            return new MemoListMaterial(callback: callback);
+                            return new ClientSelector(callback: callback);
                           },
                           fullscreenDialog: true));
                     },
@@ -1030,7 +1015,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   await client.save();
                   print(client.toJson());
 
-                  var response = await cr6FormGenerator(client, widget.code, memosSet);
+                  var response = await cr6FormGenerator(client, widget.code, objectives);
 
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(response),
@@ -1437,7 +1422,7 @@ class MiniMemo extends StatefulWidget {
     Key? key,
     required this.memo, required this.callback
   }) : super(key: key);
-  final Client memo;
+  final Objective memo;
   final Function(String, String) callback;
 
 

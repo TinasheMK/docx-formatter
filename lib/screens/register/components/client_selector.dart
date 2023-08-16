@@ -2,13 +2,13 @@ import 'package:docxform/core/constants/color_constants.dart';
 import '../../../core/models/Memo.dart';
 import 'package:flutter/material.dart';
 
-import 'memos_widget.dart';
+import 'client_selector_list.dart';
 
-class MemoListMaterial extends StatefulWidget {
+class ClientSelector extends StatefulWidget {
   @override
-  _MemoListMaterialState createState() => _MemoListMaterialState();
+  _ClientSelectorState createState() => _ClientSelectorState();
 
-  const MemoListMaterial({
+  const ClientSelector({
     Key? key,
     required this.callback
 
@@ -19,7 +19,7 @@ class MemoListMaterial extends StatefulWidget {
 
 }
 
-class _MemoListMaterialState extends State<MemoListMaterial> {
+class _ClientSelectorState extends State<ClientSelector> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +39,7 @@ class _MemoListMaterialState extends State<MemoListMaterial> {
                     Center(
                       child: Text("Select company objectives from below."),
                     ),
-                    MemoSelectionSection(memos: memos,callback: widget.callback),
+                    ClientSelectorList(callback: widget.callback),
                   ],
                 )),
           ),
