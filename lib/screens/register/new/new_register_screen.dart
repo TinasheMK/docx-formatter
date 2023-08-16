@@ -68,108 +68,60 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
   void loadData() async {
     clients = await getClients();
-    if(companyId!=null) {
-      client = (await getClient(companyId!))!;
-      dirCntrl = [];
-      secCntrl = [];
+    if(companyId!=null)client = (await getClient(companyId!))!;
 
-      coCntrl[0].text = client.name??"";
-      coCntrl[1].text = client.street??"";
-      coCntrl[2].text = client.city??"";
-      coCntrl[3].text = client.country??"";
-
-      client!.directors?.forEach((e) {
-        var fnameC = TextEditingController();
-        var lnameC = TextEditingController();
-        var idC = TextEditingController();
-        var streetC = TextEditingController();
-        var cityC = TextEditingController();
-        var countryC = TextEditingController();
-
-        fnameC.text = e.name??"";
-        lnameC.text = e.lastName??"";
-        idC.text = e.nationalId??"";
-        streetC.text = e.street??"";
-        cityC.text = e.city??"";
-        countryC.text = e.country??"";
-
-        dirCntrl?.add([
-          fnameC,
-          lnameC,
-          idC,
-          streetC,
-          cityC,
-          countryC,
-        ]);
-      });
-      client!.secretaries?.forEach((e) {
-        var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
-
-        cntrl[0].text = e.name??"";
-        cntrl[1].text = e.lastName??"";
-        cntrl[2].text = e.nationalId??"";
-        cntrl[4].text = e.street??"";
-        cntrl[5].text = e.city??"";
-        cntrl[6].text = e.country??"";
-
-        secCntrl?.add(cntrl);
-      });
-    }else{
-      client = Client.fromJson({
+    if(client!.directors==null  || client!.directors!.length<1  ){
+      client.directors = [Director.fromJson({
         "country": "Zimbabwe",
         "city": "Harare",
-        "directors": [Director.fromJson({
-          "country": "Zimbabwe",
-          "city": "Harare",
-        }),Director.fromJson({
-          "country": "Zimbabwe",
-          "city": "Harare",
-        })],
-        "secretaries": [Secretary.fromJson({
-          "country": "Zimbabwe",
-          "city": "Harare",
-        })]
-      });
-      dirCntrl = [];
-      secCntrl = [];
-
-      client!.directors?.forEach((e) {
-        var fnameC = TextEditingController();
-        var lnameC = TextEditingController();
-        var idC = TextEditingController();
-        var streetC = TextEditingController();
-        var cityC = TextEditingController();
-        var countryC = TextEditingController();
-
-        fnameC.text = e.name??"";
-        lnameC.text = e.lastName??"";
-        idC.text = e.nationalId??"";
-        streetC.text = e.street??"";
-        cityC.text = e.city??"";
-        countryC.text = e.country??"";
-
-        dirCntrl?.add([
-          fnameC,
-          lnameC,
-          idC,
-          streetC,
-          cityC,
-          countryC,
-        ]);
-      });
-      client!.secretaries?.forEach((e) {
-        var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
-
-        cntrl[0].text = e.name??"";
-        cntrl[1].text = e.lastName??"";
-        cntrl[2].text = e.nationalId??"";
-        cntrl[4].text = e.street??"";
-        cntrl[5].text = e.city??"";
-        cntrl[6].text = e.country??"";
-
-        secCntrl?.add(cntrl);
-      });
+      }),Director.fromJson({
+        "country": "Zimbabwe",
+        "city": "Harare",
+      })];
     }
+    if(client!.secretaries==null || client!.secretaries!.length<1 ){
+      client.secretaries = [Secretary.fromJson({
+        "country": "Zimbabwe",
+        "city": "Harare",
+      })];
+    }
+    if(client.country==null)client.country="Zimbabwe";
+    if(client.city==null)client.city="Harare";
+
+
+    dirCntrl = [];
+    secCntrl = [];
+
+    coCntrl[0].text = client.name??"";
+    coCntrl[1].text = client.street??"";
+    coCntrl[2].text = client.city??"";
+    coCntrl[3].text = client.country??"";
+
+    client!.directors?.forEach((e) {
+      var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+
+      cntrl[0].text = e.name??"";
+      cntrl[1].text = e.lastName??"";
+      cntrl[2].text = e.nationalId??"";
+      cntrl[3].text = e.street??"";
+      cntrl[4].text = e.city??"";
+      cntrl[5].text = e.country??"";
+
+      dirCntrl?.add(cntrl);
+    });
+    client!.secretaries?.forEach((e) {
+      var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+
+      cntrl[0].text = e.name??"";
+      cntrl[1].text = e.lastName??"";
+      cntrl[2].text = e.nationalId??"";
+      cntrl[4].text = e.city??"";
+      cntrl[5].text = e.country??"";
+
+      secCntrl?.add(cntrl);
+    });
+
+
 
     setState(() {});
   }

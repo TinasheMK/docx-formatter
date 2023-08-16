@@ -90,16 +90,21 @@ class DatabaseHelper {
           CREATE TABLE stage (
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
+            number TEXT NOT NULL,
             type TEXT NOT NULL,
-            description TEXT            
+            description TEXT,
+             is_deleted INTEGER    
           )
           ''');
     await db.execute('''
-          CREATE TABLE client_stages (
-            client_id INTEGER PRIMARY KEY,
-            stage_id TEXT NOT NULL,
+          CREATE TABLE client_stage(
+            id INTEGER PRIMARY KEY,
+            client_id INTEGER,
+            stage_id INTEGER NOT NULL,
+            type TEXT NOT NULL,
             status TEXT NOT NULL,
-            notes TEXT            
+            notes TEXT,
+            is_deleted INTEGER  
           )
           ''');
 
@@ -449,15 +454,14 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> softQueryAllRows(String table) async {
     return await _db.rawQuery("select * from '$table' where (is_deleted = 0 or is_deleted is null)" );
   }
+  Future<List<Map<String, dynamic>>> getTypeStages(String table, String type) async {
+    return await _db.rawQuery("select * from '$table' where (is_deleted = 0 or is_deleted is null) and type = '$type' order by number asc" );
+  }
 
-  Future<List<Map<String, dynamic>>> featuredProducts(String table, {int? categoryId}) async {
-    if(categoryId==null) {
+  Future<List<Map<String, dynamic>>> stages(String table, int clientId) async {
       return await _db.rawQuery(
-          "select * from '$table' where (is_deleted = 0 or is_deleted is null) order by featured desc");
-    }else{
-      return await _db.rawQuery(
-          "select * from '$table' where (is_deleted = 0 or is_deleted is null) and category_id = $categoryId  order by featured desc");
-    }
+          "select * from '$table' where client_id = '$clientId' ");
+
   }
 
 

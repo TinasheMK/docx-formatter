@@ -8,6 +8,7 @@ import 'Secretary.dart';
 import 'Wallet.dart';
 
 class ClientStage {
+  int?    id;
   int?    client_id;
   String? notes;
   String? status;
@@ -17,6 +18,7 @@ class ClientStage {
   int? stageId;
 
   ClientStage({
+    this.id,
     this.client_id,
     this.notes,
     this.status,
@@ -26,52 +28,48 @@ class ClientStage {
   });
 
  ClientStage.fromJson(Map<String, dynamic> json) {
-   client_id = json['client_id'];
+   id = json['id'];
+   client_id = json['clientId'];
    notes = json['notes'];
    status = json['status'];
-
    type = json['type'];
-   type = json['stage_id'];
-   stageId = json['type'];
+   stageId = json['stageId'];
+   type = json['type'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['client_id'] = this.client_id;
     data['notes'] = this.notes;
     data['status'] = this.status;
     return data;
   }
 
-  save() async {
+  Future<void> saveAndAttach(int clientId) async {
+    debugPrint('adding client stage ');
+
     Map<String, dynamic> row = {
-      "client_id": this.client_id,
+      "id": id,
+      "client_id": clientId,
       "notes": this.notes,
       "status": this.status,
-
       "type": this.type,
+      "stage_id": this.stageId,
       "type": this.stageId,
-      "stage_id": this.type,
     };
-    var client_id;
-    if(this.client_id==null) {
-      client_id = await dbHelper.insert("stage", row);
+
+    if(this.id==null) {
+      id = await dbHelper.insert("client_stage", row);
     }else{
-      dbHelper.update('stage',row);
-      client_id = this.client_id;
+      dbHelper.update('client_stage',row);
+      id = this.id;
     }
 
-    this.client_id = client_id;
-
-    for(int i=0; i<30; i++){{
-      try {
-      }catch(err) {}
-
-    }
-    }
-
-
-    debugPrint('inserted stage row client_id: $client_id');
+    // final id = await dbHelper.insert("client_stage", row);
+    // this.id = id;
+    debugPrint('inserted client stage row id: $id');
   }
+
  query() async {
     final allRows = await dbHelper.queryAllRows('stage');
     debugPrint('query all rows:');
@@ -84,8 +82,8 @@ class ClientStage {
  delete() async {
     // Assuming that the number of rows is the client_id for the last row.
     // final client_id = await dbHelper.queryRowCount('stage');
-    final rowsDeleted = await dbHelper.softDelete('stage',this.client_id!);
-    debugPrint('deleted $rowsDeleted row(s): row $client_id');
+    final rowsDeleted = await dbHelper.softDelete('stage',this.id!);
+    debugPrint('deleted $rowsDeleted row(s): row $id');
   }
 
 
@@ -95,11 +93,13 @@ class ClientStage {
 
 }
 
-Future<List<ClientStage>> getClientStages() async {
-  final maps = await dbHelper.softQueryAllRows("stage");
+Future<List<ClientStage>> getClientStages(int clientId) async {
+  final maps = await dbHelper.stages("client_stage", clientId);
 
   return List.generate(maps.length, (i) {
+    print(maps?[i]["stage_id"]);
     return ClientStage(
+      id : maps[i]['id'],
       client_id : maps[i]['client_id'],
       notes : maps[i]['notes'],
       status : maps[i]['status'],
@@ -110,10 +110,11 @@ Future<List<ClientStage>> getClientStages() async {
   });
 }
 Future<List<ClientStage>> getClientStagesForSync() async {
-  final maps = await dbHelper.getReadyForSyc("stage");
+  final maps = await dbHelper.getReadyForSyc("client_stage");
 
   return List.generate(maps.length, (i) {
     return ClientStage(
+      id : maps[i]['id'],
       client_id : maps[i]['client_id'],
       notes : maps[i]['notes'],
       status : maps[i]['status'],
@@ -125,12 +126,11 @@ Future<List<ClientStage>> getClientStagesForSync() async {
   });
 }
 
-Future<ClientStage?> getClientStage(int client_id) async {
-  var maps = await dbHelper.findById("stage", client_id);
-  List<Director> directors = await getDirectors(maps?['client_id']);
-  List<Secretary> secretaries = await getSecretaries(maps?['client_id']);
+Future<ClientStage?> getClientStage(int id) async {
+  var maps = await dbHelper.findById("client_stage", id);
 
     return ClientStage(
+      id : maps?['id'],
       client_id : maps?['client_id'],
       notes : maps?['notes'],
       status : maps?['status'],
@@ -142,12 +142,12 @@ Future<ClientStage?> getClientStageByUni(int client_id, {bool? copy}) async {
   var maps ;
 
   if(copy != null && copy==true){
-    maps = await dbHelper.findByIdUni("stage", client_id);
+    maps = await dbHelper.findByIdUni("client_stage", client_id);
     if(maps == null){
       return null;
     }
   }else{
-    maps = await dbHelper.findByIdUni("stage", client_id);
+    maps = await dbHelper.findByIdUni("client_stage", client_id);
 
     if(maps == null){
       return null;
@@ -155,6 +155,7 @@ Future<ClientStage?> getClientStageByUni(int client_id, {bool? copy}) async {
   }
 
     return ClientStage(
+      id : maps?['id'],
       client_id : maps?['client_id'],
       notes : maps?['notes'],
       status : maps?['status'],

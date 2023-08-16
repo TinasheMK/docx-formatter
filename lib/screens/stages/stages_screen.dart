@@ -2,13 +2,13 @@ import '../../core/constants/color_constants.dart';
 import '../../core/utils/responsive.dart';
 import '../dashboard/components/header.dart';
 import '../dashboard/components/user_details_widget.dart';
-import './components/objectives_mini_header.dart';
+import './components/stages_mini_header.dart';
 import 'package:flutter/material.dart';
 
-import 'components/objective_list.dart';
+import 'components/stages_list.dart';
 
 
-class ObjectivesScreen extends StatelessWidget {
+class StagesScreen extends StatelessWidget {
 
 
 
@@ -25,7 +25,7 @@ class ObjectivesScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ObjectivesMiniHeader(),
+              StagesMiniHeader(),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +34,7 @@ class ObjectivesScreen extends StatelessWidget {
                     flex: 5,
                     child: Column(
                       children: [
-                        ObjectiveList(),
+                        StageList(),
                       ],
                     ),
                   ),

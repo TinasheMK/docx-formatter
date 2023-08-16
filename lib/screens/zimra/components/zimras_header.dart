@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/daily_info_model.dart';
 import '../../objectives/objectives_home_screen.dart';
 import '../../register/new/new_register_home_screen.dart';
+import '../../stages/stages_home_screen.dart';
 
 class ZimrasHeader extends StatelessWidget {
   const ZimrasHeader({
@@ -38,7 +39,7 @@ class ZimrasHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ObjectivesHomeScreen()),
+                  MaterialPageRoute(builder: (context) => StagesHomeScreen()),
                 );
 
 

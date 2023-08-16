@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import '../../main.dart';
 import '../enums/status_enum.dart';
+import 'ClientStage.dart';
 import 'Currency.dart';
 import 'Director.dart';
 import 'Employee.dart';
@@ -20,7 +21,8 @@ class Client {
   Currency? currencyFull;
   Status? status;
   List<Employee>? employees;
-  // List<int>? shareholders;
+  List<ClientStage>? stages;
+  List<ClientStage>? prazStages;
   List<Director>? directors;
   List<Secretary>? secretaries;
 
@@ -42,7 +44,8 @@ class Client {
     this.name,
     this.street,
     this.city,
-    // this.shareholders,
+    this.stages,
+    this.prazStages,
     this.set,
     this.currency,
     this.currencyFull,
@@ -69,6 +72,8 @@ class Client {
  Client.fromJson(Map<String, dynamic> json) {
    id = json['id'];
    name = json['name'];
+   stages = json['stages'];
+   prazStages = json['prazStages'];
    street = json['street'];
    city = json['city'];
    country = json['country'];
@@ -93,6 +98,8 @@ class Client {
    version = json['version'];
    isConfirmed = json['isConfirmed'];
    universalId = json['id'];
+   stages = json['stages'];
+   prazStages = json['prazStages'];
 
 
    name = json['name'];
@@ -121,6 +128,8 @@ class Client {
     data['street'] = this.street;
     data['city'] = this.city;
     data['country'] = this.country;
+    data['stages'] = this.stages;
+    data['prazStages'] = this.prazStages;
     data['telephone'] = this.telephone;
     data['email'] = this.email;
     data['status'] = this.status;
@@ -143,6 +152,8 @@ class Client {
     data['street'] = this.street;
     data['city'] = this.city;
     data['country'] = this.country;
+    data['stages'] = this.stages;
+    data['prazStages'] = this.prazStages;
     data['telephone'] = this.telephone;
     data['email'] = this.email;
     data['status'] = this.status;
@@ -186,6 +197,11 @@ class Client {
     var dirs = this.directors;
     var secs = this.secretaries;
 
+    this.stages?.forEach((e) {
+      e.saveAndAttach(id);
+    });
+
+
     for(int i=0; i<30; i++){{
       try {
         dirs?[i]?.saveAndAttach(id);
@@ -208,6 +224,8 @@ class Client {
       "street": this.street,
       "city": this.city,
       "country": this.country,
+      "stages": this.stages,
+      "prazStages": this.prazStages,
       "telephone": this.telephone,
       "email": this.email,
       "status": this.status,
@@ -255,6 +273,8 @@ class Client {
       "street": this.street,
       "city": this.city,
       "country": this.country,
+      "stages": this.stages,
+      "prazStages": this.prazStages,
       "telephone": this.telephone,
       "email": this.email,
       "status": this.status,
@@ -301,32 +321,6 @@ class Client {
     final rowsDeleted = await dbHelper.softDelete('client',this.id!);
     debugPrint('deleted $rowsDeleted row(s): row $id');
   }
-
-
-  Future<Wallet> getWallet(String currency) async {
-
-    final maps = await dbHelper.findClientWallet("wallet", this.id!, currency);
-
-    if (maps == null){
-      Wallet wallet =  new Wallet(
-        currency : currency,
-        clientId : this.id,
-      );
-      wallet.save();
-      getWallet(wallet.currency!);
-    }
-
-    return Wallet(
-      id : maps?['id'],
-      balance : maps?['balance'],
-      currency : maps?['currency'],
-      clientId : maps?['client_id'],
-
-    );
-
-  }
-
-
 
 }
 
@@ -403,6 +397,8 @@ Future<List<Client>> searchClients(String query) async {
 Future<Client?> getClient(int id) async {
   var maps = await dbHelper.findById("client", id);
   List<Director> directors = await getDirectors(maps?['id']);
+  List<ClientStage> stages = await getClientStages(maps?['id']);
+  // List<ClientStage> prazStages = await getClientStages(maps?['id']);
   List<Secretary> secretaries = await getSecretaries(maps?['id']);
 
     return Client(
@@ -416,12 +412,15 @@ Future<Client?> getClient(int id) async {
       status : maps?['status'],
       currency : maps?['currency'],
       employees : maps?['employees'],
+      stages: stages,
+      // prazStages: prazStages,
       directors : directors,
       secretaries : secretaries,
 
     );
 
 }
+
 Future<Client?> getClientByUni(int id, {bool? copy}) async {
   var maps ;
 

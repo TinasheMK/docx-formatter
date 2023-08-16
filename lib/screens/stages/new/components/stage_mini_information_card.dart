@@ -5,15 +5,15 @@ import 'package:docxform/screens/dashboard/components/mini_information_widget.da
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/daily_info_model.dart';
-import '../../objectives_home_screen.dart';
+import '../../stages_home_screen.dart';
 
 // import '../new/new_register_home_screen.dart';
 // import '../new/new_register_screen.dart';
 
-class ObjectiveMiniInformation extends StatelessWidget {
+class StageMiniInformation extends StatelessWidget {
 
 
-  const ObjectiveMiniInformation({
+  const StageMiniInformation({
     Key? key,required this.title
   }) : super(key: key);
   final String title;
@@ -29,7 +29,7 @@ class ObjectiveMiniInformation extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text("Objective", style: TextStyle(fontSize: 35, color: Colors.white) ),
+            Text("Stage", style: TextStyle(fontSize: 35, color: Colors.white) ),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -42,7 +42,7 @@ class ObjectiveMiniInformation extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ObjectivesHomeScreen()),
+                  MaterialPageRoute(builder: (context) => StagesHomeScreen()),
                 );
 
 

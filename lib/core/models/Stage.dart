@@ -11,31 +11,35 @@ class Stage {
   int?    id;
   String? name;
   String? description;
-
-
+  String? number;
   String? type;
+  String? notes;
+  String? status;
 
   Stage({
     this.id,
     this.name,
     this.description,
-
-    this.type
+    this.number,
+    this.type,
+    this.notes,
+    this.status,
   });
 
  Stage.fromJson(Map<String, dynamic> json) {
    id = json['id'];
    name = json['name'];
    description = json['description'];
+   number = json['number'];
 
    type = json['type'];
   }
  Stage.fromSyncJson(Map<String, dynamic> json) {
-   id = json['originId'];
 
 
    name = json['name'];
    description = json['description'];
+   number = json['number'];
 
    type = json['type'];
   }
@@ -45,6 +49,8 @@ class Stage {
     data['id'] = this.id;
     data['name'] = this.name;
     data['description'] = this.description;
+    data['number'] = this.number;
+    data['type'] = this.type;
     return data;
   }
   Map<String, dynamic> toSyncJson() {
@@ -53,6 +59,8 @@ class Stage {
 
     data['name'] = this.name;
     data['description'] = this.description;
+    data['number'] = this.number;
+    data['type'] = this.type;
     return data;
   }
 
@@ -62,7 +70,7 @@ class Stage {
       "id": this.id,
       "name": this.name,
       "description": this.description,
-
+      "number": this.number,
       "type": this.type,
     };
     var id;
@@ -116,7 +124,22 @@ Future<List<Stage>> getStages() async {
       id : maps[i]['id'],
       name : maps[i]['name'],
       description : maps[i]['description'],
-      type : maps?[i]["type"],
+      number : maps[i]['number'],
+      type : maps[i]['type'],
+
+    );
+  });
+}
+Future<List<Stage>> getTypeStages(String type) async {
+  final maps = await dbHelper.getTypeStages("stage", type);
+
+  return List.generate(maps.length, (i) {
+    return Stage(
+      id : maps[i]['id'],
+      name : maps[i]['name'],
+      description : maps[i]['description'],
+      number : maps[i]['number'],
+      type : maps[i]['type'],
 
     );
   });
@@ -129,9 +152,8 @@ Future<List<Stage>> getStagesForSync() async {
       id : maps[i]['id'],
       name : maps[i]['name'],
       description : maps[i]['description'],
-
-      type : maps?[i]["type"],
-
+      number : maps[i]['number'],
+      type : maps[i]['type'],
     );
   });
 }
@@ -145,6 +167,8 @@ Future<Stage?> getStage(int id) async {
       id : maps?['id'],
       name : maps?['name'],
       description : maps?['description'],
+      number : maps?['number'],
+      type : maps?['type'],
 
     );
 
@@ -169,8 +193,8 @@ Future<Stage?> getStageByUni(int id, {bool? copy}) async {
       id : maps?['id'],
       name : maps?['name'],
       description : maps?['description'],
-
-      type : maps?["type"],
+      number : maps?['number'],
+      type : maps?['type'],
 
     );
 

@@ -3,12 +3,12 @@ import 'package:docxform/core/constants/color_constants.dart';
 import 'package:docxform/core/utils/responsive.dart';
 import 'package:docxform/screens/dashboard/components/mini_information_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:docxform/screens/objectives/new/new_client_home_screen.dart';
 
 import '../../../core/models/daily_info_model.dart';
+import '../new/new_stage_home_screen.dart';
 
-class ObjectivesMiniHeader extends StatelessWidget {
-  const ObjectivesMiniHeader({
+class StagesMiniHeader extends StatelessWidget {
+  const StagesMiniHeader({
     Key? key,
   }) : super(key: key);
 
@@ -20,7 +20,7 @@ class ObjectivesMiniHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text( "Objectives", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
+            Text( "Stages", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.white),),
             ElevatedButton.icon(
               style: TextButton.styleFrom(
                 // backgroundColor: Colors.green,
@@ -33,14 +33,14 @@ class ObjectivesMiniHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewObjectiveHome(title: 'Company Registration', code: 'wiw',)),
+                  MaterialPageRoute(builder: (context) => NewStageHome(title: 'Company Registration', code: 'wiw',)),
                 );
 
 
               },
               icon: Icon(Icons.add),
               label: Text(
-                "New Objective",
+                "New Stage",
               ),
             ),
           ],

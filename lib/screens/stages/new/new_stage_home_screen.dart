@@ -3,18 +3,18 @@ import '../../dashboard/components/side_menu.dart';
 
 import 'package:flutter/material.dart';
 
-import 'new_objective_screen.dart';
+import 'new_stage_screen.dart';
 
-class NewObjectiveHome extends StatefulWidget {
-  NewObjectiveHome({required this.title, required this.code, this.clientId});
+class NewStageHome extends StatefulWidget {
+  NewStageHome({required this.title, required this.code, this.clientId});
   final String title;
   final String code;
   int? clientId;
   @override
-  _NewObjectiveHomeState createState() => _NewObjectiveHomeState();
+  _NewStageHomeState createState() => _NewStageHomeState();
 }
 
-class _NewObjectiveHomeState extends State<NewObjectiveHome> with SingleTickerProviderStateMixin {
+class _NewStageHomeState extends State<NewStageHome> with SingleTickerProviderStateMixin {
 
 
   var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
@@ -69,7 +69,7 @@ class _NewObjectiveHomeState extends State<NewObjectiveHome> with SingleTickerPr
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: NewObjectiveScreen(title: widget.title, code: widget.code, clientId: widget.clientId,),
+              child: NewStageScreen(title: widget.title, code: widget.code, clientId: widget.clientId,),
             ),
           ],
         ),

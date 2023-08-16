@@ -2,9 +2,9 @@ import 'package:docxform/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 
 import '../dashboard/components/side_menu.dart';
-import 'objectives_screen.dart';
+import 'stages_screen.dart';
 
-class ObjectivesHomeScreen extends StatelessWidget {
+class StagesHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,7 @@ class ObjectivesHomeScreen extends StatelessWidget {
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: ObjectivesScreen(),
+              child: StagesScreen(),
             ),
           ],
         ),

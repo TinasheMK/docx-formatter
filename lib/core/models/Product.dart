@@ -254,17 +254,17 @@ Future<List<Product>> getProducts() async {
   final maps = await dbHelper.softQueryAllRows("product");
   return convert(maps);
 }
-Future<List<Product>> getFeaturedProducts({int? categoryId}) async {
-  final maps;
-
-  if(categoryId==null) {
-      maps =  await dbHelper.featuredProducts("product");
-  }else{
-    maps =  await dbHelper.featuredProducts("product", categoryId: categoryId);
-   }
-
-  return convert(maps);
-}
+// Future<List<Product>> getFeaturedProducts({int? categoryId}) async {
+//   final maps;
+//
+//   if(categoryId==null) {
+//       maps =  await dbHelper.featuredProducts("product");
+//   }else{
+//     maps =  await dbHelper.featuredProducts("product", categoryId: categoryId);
+//    }
+//
+//   return convert(maps);
+// }
 Future<List<Product>> getProductsForSync() async {
   final maps = await dbHelper.getReadyForSyc("product");
   return convert(maps);

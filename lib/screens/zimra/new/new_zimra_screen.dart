@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:docxform/core/models/ClientStage.dart';
 import 'package:flutter/services.dart';
 import '../../../core/models/Client.dart';
 import '../../../core/models/Client.dart';
@@ -8,6 +9,7 @@ import '../../../core/models/Director.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/models/Secretary.dart';
+import '../../../core/models/Stage.dart';
 import '../../../core/widgets/app_button_widget.dart';
 import '../../../core/widgets/input_widget.dart';
 import '../../../core/utils/responsive.dart';
@@ -42,132 +44,54 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
   List persons = [];
   List original = [];
   List<Client> clients = [Client.fromJson({})];
+  List<Stage> stages = [Stage.fromJson({})];
   TextEditingController txtQuery = new TextEditingController();
   late int crossAxisCount;
   late double childAspectRatio;
   List<Client> memosSet = [];
   final _formKey = GlobalKey<FormState>();
   List<String> memoItems = [];
-  Client client = Client.fromJson({
-    "country": "Zimbabwe",
-    "city": "Harare",
-    "directors": [Director.fromJson({
-      "country": "Zimbabwe",
-      "city": "Harare",
-    }) ],
-    "secretaries": [Secretary.fromJson({
-      "country": "Zimbabwe",
-      "city": "Harare",
-    })]
-  });
-  List<List<TextEditingController>> secCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
-  List<List<TextEditingController>> dirCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
-  List<TextEditingController> coCntrl = [TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()] ;
+  Client client = Client.fromJson({});
 
   void loadData() async {
+    client.stages = [];
     clients = await getClients();
+    stages = await getTypeStages('zimra');
     if(companyId!=null) {
       client = (await getClient(companyId!))!;
-      dirCntrl = [];
-      secCntrl = [];
-
-      coCntrl[0].text = client.name??"";
-      coCntrl[1].text = client.street??"";
-      coCntrl[2].text = client.city??"";
-      coCntrl[3].text = client.country??"";
-
-      client!.directors?.forEach((e) {
-        var fnameC = TextEditingController();
-        var lnameC = TextEditingController();
-        var idC = TextEditingController();
-        var streetC = TextEditingController();
-        var cityC = TextEditingController();
-        var countryC = TextEditingController();
-
-        fnameC.text = e.name??"";
-        lnameC.text = e.lastName??"";
-        idC.text = e.nationalId??"";
-        streetC.text = e.street??"";
-        cityC.text = e.city??"";
-        countryC.text = e.country??"";
-
-        dirCntrl?.add([
-          fnameC,
-          lnameC,
-          idC,
-          streetC,
-          cityC,
-          countryC,
-        ]);
-      });
-      client!.secretaries?.forEach((e) {
-        var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
-
-        cntrl[0].text = e.name??"";
-        cntrl[1].text = e.lastName??"";
-        cntrl[2].text = e.nationalId??"";
-        cntrl[4].text = e.street??"";
-        cntrl[5].text = e.city??"";
-        cntrl[6].text = e.country??"";
-
-        secCntrl?.add(cntrl);
-      });
-    }else{
-      client = Client.fromJson({
-        "country": "Zimbabwe",
-        "city": "Harare",
-        "directors": [Director.fromJson({
-          "country": "Zimbabwe",
-          "city": "Harare",
-        }),Director.fromJson({
-          "country": "Zimbabwe",
-          "city": "Harare",
-        })],
-        "secretaries": [Secretary.fromJson({
-          "country": "Zimbabwe",
-          "city": "Harare",
-        })]
-      });
-      dirCntrl = [];
-      secCntrl = [];
-
-      client!.directors?.forEach((e) {
-        var fnameC = TextEditingController();
-        var lnameC = TextEditingController();
-        var idC = TextEditingController();
-        var streetC = TextEditingController();
-        var cityC = TextEditingController();
-        var countryC = TextEditingController();
-
-        fnameC.text = e.name??"";
-        lnameC.text = e.lastName??"";
-        idC.text = e.nationalId??"";
-        streetC.text = e.street??"";
-        cityC.text = e.city??"";
-        countryC.text = e.country??"";
-
-        dirCntrl?.add([
-          fnameC,
-          lnameC,
-          idC,
-          streetC,
-          cityC,
-          countryC,
-        ]);
-      });
-      client!.secretaries?.forEach((e) {
-        var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
-
-        cntrl[0].text = e.name??"";
-        cntrl[1].text = e.lastName??"";
-        cntrl[2].text = e.nationalId??"";
-        cntrl[4].text = e.street??"";
-        cntrl[5].text = e.city??"";
-        cntrl[6].text = e.country??"";
-
-        secCntrl?.add(cntrl);
-      });
     }
+    
+    // Match required stages to available stages
+    if(client.stages?.length != stages.length){
+        stages.forEach((e) {
+          var exists = false;
+          client.stages!.forEach((s) {
+            if(e.id==s.stageId){
+              exists = true;
+            }
+          });
+
+          if(exists==false){
+            client.stages!.add(ClientStage.fromJson({
+              "client_id": client.id,
+              "notes": "",
+              "status": "incomplete",
+              "type": "zimra",
+              "stageId": e.id,
+            }));
+          }
+
+
+
+        });
+        
+
+      
+ 
+    }
+
+    // print("done");
+
 
     setState(() {});
   }
@@ -190,43 +114,17 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
     });
   }
 
-  void _printLatestValue() {
-
-    secCntrl.forEach((e) {
-      e.forEach((a) {
-        print('Text field: ${a.text}');
-      });
-
-    });
-
-  }
 
   @override
   void initState() {
-    secCntrl[0][4].text = "Harare";
-    secCntrl[0][5].text = "Zimbabwe";
     super.initState();
 
     loadData();
 
 
-    secCntrl.forEach((e) {
-      e.forEach((a) {
-        a.addListener(_printLatestValue);
-      });
-    });
 
   }
 
-  @override
-  void dispose() {
-    secCntrl.forEach((e) {
-      e.forEach((a) {
-        a.dispose();
-      });
-    });
-    super.dispose();
-  }
 
 
   @override
@@ -257,8 +155,6 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                     flex: 5,
                     child: Column(
                       children: [
-                        //MyFiels(),
-                        //SizedBox(height: defaultPadding),
                         _registerScreen(context),
                         SizedBox(height: defaultPadding),
                         if (Responsive.isMobile(context))
@@ -268,12 +164,6 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                   ),
                   if (!Responsive.isMobile(context))
                     SizedBox(width: defaultPadding),
-                  // On Mobile means if the screen is less than 850 we dont want to show it
-                  // if (!Responsive.isMobile(context))
-                    //z Expanded(
-                    //   flex: 2,
-                    //   child: UserDetailsWidget(),
-                    // ),
                 ],
               )
             ],
@@ -289,23 +179,11 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
       if(action=="set"){
           var client1 = await getClient(int.parse(mem));
         setState(()  {
-          // memoItems.add(mem);
-          // print(clients);
           memosSet.removeWhere((e) => e.id ==int.parse(mem));
-          // client1.set = "set";
-          // client1.update();
-          // memosSet.add(client1);
-          // memosSet.add(clients.where((e) => e.id == mem).first);
-
-
-
         });
       }else{
         setState(() {
-          // memoItems.removeWhere((element) => element == mem);
           memosSet.removeWhere((element) => element.id == int.parse(mem));
-
-          // print(memoItems);
         });
       }
 
@@ -325,7 +203,29 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
           children: [
 
             SizedBox(height: 16.0),
-            Text( (client.name??""), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),),
+            client.name!=null
+                ? Text( (client.name??""), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),)
+                : InputWidget(
+              keyboardType: TextInputType.text,
+              onSaved: (String? value) {
+                // This optional block of code can be used to run
+                // code when the user saves the form.
+              },
+              onChanged: (String? value) {
+                client.name = value;
+
+              },
+              validator: (String? value) {
+                return (value != null && value.contains('@'))
+                    ? 'Do not use the @ char.'
+                    : null;
+              },
+
+              topLabel: "Company Name",
+
+              hintText: "Enter Company Name",
+              // prefixIcon: FlutterIcons.chevron_left_fea,
+            ),
 
 
             SizedBox(height: 50.0),
@@ -333,7 +233,21 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
             //First Stage
             Column(
               children: List.generate(
-                  client.directors!.length, (i) {
+                  (client.stages?.length??0), (i) {
+
+                    var con = TextEditingController(text: client.stages![i].notes);
+
+                    Stage getClientStage(int stageId){
+                      Stage stage = Stage.fromJson({});
+                      stages.forEach((e) {
+                        if(e.id==stageId){
+                          stage = e;
+                        }
+                      });
+                      return stage;
+                    }
+
+
                   return Column(
                     children: [
                       Container(
@@ -352,8 +266,8 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text( "Stage 1", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),),
-                                    Text( "Data collection from client.", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                                    Text( "Stage "+(getClientStage(client.stages![i].stageId!).number??"")+" : "+(getClientStage(client.stages?[i].stageId ?? 0).name??""), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),),
+                                    Text( getClientStage(client.stages?[i].stageId ?? 1).description??"", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
                                   ],
                                 ),
                                 Row(
@@ -362,12 +276,16 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                                     Text("Completed?"
                                       , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),),
                                     Checkbox(
-                                      value: isChecked,
+                                      value:  client!.stages?[i].status=="complete",
                                       checkColor: Colors.green,
                                       activeColor: Colors.white,
                                       onChanged: (bool? value) {
                                         setState(() {
-                                          isChecked = value!;
+                                          if(value == false){
+                                            client!.stages?[i].status="incomplete";
+                                          }else{
+                                            client!.stages?[i].status="complete";
+                                          };
                                         });
                                       },
                                     ),
@@ -376,34 +294,16 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                               ],),
                             SizedBox(height: 16.0),
                             InputWidget(
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.multiline,
                               onSaved: (String? value) {
                                 // This optional block of code can be used to run
                                 // code when the user saves the form.
-                              },
-                              kController: dirCntrl[0][0],
+                              },kController: con,
                               onChanged: (String? value) {
-                                if(!client!.directors!.asMap().containsKey(0)){
-                                  client!.directors!.add(Director.fromJson({}));
-                                }
-                                client!.directors![0].name = value;
-
-                                if(!secEdited){
-                                  client!.secretaries![0].name = value;
-                                  setState(() {
-                                    secCntrl[0][0].text = value.toString();
-                                  });
-                                }
+                                client!.stages?[i].notes = value;
 
                               },
-                              validator: (String? value) {
-                                return (value != null && value.contains('@'))
-                                    ? 'Do not use the @ char.'
-                                    : null;
-                              },
-
                               topLabel: "Notes",
-
                               hintText: "Enter Additional Notes",
                               // prefixIcon: FlutterIcons.chevron_left_fea,
                             ),
@@ -432,17 +332,13 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                   if (_formKey.currentState!.validate()) {}
 
 
-                  client!.directors!.removeWhere((e) => e.name == null);
-                  client!.secretaries!.removeWhere((e) => e.name == null);
+                  client!.directors?.removeWhere((e) => e.name == null);
+                  client!.secretaries?.removeWhere((e) => e.name == null);
+                  client!.stages?.removeWhere((e) => e.status == null);
 
                   await client.save();
                   print(client.toJson());
 
-                  var response = await cr6FormGenerator(client, widget.code, memosSet);
-
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(response),
-                  ));
 
                 },
                 label: Text("Save")),
@@ -454,344 +350,7 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
     );
   }
 
-
-  Widget _SecondDirector(BuildContext context, int number) {
-    return
-      Column(
-        children:[
-          SizedBox(height: 50.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text( "Director "+number.toString()+" Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-              ),
-              SizedBox(width: 100),
-              TextButton(
-                onPressed: () {
-                  _removeDirector();
-                  client!.directors!.removeAt(number-1);
-
-                },
-                child: Text("Remove Director",
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontWeight: FontWeight.w400, color: Colors.redAccent)),
-              ),
-              !(client!.directors?[number-1].shareholder??false)
-                  ?
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    client!.directors![number-1].shareholder = true;
-
-                  });
-
-                },
-                child: Text("Make Shareholder",
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontWeight: FontWeight.w400, color: Colors.blue)),
-              )
-                  :
-              SizedBox(
-                width: 150,
-                child:
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  onChanged: (String? value) {
-                    print(value);
-                    if(value == ''){
-                      setState(() {
-
-                        client!.directors![number-1].shareholder = false;
-                      });
-                    }else{
-                      client!.directors![number-1].shares = int.parse(value!);
-
-                    }
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromRGBO(74, 77, 84, 0.2),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        //gapPadding: 16,
-                        borderSide: BorderSide(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      errorStyle: TextStyle(height: 0, color: Colors.transparent),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).errorColor,
-                        ),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        //gapPaddings: 16,
-                        borderSide: BorderSide(
-                          color: Theme.of(context).errorColor,
-                        ),
-                      ),
-                      hintText: "Shares",
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(color: Colors.white54),
-
-                  )
-                  // topLabel: "Shares",
-
-                  // hintText: "Enter Shares",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  kController: dirCntrl[number-1][0],
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorName = value!;value
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                        client!.directors!.add(Director.fromJson({}));
-                    }
-                    client!.directors![number-1].name = value;
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director First Name",
-
-                  hintText: "Enter First Name",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  kController: dirCntrl[number-1][1],
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorLastName = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                      client!.directors!.add(Director.fromJson({}));
-                    }
-                    client!.directors![number-1].lastName = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director Last Name",
-
-                  hintText: "Enter Last Name",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  kController: dirCntrl[number-1][2],
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorLastName = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                      client!.directors!.add(Director.fromJson({}));
-                    }
-                    client!.directors![number-1].nationalId = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director id",
-
-                  hintText: "Enter id",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  kController: dirCntrl[number-1][3],
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorStreet = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                        client!.directors!.add(Director.fromJson({}));
-                    }
-                    client!.directors![number-1].street = value;
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director Street Address",
-
-                  hintText: "Enter Street Address",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorCity = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                        client!.directors!.add(Director.fromJson({}));
-                    }
-                    client!.directors![number-1].city = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-                  kController: dirCntrl[number-1][4],
-
-                  topLabel: "Director City",
-
-                  hintText: "Enter City",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorCountry = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                        client!.directors!.add(Director.fromJson({}));
-                    }
-                    client!.directors![number-1].country = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-                  kController: dirCntrl[number-1][5],
-
-                  topLabel: "Director Country",
-
-                  hintText: "Enter Country",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 40.0),
-        ],
-
-      );
-  }
-
-
 }
-
-Widget _listView(persons) {
-  return Expanded(
-    child: ListView.builder(
-        itemCount: persons.length,
-        itemBuilder: (context, index) {
-          var person = persons[index];
-          return ListTile(
-            leading: CircleAvatar(
-              child: Text(person['name'][0]),
-            ),
-            title: Text(person['name']),
-            subtitle: Text("City: " + person['city']),
-          );
-        }),
-  );
-}
-
 
 
 

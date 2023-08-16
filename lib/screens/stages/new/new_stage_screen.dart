@@ -1,6 +1,6 @@
 
 import 'package:flutter/services.dart';
-import '../../../core/models/Objective.dart';
+import '../../../core/models/Stage.dart';
 import '../../../core/models/Employee.dart';
 import '../../../core/models/Memo.dart';
 
@@ -9,43 +9,34 @@ import '../../../core/widgets/input_widget.dart';
 import '../../../core/utils/responsive.dart';
 
 import '../../dashboard/components/header.dart';
-import '../objectives_home_screen.dart';
-import 'components/objective_mini_information_card.dart';
+import '../stages_home_screen.dart';
+import 'components/stage_mini_information_card.dart';
 
 import 'package:flutter/material.dart';
 
 
-class NewObjectiveScreen extends StatefulWidget {
-  NewObjectiveScreen({required this.title, required this.code, this.clientId});
+class NewStageScreen extends StatefulWidget {
+  NewStageScreen({required this.title, required this.code, this.clientId});
   final String title;
   final String code;
   int? clientId;
 
   @override
-  _NewObjectiveScreenState createState() => _NewObjectiveScreenState(clientId);
+  _NewStageScreenState createState() => _NewStageScreenState(clientId);
 }
 
-// class NewObjectiveScreen extends StatefulWidget {
-class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTickerProviderStateMixin {
-  _NewObjectiveScreenState(int? this.clientId);
+// class NewStageScreen extends StatefulWidget {
+class _NewStageScreenState extends State<NewStageScreen> with SingleTickerProviderStateMixin {
+  _NewStageScreenState(int? this.clientId);
   int? clientId;
 
-  var tweenLeft = Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-      .chain(CurveTween(curve: Curves.ease));
-  var tweenRight = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 0))
-      .chain(CurveTween(curve: Curves.ease));
 
-  AnimationController? _animationController;
 
   final _formKey = GlobalKey<FormState>();
 
   bool isChecked = false;
 
-  List persons = [];
-  List original = [];
 
-
-  Employee employee = Employee.fromJson({});
 
 
   TextEditingController txtQuery = new TextEditingController();
@@ -58,13 +49,15 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
   late double childAspectRatio;
   late List<Memo> memosSet = [];
 
-  Objective? client =  new Objective.fromJson({});
+  Stage? client =  new Stage.fromJson({});
   TextEditingController titleCon = TextEditingController();
+  TextEditingController numCon = TextEditingController();
   TextEditingController descCon = TextEditingController();
 
   Future<void> _initclient() async {
     if(clientId!=null) {
-      client = await getObjective(clientId!);
+      client = await getStage(clientId!);
+      numCon.text = client?.number??"";
       titleCon.text = client?.name??"";
       descCon.text = client?.description??"";
 
@@ -79,12 +72,6 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
     _initclient();
 
 
-  }
-
-  @override
-  void dispose() {
-    _animationController?.dispose();
-    super.dispose();
   }
 
 
@@ -118,7 +105,7 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ObjectiveMiniInformation(title: client?.name??"",),
+              StageMiniInformation(title: client?.name??"",),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,24 +114,122 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
                     flex: 5,
                     child: Column(
                       children: [
-                        //MyFiels(),
-                        //SizedBox(height: defaultPadding),
                         Container(
                           width: double.infinity,
                           constraints: BoxConstraints(
-                            // minHeight: MediaQuery.of(context).size.height - 0.0,
                           ),
                           child: Form(
                             key: _formKey,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
                                 SizedBox(height: 16.0),
                                 Padding(
+                                  padding: EdgeInsets.only( bottom: 10),
+                                  child: TextButton(
+                                    child: Text("Stage Type: "+(client?.type??"") , style: TextStyle(color: Colors.green, fontSize:20)),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) {
+                                            return AlertDialog(
+                                                title: Center(
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(Icons.lightbulb,
+                                                          size: 36, color: Colors.green),
+                                                      SizedBox(height: 20),
+                                                      Text("Select Type Of Stage"),
+                                                    ],
+                                                  ),
+                                                ),
+                                                content: Container(
+                                                  color: secondaryColor,
+                                                  height: 70,
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          ElevatedButton.icon(
+                                                              icon: Icon(
+                                                                Icons.accessibility_sharp,
+                                                                size: 14,
+                                                              ),
+                                                              style: ElevatedButton.styleFrom(
+                                                                  primary: Colors.purple),
+                                                              onPressed: () {
+                                                                client!.type = "praz";
+                                                                Navigator.of(context).pop();
+                                                                setState(() {
+
+                                                                });
+                                                              },
+                                                              label: Text("Praz")),
+                                                          SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                          ElevatedButton.icon(
+                                                              icon: Icon(
+                                                                Icons.house,
+                                                                size: 14,
+                                                              ),
+                                                              style: ElevatedButton.styleFrom(
+                                                                  primary: Colors.red),
+                                                              onPressed: () {
+                                                                client!.type = "zimra";
+                                                                Navigator.of(context).pop();
+                                                                setState(() {
+
+                                                                });
+                                                              },
+                                                              label: Text("ZIMRA"))
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ));
+                                          });
+                                    },
+                                    // Delete
+                                  ),
+                                ),
+                                Padding(
                                   padding: EdgeInsets.only(left: 5, right:5),
                                   child: InputWidget(
-                                    topLabel: "Objective Title",
+                                    topLabel: "Stage Number",
+                                    keyboardType: TextInputType.number,
+                                    kinputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
+                                    ],
+                                    kController: numCon,
+
+                                    onSaved: (String? value) {
+                                      // This optional block of code can be used to run
+                                      // code when the user saves the form.
+                                    },
+                                    onChanged: (String? value) {
+                                      print(client!.toJson());
+                                      client!.number = value;
+                                    },
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter company name.';
+                                      }
+                                      return null;
+                                    },
+
+
+
+                                    // prefixIcon: FlutterIcons.chevron_left_fea,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5, right:5),
+                                  child: InputWidget(
+                                    topLabel: "Stage Title",
                                     keyboardType: TextInputType.text,
                                     kController: titleCon,
 
@@ -187,6 +272,7 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
                                   ),
                                 ),
 
+
                                 SizedBox(height: 25,),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -211,12 +297,12 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
 
 
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("Objective saved successfully"),
+                                              content: Text("Stage saved successfully"),
                                             ));
 
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => ObjectivesHomeScreen()),
+                                              MaterialPageRoute(builder: (context) => StagesHomeScreen()),
                                             );
                                           }catch(e){
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -231,7 +317,7 @@ class _NewObjectiveScreenState extends State<NewObjectiveScreen> with SingleTick
                                       },
                                       icon: Icon(Icons.save),
                                       label: Text(
-                                        "Save Objective",
+                                        "Save Stage",
                                       ),
                                     ),
                                   ],

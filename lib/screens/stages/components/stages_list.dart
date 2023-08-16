@@ -1,24 +1,24 @@
 import 'package:docxform/core/constants/color_constants.dart';
 import 'package:docxform/core/utils/colorful_tag.dart';
 import 'package:flutter/material.dart';
-import 'package:docxform/screens/objectives/new/new_client_home_screen.dart';
 
-import '../../../core/models/Objective.dart';
+import '../../../core/models/Stage.dart';
 import '../../../core/utils/responsive.dart';
+import '../new/new_stage_home_screen.dart';
 
 
 
-class ObjectiveList extends StatefulWidget {
+class StageList extends StatefulWidget {
   @override
-  _ObjectiveListState createState() => _ObjectiveListState();
+  _StageListState createState() => _StageListState();
 }
 
-class _ObjectiveListState extends State<ObjectiveList> {
+class _StageListState extends State<StageList> {
 
-  List<Objective> clients = [Objective.fromJson({})];
+  List<Stage> clients = [Stage.fromJson({})];
 
   Future<void> _initclients() async {
-    clients = await getObjectives();
+    clients = await getStages();
     setState(() {});
   }
 
@@ -43,7 +43,7 @@ class _ObjectiveListState extends State<ObjectiveList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Objective List",
+            "Stage List",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SingleChildScrollView(
@@ -83,7 +83,7 @@ class _ObjectiveListState extends State<ObjectiveList> {
 
 }
 
-DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
+DataRow recentUserDataRow(Stage userInfo, BuildContext context) {
   return DataRow(
     cells: [
       DataCell(
@@ -119,7 +119,7 @@ DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewObjectiveHome(title: "Edit Objective", code: "edit", clientId: userInfo.id );
+                      return new NewStageHome(title: "Edit Stage", code: "edit", clientId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -131,7 +131,7 @@ DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
               onTap:(){
                 Navigator.of(context).push(new MaterialPageRoute<Null>(
                     builder: (BuildContext context) {
-                      return new NewObjectiveHome(title: "Edit Objective", code: "edit", clientId: userInfo.id );
+                      return new NewStageHome(title: "Edit Stage", code: "edit", clientId: userInfo.id );
                     },
                     fullscreenDialog: true));
               },
@@ -209,7 +209,7 @@ DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
             //                               try{
             //                                 userInfo.delete();
             //                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //                                   content: Text("Objective deleted successfully"),
+            //                                   content: Text("Stage deleted successfully"),
             //                                 ));
             //                               }catch(e){
             //                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -219,7 +219,7 @@ DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
             //                               Navigator.of(context).pop();
             //                               Navigator.push(
             //                                 context,
-            //                                 MaterialPageRoute(builder: (context) => ObjectivesHomeScreen()),
+            //                                 MaterialPageRoute(builder: (context) => StagesHomeScreen()),
             //                               );
             //                             },
             //                             label: Text("Delete"))
@@ -280,7 +280,7 @@ DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
             //                                 try{
             //                                   userInfo.delete();
             //                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //                                     content: Text("Objective deleted successfully"),
+            //                                     content: Text("Stage deleted successfully"),
             //                                   ));
             //                                 }catch(e){
             //                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -290,7 +290,7 @@ DataRow recentUserDataRow(Objective userInfo, BuildContext context) {
             //                                 Navigator.of(context).pop();
             //                                 Navigator.push(
             //                                   context,
-            //                                   MaterialPageRoute(builder: (context) => ObjectivesHomeScreen()),
+            //                                   MaterialPageRoute(builder: (context) => StagesHomeScreen()),
             //                                 );
             //                               },
             //                               label: Text("Delete"))
