@@ -156,20 +156,18 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-
-
-          GestureDetector(
-              child: Container(
+    return GestureDetector(
+        child:Container(
+          padding: EdgeInsets.all(defaultPadding),
+          decoration: BoxDecoration(
+            color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -205,25 +203,23 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                   ],
                 ),
               ),
-              onTap: () {
-                // _toggle();
-                if(widget.memo.set=="set"){
-                  widget.callback(widget.memo.id.toString()!, "not");
-                  setState(() {
-                    widget.memo.set="not";
-                  });
-                }else{
-                  widget.callback(widget.memo.id.toString()!, "set");
-                  setState(() {
-                    widget.memo.set="set";
-                  });
-
-                }
-              }
+            ],
           ),
+        ),onTap: () {
+      // _toggle();
+      if(widget.memo.set=="set"){
+        widget.callback(widget.memo.id.toString()!, "not");
+        setState(() {
+          widget.memo.set="not";
+        });
+      }else{
+        widget.callback(widget.memo.id.toString()!, "set");
+        setState(() {
+          widget.memo.set="set";
+        });
 
-        ],
-      ),
+      }
+    }
     );
   }
 

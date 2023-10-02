@@ -102,7 +102,7 @@ class Stage {
   }
 
 
-  void delete() async {
+  Future<void> delete() async {
     // Assuming that the number of rows is the id for the last row.
     // final id = await dbHelper.queryRowCount('stage');
     final rowsDeleted = await dbHelper.softDelete('stage',this.id!);
@@ -130,6 +130,7 @@ Future<List<Stage>> getStages() async {
     );
   });
 }
+
 Future<List<Stage>> getTypeStages(String type) async {
   final maps = await dbHelper.getTypeStages("stage", type);
 

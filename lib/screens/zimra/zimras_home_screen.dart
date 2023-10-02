@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import '../dashboard/components/side_menu.dart';
 
 class ZimrasHomeScreen extends StatelessWidget {
+  final String title;
+
+  const ZimrasHomeScreen({Key? key, required this.title}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +28,7 @@ class ZimrasHomeScreen extends StatelessWidget {
             Expanded(
               // It takes 5/6 part of the screen
               flex: 5,
-              child: ZimrasScreen(),
+              child: ZimrasScreen(title: title),
             ),
           ],
         ),

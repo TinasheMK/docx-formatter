@@ -65,32 +65,14 @@ class Secretary {
     return data;
   }
 
-  Future<void> save() async {
-    Map<String, dynamic> row = {
-      'name': this.name,
-      'last_name': this.lastName,
-      'city': this.city,
-      'country': this.country,
-      'nationality': this.nationality,
-      'national_id': this.nationalId,
-      'street': this.street,
-      'particulars': this.particulars,
-      'incDate': this.incDate,
-      'company_id': this.companyId,
-      'email': this.email,
-
-    };
-    final id = await dbHelper.insert("secretary", row);
-    this.id = id;
-    debugPrint('inserted secretary row id: $id');
-  }
 
   Future<void> saveAndAttach(int companyId) async {
     debugPrint('adding secretary ');
 
     Map<String, dynamic> row = {
+      'id': this.id,
       'name': this.name,
-      'last_name': this.lastName,
+      'last_name': "",
       'city': this.city,
       'country': this.country,
       'nationality': this.nationality,
@@ -101,9 +83,17 @@ class Secretary {
       'email': this.email,
       'company_id': companyId
     };
-    final id = await dbHelper.insert("secretary", row);
-    this.id = id;
-    debugPrint('inserted secretary row id: $id');
+
+    if(this.id==null){
+      final id = await dbHelper.insert("secretary", row);
+      this.id = id;
+      debugPrint('inserted secretary row id: $id');
+    }else{
+      final id = await dbHelper.update("secretary", row);
+      this.id = id;
+      debugPrint('updated secretary row id: $id');
+    }
+
   }
 
   Future<void> query() async {

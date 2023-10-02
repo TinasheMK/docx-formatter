@@ -1,4 +1,5 @@
 import 'package:docxform/core/constants/color_constants.dart';
+import 'package:docxform/screens/clients/clients_home_screen.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/daily_info_model.dart';
 import '../../../core/utils/responsive.dart';
 import '../../register/new/new_register_home_screen.dart';
+import '../../zimra/new/new_zimra_home_screen.dart';
 
 class MiniInformationWidget extends StatefulWidget {
   const MiniInformationWidget({
@@ -74,6 +76,21 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                               context,
                               MaterialPageRoute(builder: (context) => NewRegisterHome(title: widget.dailyData.title! , code: widget.dailyData.code != null?
                               widget.dailyData.code!:"reg")),
+                            );
+                          }else if(widget.dailyData.title=="ZIMRA"){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => NewZimraHome(title: 'ZIMRA', code: 'wiw',)),
+                            );
+                          }else if(widget.dailyData.title=="PRAZ"){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => NewZimraHome(title: 'PRAZ', code: 'wiw',)),
+                            );
+                          }else if(widget.dailyData.title=="CLIENT"){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ClientsHomeScreen()),
                             );
                           }else{
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

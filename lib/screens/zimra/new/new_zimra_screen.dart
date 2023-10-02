@@ -30,14 +30,15 @@ class NewZimraScreen extends StatefulWidget {
   final int? companyId;
 
   @override
-  _NewZimraScreenState createState() => _NewZimraScreenState(companyId);
+  _NewZimraScreenState createState() => _NewZimraScreenState(companyId,title);
 }
 
 // class NewZimraScreen extends StatefulWidget {
 class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProviderStateMixin {
-  _NewZimraScreenState(this.companyId);
+  _NewZimraScreenState(this.companyId, this.title);
 
   final int? companyId;
+  final String? title;
   bool isChecked = false;
   bool secEdited = false;
   int _directors = 2;
@@ -56,13 +57,20 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
   void loadData() async {
     client.stages = [];
     clients = await getClients();
-    stages = await getTypeStages('zimra');
+
+    if(title=="ZIMRA"){
+      stages = await getTypeStages('zimra');
+    }else{
+      stages = await getTypeStages('praz');
+    }
+
+
     if(companyId!=null) {
       client = (await getClient(companyId!))!;
     }
     
     // Match required stages to available stages
-    if(client.stages?.length != stages.length){
+    if(true){
         stages.forEach((e) {
           var exists = false;
           client.stages!.forEach((s) {
@@ -76,12 +84,10 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
               "client_id": client.id,
               "notes": "",
               "status": "incomplete",
-              "type": "zimra",
+              "type": title=="ZIMRA"?"zimra":"praz",
               "stageId": e.id,
             }));
           }
-
-
 
         });
         
@@ -91,6 +97,20 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
     }
 
     // print("done");
+
+    Stage getClientStage(int stageId){
+      Stage stage = Stage.fromJson({});
+      stages.forEach((e) {
+        if(e.id==stageId){
+          stage = e;
+        }
+      });
+      return stage;
+    }
+
+
+      client.stages!.sort((a, b) => (getClientStage(a.stageId!).number??"0").compareTo((getClientStage(b.stageId!).number??"0")));
+
 
 
     setState(() {});
@@ -248,7 +268,7 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                     }
 
 
-                  return Column(
+                  return getClientStage(client.stages![i].stageId!).number!=null?Column(
                     children: [
                       Container(
                         padding: EdgeInsets.all(defaultPadding),
@@ -312,7 +332,7 @@ class _NewZimraScreenState extends State<NewZimraScreen> with SingleTickerProvid
                       ),
                       SizedBox(height:20)
                     ],
-                  );
+                  ):SizedBox();
                }),
             ),
 

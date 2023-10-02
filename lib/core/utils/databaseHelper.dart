@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
   static const _databaseName = "/DocxApp/app-data/docdatabase.db";
-  static const _databaseVersion = 2;
+  static const _databaseVersion = 4;
 
 
 
@@ -19,6 +21,8 @@ class DatabaseHelper {
         path,
         version: _databaseVersion,
         onCreate: _onCreate,
+          onUpgrade: _onUpgrade
+
       );
     }catch(e){}
   }
@@ -46,6 +50,13 @@ class DatabaseHelper {
             currency TEXT, 
             email TEXT ,
             status TEXT,
+            
+            entitynum TEXT,
+            oldaddress TEXT,
+            oldemail TEXT,
+            newaddress TEXT,
+            newpostal TEXT,
+            newemail TEXT,
             
             created_date TEXT,
             created_by TEXT,
@@ -416,6 +427,19 @@ class DatabaseHelper {
           )
           ''');
 
+    try{
+      await db.execute('''
+            CREATE TABLE client_objective (
+              id INTEGER PRIMARY KEY, 
+              client_id INTEGER NOT NULL, 
+              objective_id INTEGER NOT NULL,  
+            )
+            ''');
+
+    } catch (e) {
+    log("Table client_objective already exists");
+    }
+
 
     await db.execute('''
           insert into currency (
@@ -442,6 +466,54 @@ class DatabaseHelper {
             )
             values("ZWL","ZWL","United States of America" )
           ''');
+
+  }
+
+  Future _onUpgrade(Database db, int version,  int version2) async {
+    try {
+      await db.execute(''' ALTER TABLE client ADD entitynum TEXT ;   ''');
+    } catch (e) {
+      log("Column entitynum already exists on table client");
+    }
+    try {
+      await db.execute(''' ALTER TABLE client ADD oldaddress TEXT ;   ''');
+    } catch (e) {
+      log("Column oldaddress already exists on table client");
+    }
+    try {
+      await db.execute(''' ALTER TABLE client ADD oldemail TEXT ;   ''');
+    } catch (e) {
+      log("Column oldemail already exists on table client");
+    }
+    try {
+      await db.execute(''' ALTER TABLE client ADD newaddress TEXT ;   ''');
+    } catch (e) {
+      log("Column newaddress already exists on table client");
+    }
+    try {
+      await db.execute(''' ALTER TABLE client ADD newpostal TEXT ;   ''');
+    } catch (e) {
+      log("Column newpostal already exists on table client");
+    }
+    try {
+      await db.execute(''' ALTER TABLE client ADD newemail TEXT ;   ''');
+    } catch (e) {
+      log("Column newemail already exists on table client");
+    }
+
+
+    try {
+      await db.execute('''
+          CREATE TABLE client_objective (
+            id INTEGER PRIMARY KEY, 
+            client_id INTEGER NOT NULL, 
+            objective_id INTEGER NOT NULL,  
+          )
+          ''');
+    } catch (e) {
+      log("Table client_objective already exists");
+    }
+
 
   }
 
@@ -517,6 +589,10 @@ class DatabaseHelper {
     List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE company_id = $id');
     return results;
   }
+  Future<List<Map<String, dynamic>>> findClientObjectives(String table, int id) async {
+    List<Map<String, Object?>> results = await _db.rawQuery('SELECT * FROM $table WHERE client_id = $id');
+    return results;
+  }
 
 
   Future<List<Map<String, dynamic>>> searchClients(String query) async {
@@ -550,7 +626,7 @@ class DatabaseHelper {
   Future<int> softDelete(String table, int id) async {
 
     Map<String, dynamic> row = {
-      "is_deleted":  0,
+      "is_deleted":  1,
     };
 
     return await _db.update(
@@ -568,6 +644,14 @@ class DatabaseHelper {
       table,
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  Future<int> detach(String table,int clientId, int objectiveId ) async {
+    return await _db.delete(
+      table,
+      where: 'client_id = ? and objective_id =?',
+      whereArgs: [clientId, objectiveId],
     );
   }
 }

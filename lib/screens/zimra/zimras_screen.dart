@@ -11,10 +11,9 @@ import 'components/zimras_list.dart';
 
 
 class ZimrasScreen extends StatelessWidget {
+  final String title;
 
-
-
-
+  const ZimrasScreen({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class ZimrasScreen extends StatelessWidget {
             children: [
               Header(),
               SizedBox(height: defaultPadding),
-              ZimrasHeader(),
+              ZimrasHeader(title: title),
               SizedBox(height: defaultPadding),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +37,7 @@ class ZimrasScreen extends StatelessWidget {
                       children: [
                         //MyFiels(),
                         //SizedBox(height: defaultPadding),
-                        ZimrasList(),
+                        ZimrasList(title: title),
                         SizedBox(height: defaultPadding),
                         // RecentDiscussions(),
                         if (Responsive.isMobile(context))

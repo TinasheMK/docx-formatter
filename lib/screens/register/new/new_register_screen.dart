@@ -44,21 +44,31 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
   int _directors = 2;
   List persons = [];
   List original = [];
-  List<Client> clients = [Client.fromJson({})];
+  List<Client> clients = [Client(objectives: [])];
   TextEditingController txtQuery = new TextEditingController();
   late int crossAxisCount;
   late double childAspectRatio;
-  List<Objective> objectives = [];
+  // List<Objective> client.objectives! = [];
   final _formKey = GlobalKey<FormState>();
   List<String> memoItems = [];
-  Client client = Client.fromJson({});
+  Client client = Client(objectives: []);
   List<List<TextEditingController>> secCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
   List<List<TextEditingController>> dirCntrl = [[TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()]] ;
-  List<TextEditingController> coCntrl = [TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController(),TextEditingController()] ;
+  List<TextEditingController> coCntrl = [
+    TextEditingController(),TextEditingController(),
+    TextEditingController(),TextEditingController(),
+    TextEditingController(),TextEditingController(),
+    TextEditingController(),TextEditingController(),
+    TextEditingController(),TextEditingController()
+  ] ;
 
   void loadData() async {
     clients = await getClients();
-    if(companyId!=null)client = (await getClient(companyId!))!;
+    if(companyId!=null) {
+      secEdited=true;
+      client = (await getClient(companyId!))!;
+
+    }
 
     if(client!.directors==null  || client!.directors!.length<1  ){
       client.directors = [Director.fromJson({
@@ -88,6 +98,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
     coCntrl[2].text = client.city??"";
     coCntrl[3].text = client.country??"";
 
+    coCntrl[4].text = client.entitynum??"";
+    coCntrl[5].text = client.oldaddress??"";
+    coCntrl[6].text = client.oldemail??"";
+    coCntrl[7].text = client.newaddress??"";
+    coCntrl[8].text = client.newpostal??"";
+    coCntrl[9].text = client.email??"";
+
     client!.directors?.forEach((e) {
       var cntrl = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
 
@@ -106,6 +123,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       cntrl[0].text = e.name??"";
       cntrl[1].text = e.lastName??"";
       cntrl[2].text = e.nationalId??"";
+      cntrl[3].text = e.street??"";
       cntrl[4].text = e.city??"";
       cntrl[5].text = e.country??"";
 
@@ -239,12 +257,21 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
       if(action=="set"){
           var objective = await getObjective(int.parse(mem));
         setState(()  {
-          objectives.removeWhere((e) => e.id ==int.parse(mem));
-          if(objective!=null)objectives.add(objective);
+          client.objectives!.removeWhere((e) => e.id ==int.parse(mem));
+          if(objective!=null)client.objectives!.add(objective);
         });
       }else{
+
+        for(int i =0; i<client!.objectives!.length; i++){
+          if(client.objectives![i].id == int.parse(mem)){
+            await client.objectives![i].detach(client.id);
+          }
+        }
+
+
         setState(() {
-          objectives.removeWhere((element) => element.id == int.parse(mem));
+          client.objectives!.removeWhere((element) => element.id == int.parse(mem));
+
         });
       }
 
@@ -252,6 +279,178 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
     }
 
+    Cr5Form(){
+      return Column(
+        children: [
+          // CR5
+          Text( "Fill In For CR5 Form", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white),
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Expanded(
+              //   child:
+              //   InputWidget(
+              //     keyboardType: TextInputType.text,
+              //     onSaved: (String? value) {
+              //     },
+              //     kController: coCntrl[4],
+              //
+              //     onChanged: (String? value) {
+              //       client!.entitynum = value;
+              //
+              //
+              //     },
+              //     validator: (String? value) {
+              //       return (value != null && value.contains('@'))
+              //           ? 'Do not use the @ char.'
+              //           : null;
+              //     },
+              //
+              //     topLabel: "No of entity",
+              //
+              //     hintText: "No of entity",
+              //   ),
+              // ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  onSaved: (String? value) {
+                  },
+                  kController: coCntrl[5],
+                  onChanged: (String? value) {
+                    client!.oldaddress = value;
+
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Previous address",
+
+                  hintText: "Enter previous address",
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  kController: coCntrl[6],
+                  onSaved: (String? value) {
+                  },
+                  onChanged: (String? value) {
+                    client!.oldemail = value;
+
+
+
+                  },
+                  validator: (String? value) {
+                    // return (value != null && value.contains('@'))
+                    //     ? 'Do not use the @ char.'
+                    //     : null;
+                  },
+
+                  topLabel: "Previous email",
+
+                  hintText: "Enter previous email",
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Expanded(
+              //   child:
+              //   InputWidget(
+              //     keyboardType: TextInputType.text,
+              //     kController: coCntrl[7],
+              //     onSaved: (String? value) {
+              //     },
+              //     onChanged: (String? value) {
+              //       // directorStreet = value!;
+              //       client!.newaddress = value;
+              //
+              //
+              //     },
+              //     validator: (String? value) {
+              //       return (value != null && value.contains('@'))
+              //           ? 'Do not use the @ char.'
+              //           : null;
+              //     },
+              //
+              //     topLabel: "New Address",
+              //
+              //     hintText: "Enter new Address",
+              //   ),
+              // ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  kController: coCntrl[8],
+                  onSaved: (String? value) {
+                  },
+                  onChanged: (String? value) {
+                    // directorCity = value!;
+                    client!.newpostal = value;
+
+
+
+                  },
+                  validator: (String? value) {
+                    return (value != null && value.contains('@'))
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+
+                  topLabel: "Postal Address",
+
+                  hintText: "Enter  postal address",
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child:
+                InputWidget(
+                  keyboardType: TextInputType.text,
+                  kController: coCntrl[9],
+                  onSaved: (String? value) {
+                  },
+                  onChanged: (String? value) {
+                    // directorCountry = value!;
+                    client!.email = value;
+
+
+
+                  },
+                  validator: (String? value) {
+                    // return (value != null && value.contains('@'))
+                    //     ? 'Do not use the @ char.'
+                    //     : null;
+                  },
+
+                  topLabel: "New email",
+
+                  hintText: "Enter new email",
+                ),
+              )
+            ],
+          ),
+          //CR5 Ends
+        ],
+      );
+    }
     return Container(
       width: double.infinity,
       constraints: BoxConstraints(
@@ -388,348 +587,18 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 )
               ],
             ),
+            SizedBox(height: 8.0),
+            Cr5Form(),
+
 
             SizedBox(height: 50.0),
 
-            //First Director
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text( "Director 1 Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-                ),
-                SizedBox(width: 100),
-                !(client!.directors?[0].shareholder??false)
-                    ?
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      client!.directors![0].shareholder = true;
-
-                    });
-
-                  },
-                  child: Text("Make Shareholder",
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontWeight: FontWeight.w400, color: Colors.blue)),
-                )
-                    :
-                SizedBox(
-                  width: 150,
-                  child:
-                  TextFormField(
-                      keyboardType: TextInputType.text,
-                      onSaved: (String? value) {
-                        // This optional block of code can be used to run
-                        // code when the user saves the form.
-                      },
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      onChanged: (String? value) {
-                        print(value);
-                        if(value == ''){
-                          setState(() {
-
-                            client!.directors![0].shareholder = false;
-                          });
-                        }else{
-                          client!.directors![0].shares = int.parse(value!);
-
-                        }
-
-                      },
-                      validator: (String? value) {
-                        return (value != null && value.contains('@'))
-                            ? 'Do not use the @ char.'
-                            : null;
-                      },
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromRGBO(74, 77, 84, 0.2),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          //gapPadding: 16,
-                          borderSide: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        errorStyle: TextStyle(height: 0, color: Colors.transparent),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).errorColor,
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          //gapPaddings: 16,
-                          borderSide: BorderSide(
-                            color: Theme.of(context).errorColor,
-                          ),
-                        ),
-                        hintText: "Shares",
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(color: Colors.white54),
-
-                      )
-                    // topLabel: "Shares",
-
-                    // hintText: "Enter Shares",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-              ],
+            Column(
+              children: List.generate(
+                (client.directors?.length)??0,
+                    (index) =>_SecondDirector(context, index),
+              ),
             ),
-            SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: dirCntrl[0][0],
-                    onChanged: (String? value) {
-                      if(!client!.directors!.asMap().containsKey(0)){
-                        client!.directors!.add(Director.fromJson({}));
-                      }
-                      client!.directors![0].name = value;
-
-                      if(!secEdited){
-                        client!.secretaries![0].name = value;
-                        setState(() {
-                          secCntrl[0][0].text = value.toString();
-                        });
-                      }
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director First Name",
-
-                    hintText: "Enter First Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: dirCntrl[0][1],
-                    onChanged: (String? value) {
-                      if(!client!.directors!.asMap().containsKey(0)){
-                        client!.directors!.add(Director.fromJson({}));
-                      }
-                      client!.directors![0].lastName = value;
-
-                      if(!secEdited){
-                        client!.secretaries![0].lastName = value;
-                        setState(() {
-                          secCntrl[0][1].text = value.toString();
-                        });
-                      }
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director Last Name",
-
-                    hintText: "Enter Last Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: dirCntrl[0][2],
-                    onChanged: (String? value) {
-                      if(!client!.directors!.asMap().containsKey(0)){
-                        client!.directors!.add(Director.fromJson({}));
-                      }
-                      client!.directors![0].nationalId = value;
-
-                      if(!secEdited){
-                        client!.secretaries![0].nationalId = value;
-                        setState(() {
-                          secCntrl[0][2].text = value.toString();
-                        });
-                      }
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director id",
-
-                    hintText: "Enter id",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: dirCntrl[0][3],
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorStreet = value!;
-                      if(!client!.directors!.asMap().containsKey(0)){
-                        client!.directors!.add(Director.fromJson({}));
-                      }
-                      client!.directors![0].street = value;
-                      if(!secEdited){
-                        client!.secretaries![0].street = value;
-                        setState(() {
-                          secCntrl[0][3].text = value.toString();
-                        });
-                      }
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director Street Address",
-
-                    hintText: "Enter Street Address",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: dirCntrl[0][4],
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorCity = value!;
-                      if(!client!.directors!.asMap().containsKey(0)){
-                        client!.directors!.add(Director.fromJson({}));
-                      }
-                      client!.directors![0].city = value;
-                      if(!secEdited){
-                        client!.secretaries![0].city = value;
-                        setState(() {
-                          secCntrl[0][4].text = value.toString();
-                        });
-                      }
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director City",
-
-                    hintText: "Enter City",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: dirCntrl[0][5],
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorCountry = value!;
-                      if(!client!.directors!.asMap().containsKey(0)){
-                        client!.directors!.add(Director.fromJson({}));
-                      }
-                      client!.directors![0].country = value;
-                      if(!secEdited){
-                        client!.secretaries![0].country = value;
-                        setState(() {
-                          secCntrl[0][5].text = value.toString();
-                        });
-                      }
-
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "First Director Country",
-
-                    hintText: "Enter Country",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                )
-              ],
-            ),
-            //First Director Ends
-
-            SizedBox(height: 50.0),
-            client.directors!.length>=2? _SecondDirector(context, 2):SizedBox(height:0),
-            client.directors!.length>=3? _SecondDirector(context, 3):SizedBox(height:0),
-            client.directors!.length>=4? _SecondDirector(context, 4):SizedBox(height:0),
-            client.directors!.length>=5? _SecondDirector(context, 5):SizedBox(height:0),
-            client.directors!.length>=6? _SecondDirector(context, 6):SizedBox(height:0),
-            client.directors!.length>=7? _SecondDirector(context, 7):SizedBox(height:0),
-            client.directors!.length>=8? _SecondDirector(context, 8):SizedBox(height:0),
-            client.directors!.length>=9? _SecondDirector(context, 9):SizedBox(height:0),
-            client.directors!.length>=10? _SecondDirector(context, 10):SizedBox(height:0),
-            client.directors!.length>=11? _SecondDirector(context, 11):SizedBox(height:0),
-            client.directors!.length>=12? _SecondDirector(context, 12):SizedBox(height:0),
-            client.directors!.length>=13? _SecondDirector(context, 13):SizedBox(height:0),
-
 
             SizedBox(height: 20.0),
             Row(
@@ -771,37 +640,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // code when the user saves the form.
                       // directorName = value!;
                       client!.secretaries![0].name = value;
-                      secEdited = true;
-
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
-
-                    topLabel: "Secretary First Name",
-
-                    hintText: "Enter First Name",
-                    // prefixIcon: FlutterIcons.chevron_left_fea,
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child:
-                  InputWidget(
-                    keyboardType: TextInputType.text,
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    kController: secCntrl[0][1],
-                    onChanged: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                      // directorLastName = value!;
-                      client!.secretaries![0].lastName = value;
-                      secEdited = true;
 
 
                     },
@@ -811,12 +649,43 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           : null;
                     },
 
-                    topLabel: "Secretary Last Name",
+                    topLabel: "Secretary Full Name",
 
-                    hintText: "Enter Last Name",
+                    hintText: "Enter Full Name",
                     // prefixIcon: FlutterIcons.chevron_left_fea,
                   ),
                 ),
+                // SizedBox(width: 16.0),
+                // Expanded(
+                //   child:
+                //   InputWidget(
+                //     keyboardType: TextInputType.text,
+                //     onSaved: (String? value) {
+                //       // This optional block of code can be used to run
+                //       // code when the user saves the form.
+                //     },
+                //     kController: secCntrl[0][1],
+                //     onChanged: (String? value) {
+                //       // This optional block of code can be used to run
+                //       // code when the user saves the form.
+                //       // directorLastName = value!;
+                //       client!.secretaries![0].lastName = value;
+                //
+                //
+                //
+                //     },
+                //     validator: (String? value) {
+                //       return (value != null && value.contains('@'))
+                //           ? 'Do not use the @ char.'
+                //           : null;
+                //     },
+                //
+                //     topLabel: "Secretary Last Name",
+                //
+                //     hintText: "Enter Last Name",
+                //     // prefixIcon: FlutterIcons.chevron_left_fea,
+                //   ),
+                // ),
                 SizedBox(width: 16.0),
                 Expanded(
                   child:
@@ -832,7 +701,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // code when the user saves the form.
                       // directorLastName = value!;
                       client!.secretaries![0].nationalId = value;
-                      secEdited = true;
+
 
 
                     },
@@ -868,7 +737,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // code when the user saves the form.
                       // directorStreet = value!;
                       client!.secretaries![0].street = value;
-                      secEdited = true;
+
 
                     },
                     validator: (String? value) {
@@ -898,7 +767,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // code when the user saves the form.
                       // directorCity = value!;
                       client!.secretaries![0].city = value;
-                      secEdited = true;
+
 
 
                     },
@@ -929,7 +798,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                       // code when the user saves the form.
                       // directorCountry = value!;
                       client!.secretaries![0].country = value;
-                      secEdited = true;
+
 
 
                     },
@@ -951,21 +820,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
 
 
 
+
             SizedBox(height: 40.0),
 
 
-            objectives.length >= 1 ?
+            client.objectives!.length >= 1 ?
             GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: objectives.length,
+                  itemCount: client.objectives!.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: defaultPadding,
                     mainAxisSpacing: defaultPadding,
                     childAspectRatio: childAspectRatio,
                   ),
-                  itemBuilder: (context, index) => MiniMemo(memo: objectives[index], callback: callback),
+                  itemBuilder: (context, index) => ObjectiveTile(memo: client.objectives![index], callback: callback),
               )
             :SizedBox(
                 height: 20.0,
@@ -991,7 +861,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                           },
                           fullscreenDialog: true));
                     },
-                    label: Text("Edit Objectives")),
+                    label: Text("Edit client objectives!")),
               ],),
 
 
@@ -1013,9 +883,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   client!.secretaries!.removeWhere((e) => e.name == null);
 
                   await client.save();
+                  await client.save();
                   print(client.toJson());
 
-                  var response = await cr6FormGenerator(client, widget.code, objectives);
+                  var response = await cr6FormGenerator(client, widget.code, client.objectives!);
 
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(response),
@@ -1073,6 +944,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
         ),
       ),
     );
+
   }
 
 
@@ -1084,25 +956,27 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text( "Director "+number.toString()+" Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+              Text( "Director "+(number+1).toString()+" Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
               ),
               SizedBox(width: 100),
               TextButton(
                 onPressed: () {
                   _removeDirector();
-                  client!.directors!.removeAt(number-1);
+                  client!.directors![number].delete();
+                  client!.directors!.removeAt(number);
+
 
                 },
                 child: Text("Remove Director",
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         fontWeight: FontWeight.w400, color: Colors.redAccent)),
               ),
-              !(client!.directors?[number-1].shareholder??false)
+              !(client!.directors?[number].shareholder??false)
                   ?
               TextButton(
                 onPressed: () {
                   setState(() {
-                    client!.directors![number-1].shareholder = true;
+                    client!.directors![number].shareholder = true;
 
                   });
 
@@ -1118,8 +992,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 TextFormField(
                   keyboardType: TextInputType.text,
                   onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                   },
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -1129,10 +1001,10 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                     if(value == ''){
                       setState(() {
 
-                        client!.directors![number-1].shareholder = false;
+                        client!.directors![number].shareholder = false;
                       });
                     }else{
-                      client!.directors![number-1].shares = int.parse(value!);
+                      client!.directors![number].shares = int.parse(value!);
 
                     }
 
@@ -1176,7 +1048,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   // topLabel: "Shares",
 
                   // hintText: "Enter Shares",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
                 ),
               ),
             ],
@@ -1190,18 +1061,20 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 InputWidget(
                   keyboardType: TextInputType.text,
                   onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                   },
-                  kController: dirCntrl[number-1][0],
+                  kController: dirCntrl[number][0],
                   onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorName = value!;value
-                    if(!client!.directors!.asMap().containsKey(number-1)){
+                    if(!client!.directors!.asMap().containsKey(number)){
                         client!.directors!.add(Director.fromJson({}));
                     }
-                    client!.directors![number-1].name = value;
+                    client!.directors![number].name = value;
+
+                    if(!secEdited && number == 0 ){
+                      client!.secretaries![0].name = value;
+                      setState(() {
+                        secCntrl[0][0].text = value.toString();
+                      });
+                    }
 
                   },
                   validator: (String? value) {
@@ -1210,64 +1083,57 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         : null;
                   },
 
-                  topLabel: "Director First Name",
+                  topLabel: "Director Full Name",
 
-                  hintText: "Enter First Name",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
+                  hintText: "Enter Full Name",
                 ),
               ),
               SizedBox(width: 16.0),
+              // Expanded(
+              //   child:
+              //   InputWidget(
+              //     keyboardType: TextInputType.text,
+              //     onSaved: (String? value) {
+              //     },
+              //     kController: dirCntrl[number][1],
+              //     onChanged: (String? value) {
+              //       if(!client!.directors!.asMap().containsKey(number)){
+              //         client!.directors!.add(Director.fromJson({}));
+              //       }
+              //       client!.directors![number].lastName = value;
+              //
+              //
+              //     },
+              //     validator: (String? value) {
+              //       return (value != null && value.contains('@'))
+              //           ? 'Do not use the @ char.'
+              //           : null;
+              //     },
+              //
+              //     topLabel: "Director Last Name",
+              //
+              //     hintText: "Enter Last Name",
+              //   ),
+              // ),
+              // SizedBox(width: 16.0),
               Expanded(
                 child:
                 InputWidget(
                   keyboardType: TextInputType.text,
                   onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                   },
-                  kController: dirCntrl[number-1][1],
+                  kController: dirCntrl[number][2],
                   onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorLastName = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
+                    if(!client!.directors!.asMap().containsKey(number)){
                       client!.directors!.add(Director.fromJson({}));
                     }
-                    client!.directors![number-1].lastName = value;
-
-
-                  },
-                  validator: (String? value) {
-                    return (value != null && value.contains('@'))
-                        ? 'Do not use the @ char.'
-                        : null;
-                  },
-
-                  topLabel: "Director Last Name",
-
-                  hintText: "Enter Last Name",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child:
-                InputWidget(
-                  keyboardType: TextInputType.text,
-                  onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                  },
-                  kController: dirCntrl[number-1][2],
-                  onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
-                    // directorLastName = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
-                      client!.directors!.add(Director.fromJson({}));
+                    client!.directors![number].nationalId = value;
+                    if(!secEdited&& number ==0){
+                      client!.secretaries![0].nationalId = value;
+                      setState(() {
+                        secCntrl[0][2].text = value.toString();
+                      });
                     }
-                    client!.directors![number-1].nationalId = value;
-
 
                   },
                   validator: (String? value) {
@@ -1279,7 +1145,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   topLabel: "Director id",
 
                   hintText: "Enter id",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
                 ),
               )
             ],
@@ -1293,18 +1158,21 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 InputWidget(
                   keyboardType: TextInputType.text,
                   onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                   },
-                  kController: dirCntrl[number-1][3],
+                  kController: dirCntrl[number][3],
                   onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                     // directorStreet = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
+                    if(!client!.directors!.asMap().containsKey(number)){
                         client!.directors!.add(Director.fromJson({}));
                     }
-                    client!.directors![number-1].street = value;
+                    client!.directors![number].street = value;
+
+                    if(!secEdited&& number ==0){
+                      client!.secretaries![0].street = value;
+                      setState(() {
+                        secCntrl[0][3].text = value.toString();
+                      });
+                    }
 
                   },
                   validator: (String? value) {
@@ -1316,7 +1184,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                   topLabel: "Director Street Address",
 
                   hintText: "Enter Street Address",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
                 ),
               ),
               SizedBox(width: 16.0),
@@ -1325,18 +1192,20 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 InputWidget(
                   keyboardType: TextInputType.text,
                   onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                   },
                   onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                     // directorCity = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
+                    if(!client!.directors!.asMap().containsKey(number)){
                         client!.directors!.add(Director.fromJson({}));
                     }
-                    client!.directors![number-1].city = value;
+                    client!.directors![number].city = value;
 
+                    if(!secEdited&&number==0){
+                      client!.secretaries![0].city = value;
+                      setState(() {
+                        secCntrl[0][4].text = value.toString();
+                      });
+                    }
 
                   },
                   validator: (String? value) {
@@ -1344,12 +1213,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ? 'Do not use the @ char.'
                         : null;
                   },
-                  kController: dirCntrl[number-1][4],
+                  kController: dirCntrl[number][4],
 
                   topLabel: "Director City",
 
                   hintText: "Enter City",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
                 ),
               ),
               SizedBox(width: 16.0),
@@ -1358,17 +1226,19 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                 InputWidget(
                   keyboardType: TextInputType.text,
                   onSaved: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                   },
                   onChanged: (String? value) {
-                    // This optional block of code can be used to run
-                    // code when the user saves the form.
                     // directorCountry = value!;
-                    if(!client!.directors!.asMap().containsKey(number-1)){
+                    if(!client!.directors!.asMap().containsKey(number)){
                         client!.directors!.add(Director.fromJson({}));
                     }
-                    client!.directors![number-1].country = value;
+                    client!.directors![number].country = value;
+                    if(!secEdited&&number==0){
+                      client!.secretaries![0].country = value;
+                      setState(() {
+                        secCntrl[0][5].text = value.toString();
+                      });
+                    }
 
 
                   },
@@ -1377,12 +1247,11 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> with SingleTicker
                         ? 'Do not use the @ char.'
                         : null;
                   },
-                  kController: dirCntrl[number-1][5],
+                  kController: dirCntrl[number][5],
 
                   topLabel: "Director Country",
 
                   hintText: "Enter Country",
-                  // prefixIcon: FlutterIcons.chevron_left_fea,
                 ),
               )
             ],
@@ -1417,8 +1286,8 @@ Widget _listView(persons) {
 
 
 
-class MiniMemo extends StatefulWidget {
-  const MiniMemo({
+class ObjectiveTile extends StatefulWidget {
+  const ObjectiveTile({
     Key? key,
     required this.memo, required this.callback
   }) : super(key: key);
@@ -1427,10 +1296,10 @@ class MiniMemo extends StatefulWidget {
 
 
   @override
-  _MiniMemoState createState() => _MiniMemoState();
+  _ObjectiveTileState createState() => _ObjectiveTileState();
 }
 
-class _MiniMemoState extends State<MiniMemo> {
+class _ObjectiveTileState extends State<ObjectiveTile> {
   bool _visible = false;
 
 
@@ -1441,18 +1310,18 @@ class _MiniMemoState extends State<MiniMemo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GestureDetector(
-              child: Container(
+    return GestureDetector(
+        child:Container(
+          // padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: widget.memo.set=="set"?darkgreenColor:Colors.black38,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1473,16 +1342,16 @@ class _MiniMemoState extends State<MiniMemo> {
                   ],
                 ),
               ),
-              onTap: () {
-                // _toggle();
-                widget.callback(widget.memo.id.toString()!, "not");
-
-
-              }
+            ],
           ),
+        ) ,
+        onTap: () {
+          // _toggle();
+          widget.callback(widget.memo.id.toString()!, "not");
 
-        ],
-      ),
+
+
+        }
     );
   }
 

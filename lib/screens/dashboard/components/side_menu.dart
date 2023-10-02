@@ -65,7 +65,7 @@ class SideMenu extends StatelessWidget {
               press: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ZimrasHomeScreen()),
+                  MaterialPageRoute(builder: (context) => ZimrasHomeScreen(title:"ZIMRA")),
                 );
               },
             ),
@@ -73,13 +73,10 @@ class SideMenu extends StatelessWidget {
               title: "PRAZ",
               svgSrc: "assets/icons/menu_store.svg",
               press: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => PrazsHomeScreen()),
-                // );
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Feature not yet available"),
-                ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ZimrasHomeScreen(title: 'PRAZ',)),
+                );
               },
             ),
             // DrawerListTile(

@@ -11,8 +11,10 @@ import '../../register/new/new_register_home_screen.dart';
 import '../../stages/stages_home_screen.dart';
 
 class ZimrasHeader extends StatelessWidget {
+  final String title;
+
   const ZimrasHeader({
-    Key? key,
+    Key? key, required this.title,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,7 @@ class ZimrasHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              "ZIMRA Registration Office",
+              "${title} Registration Office",
               style: Theme.of(context).textTheme.headline6,
             ),
             ElevatedButton.icon(
@@ -62,14 +64,14 @@ class ZimrasHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewZimraHome(title: 'ZIMRA Stages', code: 'wiw',)),
+                  MaterialPageRoute(builder: (context) => NewZimraHome(title: title, code: 'wiw',)),
                 );
 
 
               },
               icon: Icon(Icons.add),
               label: Text(
-                "Start ZIMRA Reg",
+                "Start ${title} Reg",
               ),
             ),
           ],

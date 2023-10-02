@@ -1,3 +1,4 @@
+import 'package:docxform/core/models/Objective.dart';
 import 'package:flutter/cupertino.dart';
 import '../../main.dart';
 import '../enums/status_enum.dart';
@@ -6,7 +7,6 @@ import 'Currency.dart';
 import 'Director.dart';
 import 'Employee.dart';
 import 'Secretary.dart';
-import 'Wallet.dart';
 
 class Client {
   int?    id;
@@ -24,7 +24,14 @@ class Client {
   List<ClientStage>? stages;
   List<ClientStage>? prazStages;
   List<Director>? directors;
+  List<Objective>? objectives;
   List<Secretary>? secretaries;
+
+  String? entitynum;
+  String? oldaddress;
+  String? oldemail;
+  String? newaddress;
+  String? newpostal;
 
 
   String? createdDate;
@@ -57,6 +64,13 @@ class Client {
     this.directors,
     this.secretaries,
 
+    this.entitynum,
+    this.oldaddress,
+    this.oldemail,
+    this.newaddress,
+    this.newpostal,
+    this.objectives,
+
     this.createdDate,
     this.createdBy,
     this.lastModifiedBy,
@@ -86,32 +100,13 @@ class Client {
    currencyFull = json['currencyFull'];
    currency = json['currency'];
 
-   createdDate = json['createdDate'];
-   createdBy = json['createdBy'];
-   version = json['version'];
-   lastModifiedBy = json['lastModifiedBy'];
-   lastModifiedBate = json['lastModifiedBate'];
-   // deletedAt = json['deletedAt'];
-  }
- Client.fromSyncJson(Map<String, dynamic> json) {
-   id = json['originId'];
-   version = json['version'];
-   isConfirmed = json['isConfirmed'];
-   universalId = json['id'];
-   stages = json['stages'];
-   prazStages = json['prazStages'];
 
-
-   name = json['name'];
-   street = json['street'];
-   city = json['city'];
-   country = json['country'];
-   telephone = json['telephone'];
-   email = json['email'];
-   status = json['status'];
-   employees = json['employees'];
-   currencyFull = json['currencyFull'];
-   currency = json['currency'];
+   entitynum = json['entitynum'];
+   oldaddress = json['oldaddress'];
+   oldemail = json['oldemail'];
+   newaddress = json['newaddress'];
+   newpostal = json['newpostal'];
+   objectives = json['objectives'];
 
    createdDate = json['createdDate'];
    createdBy = json['createdBy'];
@@ -133,6 +128,12 @@ class Client {
     data['telephone'] = this.telephone;
     data['email'] = this.email;
     data['status'] = this.status;
+    data['entitynum'] = this.entitynum;
+    data['oldaddress'] = this.oldaddress;
+    data['oldemail'] = this.oldemail;
+    data['newaddress'] = this.newaddress;
+    data['newpostal'] = this.newpostal;
+    data['objectives'] = this.objectives;
     data['currency'] = this.currency;
     data['employees'] = this.employees?.map((item) => item.toJson());
     data['directors'] = this.directors?.map((item) => item.toJson());
@@ -178,6 +179,12 @@ class Client {
       "status": this.status,
       "currency": this.currency,
 
+      "entitynum": this.entitynum,
+      "oldaddress": this.oldaddress,
+      "oldemail": this.oldemail,
+      "newaddress": this.newaddress,
+      "newpostal": this.newpostal,
+
       "created_date": this.createdDate,
       "created_by": this.createdBy,
       "version": this.version,
@@ -194,113 +201,25 @@ class Client {
     }
 
     this.id = id;
-    var dirs = this.directors;
-    var secs = this.secretaries;
 
     this.stages?.forEach((e) {
       e.saveAndAttach(id);
     });
 
-
-    for(int i=0; i<30; i++){{
-      try {
-        dirs?[i]?.saveAndAttach(id);
-        secs?[i]?.saveAndAttach(id);
-      }catch(err) {}
-
-    }
+    for(int i=0; i<this.objectives!.length; i++){
+      await this.objectives![i].attach(id);
     }
 
+    this.directors!.forEach((dir) {
+      dir.saveAndAttach(id);
+    });
 
-    debugPrint('inserted client row id: $id');
-  }
-  Future<void> saveSynced() async {
-    if(this.universalId==null){
-      print("Universal id is required");
-      throw Error();
-    }
-    Map<String, dynamic> row = {
-      "name": this.name,
-      "street": this.street,
-      "city": this.city,
-      "country": this.country,
-      "stages": this.stages,
-      "prazStages": this.prazStages,
-      "telephone": this.telephone,
-      "email": this.email,
-      "status": this.status,
-      "currency": this.currency,
+    this.secretaries!.forEach((dir) {
+      dir.saveAndAttach(id);
+    });
 
 
-      "created_date": this.createdDate,
-      "created_by": this.createdBy,
-      "version": this.version,
-      "last_modified_by": this.lastModifiedBy,
-      "last_modified_date": this.lastModifiedBate,
 
-      "universal_id" : this.universalId,
-      "is_synced" : (this.isSynced??false)?1:0,
-      "origin_id" : this.originId,
-      "version" : this.version,
-      "is_confirmed" : (this.isConfirmed??false)?1:0,
-    };
-
-
-    var id;
-    if(this.id==null) {
-      id = await dbHelper.insert("client", row);
-    }else{
-      dbHelper.update('client',row);
-      id = this.id;
-    }
-
-
-    debugPrint('inserted client row id: $id');
-  }
-  Future<void> updateSynced() async {
-    if(this.universalId==null){
-      print("Universal id is required");
-      throw Error();
-    }
-    if(this.id==null){
-      print("id is required");
-      throw Error();
-    }
-
-    Map<String, dynamic> row = {
-      "name": this.name,
-      "id": this.id,
-      "street": this.street,
-      "city": this.city,
-      "country": this.country,
-      "stages": this.stages,
-      "prazStages": this.prazStages,
-      "telephone": this.telephone,
-      "email": this.email,
-      "status": this.status,
-      "currency": this.currency,
-      // "business_id": this.currency,
-
-      "created_date": this.createdDate,
-      "created_by": this.createdBy,
-      "version": this.version,
-      "last_modified_by": this.lastModifiedBy,
-      "last_modified_date": this.lastModifiedBate,
-
-      "universal_id" : this.universalId,
-      "is_synced" : (this.isSynced??false)?1:0,
-      "origin_id" : this.originId,
-      "version" : this.version,
-      "is_confirmed" : (this.isConfirmed??false)?1:0,
-    };
-
-    var id;
-    if(this.id==null) {
-      id = await dbHelper.insert("client", row);
-    }else{
-      dbHelper.update('client',row);
-      id = this.id;
-    }
 
     debugPrint('inserted client row id: $id');
   }
@@ -327,8 +246,12 @@ class Client {
 Future<List<Client>> getClients() async {
   final maps = await dbHelper.softQueryAllRows("client");
 
-  return List.generate(maps.length, (i) {
-    return Client(
+  List<Client> clients = [];
+
+  for(int i=0; i<maps.length; i++){
+    List<ClientStage> stages = await getClientStages(maps?[i]['id']);
+
+    clients.add(Client(
       id : maps[i]['id'],
       name : maps[i]['name'],
       street : maps[i]['street'],
@@ -339,6 +262,15 @@ Future<List<Client>> getClients() async {
       status : maps[i]['status'],
       currency : maps[i]['currency'],
       employees : maps[i]['employees'],
+      stages : stages,
+
+
+      entitynum : maps[i]['entitynum'],
+      oldaddress : maps[i]['oldaddress'],
+      oldemail : maps[i]['oldemail'],
+      newaddress : maps[i]['newaddress'],
+      newpostal : maps[i]['newpostal'],
+      objectives : maps[i]['objectives'],
 
       universalId : maps?[i]["universal_id"],
       isSynced : maps?[i]["is_synced"]==1?true:false,
@@ -346,34 +278,13 @@ Future<List<Client>> getClients() async {
       version : maps?[i]["version"],
       isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
 
-    );
-  });
+    ));
+  }
+
+  return clients;
+
 }
-Future<List<Client>> getClientsForSync() async {
-  final maps = await dbHelper.getReadyForSyc("client");
 
-  return List.generate(maps.length, (i) {
-    return Client(
-      id : maps[i]['id'],
-      name : maps[i]['name'],
-      street : maps[i]['street'],
-      city : maps[i]['city'],
-      country : maps[i]['country'],
-      telephone : maps[i]['telephone'],
-      email : maps[i]['email'],
-      status : maps[i]['status'],
-      currency : maps[i]['currency'],
-      employees : maps[i]['employees'],
-
-      universalId : maps?[i]["universal_id"],
-      isSynced : maps?[i]["is_synced"]==1?true:false,
-      originId : maps?[i]["origin_id"],
-      version : maps?[i]["version"],
-      isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
-
-    );
-  });
-}
 Future<List<Client>> searchClients(String query) async {
   final maps = await dbHelper.searchClients(query);
 
@@ -390,6 +301,19 @@ Future<List<Client>> searchClients(String query) async {
       currency : maps[i]['currency'],
       employees : maps[i]['employees'],
 
+      entitynum : maps[i]['entitynum'],
+      oldaddress : maps[i]['oldaddress'],
+      oldemail : maps[i]['oldemail'],
+      newaddress : maps[i]['newaddress'],
+      newpostal : maps[i]['newpostal'],
+      objectives : maps[i]['objectives'],
+
+      universalId : maps?[i]["universal_id"],
+      isSynced : maps?[i]["is_synced"]==1?true:false,
+      originId : maps?[i]["origin_id"],
+      version : maps?[i]["version"],
+      isConfirmed : maps?[i]["is_confirmed"]==1?true:false,
+
     );
   });
 }
@@ -398,7 +322,7 @@ Future<Client?> getClient(int id) async {
   var maps = await dbHelper.findById("client", id);
   List<Director> directors = await getDirectors(maps?['id']);
   List<ClientStage> stages = await getClientStages(maps?['id']);
-  // List<ClientStage> prazStages = await getClientStages(maps?['id']);
+  List<Objective> clientObjectives = await getClientObjectives(maps?['id']);
   List<Secretary> secretaries = await getSecretaries(maps?['id']);
 
     return Client(
@@ -412,6 +336,14 @@ Future<Client?> getClient(int id) async {
       status : maps?['status'],
       currency : maps?['currency'],
       employees : maps?['employees'],
+
+      entitynum : maps?['entitynum'],
+      oldaddress : maps?['oldaddress'],
+      oldemail : maps?['oldemail'],
+      newaddress : maps?['newaddress'],
+      newpostal : maps?['newpostal'],
+      objectives : clientObjectives,
+
       stages: stages,
       // prazStages: prazStages,
       directors : directors,
@@ -448,6 +380,15 @@ Future<Client?> getClientByUni(int id, {bool? copy}) async {
       status : maps?['status'],
       currency : maps?['currency'],
       employees : maps?['employees'],
+
+
+      entitynum : maps?['entitynum'],
+      oldaddress : maps?['oldaddress'],
+      oldemail : maps?['oldemail'],
+      newaddress : maps?['newaddress'],
+      newpostal : maps?['newpostal'],
+      objectives : maps?['objectives'],
+
 
       universalId : maps?["universal_id"],
       isSynced : maps?["is_synced"]==1?true:false,

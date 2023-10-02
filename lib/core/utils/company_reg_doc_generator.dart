@@ -33,6 +33,10 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
     final bytes5 = data5.buffer.asUint8List();
     final memoDoc = await DocxTemplate.fromBytes(bytes5);
 
+    final data6 = await rootBundle.load('assets/templates/CR5_template.docx');
+    final bytes6 = data6.buffer.asUint8List();
+    final cr5 = await DocxTemplate.fromBytes(bytes6);
+
 
 
 
@@ -51,21 +55,20 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
 
     for (var n in directors) {
       final c = RowContent()
-        ..add(TextContent("dname", n.name! + " " + n.lastName!))..add(
-            TextContent("did", n.nationalId))..add(
-            TextContent("dstreet", n.street))..add(
-            TextContent("dcity", n.city))..add(
-            TextContent("dcountry", n.country))..add(
-            TextContent("dnationality", n.country))..add(TextContent('daddress',
-            directors[0].street! + ", " + directors[0].city! + ", " +
-                directors[0].country!));
+        ..add(TextContent("dname", n.name!))
+        ..add(  TextContent("did", n.nationalId))
+        ..add(  TextContent("dstreet", n.street))
+        ..add(  TextContent("dcity", n.city))
+        ..add( TextContent("dcountry", n.country))
+        ..add( TextContent("dnationality", n.country))
+        ..add(TextContent('daddress',  directors[0].street! + ", " + directors[0].city! + ", " + directors[0].country!));
 
       directorList.add(c);
     }
 
     for (var n in directors) {
       final c = PlainContent("dlist")
-        ..add(TextContent("dname", n.name! + " " + n.lastName!))..add(
+        ..add(TextContent("dname", n.name! ))..add(
             TextContent("did",
                 n.nationalId!));
       directorContList.add(c);
@@ -80,7 +83,7 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
 
     for (var n in secretaries) {
       final c = RowContent()
-        ..add(TextContent("sname", n.name! + " " + n.lastName!))..add(
+        ..add(TextContent("sname", n.name! ))..add(
             TextContent("sid", n.nationalId))..add(
             TextContent("snationality", n.country))..add(
             TextContent("dstreet", n.street))..add(
@@ -105,7 +108,7 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
 
     content..add(TextContent("company_name", company.name))..add(
         TextContent(
-            "d1_name", directors[0].name! + " " + directors[0].lastName!))..add(
+            "d1_name", directors[0].name! ))..add(
         TextContent("d1_street", directors[0].street))
       ..add( TextContent("d1_city", directors[0].city))
       ..add( TextContent("currentdate", day))
@@ -114,7 +117,7 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
       ..add( TextContent("d1_country", directors[0].country))
       ..add( TextContent("d1_city", directors[0].city))
       ..add( TextContent( "d1_address", directors[0].street! + ", " + directors[0].city! + ", " +   directors[0].country!))
-      ..add( TextContent(  "sname", secretaries[0].name! + " " + secretaries[0].lastName!))
+      ..add( TextContent(  "sname", secretaries[0].name! ))
       ..add( TextContent("sid", secretaries[0].nationalId))
       ..add( TextContent("snationality", secretaries[0].country))
       ..add(   TextContent('saddress', secretaries[0].street))
@@ -122,6 +125,13 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
       ..add(TableContent("table2",   secretaryList,  ))
       ..add(ListContent("dlist", directorContList))
       ..add(   ListContent("memolist", memoList))
+      ..add(  TextContent("company_street", company.street))
+      ..add(  TextContent("company_city", company.city))
+      ..add(  TextContent("company_country", company.country))
+      ..add(  TextContent("company_email", company.email))
+      ..add(  TextContent("postal_address", company.newpostal))
+      ..add(  TextContent("old_address", company.oldaddress))
+      ..add(  TextContent("old_email", company.oldemail))
     ;
 
 
@@ -130,6 +140,7 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
     final toCollectGen = await toCollect.generate(content);
     final articlesGen = await articles.generate(content);
     final memoDocGen = await memoDoc.generate(content);
+    final cr5Gen = await cr5.generate(content);
 
     final directory = await getApplicationDocumentsDirectory();
     print(directory.path);
@@ -163,9 +174,16 @@ Future <String> cr6FormGenerator(Client company, String code, List<Objective> me
         .then((File file) async {
       if (memoDocGen != null) await file.writeAsBytes(memoDocGen);
     });
+
+    new File("${directory.path}\\ClientDocs\\${company.name}\\${company
+        .name}_cr5.docx").create(recursive: true)
+        .then((File file) async {
+      if (cr5Gen != null) await file.writeAsBytes(cr5Gen);
+    });
+
     return "Documents created successfully. Check your documents folder in ClientDocs folder.";
   }catch(e){
-    return e.toString();
+    return "Failed to create. Make sure all fields are filled in.";
   }
 
 

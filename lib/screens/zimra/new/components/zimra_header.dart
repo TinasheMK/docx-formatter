@@ -42,7 +42,7 @@ class ZimraHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ZimrasHomeScreen()),
+                  MaterialPageRoute(builder: (context) => ZimrasHomeScreen(title: title)),
                 );
 
 

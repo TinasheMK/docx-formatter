@@ -128,6 +128,27 @@ class Objective {
 
     debugPrint('inserted objective row id: $id');
   }
+
+  Future<void> attach(int clientId) async {
+   var res =await this.detach(clientId);
+   if(res){
+     Map<String, dynamic> row = {
+       "objective_id": this.id,
+       "client_id": clientId,
+     };
+     await dbHelper.insert("client_objective", row);
+     debugPrint('attached objective row id: $id');
+   }
+
+  }
+
+  Future<bool> detach(clientId) async {
+    final rowsDeleted = await dbHelper.detach('client_objective',clientId, this.id!);
+    debugPrint('deleted $rowsDeleted row(s): row $id');
+    return true;
+  }
+
+
   Future<void> saveSynced() async {
     if(this.universalId==null){
       print("Universal id is required");
@@ -276,36 +297,19 @@ Future<Objective?> getObjective(int id) async {
     );
 
 }
-Future<Objective?> getObjectiveByUni(int id, {bool? copy}) async {
-  var maps ;
 
-  if(copy != null && copy==true){
-    maps = await dbHelper.findByIdUni("objective", id);
-    if(maps == null){
-      return null;
-    }
-  }else{
-    maps = await dbHelper.findByIdUni("objective", id);
+Future<List<Objective>> getClientObjectives(int id) async {
+  final maps = await dbHelper.findClientObjectives("client_objective", id);
 
-    if(maps == null){
-      return null;
-    }
+  List<Objective> result = [];
+
+  for(int i=0; i<maps.length; i++){
+    result.add((await getObjective(maps[i]['objective_id']))!);
   }
 
-    return Objective(
-      id : maps?['id'],
-      name : maps?['name'],
-      description : maps?['description'],
-
-      universalId : maps?["universal_id"],
-      isSynced : maps?["is_synced"]==1?true:false,
-      originId : maps?["origin_id"],
-      version : maps?["version"],
-      isConfirmed : maps?["is_confirmed"]==1?true:false,
-
-    );
+   return result;
+   return result;
 
 }
-
 
 

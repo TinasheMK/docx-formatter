@@ -75,8 +75,9 @@ class Director {
     debugPrint('adding   director');
 
     Map<String, dynamic> row = {
+      'id': this.id,
       'name': this.name,
-      'last_name': this.lastName,
+      'last_name': "",
       'city': this.city,
       'country': this.country,
       'nationality': this.nationality,
@@ -89,9 +90,16 @@ class Director {
       'shareholder': this.shareholder==true?1:0,
       'company_id': companyId
     };
-    final id = await dbHelper.insert("director", row);
-    this.id = id;
-    debugPrint('inserted director row id: $id');
+    if(this.id==null){
+      final id = await dbHelper.insert("director", row);
+      this.id = id;
+      debugPrint('inserted director row id: $id');
+    }else{
+      final id = await dbHelper.update("director", row);
+      this.id = id;
+      debugPrint('updated director row id: $id');
+    }
+
   }
 
   Future<void> query() async {
